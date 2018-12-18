@@ -98,7 +98,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 /* 一色の判定 */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
 	if (analysis->shanten[shantenAll] >= 0) return false; // 足切り要件：和了ってない
-	const TileCode Tiles[][9] = {
+	constexpr TileCode Tiles[][9] = {
 		{
 			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
 			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,

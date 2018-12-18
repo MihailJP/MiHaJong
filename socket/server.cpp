@@ -105,8 +105,8 @@ namespace server {
 	}
 
 	DLL void start (LPCTSTR const name, int port, int players, const char* const * const rule) { // サーバーを開始させる(DLL)
-		NumberOfPlayers = (unsigned int)players;
-		starterThread = new starter(name, (unsigned short)port, rule);
+		NumberOfPlayers = static_cast<unsigned int>(players);
+		starterThread = new starter(name, static_cast<unsigned short>(port), rule);
 		starterThread->startThread();
 	}
 	DLL void doStart() { // 接続待機をやめ、直ちに開始する
@@ -116,7 +116,7 @@ namespace server {
 		return starterThread->isFinished() ? 1 : 0;
 	}
 	DLL int chkCurrentConnection () { // 現在の接続数
-		return (int)starterThread->chkCurrentConnection();
+		return static_cast<int>(starterThread->chkCurrentConnection());
 	}
 	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz) {
 #if defined(_MSC_VER)
@@ -154,7 +154,7 @@ namespace server {
 			if (sockets[i]&&(sockets[i]->connected())) putString(i, sendingStr);
 	}
 	DLL void send (int SendingMsg, void*) { // サーバーからの送信
-		send((unsigned char)SendingMsg);
+		send(static_cast<unsigned char>(SendingMsg));
 	}
 
 	// ---------------------------------------------------------------------

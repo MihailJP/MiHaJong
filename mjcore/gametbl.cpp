@@ -9,7 +9,7 @@
 #include "func.h"
 #include "tileutil.h"
 #include "ruletbl.h"
-#include "largenum.h"
+#include "../common/largenum.h"
 
 using namespace mihajong_structs;
 
@@ -165,7 +165,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 			// 鳴き面子を格納
 			gameStat->Player[pl].Meld[i].tile = NoTile;
 			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = Normal;
-			gameStat->Player[pl].Meld[i].mstat = (MeldStat)0;
+			gameStat->Player[pl].Meld[i].mstat = static_cast<MeldStat>(0);
 		}
 		gameStat->Player[pl].NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 		gameStat->Player[pl].RichiFlag.RichiFlag = // リーチしているかどうか
@@ -195,14 +195,14 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	/* 内部処理用でエクスポートしない */
 	memset(gameStat, 0, sizeof(GameTable));
-	gameStat->gameType = (GameTypeID)gameType;
+	gameStat->gameType = gameType;
 
 #ifdef GUOBIAO
 	for (int i = 0; i < Players; i++)
-		gameStat->Player[i].PlayerScore = (LNum)500; // 持ち点500点とする
+		gameStat->Player[i].PlayerScore = 500; // 持ち点500点とする
 	gameStat->GameLength = 15; // 中国ルールは一荘行う
 #else /* GUOBIAO */
-	LNum initialPoints; /* 初期点数 */
+	LargeNum initialPoints; /* 初期点数 */
 	if (RuleData::chkRule("starting_point", "custom")) {
 		initialPoints = // 仮数部
 			std::atoi(RuleData::chkRule("starting_point_mantissa_tens")) * 10 +
@@ -215,14 +215,14 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 		for (int j = 0; j < exponent; ++j)
 			initialPoints *= 10;
 	} else {
-		initialPoints = (LNum)std::atoi(RuleData::chkRule("starting_point"));
+		initialPoints = static_cast<LargeNum>(std::atoi(RuleData::chkRule("starting_point")));
 	}
 
 	for (int i = 0; i < Players; i++) {
 		if (i < ACTUAL_PLAYERS)
 			gameStat->Player[i].PlayerScore = initialPoints;
 		else
-			gameStat->Player[i].PlayerScore = (LNum)0;
+			gameStat->Player[i].PlayerScore = 0;
 	}
 
 	if (RuleData::chkRule("game_length", "east_south_game"))
@@ -273,7 +273,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	GameTable* const sandbox = &StatSandBox;
 	doInitializeGameTable(sandbox, gameStat->gameType);
 	for (int p = 0; p < Players; p++) {
-		sandbox->Player[p].PlayerScore = (LNum)gameStat->Player[p].PlayerScore;
+		sandbox->Player[p].PlayerScore = gameStat->Player[p].PlayerScore;
 		sandbox->Player[p].playerChip = gameStat->Player[p].playerChip;
 		sandbox->Player[p].SumaroFlag = gameStat->Player[p].SumaroFlag;
 		sandbox->Player[p].shokanFlag = gameStat->Player[p].shokanFlag;

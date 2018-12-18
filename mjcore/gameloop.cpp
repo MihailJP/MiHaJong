@@ -24,7 +24,7 @@
 EndType doTableTurn(GameTable* const gameStat) {
 	{
 		CodeConv::tostringstream o;
-		o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] のツモ番です。");
+		o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] のツモ番です。");
 		info(o.str().c_str());
 	}
 	/* 変数の初期化 */

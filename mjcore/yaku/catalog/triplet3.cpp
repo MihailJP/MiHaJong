@@ -57,7 +57,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				return (nowTime.wMonth == 4) && (nowTime.wDay == 1);
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				return ((nowTime.tm_mon + 1) == 4) && (nowTime.tm_mday == 1);
 #endif /*_WIN32*/
 			};
@@ -294,8 +295,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("対々和"), _T("混老頭"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (Wind2Tile(analysis->GameStat->GameRound / 4) != // ダブ風でなくて
-					Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))) &&
-					(analysis->DuiziCount[Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))] >= 1) && // 自風があり
+					Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))) &&
+					(analysis->DuiziCount[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1) && // 自風があり
 					(analysis->DuiziCount[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1) && // 場風があり
 					(analysis->DuiziCount[CircleOne] >= 1) && (analysis->DuiziCount[BambooOne] >= 1) &&
 					(analysis->DuiziCount[WhiteDragon] >= 1);
@@ -432,7 +433,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool pairIsHonor = false; bool flag = false;
 				for (int i = TileSuitHonors; i < TileNonflowerMax; i++)
-					if (analysis->MianziDat[0].tile == (TileCode)i)
+					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i))
 						pairIsHonor = true;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
 					if ((analysis->KeziCount[i + 3] >= 1) &&
@@ -440,10 +441,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[NorthWind] >= 1) &&
 						(pairIsHonor)) {
 							if ((analysis->ShunziCount[i + 4] >= 1) &&
-								(analysis->TsumoHai->tile == (TileCode)(i + 6)))
+								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)))
 								flag = true;
 							if ((analysis->ShunziCount[i + 3] >= 1) &&
-								(analysis->TsumoHai->tile == (TileCode)(i + 3)))
+								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)))
 								flag = true;
 					}
 				}
@@ -516,7 +517,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					if ((nowTime.wMonth == 2) && (nowTime.wDay == 29))
 #else /*_WIN32*/
 					time_t nowTimeVal = time(nullptr);
-					tm nowTime = *localtime(&nowTimeVal);
+					tm nowTime;
+					localtime_s(&nowTime, &nowTimeVal);
 					if (((nowTime.tm_mon + 1) == 2) && (nowTime.tm_mday == 29))
 #endif /*_WIN32*/
 						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
@@ -528,8 +530,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
-				const int year = nowTime.tm_year + 1900;
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
+				constexpr int year = nowTime.tm_year + 1900;
 				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 #endif /*_WIN32*/
 				if (!isLeapYear) return false;
@@ -779,7 +782,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						flag1 = true;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 8] >= 1) &&
-						(analysis->TsumoHai->tile == (TileCode)(i + 8)))
+						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 8)))
 						flag2 = true;
 				return flag1 && flag2 &&
 					(analysis->MianziDat[0].tile == SouthWind);

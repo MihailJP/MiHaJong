@@ -11,12 +11,12 @@ TCHRPPROC fpTraceC, fpDebugC, fpInfoC, fpWarnC, fpErrorC, fpFatalC = nullptr;
 
 DLL void setLoggerLib (HMODULE lib) {
 	logger = lib;
-	fpTraceC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"trace");
-	fpDebugC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"debug");
-	fpInfoC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"info");
-	fpWarnC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"warn");
-	fpErrorC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"error");
-	fpFatalC = (TCHRPPROC)GetProcAddress(logger, (LPCSTR)"fatal");
+	fpTraceC = reinterpret_cast<TCHRPPROC>(GetProcAddress(logger, "trace"));
+	fpDebugC = reinterpret_cast<TCHRPPROC>(GetProcAddress(logger, "debug"));
+	fpInfoC = reinterpret_cast<TCHRPPROC>(GetProcAddress(logger, "info"));
+	fpWarnC = reinterpret_cast<TCHRPPROC>(GetProcAddress(logger, "warn"));
+	fpErrorC = reinterpret_cast<TCHRPPROC>(GetProcAddress(logger, "error"));
+	fpFatalC = reinterpret_cast<TCHRPPROC>(GetProcAddress(logger, "fatal"));
 }
 
 CodeConv::tstring posPrefix(LPCTSTR file, int line, CodeConv::tstring msg) {

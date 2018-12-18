@@ -45,8 +45,8 @@ GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TablePr
 	clockPanel = new Clock(this);
 	tileTipReconst = new TileTipReconst(this);
 	Reconstruct(GameStatus::retrGameStat());
-	const unsigned logWidth = (unsigned)floor(0.5f + // VC++2010ではround()が使えない
-		(float)(((signed)Geometry::WindowWidth - (signed)Geometry::WindowHeight) / Geometry::WindowScale() - 36)) / 9u;
+	const unsigned logWidth = static_cast<unsigned>(floor(0.5f + // VC++2010ではround()が使えない
+		static_cast<float>((static_cast<signed>(Geometry::WindowWidth) - static_cast<signed>(Geometry::WindowHeight)) / Geometry::WindowScale() - 36)) / 9u);
 	mySubScene = new TableSubsceneNormal(manipulator->getDevice());
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
 	tileSelectMode = 0;
@@ -87,7 +87,7 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
 	} else if (gameStat->chkGameType(Sanma4)) {
-		const PlayerID tobePlayed[4][4] = {
+		constexpr PlayerID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};
 		for (PlayerID i = 0; i < 4; i++) {
@@ -102,9 +102,9 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 
 /* 供託点棒などの情報を表示 */
 void GameTableScreen::ShowStatus(const GameTable* gameStat) {
-	const wchar_t* const WindName = L"東南西北白發中";
-	const wchar_t* const Numeral = L"一二三四五六七八九十";
-	const wchar_t* const FWDigit = L"０１２３４５６７８９";
+	constexpr wchar_t* const WindName = L"東南西北白發中";
+	constexpr wchar_t* const Numeral = L"一二三四五六七八九十";
+	constexpr wchar_t* const FWDigit = L"０１２３４５６７８９";
 	CodeConv::tostringstream o;
 	o << CodeConv::EnsureTStr(std::wstring(WindName + gameStat->GameRound / 4, WindName + gameStat->GameRound / 4 + 1));
 	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) { // 東場のみのルール
@@ -146,10 +146,10 @@ void GameTableScreen::cls() {
 		roundColor(), 1.0f, 0); // バッファクリア
 #else
 	glClearColor(
-		(double)((roundColor() & 0x00ff0000) >> 16) / 255.0,
-		(double)((roundColor() & 0x0000ff00) >>  8) / 255.0,
-		(double)((roundColor() & 0x000000ff)      ) / 255.0,
-		(double)((roundColor() & 0xff000000) >> 24) / 255.0);
+		static_cast<double>((roundColor() & 0x00ff0000) >> 16) / 255.0,
+		static_cast<double>((roundColor() & 0x0000ff00) >>  8) / 255.0,
+		static_cast<double>((roundColor() & 0x000000ff)      ) / 255.0,
+		static_cast<double>((roundColor() & 0xff000000) >> 24) / 255.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 #endif
 }
@@ -488,8 +488,8 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 {
 	TableProtoScene::MouseInput(od, X, Y);
 	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
-	const int scaledX = (int)((float)X / Geometry::WindowScale());
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
+	const int scaledX = static_cast<int>(static_cast<float>(X) / Geometry::WindowScale());
+	const int scaledY = static_cast<int>(static_cast<float>(Y) / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NumOfTilesInHand) &&
@@ -576,9 +576,11 @@ void GameTableScreen::FinishTileChoice() {
 	if (tehaiReconst->isCursorEnabled() && tehaiReconst->isEnabled(tehaiReconst->getTileCursor())) {
 		const Int8ByTile TileCount = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
 		if ((tileSelectMode == DiscardTileNum::Ankan) && (TileCount[GameStatus::gameStat()->statOfActive().Hand[tehaiReconst->getTileCursor()].tile] == 1))
-			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // 加槓の場合
+			ui::UIEvent->set(static_cast<unsigned>(tehaiReconst->getTileCursor()) +
+			static_cast<unsigned>(DiscardTileNum::Kakan * DiscardTileNum::TypeStep)); // 加槓の場合
 		else
-			ui::UIEvent->set((unsigned)tehaiReconst->getTileCursor() + (unsigned)(tileSelectMode * DiscardTileNum::TypeStep)); // 牌の番号を設定
+			ui::UIEvent->set(static_cast<unsigned>(tehaiReconst->getTileCursor()) +
+			static_cast<unsigned>(tileSelectMode * DiscardTileNum::TypeStep)); // 牌の番号を設定
 	} else {
 		sound::Play(sound::IDs::sndCuohu);
 	}

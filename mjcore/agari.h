@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../common/largenum.h"
 #include "gametbl.h"
-#include "largenum.h"
 #include "rational.h"
 #include "endtype.h"
 #include "yaku/yaku.h"
@@ -14,31 +14,31 @@ namespace agari {
 typedef Rational<int> Rat;
 typedef const Rat& rat;
 
-LNum agaricalc(const LNum& AgariPointRaw, int agariBairitsu, int agariBairitsu2, unsigned agariCount);
+LargeNum agaricalc(const LargeNum& AgariPointRaw, int agariBairitsu, int agariBairitsu2, unsigned agariCount);
 #ifndef GUOBIAO
-LNum agaricalc(const LNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2);
+LargeNum agaricalc(const LargeNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2);
 
-inline void deltacalcplus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int agariBairitsu, PlayerID targetPlayer) {
+inline void deltacalcplus(const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, int agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] += (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
 	return;
 }
-inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int agariBairitsu, PlayerID targetPlayer) {
+inline void deltacalcminus(const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, int agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] -= (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
 	return;
 }
-inline void deltacalcplus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, rat agariBairitsu, PlayerID targetPlayer) {
+inline void deltacalcplus(const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, rat agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] += (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
 	return;
 }
-inline void deltacalcminus(const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, rat agariBairitsu, PlayerID targetPlayer) {
+inline void deltacalcminus(const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, rat agariBairitsu, PlayerID targetPlayer) {
 	PointDelta[targetPlayer] -= (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
 	return;
 }
 #endif /* GUOBIAO */
 
-const int CAP_normal = -1;
-void calcAgariPoints(const GameTable* gameStat, LNum& agariPoint,
-	const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int Mode = CAP_normal);
+constexpr int CAP_normal = -1;
+void calcAgariPoints(const GameTable* gameStat, LargeNum& agariPoint,
+	const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, int Mode = CAP_normal);
 
 // -------------------------------------------------------------------------
 

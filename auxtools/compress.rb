@@ -97,7 +97,7 @@ File.open(cppfile, "wt") {|target|
 namespace Compressed {
 
 LPCTSTR file_#{symbolname.downcase}::Description = FILEDESC_#{symbolname};
-const uint8_t file_#{symbolname.downcase}::expectedDigest[32] = {
+constexpr uint8_t file_#{symbolname.downcase}::expectedDigest[32] = {
 #{hexarray_arranged.join("\n")}
 };
 

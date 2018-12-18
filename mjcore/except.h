@@ -24,7 +24,8 @@ EXPORT_STRUCT ErrorInfo {
 };
 
 #ifdef MJCORE_EXPORTS
-static_assert(std::is_pod<ErrorInfo>::value, "ErrorInfo is not POD");
+static_assert(std::is_trivially_copyable<ErrorInfo>::value, "ErrorInfo is not trivially copyable");
+static_assert(std::is_standard_layout<ErrorInfo>::value, "ErrorInfo is not standard layout");
 #endif
 
 void StackTraceToArray();
@@ -58,11 +59,11 @@ extern const uintptr_t errorInfoPtr[1];
 #define Raise(exceptionCode,message) {fatal(message); \
 	setStruct(message); \
 	std::cerr << __FILE__ << ' ' << __LINE__ << ':' << CodeConv::toANSI(message) << std::endl; \
-	throw (unsigned long)exceptionCode;}
+	throw static_cast<unsigned long>exceptionCode;}
 #define RaiseTolerant(exceptionCode,message) {error(message); \
 	setStruct(message); \
 	std::cerr << __FILE__ << ' ' << __LINE__ << ':' << CodeConv::toANSI(message) << std::endl; \
-	throw (unsigned long)exceptionCode;}
+	throw static_cast<unsigned long>exceptionCode;}
 #endif /*_WIN32*/
 #endif
 

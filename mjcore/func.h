@@ -12,7 +12,7 @@
 #ifndef _WIN32
 #include <sys/stat.h>
 #endif
-#include "largenum.h"
+#include "../common/largenum.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -31,12 +31,12 @@ using mihajong_structs::PlayerRankList;
 #ifdef MJCORE_EXPORTS
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
 seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
-	return (seatRelative)((Players + targetPlayer - basePlayer) % Players);
+	return static_cast<seatRelative>((Players + targetPlayer - basePlayer) % Players);
 }
 
 /* あるプレイヤーの(下家、対面、上家)を調べる */
 PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative) {
-	return (PlayerID)(((int)targetPlayer + (int)relative) % Players);
+	return static_cast<PlayerID>((static_cast<int>(targetPlayer) + static_cast<int>(relative)) % Players);
 }
 
 /* 一周するまでに必要な場の数 */
@@ -166,7 +166,7 @@ CodeConv::tstring inline TileName(TileCode tile) {
 
 TileCode Wind2Tile(uint8_t wind);
 
-LNum BasePoint();
+LargeNum BasePoint();
 bool isAboveBase(const GameTable* const gameStat, PlayerID player);
 
 CodeConv::tstring intstr(int val);

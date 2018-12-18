@@ -10,8 +10,8 @@
 
 namespace mihajong_graphic {
 
-const LPCTSTR MainWindow::myWindowClassName = _T("mihajong_main");
-const LPCTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
+constexpr LPCTSTR MainWindow::myWindowClassName = _T("mihajong_main");
+constexpr LPCTSTR MainWindow::WindowCaption = _T("MiHaJong ver. ") _T(MIHAJONG_VER);
 unsigned& MainWindow::WindowWidth = Geometry::WindowWidth;
 unsigned& MainWindow::WindowHeight = Geometry::WindowHeight;
 extern MainWindow* myMainWindow;
@@ -69,8 +69,8 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ウィ�
 	myWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 #endif
 	myWindowClass.cbSize = sizeof(WNDCLASSEX);
-	myWindowClass.hIcon = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
-	myWindowClass.hIconSm = (HICON)LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+	myWindowClass.hIcon = static_cast<HICON>(LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE));
+	myWindowClass.hIconSm = static_cast<HICON>(LoadImage(hThisInst, icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE));
 	myWindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	myWindowClass.lpszMenuName = nullptr;
 	myWindowClass.cbClsExtra = 0;

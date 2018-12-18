@@ -1,10 +1,10 @@
 ﻿#include "result.h"
 #include "regex.h"
+#include "../common/largenum.h"
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
 #include "sound.h"
 #include "func.h"
-#include "largenum.h"
 #include "rankval.h"
 #include "ruletbl.h"
 #include "haifu.h"
@@ -24,7 +24,7 @@ namespace {
 	}
 
 	/* 1000で割って丸める */
-	LNum roundScore(LNum val) {
+	LargeNum roundScore(LargeNum val) {
 #ifdef GUOBIAO
 		return val;
 #else /* GUOBIAO */
@@ -34,7 +34,7 @@ namespace {
 	}
 
 	/* ウマ計算 */
-	void calcUma(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
+	void calcUma(const GameTable* gameStat, InfoByPlayer<LargeNum>& score) {
 #ifndef GUOBIAO
 		const PlayerRankList rank(calcRank(gameStat));
 		int plusCount = 0;
@@ -48,15 +48,15 @@ namespace {
 	}
 
 	/* オカ計算 */
-	void calcOka(const GameTable* gameStat, InfoByPlayer<LNum>& score) {
+	void calcOka(const GameTable* gameStat, InfoByPlayer<LargeNum>& score) {
 		const PlayerRankList rank(calcRank(gameStat));
-		LNum sumOfScore = 0; // 不足分または過剰分
+		LargeNum sumOfScore = 0; // 不足分または過剰分
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i)
 			sumOfScore += score[i];
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
-			if ((rank[i] == 1) && (sumOfScore <= (LNum)0)) // トップ賞
+			if ((rank[i] == 1) && (sumOfScore <= 0)) // トップ賞
 				score[i] -= sumOfScore;
-			if ((rank[i] == ACTUAL_PLAYERS) && (sumOfScore > (LNum)0)) // マイナスオカ
+			if ((rank[i] == ACTUAL_PLAYERS) && (sumOfScore > 0)) // マイナスオカ
 				score[i] -= sumOfScore;
 		}
 	}
@@ -83,11 +83,11 @@ namespace {
 
 	/* 得点計算 */
 	void calcScore(const GameTable* gameStat) {
-		InfoByPlayer<LNum> playerScore;
+		InfoByPlayer<LargeNum> playerScore;
 		for (PlayerID i = 0; i < Players; ++i) // 点数処理
-			playerScore[i] = gameStat->Player[i].PlayerScore - (LargeNum)BasePoint();
+			playerScore[i] = gameStat->Player[i].PlayerScore - BasePoint();
 		for (PlayerID i = 0; i < Players; ++i) // チップを反映
-			playerScore[i] += gameStat->Player[i].playerChip * (signed)chipRate();
+			playerScore[i] += gameStat->Player[i].playerChip * static_cast<signed>(chipRate());
 		calcUma(gameStat, playerScore); // ウマを加算する
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) // 丸め処理
 			playerScore[i] = roundScore(playerScore[i]);

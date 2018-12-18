@@ -22,15 +22,15 @@ namespace logger {
 		mihajong_socket::logger::setLoggerLib(lg);
 		sound::logger::setLoggerLib(lg);
 
-		fpInitLogger = (CHRPPROC)GetProcAddress(lg, (LPCSTR)"initLogger");
+		fpInitLogger = reinterpret_cast<CHRPPROC>(GetProcAddress(lg, "initLogger"));
 		if (lg == nullptr) return (-2);
 
-		if (!(fpTraceC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"trace"))) return (-3);
-		if (!(fpDebugC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"debug"))) return (-3);
-		if (!(fpInfoC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"info"))) return (-3);
-		if (!(fpWarnC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"warn"))) return (-3);
-		if (!(fpErrorC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"error"))) return (-3);
-		if (!(fpFatalC = (TCHRPPROC)GetProcAddress(lg, (LPCSTR)"fatal"))) return (-3);
+		if (!(fpTraceC = reinterpret_cast<TCHRPPROC>(GetProcAddress(lg, "trace")))) return (-3);
+		if (!(fpDebugC = reinterpret_cast<TCHRPPROC>(GetProcAddress(lg, "debug")))) return (-3);
+		if (!(fpInfoC = reinterpret_cast<TCHRPPROC>(GetProcAddress(lg, "info")))) return (-3);
+		if (!(fpWarnC = reinterpret_cast<TCHRPPROC>(GetProcAddress(lg, "warn")))) return (-3);
+		if (!(fpErrorC = reinterpret_cast<TCHRPPROC>(GetProcAddress(lg, "error")))) return (-3);
+		if (!(fpFatalC = reinterpret_cast<TCHRPPROC>(GetProcAddress(lg, "fatal")))) return (-3);
 #ifdef MJCORE_EXPORTS
 		std::ostringstream fname;
 		fname << "debug" << GetCurrentProcessId() << ".log";

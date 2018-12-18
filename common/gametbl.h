@@ -20,17 +20,18 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
 	doraCol red;
 };
-static_assert(std::is_pod<Tile>::value, "Tile is not POD");
+static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");
+static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout");
 
 // -------------------------------------------------------------------------
 
-const unsigned int Players = 4;
+constexpr unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
 #define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
 #endif
-const unsigned int NumOfTilesInHand = 14;
-const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
-const unsigned int SizeOfDiscardBuffer = 33;
+constexpr unsigned int NumOfTilesInHand = 14;
+constexpr unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
+constexpr unsigned int SizeOfDiscardBuffer = 33;
 
 typedef int8_t PlayerID; // プレイヤー番号
 
@@ -43,7 +44,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:添字が範囲外です (") << static_cast<int>(playerID) << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -54,7 +55,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		}
 	}
 	const T& operator[](const int playerID) const {
-		return InfoByPlayer::operator[]((PlayerID)playerID);
+		return InfoByPlayer::operator[](static_cast<PlayerID>(playerID));
 	}
 	T& operator[](const PlayerID playerID) {
 		if ((playerID >= 0)&&(playerID < Players)) {
@@ -63,7 +64,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:添字が範囲外です (") << static_cast<int>(playerID) << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -74,7 +75,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		}
 	}
 	T& operator[](const int playerID) {
-		return InfoByPlayer::operator[]((PlayerID)playerID);
+		return InfoByPlayer::operator[](static_cast<PlayerID>(playerID));
 	}
 };
 
@@ -84,7 +85,7 @@ typedef Tile HandTiles[NumOfTilesInHand];
 
 // -------------------------------------------------------------------------
 
-const unsigned int SutehaiTypeStep = 200;
+constexpr unsigned int SutehaiTypeStep = 200;
 enum DiscardStat : uint8_t {
 	discardNormal,
 	discardTaken,
@@ -97,12 +98,13 @@ struct DiscardTile {
 	bool isDiscardThrough; // ツモ切りフラグ
 };
 typedef DiscardTile DiscardBuf[SizeOfDiscardBuffer];
-static_assert(std::is_pod<DiscardTile>::value, "DiscardTile is not POD");
+static_assert(std::is_trivially_copyable<DiscardTile>::value, "DiscardTile is not trivially copyable");
+static_assert(std::is_standard_layout<DiscardTile>::value, "DiscardTile is not standard layout");
 
 // -------------------------------------------------------------------------
 
-const unsigned int SizeOfMeldBuffer = 5;
-const unsigned int MeldTypeStep = 1000;
+constexpr unsigned int SizeOfMeldBuffer = 5;
+constexpr unsigned int MeldTypeStep = 1000;
 enum MeldStat : uint8_t {
 	meldSequenceConcealed,      // 手の内の順子
 	meldSequenceExposedLower,   // 小さい方をチー
@@ -126,12 +128,14 @@ struct MeldCode {
 	MeldStat mstat;
 };
 typedef MeldCode MeldBuf[SizeOfMeldBuffer];
-static_assert(std::is_pod<MeldCode>::value, "MeldCode is not POD");
+static_assert(std::is_trivially_copyable<MeldCode>::value, "MeldCode is not trivially copyable");
+static_assert(std::is_standard_layout<MeldCode>::value, "MeldCode is not standard layout");
 
 // -------------------------------------------------------------------------
 
 struct RichiStat {bool RichiFlag, IppatsuFlag, DoubleFlag, OpenFlag;};
-static_assert(std::is_pod<RichiStat>::value, "RichiStat is not POD");
+static_assert(std::is_trivially_copyable<RichiStat>::value, "RichiStat is not trivially copyable");
+static_assert(std::is_standard_layout<RichiStat>::value, "RichiStat is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -139,7 +143,8 @@ enum ChankanStat : uint8_t {
 	chankanNone, chankanRegular, chankanOfAnkan, chankanOfNorth,
 };
 struct KangStat { bool kangFlag, topFlag; uint8_t chainFlag; ChankanStat chankanFlag; };
-static_assert(std::is_pod<KangStat>::value, "KangStat is not POD");
+static_assert(std::is_trivially_copyable<KangStat>::value, "KangStat is not trivially copyable");
+static_assert(std::is_standard_layout<KangStat>::value, "KangStat is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -147,23 +152,26 @@ enum PaoYakuPage : uint8_t {pyDaisangen, pyDaisixi, pySikang, pyMinkan, PaoYakuP
 
 struct PaoStat { PlayerID paoPlayer, agariPlayer; };
 typedef PaoStat PaoStatBook[PaoYakuPages];
-static_assert(std::is_pod<PaoStat>::value, "PaoStat is not POD");
+static_assert(std::is_trivially_copyable<PaoStat>::value, "PaoStat is not trivially copyable");
+static_assert(std::is_standard_layout<PaoStat>::value, "PaoStat is not standard layout");
 
 
 // -------------------------------------------------------------------------
 
-const unsigned SizeOfDeckBuf = 144;
+constexpr unsigned SizeOfDeckBuf = 144;
 typedef Tile DeckBuf[SizeOfDeckBuf]; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
 
 // -------------------------------------------------------------------------
 
 struct PrevMeldBook { TileCode Discard, Stepped; };
-static_assert(std::is_pod<PrevMeldBook>::value, "PrevMeldBook is not POD");
+static_assert(std::is_trivially_copyable<PrevMeldBook>::value, "PrevMeldBook is not trivially copyable");
+static_assert(std::is_standard_layout<PrevMeldBook>::value, "PrevMeldBook is not standard layout");
 
 // -------------------------------------------------------------------------
 
 struct DoraStatBook { UInt8ByTile Omote, Ura; };
-static_assert(std::is_pod<DoraStatBook>::value, "DoraStatBook is not POD");
+static_assert(std::is_trivially_copyable<DoraStatBook>::value, "DoraStatBook is not trivially copyable");
+static_assert(std::is_standard_layout<DoraStatBook>::value, "DoraStatBook is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -174,12 +182,14 @@ struct DeclFlag {
 	bool Ron, Kan, Pon;
 	ChiiType Chi;
 };
-static_assert(std::is_pod<DeclFlag>::value, "DeclFlag is not POD");
+static_assert(std::is_trivially_copyable<DeclFlag>::value, "DeclFlag is not trivially copyable");
+static_assert(std::is_standard_layout<DeclFlag>::value, "DeclFlag is not standard layout");
 
 // -------------------------------------------------------------------------
 
 struct CurrPlayer { PlayerID Active, Passive, Agari, Furikomi; };
-static_assert(std::is_pod<CurrPlayer>::value, "CurrPlayer is not POD");
+static_assert(std::is_trivially_copyable<CurrPlayer>::value, "CurrPlayer is not trivially copyable");
+static_assert(std::is_standard_layout<CurrPlayer>::value, "CurrPlayer is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -188,7 +198,8 @@ struct Flowers { // 花牌フラグ用
 		Plum, Orchid, Chrys, Bamboo;
 	/* Chrysanthemum は綴りが長いので省略…… */
 };
-static_assert(std::is_pod<Flowers>::value, "Flowers is not POD");
+static_assert(std::is_trivially_copyable<Flowers>::value, "Flowers is not trivially copyable");
+static_assert(std::is_standard_layout<Flowers>::value, "Flowers is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -196,7 +207,8 @@ struct Dice { // サイコロ
 	uint8_t Number;
 	uint8_t Direction;
 };
-static_assert(std::is_pod<Dice>::value, "Dice is not POD");
+static_assert(std::is_trivially_copyable<Dice>::value, "Dice is not trivially copyable");
+static_assert(std::is_standard_layout<Dice>::value, "Dice is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -231,7 +243,8 @@ struct PlayerTable { // プレイヤーの状態を格納
 	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* 自摸牌 (immutable) */
 	      Tile& Tsumohai()       {return Hand[TsumohaiIndex];} /* 自摸牌 (mutable) */
 };
-static_assert(std::is_pod<PlayerTable>::value, "PlayerTable is not POD");
+static_assert(std::is_trivially_copyable<PlayerTable>::value, "PlayerTable is not trivially copyable");
+static_assert(std::is_standard_layout<PlayerTable>::value, "PlayerTable is not standard layout");
 
 // -------------------------------------------------------------------------
 
@@ -299,24 +312,25 @@ struct GameTable { // 卓の情報を格納する
 
 	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
 		if (chkGameType(SanmaT))
-			return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-		else return (seatAbsolute)((player + 32 - currentRound) % 4);
+			return static_cast<seatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return static_cast<seatAbsolute>((player + 32 - currentRound) % 4);
 	}
 	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
 		return playerwind(player, GameRound);
 	}
 
 	int tilesLeft() const { // 王牌を除いた山牌の残り枚数
-		return ((int)RinshanPointer - ((int)DeadTiles - 1) - (int)TilePointer);
+		return (static_cast<int>(RinshanPointer) - (static_cast<int>(DeadTiles) - 1) - static_cast<int>(TilePointer));
 	}
 
 };
-static_assert(std::is_pod<GameTable>::value, "GameTable is not POD");
+static_assert(std::is_trivially_copyable<GameTable>::value, "GameTable is not trivially copyable");
+static_assert(std::is_standard_layout<GameTable>::value, "GameTable is not standard layout");
 
 // -------------------------------------------------------------------------
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
-const unsigned int agariKuikae = 999;
+constexpr unsigned int agariKuikae = 999;
 
 // -------------------------------------------------------------------------
 

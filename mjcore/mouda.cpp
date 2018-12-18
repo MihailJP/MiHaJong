@@ -219,7 +219,7 @@ namespace { /* 内部処理分割用 */
 	}
 	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 暗槓・加槓するときの処理 */
 #ifdef GUOBIAO
-		const unsigned kanLim = 16;
+		constexpr unsigned kanLim = 16;
 #else /* GUOBIAO */
 		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
 #endif /* GUOBIAO */
@@ -369,9 +369,9 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	EndType RoundEndType = Continuing;
 	{
 		CodeConv::tostringstream o;
-		o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active <<
-			_T("] 打牌タイプ [") << (int)DiscardTileIndex.type <<
-			_T("] 手牌番号 [") << (int)DiscardTileIndex.id << _T("]");
+		o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) <<
+			_T("] 打牌タイプ [") << static_cast<int>(DiscardTileIndex.type) <<
+			_T("] 手牌番号 [") << static_cast<int>(DiscardTileIndex.id) << _T("]");
 		info(o.str().c_str());
 	}
 	/* 立直していない同順振聴ならその期限のため振聴を解除する */

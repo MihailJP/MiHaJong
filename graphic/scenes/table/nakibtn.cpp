@@ -17,7 +17,15 @@
 
 namespace mihajong_graphic {
 
-const GameTableScreen::ButtonReconst::BtnData
+namespace {
+
+template <typename T> T scaleToWindow(T val) {
+	return static_cast<T>(static_cast<float>(val) * Geometry::WindowScale());
+}
+
+}
+
+constexpr GameTableScreen::ButtonReconst::BtnData
 	GameTableScreen::ButtonReconst::buttonDat[2][GameTableScreen::ButtonReconst::btnMAXIMUM] = {
 		{
 			{_T("左チー"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffccff66},
@@ -94,15 +102,15 @@ void GameTableScreen::ButtonReconst::Render() {
 	if (cursor != CursorDisabled) {
 #include "color.h"
 		Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][cursor].color;
-		const double Zeit = (double)(myTimer.currTime() % 9000000ULL);
-		btnColor.rgbaAsStruct.r = (unsigned)((double)btnColor.rgbaAsStruct.r * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
-		btnColor.rgbaAsStruct.g = (unsigned)((double)btnColor.rgbaAsStruct.g * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
-		btnColor.rgbaAsStruct.b = (unsigned)((double)btnColor.rgbaAsStruct.b * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
+		btnColor.rgbaAsStruct.r = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.r) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
+		btnColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		buttons->setButton(cursor,
 			(sunkenButton == cursor) ? ButtonPic::sunken : (buttonEnabled[cursor] ? ButtonPic::raised : ButtonPic::clear),
-			buttonDat[currentButtonSet][cursor].x * Geometry::WindowScale(),
-			buttonDat[currentButtonSet][cursor].y * Geometry::WindowScale(),
-			117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
+			scaleToWindow(buttonDat[currentButtonSet][cursor].x),
+			scaleToWindow(buttonDat[currentButtonSet][cursor].y),
+			scaleToWindow(117u), scaleToWindow(36u),
 			btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][cursor].label);
 	}
 	buttons->Render();
@@ -121,9 +129,9 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	}*/
 	buttons->setButton(buttonID,
 		(sunkenButton == buttonID) ? ButtonPic::sunken : (buttonEnabled[buttonID] ? ButtonPic::raised : ButtonPic::clear),
-		buttonDat[currentButtonSet][buttonID].x * Geometry::WindowScale(),
-		buttonDat[currentButtonSet][buttonID].y * Geometry::WindowScale(),
-		117 * Geometry::WindowScale(), 36 * Geometry::WindowScale(),
+		scaleToWindow(buttonDat[currentButtonSet][buttonID].x),
+		scaleToWindow(buttonDat[currentButtonSet][buttonID].y),
+		scaleToWindow(117u), scaleToWindow(36u),
 		btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][buttonID].label);
 	caller->setRegion(buttonID + ButtonRegionNum,
 		buttonDat[currentButtonSet][buttonID].x      , buttonDat[currentButtonSet][buttonID].y,
@@ -132,7 +140,7 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 void GameTableScreen::ButtonReconst::reconstruct() {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
 	for (unsigned i = 0; i < btnMAXIMUM; ++i)
-		reconstruct((ButtonID)i);
+		reconstruct(static_cast<ButtonID>(i));
 }
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
@@ -317,7 +325,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		this->setSunkenButton(button);
 		for (int i = 0; i < btnMAXIMUM; ++i)
 			if (i != button)
-				this->disable((ButtonID)i);
+				this->disable(static_cast<ButtonID>(i));
 		this->reconstruct();
 		caller->tehaiReconst->enable();
 		for (int i = 0; i < NumOfTilesInHand; ++i) {
@@ -329,7 +337,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
 	sound::Play(sound::IDs::sndButton);
-	if (!this->isEnabled((ButtonID)this->getCursor())) {
+	if (!this->isEnabled(static_cast<ButtonID>(this->getCursor()))) {
 		sound::Play(sound::IDs::sndCuohu);
 	} else if (this->getButtonSet() == btnSetTsumo) {
 		auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {

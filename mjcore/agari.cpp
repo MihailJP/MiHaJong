@@ -18,17 +18,17 @@
 
 /* 青天井対応の点棒処理 */
 #ifndef GUOBIAO
-LNum endround::agari::agaricalc(const LNum& AgariPointRaw, int agariBairitsu, int agariBairitsu2, unsigned agariCount) {
-	LNum agariPointArray = (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
+LargeNum endround::agari::agaricalc(const LargeNum& AgariPointRaw, int agariBairitsu, int agariBairitsu2, unsigned agariCount) {
+	LargeNum agariPointArray = (AgariPointRaw * agariBairitsu + 99) / 100 * 100;
 	for (unsigned i = 0; i < agariCount; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu2 + 99) / 100 * 100;
 	return agariPointArray;
 }
-LNum endround::agari::agaricalc(const LNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2) {
-	LNum agariPointArray = (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
-	for (unsigned i = 0; i < agariCount; ++i)
+LargeNum endround::agari::agaricalc(const LargeNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2) {
+	LargeNum agariPointArray = (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
+	for (int i = 0; i < agariCount; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu2.getNumerator() / agariBairitsu2.getDenominator() + 99) / 100 * 100;
-	for (unsigned i = 0; i < agariCount2; ++i)
+	for (int i = 0; i < agariCount2; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu3.getNumerator() / agariBairitsu3.getDenominator() + 99) / 100 * 100;
 	return agariPointArray;
 }
@@ -42,7 +42,7 @@ namespace {
 #ifdef GUOBIAO
 
 	void calcAgariPoints_Tsumo( // 中国ルール：ツモ
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		agariPoint = AgariPointRaw;
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
@@ -54,7 +54,7 @@ namespace {
 	}
 
 	void calcAgariPoints_Ron( // 中国ルール：ロン
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		agariPoint = AgariPointRaw;
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
@@ -70,9 +70,9 @@ namespace {
 #else /* GUOBIAO */
 
 	void calcAgariPoints_Pao( // 包適用時
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, int Mode)
+		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, int Mode)
 	{
-		const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
+		const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : static_cast<PlayerID>(Mode);
 		const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
 		if (gameStat->playerwind(AgariPlayer) == sEast) { // 親の和了り
 			if (TsumoAgari) { // ツモアガリ(包の人が一人払い)
@@ -125,7 +125,7 @@ namespace {
 	}
 
 	void calcAgariPoints_Ron( // 通常時：ロン
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		if (gameStat->playerwind(AgariPlayer) == sEast) { // 親の和了り
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
@@ -149,7 +149,7 @@ namespace {
 	}
 
 	void calcAgariPoints_Tsumo_Dealer( // 通常時：親のツモ
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		if (gameStat->chkGameType(Yonma) || (gameStat->chkGameType(Sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
 			// 四麻式ルール
@@ -192,7 +192,7 @@ namespace {
 	}
 
 	void calcAgariPoints_Tsumo_NonDealer( // 通常時：子のツモ
-		const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw, InfoByPlayer<LNum>& PointDelta, PlayerID AgariPlayer)
+		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
 		if (gameStat->chkGameType(Yonma) || (gameStat->chkGameType(Sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
 			// 四麻式ルール
@@ -274,10 +274,10 @@ namespace {
 }
 
 void endround::agari::calcAgariPoints(
-	const GameTable* gameStat, LNum& agariPoint, const LNum& AgariPointRaw,
-	InfoByPlayer<LNum>& PointDelta, int Mode)
+	const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw,
+	InfoByPlayer<LargeNum>& PointDelta, int Mode)
 {
-	const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
+	const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : static_cast<PlayerID>(Mode);
 	const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
 #ifdef GUOBIAO
 	if (TsumoAgari) // 中国ルール：ツモアガリ
@@ -486,7 +486,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 namespace {
 #ifndef GUOBIAO
 	void deltawareme(PlayerID agariTmpPlayer, PlayerID agariTmpWareme) {
-		LNum subtrahend = endround::transfer::getDelta()[agariTmpWareme];
+		LargeNum subtrahend = endround::transfer::getDelta()[agariTmpWareme];
 		endround::transfer::addDelta(agariTmpPlayer, -subtrahend);
 		return;
 	}
@@ -599,7 +599,7 @@ namespace {
 #endif /* GUOBIAO */
 
 	void agariscrproc(const GameTable* gameStat, const YakuResult* yakuInfo,
-		const LNum* agariPointArray, int& ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
+		const LargeNum* agariPointArray, int& ChipAmount, const CodeConv::tstring& ResultDesc, bool& tmpUraFlag)
 	{
 		sound::util::bgmstop();
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -623,7 +623,7 @@ namespace {
 void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring& ResultDesc, PlayerID& AgariPlayerPriority,
 	std::uint16_t origDoraPointer, const yaku::YAKUSTAT& yakuInfo, bool& tmpUraFlag, bool& tmpAliceFlag, int& OyaAgari)
 {
-	LNum AgariPointRaw = yakuInfo.AgariPoints;
+	LargeNum AgariPointRaw = yakuInfo.AgariPoints;
 	if (AgariPlayerPriority == -1) AgariPlayerPriority = gameStat->CurrentPlayer.Agari;
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {
@@ -665,9 +665,9 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	transfer::resetDelta();
 	if (gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast)
 		OyaAgari = gameStat->CurrentPlayer.Agari; // 親の和了り
-	LNum agariPoint;
+	LargeNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
-	assert(agariPoint > (LNum)0);
+	assert(agariPoint > 0);
 #ifndef GUOBIAO
 	calculateWaremeDelta(gameStat);
 #endif /* GUOBIAO */

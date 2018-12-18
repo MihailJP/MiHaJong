@@ -80,7 +80,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 	glXMakeCurrent(disp, hWnd, pDevice);
 #endif
 
-	const intptr_t textureList[] = { // テクスチャの先行読み込み
+	constexpr intptr_t textureList[] = { // テクスチャの先行読み込み
 		IDB_PNG_TBLBAIZE,
 		IDB_PNG_TBLBORDER,
 		IDB_PNG_SDBAR,

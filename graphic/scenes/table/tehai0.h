@@ -18,7 +18,7 @@ protected:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 		std::function<std::tuple<int, int> (seatRelative)> coordFunc,
 		seatRelative direction = (seatRelative)-1,
-		std::function<ArgbColor (int)> colorFunc = [](int){return (ArgbColor)0xffffffff;},
+		std::function<ArgbColor (int)> colorFunc = [](int){return static_cast<ArgbColor>(0xffffffff);},
 		std::function<void (const int*, const int*, int)> regionFunc = [](const int*, const int*, int){}); // 手牌の再構築
 private:
 	DevicePtr myDevice;

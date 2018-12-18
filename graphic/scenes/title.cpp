@@ -14,6 +14,15 @@
 #include "../keycode.h"
 #endif /*_WIN32*/
 
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
+using std::max;
+using std::min;
+
 namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
@@ -32,12 +41,12 @@ TitleScreen::~TitleScreen() {
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
-	double t = ((double)myTimer.elapsed() / (double)timePerFrame - (double)startF) / 2.0;
-	if ((t >= 0.0f) && (t < ((float)(endF - startF) * 1.1118f)))
+	double t = (static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame) - static_cast<double>(startF)) / 2.0;
+	if ((t >= 0.0f) && (t < (static_cast<float>(endF - startF) * 1.1118f)))
 		sprite->show(X, Y,
-			powf((float)((double)(endF - startF) - t) / (float)(endF - startF) * 4.0f, 2.0f) + 0.8f,
-			(int)(96.0f * (2.0f - sqrt(abs((float)((double)(endF - startF) - t) / (float)(endF - startF) * 4.0f)))));
-	else if (t >= ((float)(endF - startF) * 1.1118f))
+			powf(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f, 2.0f) + 0.8f,
+			static_cast<int>(96.0f * (2.0f - sqrt(abs(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f)))));
+	else if (t >= (static_cast<float>(endF - startF) * 1.1118f))
 		sprite->show(X, Y, 1.0f, 128);
 }
 
@@ -46,57 +55,57 @@ void TitleScreen::menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, 
 #ifndef _MSC_VER
 		using std::max; using std::min;
 #endif
-		const double circleAngle = 360.0;
+		constexpr double circleAngle = 360.0;
 		const double h = Hue - floor(Hue / circleAngle) * circleAngle;
 		const double s = max(0.0, min(1.0, Saturation));
 		const double v = max(0.0, min(1.0, Value));
-		const double f = h / 60.0 - ((int)h / 60);
+		const double f = h / 60.0 - (static_cast<int>(h) / 60);
 		const double p = v * (1.0 - s);
 		const double q = v * (1.0 - f * s);
 		const double t = v * (1.0 - (1.0 - f) * s);
-		switch ((int)h / 60) {
+		switch (static_cast<int>(h) / 60) {
 		case 0:
-			return ((int)(v * 255) << 16) | ((int)(t * 255) << 8) | (int)(p * 255);
+			return (static_cast<int>(v * 255) << 16) | (static_cast<int>(t * 255) << 8) | static_cast<int>(p * 255);
 		case 1:
-			return ((int)(q * 255) << 16) | ((int)(v * 255) << 8) | (int)(p * 255);
+			return (static_cast<int>(q * 255) << 16) | (static_cast<int>(v * 255) << 8) | static_cast<int>(p * 255);
 		case 2:
-			return ((int)(p * 255) << 16) | ((int)(v * 255) << 8) | (int)(t * 255);
+			return (static_cast<int>(p * 255) << 16) | (static_cast<int>(v * 255) << 8) | static_cast<int>(t * 255);
 		case 3:
-			return ((int)(p * 255) << 16) | ((int)(q * 255) << 8) | (int)(v * 255);
+			return (static_cast<int>(p * 255) << 16) | (static_cast<int>(q * 255) << 8) | static_cast<int>(v * 255);
 		case 4:
-			return ((int)(t * 255) << 16) | ((int)(p * 255) << 8) | (int)(v * 255);
+			return (static_cast<int>(t * 255) << 16) | (static_cast<int>(p * 255) << 8) | static_cast<int>(v * 255);
 		case 5:
-			return ((int)(v * 255) << 16) | ((int)(p * 255) << 8) | (int)(q * 255);
+			return (static_cast<int>(v * 255) << 16) | (static_cast<int>(p * 255) << 8) | static_cast<int>(q * 255);
 		default:
 			return 0xffffffff;
 		}
 	};
-	double t = ((double)myTimer.elapsed() / (double)timePerFrame - (double)startF);
-	float virt_width = (float)Geometry::WindowWidth / Geometry::WindowScale();
-	if ((t >= 0.0f) && (t < (double)(endF - startF))) {
+	double t = static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame) - static_cast<double>(startF);
+	float virt_width = static_cast<float>(Geometry::WindowWidth) / Geometry::WindowScale();
+	if ((t >= 0.0) && (t < static_cast<double>(endF - startF))) {
 		myTextRenderer->NewText(ID,
-		menustr, X + virt_width * pow(1.0 - t / (double)(endF - startF), 2.0),
+		menustr, X + static_cast<int>(virt_width * pow(1.0 - t / static_cast<double>(endF - startF), 2)),
 		Y, 2.0f,
-		1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+		1.6f * WidthRate(),
 		0x33ffffff);
-	} else if (t >= (double)(endF - startF)) {
+	} else if (t >= static_cast<double>(endF - startF)) {
 		if (ID == (menuCursor - 1))
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
-			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
-			0xcc000000 | (0x00ffffff & hsv2rgb(t - (double)(endF - startF), 0.25, 1.0))
+			1.6f * WidthRate(),
+			0xcc000000 | (0x00ffffff & hsv2rgb(t - static_cast<double>(endF - startF), 0.25, 1))
 			);
 		else
 			myTextRenderer->NewText(ID, menustr, X, Y, 2.0f,
-			1.6f * Geometry::WindowWidth * 0.75f / Geometry::WindowHeight,
+			1.6f * WidthRate(),
 			0x33ffffff);
 	}
-	setRegion(ID, X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y,
-		(Geometry::BaseSize * 4 / 3) - X / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight), Y + 71);
+	setRegion(ID, static_cast<int>(static_cast<float>(X) / WidthRate()), Y,
+		(Geometry::BaseSize * 4 / 3) - static_cast<int>(static_cast<float>(X) / WidthRate()), Y + 71);
 }
 
 void TitleScreen::menuLabels() {
 	auto center = [](unsigned cols) {
-		return (signed(Geometry::BaseSize * 2 / 3) - signed(1.6 * 18 * cols)) * ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight);
+		return static_cast<int>((static_cast<int>(Geometry::BaseSize * 2 / 3) - static_cast<int>(1.6 * 18 * cols)) * WidthRate());
 	};
 	menuLabelSlide(0, _T("Standalone Game"), center(15), 400, 120, 180);
 	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 480, 125, 180);
@@ -125,7 +134,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
+	constexpr bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
@@ -177,9 +186,7 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 {
 	const bool flag1 = (myTimer.elapsed() > 180u * timePerFrame);
-	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
-	const int region = whichRegion(scaledX, scaledY);
+	const int region = whichRegion(scaleInvX(X), scaleInvY(Y));
 #if 0
 	{
 		CodeConv::tostringstream o;
@@ -262,23 +269,23 @@ void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) 
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix matrix, matrix1;
 	D3DXMatrixIdentity(&matrix);
-	D3DXMatrixTranslation(&matrix1, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, static_cast<float>(-X), static_cast<float>(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1,
-		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
+		WidthRate() * Geometry::WindowScale(),
 		Geometry::WindowScale(),
 		0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	glTranslatef((float)X * Geometry::WindowScale(), -(float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+	glTranslatef(static_cast<float>(X) * Geometry::WindowScale(), -static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(scale, scale, 1.0f);
-	glTranslatef(-(float)X * Geometry::WindowScale(), (float)Y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(-static_cast<float>(X) * Geometry::WindowScale(), static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
 	glScalef(
-		(float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight * Geometry::WindowScale(),
+		WidthRate() * Geometry::WindowScale(),
 		Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
 	glPopMatrix();
 #endif

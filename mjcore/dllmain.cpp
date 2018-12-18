@@ -13,7 +13,7 @@
 
 HINSTANCE dllInst;
 ErrorInfo errorInfo;
-const ULONG_PTR errorInfoPtr[1] = {(ULONG_PTR)(&errorInfo)};
+const ULONG_PTR errorInfoPtr[1] = {reinterpret_cast<ULONG_PTR>(&errorInfo)};
 
 #ifdef _MSC_VER
 void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
@@ -51,7 +51,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 	DWORD disp;
 	HANDLE hThread = GetCurrentThread();
 
-	PIMAGEHLP_SYMBOL pSymbol = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
+	PIMAGEHLP_SYMBOL pSymbol = reinterpret_cast<PIMAGEHLP_SYMBOL>(GlobalAlloc(GMEM_FIXED, 16384));
 	pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
 	SymInitialize(GetCurrentProcess(), nullptr, TRUE);
 
@@ -113,7 +113,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 	case EXCEPTION_MJCORE_OVERFLOW:
 	case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
 	case EXCEPTION_MJCORE_HASH_MISMATCH:
-		errinf = (ErrorInfo *)(ex->ExceptionRecord->ExceptionInformation[0]);
+		errinf = reinterpret_cast<ErrorInfo *>(ex->ExceptionRecord->ExceptionInformation[0]);
 		lmsg << _T(">>> ") << errinf->msg;
 		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 #if defined(_MSC_VER) && defined(_DEBUG)
@@ -122,7 +122,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 		_T(" 関数名: ") << errinf->func;
 		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 
-		pSymbol = (PIMAGEHLP_SYMBOL)GlobalAlloc(GMEM_FIXED, 16384);
+		pSymbol = reinterpret_cast<PIMAGEHLP_SYMBOL>(GlobalAlloc(GMEM_FIXED, 16384));
 		pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
 		SymInitialize(GetCurrentProcess(), nullptr, TRUE);
 		for (unsigned int i = 0; true; i++) {
@@ -157,7 +157,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 void MJCore_Terminate_Handler() {
 	try {throw;}
 	catch (std::exception& e) { // 例外クラスのインスタンスだった場合
-		const type_info& exceptionType = typeid(e);
+		constexpr type_info& exceptionType = typeid(e);
 		CodeConv::tostringstream dmsg, lmsg;
 		dmsg << _T("ハンドルされない例外 ") << exceptionType.name() <<
 			_T(" が発生したため強制終了されます。") << std::endl <<
@@ -179,7 +179,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
 		dllInst = hinstDLL;
-		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)MJCore_Exception_Filter);
+		SetUnhandledExceptionFilter(static_cast<LPTOP_LEVEL_EXCEPTION_FILTER>(MJCore_Exception_Filter));
 #ifdef _MSC_VER
 		//set_terminate(MJCore_Terminate_Handler);
 		_set_se_translator(translateException);
@@ -201,6 +201,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 #include "except.h"
 
 ErrorInfo errorInfo;
-const uintptr_t errorInfoPtr[1] = {(uintptr_t)(&errorInfo)};
+constexpr uintptr_t errorInfoPtr[1] = {static_cast<uintptr_t>(&errorInfo)};
 
 #endif /*_WIN32*/

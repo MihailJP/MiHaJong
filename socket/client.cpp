@@ -99,7 +99,7 @@ namespace client {
 	CodeConv::tstring starter::getPlayerName (unsigned id) { // プレイヤー名
 		return playerName[id];
 	}
-	const char* starter::getRules (unsigned line) {
+	constexpr char* starter::getRules (unsigned line) {
 		return ruleConf[line];
 	}
 	int starter::getClientNumber () { // クライアント番号
@@ -109,8 +109,8 @@ namespace client {
 	// ---------------------------------------------------------------------
 
 	DLL void start (LPCTSTR const name, const char* const server, int port, int players) { // サーバーを開始させる(DLL)
-		NumberOfPlayers = (unsigned int)players;
-		starterThread = new starter(name, server, (unsigned short)port);
+		NumberOfPlayers = static_cast<unsigned int>(players);
+		starterThread = new starter(name, server, static_cast<unsigned short>(port));
 		starterThread->startThread();
 	}
 	DLL int isStartingFinished () { // 待機用スレッドが終わったかどうか
@@ -153,7 +153,7 @@ namespace client {
 		// かつてはここでログ出力していた
 	}
 	DLL void send (int SendingMsg) try { // サーバーにメッセージを送る [Transitional API]
-		send((unsigned char)SendingMsg);
+		send(static_cast<unsigned char>(SendingMsg));
 	} catch (socket_error& err) {
 		CodeConv::tostringstream o;
 		o << _T("サーバーへの送信に失敗 エラーコード [") << err.error_code() << _T(']');

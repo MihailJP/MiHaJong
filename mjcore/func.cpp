@@ -13,12 +13,12 @@
 #include <unistd.h>
 #endif /*_WIN32*/
 #include "../common/strcode.h"
+#include "../common/largenum.h"
 #include "../sound/sound.h"
 #include "../socket/socket.h"
 #include "socknum.h"
 #include "except.h"
 #include "ruletbl.h"
-#include "largenum.h"
 #include "regex.h"
 
 /* 順位を計算する */
@@ -28,9 +28,9 @@ PlayerRankList calcRank(const GameTable* const gameStat) {
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		rankList[i] = 1;
 		for (int j = 0; j < ACTUAL_PLAYERS; j++) {
-			if ((LNum)gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
+			if (gameStat->Player[j].PlayerScore > gameStat->Player[i].PlayerScore)
 				rankList[i]++;
-			if (((LNum)gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
+			if ((gameStat->Player[j].PlayerScore == gameStat->Player[i].PlayerScore) &&
 				(i > j)) rankList[i]++; // 同着の場合は起家に近い側が上位
 		}
 	}
@@ -99,12 +99,12 @@ TileCode Wind2Tile(uint8_t wind) {
 }
 
 /* 原点(返し点) */
-LNum BasePoint() {
+LargeNum BasePoint() {
 #ifdef GUOBIAO
 	return 500;
 #else /* GUOBIAO */
 	if (RuleData::chkRule("starting_point", "custom")) {
-		LNum basePoint = // 仮数部
+		LargeNum basePoint = // 仮数部
 		std::atoi(RuleData::chkRule("base_point_mantissa_tens")) * 10 +
 		std::atoi(RuleData::chkRule("base_point_mantissa_ones"));
 		/* 指数部の処理 */
@@ -116,7 +116,7 @@ LNum BasePoint() {
 			basePoint *= 10;
 		return basePoint;
 	} else if (GameStat.chkGameType(SanmaT)) {
-		const char rulestat[6][16] = {
+		constexpr char rulestat[6][16] = {
 			"35000pts_oka15", "40000pts_oka0", "45000pts_oka-15", "50000pts_oka-30", "25000pts_oka45", "30000pts_oka30",
 		};
 		for (int i = 0; i < 6; i++)
@@ -129,7 +129,7 @@ LNum BasePoint() {
 
 /* 浮いているか判定する関数 */
 bool isAboveBase(const GameTable* const gameStat, PlayerID player) {
-	return gameStat->Player[player].PlayerScore >= (LNum)BasePoint();
+	return gameStat->Player[player].PlayerScore >= BasePoint();
 }
 
 /* 非負整数1桁なら全角・それ以外は半角 */
@@ -246,8 +246,8 @@ bool isRichiReqSatisfied (const GameTable* const gameStat, PlayerID targetPlayer
 	return false;
 #else /* GUOBIAO */
 	bool Flag = true;
-	if (gameStat->Player[targetPlayer].PlayerScore < (LNum)1000) Flag = false;
-	else if ((gameStat->Player[targetPlayer].PlayerScore == (LNum)1000) &&
+	if (gameStat->Player[targetPlayer].PlayerScore < 1000) Flag = false;
+	else if ((gameStat->Player[targetPlayer].PlayerScore == 1000) &&
 		(RuleData::chkRule("riichi_requisite", "require_1100"))) Flag = false;
 	if (RuleData::chkRule("riichi_requisite", "no")) Flag = true;
 	if (RuleData::chkRule("buttobi_border", "no")) Flag = true;
@@ -262,9 +262,9 @@ bool isDobon (const GameTable* const gameStat, PlayerID targetPlayer) {
 #else /* GUOBIAO */
 	if (!RuleData::chkRuleApplied("buttobi_border"))
 		return false;
-	else if (gameStat->Player[targetPlayer].PlayerScore < (LNum)0)
+	else if (gameStat->Player[targetPlayer].PlayerScore < 0)
 		return true;
-	else if ((gameStat->Player[targetPlayer].PlayerScore == (LNum)0) &&
+	else if ((gameStat->Player[targetPlayer].PlayerScore == 0) &&
 		RuleData::chkRule("buttobi_border", "nonpositive"))
 		return true;
 	else return false;
@@ -277,19 +277,19 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 	return false;
 #else /* GUOBIAO */
 	if (RuleData::chkRule("teppen", "50000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)50000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 50000))
 		return true;
 	else if (RuleData::chkRule("teppen", "55000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)55000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 55000))
 		return true;
 	else if (RuleData::chkRule("teppen", "60000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)60000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 60000))
 		return true;
 	else if (RuleData::chkRule("teppen", "65000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)65000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 65000))
 		return true;
 	else if (RuleData::chkRule("teppen", "70000pts") &&
-		(gameStat->Player[targetPlayer].PlayerScore >= (LNum)70000))
+		(gameStat->Player[targetPlayer].PlayerScore >= 70000))
 		return true;
 	else return false;
 #endif /* GUOBIAO */

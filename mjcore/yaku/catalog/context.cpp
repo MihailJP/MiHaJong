@@ -731,15 +731,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				switch (TileCode tc = analysis->TsumoHai->tile) {
 				case EastWind: case SouthWind: case WestWind: case NorthWind: // 風牌だった
 					yakuFlag = (!*analysis->TsumoAgariFlag); // 仮にフラグ設定
-					if (tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->player))) // 自風だった
+					if (tc == Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))) // 自風だった
 						yakuFlag = false;
 					if (tc == Wind2Tile(analysis->GameStat->GameRound / 4)) // 場風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("kaimenkaze") &&
-						(tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))) // 開門風だった
+						(tc == Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer))))) // 開門風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("urakaze") &&
-						(tc == Wind2Tile((uint8_t)analysis->GameStat->playerwind(RelativePositionOf(analysis->player, sOpposite))))) // 裏風だった
+						(tc == Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(RelativePositionOf(analysis->player, sOpposite)))))) // 裏風だった
 							yakuFlag = false;
 					break;
 				default: // 風牌じゃなかった
@@ -753,16 +753,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 
 	/* 鳳還巣系列の役 */
 	{
-		const int Rules = 10;
-		const char tmpRuleCodeList[Rules][16] = {
+		constexpr int Rules = 10;
+		constexpr char tmpRuleCodeList[Rules][16] = {
 			"houkansou", "gekkanjun", "shinriishou", "kinki_kikan", "hokuto_shoukan",
 			"daija_kanketsu", "dongfengchui", "nanfengchui", "xifengchui", "beifengchui",
 		};
-		const TileCode tmpTileCodeList[Rules] = {
+		constexpr TileCode tmpTileCodeList[Rules] = {
 			BambooOne, CircleOne, CharacterOne, BambooSeven, CircleSeven,
 			CharacterSeven, EastWind, SouthWind, WestWind, NorthWind,
 		};
-		const TCHAR tmpYakuNameList[Rules][16] = {
+		constexpr TCHAR tmpYakuNameList[Rules][16] = {
 			_T("鳳還巣"), _T("月還巡"), _T("針戻手"), _T("金亀帰還"), _T("北斗召還"),
 			_T("大蛇還穴"), _T("東風吹"), _T("南風吹"), _T("西風吹"), _T("北風吹"),
 		};

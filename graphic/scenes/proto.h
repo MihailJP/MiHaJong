@@ -13,12 +13,21 @@ class ScreenManipulator;
 
 /* シーン オブジェクトのスーパークラス */
 class Scene {
+public:
+	static float WidthRate(); // アス比×0.75(横幅調整用)
 protected:
 	struct Region {int Left, Top, Right, Bottom;}; // クリック位置判定用
 	static const Region NullRegion;
 	void setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom);
 	void setRegion(unsigned regionID, const Region& region);
 	int whichRegion(int X, int Y); // どの領域にマウスがあるかを取得
+	static int scaleX(int X);
+	static int scaleY(int Y);
+	static unsigned int scaleW(unsigned int Width);
+	static unsigned int scaleH(unsigned int Height);
+	static int scaleInvX(int X);
+	static int scaleInvY(int Y);
+	static int adjX(int x);
 private:
 	std::vector<Region> regions; // クリック位置判定用
 protected:
