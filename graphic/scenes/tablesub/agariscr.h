@@ -18,9 +18,9 @@ class TableSubsceneAgariScreenProto : public TableSubscene {
 protected:
 	static const unsigned yakuWndWidth  = 720u;
 	static const unsigned yakuWndHeight = 864u;
-	static const int BaseX = ((signed)Geometry::BaseSize - (signed)yakuWndWidth ) / 2;
-	static const int BaseY = ((signed)Geometry::BaseSize - (signed)yakuWndHeight) / 2;
-	double seconds() {return (double)myTimer.elapsed() / 1000000.0;}
+	static const int BaseX = (static_cast<signed>(Geometry::BaseSize) - static_cast<signed>(yakuWndWidth )) / 2;
+	static const int BaseY = (static_cast<signed>(Geometry::BaseSize) - static_cast<signed>(yakuWndHeight)) / 2;
+	double seconds() {return static_cast<double>(myTimer.elapsed()) / 1000000.0;}
 	static const int handPosY = BaseY + 56;
 	static const double yakuInterval;
 	static const double yakuAnimStartSecond;
@@ -102,7 +102,7 @@ private:
 	unsigned int MeldPosH() {return BaseX + yakuWndWidth - 24;}
 	unsigned int MeldPosV() {
 		const double Zeit = myCaller->seconds();
-		const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
+		const int yOffset = (Zeit >= 1.0) ? 0 : static_cast<int>(pow(1.0 - Zeit, 2) * static_cast<double>(Geometry::BaseSize));
 		return handPosY - yOffset;
 	}
 	unsigned int MPosVVert() {return MeldPosV();}

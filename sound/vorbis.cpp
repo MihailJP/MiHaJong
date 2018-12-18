@@ -48,7 +48,7 @@ void sound::OggData::Prepare(const std::string& filename) {
 	format.wBitsPerSample = 16;
 	format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
 	// データ読み込み
-	char* buf = (char*)calloc(1, 1 << 22 /* 4 MiB */);
+	char* buf = new char[1 << 22 /* 4 MiB */]();
 	long bytes_read = 0; int current = 0;
 	do {
 		bytes_read = ov_read(ovFile, buf, (1 << 22) - 1, 0, 2, 1, &current);
@@ -60,7 +60,7 @@ void sound::OggData::Prepare(const std::string& filename) {
 	} while (bytes_read);
 	// 読み終わり
 	fclose(file); delete ovFile;
-	free(buf); buf = nullptr;
+	delete[] buf; buf = nullptr;
 }
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)

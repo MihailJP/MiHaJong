@@ -20,7 +20,7 @@ RankVal::RankVal() {
 	CSVReader::parsecsv(parsedCsv, csvDat.c_str()); // CSVをパース
 
 	/* 数値に直して格納 */
-	for (int i = 1 /* 最初の行は見出しなので飛ばす */; i < parsedCsv.size(); ++i) {
+	for (unsigned int i = 1 /* 最初の行は見出しなので飛ばす */; i < parsedCsv.size(); ++i) {
 		RankValSet values;
 		for (int j = 0; j < Players + 1; ++j)
 			for (int k = 0; k < Players - 1; ++k)
@@ -39,7 +39,7 @@ RankVal* RankVal::Instantiate() {
 /* 値を取得 */
 static LargeNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 	std::ostringstream tagNameStream;
-	tagNameStream << "point_basis_" << (char)('a' + ((playersAboveBase + 3) % 4)) << (char)('0' + rank);
+	tagNameStream << "point_basis_" << static_cast<char>('a' + ((playersAboveBase + 3) % 4)) << static_cast<char>('0' + rank);
 	LargeNum point(
 		(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens")[0] == '-' ? (-1) : 1) *
 		(abs(std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_tens").c_str())) * 10 +
@@ -80,7 +80,7 @@ LargeNum RankVal::getRankVal(const GameTable* gameStat, const std::string& rulet
 			return -(
 				getCustomVal(abvBase, 2) +
 				getCustomVal(abvBase, 3) +
-				(gameStat->chkGameType(SanmaT) ? (LargeNum)0 : getCustomVal(abvBase, 4)));
+				(gameStat->chkGameType(SanmaT) ? static_cast<LargeNum>(0) : getCustomVal(abvBase, 4)));
 		} else { /* トップ以外の場合 */
 			return getCustomVal(abvBase, rank);
 		}

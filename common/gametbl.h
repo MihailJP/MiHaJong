@@ -25,13 +25,13 @@ static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout
 
 // -------------------------------------------------------------------------
 
-const unsigned int Players = 4;
+constexpr unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
 #define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
 #endif
-const unsigned int NumOfTilesInHand = 14;
-const unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
-const unsigned int SizeOfDiscardBuffer = 33;
+constexpr unsigned int NumOfTilesInHand = 14;
+constexpr unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
+constexpr unsigned int SizeOfDiscardBuffer = 33;
 
 typedef int8_t PlayerID; // プレイヤー番号
 
@@ -44,7 +44,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:添字が範囲外です (") << static_cast<int>(playerID) << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -55,7 +55,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		}
 	}
 	const T& operator[](const int playerID) const {
-		return InfoByPlayer::operator[]((PlayerID)playerID);
+		return InfoByPlayer::operator[](static_cast<PlayerID>(playerID));
 	}
 	T& operator[](const PlayerID playerID) {
 		if ((playerID >= 0)&&(playerID < Players)) {
@@ -64,7 +64,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByPlayer:添字が範囲外です (") << (int)playerID << _T(")");
+			o << _T("InfoByPlayer:添字が範囲外です (") << static_cast<int>(playerID) << _T(")");
 			Raise(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 #ifdef _MSC_VER
@@ -75,7 +75,7 @@ template <class T> struct InfoByPlayer { // プレイヤーごとに指定した
 		}
 	}
 	T& operator[](const int playerID) {
-		return InfoByPlayer::operator[]((PlayerID)playerID);
+		return InfoByPlayer::operator[](static_cast<PlayerID>(playerID));
 	}
 };
 
@@ -85,7 +85,7 @@ typedef Tile HandTiles[NumOfTilesInHand];
 
 // -------------------------------------------------------------------------
 
-const unsigned int SutehaiTypeStep = 200;
+constexpr unsigned int SutehaiTypeStep = 200;
 enum DiscardStat : uint8_t {
 	discardNormal,
 	discardTaken,
@@ -103,8 +103,8 @@ static_assert(std::is_standard_layout<DiscardTile>::value, "DiscardTile is not s
 
 // -------------------------------------------------------------------------
 
-const unsigned int SizeOfMeldBuffer = 5;
-const unsigned int MeldTypeStep = 1000;
+constexpr unsigned int SizeOfMeldBuffer = 5;
+constexpr unsigned int MeldTypeStep = 1000;
 enum MeldStat : uint8_t {
 	meldSequenceConcealed,      // 手の内の順子
 	meldSequenceExposedLower,   // 小さい方をチー
@@ -158,7 +158,7 @@ static_assert(std::is_standard_layout<PaoStat>::value, "PaoStat is not standard 
 
 // -------------------------------------------------------------------------
 
-const unsigned SizeOfDeckBuf = 144;
+constexpr unsigned SizeOfDeckBuf = 144;
 typedef Tile DeckBuf[SizeOfDeckBuf]; // 最初はunionでやろうと思ったけどおかしくなるのでやめた
 
 // -------------------------------------------------------------------------
@@ -312,15 +312,15 @@ struct GameTable { // 卓の情報を格納する
 
 	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
 		if (chkGameType(SanmaT))
-			return (seatAbsolute)((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-		else return (seatAbsolute)((player + 32 - currentRound) % 4);
+			return static_cast<seatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return static_cast<seatAbsolute>((player + 32 - currentRound) % 4);
 	}
 	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
 		return playerwind(player, GameRound);
 	}
 
 	int tilesLeft() const { // 王牌を除いた山牌の残り枚数
-		return ((int)RinshanPointer - ((int)DeadTiles - 1) - (int)TilePointer);
+		return (static_cast<int>(RinshanPointer) - (static_cast<int>(DeadTiles) - 1) - static_cast<int>(TilePointer));
 	}
 
 };
@@ -330,7 +330,7 @@ static_assert(std::is_standard_layout<GameTable>::value, "GameTable is not stand
 // -------------------------------------------------------------------------
 
 // 食い変え判定用の gameStat->AgariSpecialStat 番号
-const unsigned int agariKuikae = 999;
+constexpr unsigned int agariKuikae = 999;
 
 // -------------------------------------------------------------------------
 

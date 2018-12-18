@@ -122,7 +122,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			CodeConv::tostringstream o;
 			o << _T("暗槓するための牌が") <<
 				((nakiCount < 4) ? _T("足りません") : _T("多すぎます")) <<
-				_T("。牌コード [") << (int)gameStat->CurrentDiscard.tile << _T("] は [") <<
+				_T("。牌コード [") << static_cast<int>(gameStat->CurrentDiscard.tile) << _T("] は [") <<
 				nakiCount << _T("] 枚") <<
 				((nakiCount < 4) ? _T("しかありません。") : _T("あります。"));
 			error(o.str().c_str());
@@ -155,7 +155,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			CodeConv::tostringstream o;
 			o << _T("加槓するための明刻子が") <<
 				(nakiCount ? _T("複数見つかりました。面子データに不整合が発生しています") : _T("見つかりません")) <<
-				_T("。牌コード [") << (int)gameStat->CurrentDiscard.tile << _T("]");
+				_T("。牌コード [") << static_cast<int>(gameStat->CurrentDiscard.tile) << _T("]");
 			error(o.str().c_str());
 		}
 		break;
@@ -173,7 +173,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			CodeConv::tostringstream o;
 			o << _T("明槓するための牌が") <<
 				((nakiCount < 3) ? _T("足りません") : _T("多すぎます")) <<
-				_T("。牌コード [") << (int)gameStat->CurrentDiscard.tile << _T("] は [") <<
+				_T("。牌コード [") << static_cast<int>(gameStat->CurrentDiscard.tile) << _T("] は [") <<
 				nakiCount << _T("] 枚") <<
 				((nakiCount < 3) ? _T("しかありません。") : _T("あります。"));
 			error(o.str().c_str());
@@ -221,7 +221,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		default:
 			{
 				CodeConv::tostringstream o;
-				o << _T("牌コード [") << (int)gameStat->CurrentDiscard.tile << _T("] は花牌ではありません。");
+				o << _T("牌コード [") << static_cast<int>(gameStat->CurrentDiscard.tile) << _T("] は花牌ではありません。");
 				warn(o.str().c_str());
 			}
 		}
@@ -248,7 +248,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		}
 		if (nakiCount < 2) {
 			CodeConv::tostringstream o;
-			o << _T("ポンするための牌が足りません。牌コード [") << (int)gameStat->CurrentDiscard.tile <<
+			o << _T("ポンするための牌が足りません。牌コード [") << static_cast<int>(gameStat->CurrentDiscard.tile) <<
 				_T("] は [") << nakiCount << _T("] 枚しかありません。");
 			error(o.str().c_str());
 		}
@@ -309,7 +309,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == 3)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedUpper;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile =
-			(TileCode)(gameStat->CurrentDiscard.tile + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi);
+			static_cast<TileCode>(gameStat->CurrentDiscard.tile + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi);
 		/* 自動理牌 */
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
@@ -321,9 +321,9 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
 			switch (gameStat->Player[kangPlayer].DeclarationFlag.Chi) {
-				case 1: gameStat->PreviousMeld.Stepped = (TileCode)(gameStat->CurrentDiscard.tile + 3); break;
+				case 1: gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile + 3); break;
 				case 2: gameStat->PreviousMeld.Stepped = NoTile; break;
-				case 3: gameStat->PreviousMeld.Stepped = (TileCode)(gameStat->CurrentDiscard.tile - 3); break;
+				case 3: gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile - 3); break;
 			}
 		} else {
 			gameStat->PreviousMeld.Stepped = NoTile;
@@ -464,9 +464,9 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 			++gameStat->Player[kangPlayer].NumberOfQuads;
 			++gameStat->KangNum;
 			CodeConv::tostringstream o;
-			o << _T("プレイヤー [") << (int)kangPlayer << _T("] が [") <<
-				(int)gameStat->Player[kangPlayer].NumberOfQuads << _T("] 回開槓、全員の合計で [") <<
-				(int)gameStat->KangNum << _T("] 回開槓しています。");
+			o << _T("プレイヤー [") << static_cast<int>(kangPlayer) << _T("] が [") <<
+				static_cast<int>(gameStat->Player[kangPlayer].NumberOfQuads) << _T("] 回開槓、全員の合計で [") <<
+				static_cast<int>(gameStat->KangNum) << _T("] 回開槓しています。");
 			debug(o.str().c_str());
 		}
 #endif /* GUOBIAO */
@@ -480,7 +480,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTileNum& DiscardTileIndex, FuuroType Mode) {
 	{
 		CodeConv::tostringstream o;
-		o << _T("副露の処理を開始します。モード[") << (int)Mode << _T("]");
+		o << _T("副露の処理を開始します。モード[") << static_cast<int>(Mode) << _T("]");
 		info(o.str().c_str());
 	}
 	PlayerID fuuroPlayer = PrepareFuuro(gameStat, DiscardTileIndex, Mode);
@@ -533,13 +533,13 @@ void checkpao(GameTable* const gameStat) {
 	CodeConv::tostringstream o;
 	if (RuleData::chkRuleApplied("normal_pao")) {
 		if ((DragonPons == 3) && (gameStat->PaoFlag[pyDaisangen].paoPlayer == -1)) {
-			o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] は、大三元を包になります。");
+			o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] は、大三元を包になります。");
 			debug(o.str().c_str());
 			gameStat->PaoFlag[pyDaisangen].paoPlayer = gameStat->CurrentPlayer.Active;
 			gameStat->PaoFlag[pyDaisangen].agariPlayer = gameStat->CurrentPlayer.Passive;
 		}
 		if ((WindPons == 4) && (gameStat->PaoFlag[pyDaisixi].paoPlayer == -1)) {
-			o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] は、大四喜を包になります。");
+			o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] は、大四喜を包になります。");
 			debug(o.str().c_str());
 			gameStat->PaoFlag[pyDaisixi].paoPlayer = gameStat->CurrentPlayer.Active;
 			gameStat->PaoFlag[pyDaisixi].agariPlayer = gameStat->CurrentPlayer.Passive;
@@ -547,7 +547,7 @@ void checkpao(GameTable* const gameStat) {
 	}
 	if ((RuleData::chkRule("suukantsu", "yakuman_with_pao") || RuleData::chkRule("suukantsu", "double_yakuman_with_pao")) &&
 		(NumOfKangs == 4) && (gameStat->PaoFlag[pySikang].paoPlayer == -1)) {
-		o << _T("プレイヤー [") << (int)gameStat->CurrentPlayer.Active << _T("] は、四槓子を包になります。");
+		o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] は、四槓子を包になります。");
 		debug(o.str().c_str());
 		gameStat->PaoFlag[pySikang].paoPlayer = gameStat->CurrentPlayer.Active;
 		gameStat->PaoFlag[pySikang].agariPlayer = gameStat->CurrentPlayer.Passive;
@@ -578,7 +578,7 @@ namespace {
 		} else {
 			Subscene(tblSubsceneNone);
 		}
-		switch ((NakiTypeID)result) {
+		switch (static_cast<NakiTypeID>(result)) {
 		case nakiRon:
 			debug(_T("プレイヤーからの応答：ロン"));
 			playerStat->DeclarationFlag.Ron = true;
@@ -677,16 +677,16 @@ EndType ronhuproc(GameTable* const gameStat) {
 		CodeConv::tostringstream o;
 		o << _T("ロン [");
 		for (PlayerID i = 0; i < Players; i++)
-			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Ron;
+			o << (i ? _T(" ") : _T("")) << static_cast<int>(gameStat->Player[i].DeclarationFlag.Ron);
 		o << _T("] カン [");
 		for (PlayerID i = 0; i < Players; i++)
-			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Kan;
+			o << (i ? _T(" ") : _T("")) << static_cast<int>(gameStat->Player[i].DeclarationFlag.Kan);
 		o << _T("] ポン [");
 		for (PlayerID i = 0; i < Players; i++)
-			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Pon;
+			o << (i ? _T(" ") : _T("")) << static_cast<int>(gameStat->Player[i].DeclarationFlag.Pon);
 		o << _T("] チー [");
 		for (PlayerID i = 0; i < Players; i++)
-			o << (i ? _T(" ") : _T("")) << (int)gameStat->Player[i].DeclarationFlag.Chi;
+			o << (i ? _T(" ") : _T("")) << static_cast<int>(gameStat->Player[i].DeclarationFlag.Chi);
 		o << _T("]"); trace(o.str().c_str());
 	}
 	/* 和了り放棄の時は宣言を無効にする */
@@ -694,7 +694,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		if (gameStat->Player[i].AgariHouki) {
 			{
 				CodeConv::tostringstream o;
-				o << _T("プレイヤー [") << (int)i << _T("] は和了り放棄です。宣言フラグを下ろします。");
+				o << _T("プレイヤー [") << static_cast<int>(i) << _T("] は和了り放棄です。宣言フラグを下ろします。");
 				debug(o.str().c_str());
 			}
 			gameStat->Player[i].DeclarationFlag.Ron = gameStat->Player[i].DeclarationFlag.Pon =
@@ -718,7 +718,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
 			{
 				CodeConv::tostringstream o;
-				o << _T("プレイヤー [") << (int)i << _T("] は、栄和を宣言します。");
+				o << _T("プレイヤー [") << static_cast<int>(i) << _T("] は、栄和を宣言します。");
 				debug(o.str().c_str());
 			}
 			// 優先権のないロンも表示されるようにする
@@ -729,7 +729,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	/* 実際にロンできる人を表示 */
 	unsigned roncount = 0;
 	for (int i = 0; i < (Players - 1); i++) {
-		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1))].DeclarationFlag.Ron) {
+		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, static_cast<seatRelative>(i + 1))].DeclarationFlag.Ron) {
 			bool accept = false;
 			switch (roncount) {
 			case 0:
@@ -751,10 +751,10 @@ EndType ronhuproc(GameTable* const gameStat) {
 			}
 			if (accept) {
 				CodeConv::tostringstream o;
-				o << _T("プレイヤー [") << (int)i << _T("] は、栄和できます。");
+				o << _T("プレイヤー [") << static_cast<int>(i) << _T("] は、栄和できます。");
 				debug(o.str().c_str());
 				mihajong_graphic::calltext::setCall(
-					RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1)),
+					RelativePositionOf(gameStat->CurrentPlayer.Active, static_cast<seatRelative>(i + 1)),
 					mihajong_graphic::calltext::RonQualified);
 			}
 			++roncount;
@@ -763,7 +763,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	/* 実際に栄和を行なう処理 */
 	for (int i = 0; i < (Players - 1); i++) {
 		threadYield();
-		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, (seatRelative)(i + 1));
+		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, static_cast<seatRelative>(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* ウォッチモードの場合は和了った人に視点を向ける */
 			if (EnvTable::Instantiate()->WatchModeFlag)

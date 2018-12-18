@@ -71,7 +71,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("奇数七対子"), get_yaku_han("odd_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const TileCode tc[15] = {
+				constexpr TileCode tc[15] = {
 					CharacterOne, CharacterThree, CharacterFive, CharacterSeven, CharacterNine,
 					CircleOne, CircleThree, CircleFive, CircleSeven, CircleNine,
 					BambooOne, BambooThree, BambooFive, BambooSeven, BambooNine,
@@ -85,7 +85,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("偶数七対子"), get_yaku_han("even_pairs"),
 			_T("断幺九"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const TileCode tc[12] = {
+				constexpr TileCode tc[12] = {
 					CharacterTwo, CharacterFour, CharacterSix, CharacterEight,
 					CircleTwo, CircleFour, CircleSix, CircleEight,
 					BambooTwo, BambooFour, BambooSix, BambooEight,
@@ -122,7 +122,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			}),
 			_T("混一色"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const TileCode tc[7] = {
+				constexpr TileCode tc[7] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
 					NorthWind, WhiteDragon,
 				};
@@ -135,7 +135,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("世界一"), get_yaku_han("sekaiichi"),
 			_T("四喜七対子"), _T("混老頭"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const TileCode tc[7] = {
+				constexpr TileCode tc[7] = {
 					CharacterOne, CircleOne, BambooOne,
 					EastWind, SouthWind, WestWind, NorthWind,
 				};
@@ -147,7 +147,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("ニコニコ七対子"), get_yaku_han("nikoniko_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const TileCode tc[6] = {
+				constexpr TileCode tc[6] = {
 					CharacterTwo, CharacterFive,
 					CircleTwo, CircleFive, BambooTwo, BambooFive,
 				};
@@ -159,7 +159,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("一休さん七対子"), get_yaku_han("ikkyuusan_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
-				const TileCode tc[9] = {
+				constexpr TileCode tc[9] = {
 					CharacterOne, CharacterThree, CharacterNine,
 					CircleOne, CircleThree, CircleNine,
 					BambooOne, BambooThree, BambooNine,

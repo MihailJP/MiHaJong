@@ -19,7 +19,7 @@ uint32_t mihajong_socket::Sock::addr2var(const std::string& address) { // アド
 #else /* _WIN32 */
 			throw invalid_address(errno); // 失敗したら例外を投げる
 #endif /* _WIN32 */
-		addr = *(uint32_t *)host->h_addr_list[0]; // 成功したらそのアドレス
+		addr = *reinterpret_cast<uint32_t *>(host->h_addr_list[0]); // 成功したらそのアドレス
 	}
 	return addr;
 }
@@ -71,7 +71,7 @@ void mihajong_socket::Sock::listen (uint16_t port) { // サーバー開始
 #else /* _WIN32 */
 	addr.sin_addr.s_addr = inet_addr("127.0.0.1"); // アドレス
 #endif /* _WIN32 */
-	if (bind(lsock, (sockaddr *)&addr, sizeof(addr)))
+	if (bind(lsock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)))
 #ifdef _WIN32
 		throw socket_bind_error(WSAGetLastError()); // 失敗したら例外を投げる
 #else /* _WIN32 */
@@ -150,7 +150,7 @@ unsigned char mihajong_socket::Sock::getc () { // 読み込み(非同期)
 	{
 		CodeConv::tostringstream o;
 		o << _T("バイト受信 dequeue ポート [") << portnum << _T("] バイト [0x") <<
-			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
+			std::hex << std::setw(2) << std::setfill(_T('0')) << static_cast<unsigned int>(byte) << _T("]");
 		trace(o.str().c_str());
 	}
 	return byte;
@@ -174,7 +174,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // 読み込み(同期)
 	{
 		CodeConv::tostringstream o;
 		o << _T("バイト受信処理(同期) ポート [") << portnum << _T("] バイト [0x") <<
-			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
+			std::hex << std::setw(2) << std::setfill(_T('0')) << static_cast<unsigned int>(byte) << _T("]");
 		trace(o.str().c_str());
 	}
 	return byte;
@@ -201,7 +201,7 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // 書き込み
 	{
 		CodeConv::tostringstream o;
 		o << _T("バイト送信 enqueue ポート [") << portnum << _T("] バイト [0x") <<
-			std::hex << std::setw(2) << std::setfill(_T('0')) << (unsigned int)byte << _T("]");
+			std::hex << std::setw(2) << std::setfill(_T('0')) << static_cast<unsigned int>(byte) << _T("]");
 		trace(o.str().c_str());
 	}
 	threadPtr->write(byte);
@@ -218,7 +218,7 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列�
 	}
 	std::string encoded_str(CodeConv::EncodeStr(str));
 	for (const auto& k : encoded_str)
-		threadPtr->write((unsigned char)k);
+		threadPtr->write(static_cast<unsigned char>(k));
 	threadPtr->chkError();
 }
 
@@ -307,7 +307,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			break; // データがない場合
 		default: // エラー処理
 			errtype = errRecv; errcode = err; terminated = true; connected = false;
-			return -((int)errtype);
+			return -static_cast<int>(errtype);
 		}
 #else /* _WIN32 */
 		switch (errno) {
@@ -315,7 +315,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			break; // データがない場合
 		default: // エラー処理
 			errtype = errRecv; errcode = errno; terminated = true; connected = false;
-			return -((int)errtype);
+			return -static_cast<int>(errtype);
 		}
 #endif /* _WIN32 */
 	}
@@ -355,7 +355,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 			break; // このエラーは無視する
 		default:
 			errtype = errSend; errcode = err; terminated = true; connected = false;
-			return -((int)errtype);
+			return -static_cast<int>(errtype);
 		}
 	}
 #else /* _WIN32 */
@@ -365,7 +365,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 			break; // このエラーは無視する
 		default:
 			errtype = errSend; errcode = errno; terminated = true; connected = false;
-			return -((int)errtype);
+			return -static_cast<int>(errtype);
 		}
 	}
 #endif /* _WIN32 */
@@ -505,29 +505,29 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を�
 	const time_t startTime(time(nullptr)); // 開始時刻(秒単位)
 	while (true) {
 #ifdef _WIN32
-		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == SOCKET_ERROR) { // 接続
+		if (::connect(*mySock, reinterpret_cast<sockaddr*>(&myAddr), sizeof(myAddr)) == SOCKET_ERROR) { // 接続
 			errcode = WSAGetLastError();
 			if (errcode == WSAEISCONN) {
 				break; // 正常に接続完了したとみなす
 			} else if ((errcode != WSAEWOULDBLOCK) && (errcode != WSAEALREADY)) {
-				errtype = errConnection; return -((int)errtype);
+				errtype = errConnection; return -static_cast<int>(errtype);
 			} else if (difftime(time(nullptr), startTime) >= 20) {
 				/* connect()はタイムアウトしてくれないので自力のタイムアウト */
 				errcode = WSAETIMEDOUT; // 10060 Connection timed out
-				errtype = errConnection; return -((int)errtype);
+				errtype = errConnection; return -static_cast<int>(errtype);
 			}
 		} else break;
 #else /* _WIN32 */
-		if (::connect(*mySock, (sockaddr*)&myAddr, sizeof(myAddr)) == -1) { // 接続
+		if (::connect(*mySock, reinterpret_cast<sockaddr*>(&myAddr), sizeof(myAddr)) == -1) { // 接続
 			errcode = errno;
 			if (errcode == EISCONN) {
 				break; // 正常に接続完了したとみなす
 			} else if ((errcode != EINPROGRESS) && (errcode != EALREADY)) {
-				errtype = errConnection; return -((int)errtype);
+				errtype = errConnection; return -static_cast<int>(errtype);
 			} else if (difftime(time(nullptr), startTime) >= 20) {
 				/* connect()はタイムアウトしてくれないので自力のタイムアウト */
 				errcode = ETIMEDOUT; // 10060 Connection timed out
-				errtype = errConnection; return -((int)errtype);
+				errtype = errConnection; return -static_cast<int>(errtype);
 			}
 		} else break;
 #endif /* _WIN32 */
@@ -547,13 +547,13 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 #ifdef _WIN32
 	u_long arg = 1; ioctlsocket(*listenerSock, FIONBIO, &arg); // non-blocking モードに設定
 	if (::listen(*listenerSock, SOMAXCONN) == SOCKET_ERROR) { // 待機
-		errtype = errListen; errcode = WSAGetLastError(); return -((int)errtype);
+		errtype = errListen; errcode = WSAGetLastError(); return -static_cast<int>(errtype);
 	}
 #else /* _WIN32 */
 	int socketFlag = fcntl(*listenerSock, F_GETFL, 0);
 	fcntl(*listenerSock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking モードに設定
 	if (::listen(*listenerSock, SOMAXCONN) == -1) { // 待機
-		errtype = errListen; errcode = errno; return -((int)errtype);
+		errtype = errListen; errcode = errno; return -static_cast<int>(errtype);
 	}
 #endif /* _WIN32 */
 	while (true) {
@@ -564,7 +564,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 			if (errcode != WSAEWOULDBLOCK) {
 				errtype = errAccept;
 				closesocket(*listenerSock);
-				return -((int)errtype);
+				return -static_cast<int>(errtype);
 			}
 		} else break;
 #else /* _WIN32 */
@@ -574,7 +574,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 			if ((errcode != EWOULDBLOCK) && (errcode != EAGAIN)) {
 				errtype = errAccept;
 				close(*listenerSock);
-				return -((int)errtype);
+				return -static_cast<int>(errtype);
 			}
 		} else break;
 #endif /* _WIN32 */

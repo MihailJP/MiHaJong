@@ -90,7 +90,7 @@ void sound::util::setvolume() {
 		REGEX::smatch matchDat; int volperc = 100;
 		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("vol_(\\d+)")))
 			volperc = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
-		return (double)volperc / 100.0;
+		return static_cast<double>(volperc) / 100.0;
 	};
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
 		if (BGM_Mode[i] != None)

@@ -12,9 +12,9 @@ typedef uint64_t TimerMicrosec;
 inline TimerMicrosec getCurrentTime() {
 #ifdef _WIN32
 	FILETIME t; GetSystemTimeAsFileTime(&t);
-	return (((unsigned long long)t.dwHighDateTime << 32) | t.dwLowDateTime) / 10;
+	return ((static_cast<unsigned long long>(t.dwHighDateTime) << 32) | t.dwLowDateTime) / 10;
 #else /*_WIN32*/
 	timespec t; clock_gettime(CLOCK_REALTIME, &t);
-	return (unsigned long long)t.tv_sec * 1000000ull + (unsigned long long)t.tv_nsec / 1000ull;
+	return static_cast<unsigned long long>(t.tv_sec) * 1000000ull + static_cast<unsigned long long>(t.tv_nsec) / 1000ull;
 #endif /*_WIN32*/
 }

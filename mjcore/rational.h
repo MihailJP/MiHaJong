@@ -53,33 +53,33 @@ public:
 		return *this;
 	}
 	// Unary plus and minus
-	const Rational& operator+() const {return *this;}
-	const Rational& operator-() const {
+	constexpr Rational& operator+() const {return *this;}
+	constexpr Rational& operator-() const {
 		return Rational<T>(-num, denom).reduce();
 	}
 	// addition
-	const Rational& operator+(const Rational<T>& addend) const {
+	constexpr Rational& operator+(const Rational<T>& addend) const {
 		return Rational<T>(num * addend.denom + addend.num * denom, denom * addend.denom).reduce();
 	}
 	Rational& operator+=(const Rational<T>& addend) {
 		return (*this = Rational<T>(num * addend.denom + addend.num * denom, denom * addend.denom).reduce());
 	}
 	// Subtraction
-	const Rational& operator-(const Rational<T>& subtrahend) const {
+	constexpr Rational& operator-(const Rational<T>& subtrahend) const {
 		return Rational<T>(num * subtrahend.denom - subtrahend.num * denom, denom * subtrahend.denom).reduce();
 	}
 	Rational& operator-=(const Rational<T>& subtrahend) {
 		return (*this = Rational<T>(num * subtrahend.denom - subtrahend.num * denom, denom * subtrahend.denom).reduce());
 	}
 	// Multiplication
-	const Rational& operator*(const Rational<T>& multiplier) const {
+	constexpr Rational& operator*(const Rational<T>& multiplier) const {
 		return Rational<T>(num * multiplier.num, denom * multiplier.denom).reduce();
 	}
 	Rational& operator*=(const Rational<T>& multiplier) {
 		return (*this = Rational<T>(num * multiplier.num, denom * multiplier.denom).reduce());
 	}
 	// Division
-	const Rational& operator/(const Rational<T>& divisor) const {
+	constexpr Rational& operator/(const Rational<T>& divisor) const {
 		if (divisor.num == 0) throw std::invalid_argument("Division by zero");
 		return Rational<T>(num * divisor.denom, denom * divisor.num).reduce();
 	}
@@ -103,7 +103,7 @@ public:
 	T getNumerator() const {return num;}
 	T getDenominator() const {return denom;}
 	// Cast into float
-	operator float() const {return (float)num / (float)denom;}
-	operator double() const {return (double)num / (double)denom;}
-	operator long double() const {return (long double)num / (long double)denom;}
+	operator float() const {return static_cast<float>num / static_cast<float>denom;}
+	operator double() const {return static_cast<double>num / static_cast<double>denom;}
+	operator long double() const {return static_cast<long double>num / static_cast<long double>denom;}
 };

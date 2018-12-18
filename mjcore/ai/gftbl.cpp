@@ -6,20 +6,20 @@
 
 /* gameStatのアドレスを取得（暗黙の引数） */
 GameTable* aiscript::table::functable::gametbl::getGameStatAddr(lua_State* const L) {
-	lua_getfield(L, 1, "addr"); GameTable* addr = (GameTable*)lua_touserdata(L, -1); lua_pop(L, 1);
+	lua_getfield(L, 1, "addr"); GameTable* addr = reinterpret_cast<GameTable*>(lua_touserdata(L, -1)); lua_pop(L, 1);
 	return addr;
 }
 
 /* プレイヤー番号を取得 */
 PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, int index) {
 	PlayerID player; int n = lua_gettop(L);
-	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = lua_tointeger(L, index);
-	else {lua_getfield(L, 1, "playerid"); player = lua_tointeger(L, -1); lua_pop(L, 1);}
+	if ((index != 0)&&(n >= index)&&(!lua_isnil(L, index))) player = static_cast<Player_ID>(lua_tointeger(L, index));
+	else {lua_getfield(L, 1, "playerid"); player = static_cast<Player_ID>(lua_tointeger(L, -1)); lua_pop(L, 1);}
 	return player - 1;
 }
 
 /* 牌の種類ごとの表をスタックに積む */
-const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
+constexpr std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
 	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
 	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
 	CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
@@ -32,25 +32,25 @@ const std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles =
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
 	lua_newtable(L); // テーブル
 	for (const auto& k : validTiles)
-		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
+		TableAdd(L, static_cast<lua_Integer>(k), static_cast<lua_Integer>(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, UInt8ByTile& tptr) {
 	lua_newtable(L); // テーブル
 	for (const auto& k : validTiles)
-		TableAdd(L, (lua_Integer)k, (lua_Integer)(tptr[k]));
+		TableAdd(L, static_cast<lua_Integer>(k), static_cast<lua_Integer>(tptr[k]));
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, FlagByTile& tptr) {
 	lua_newtable(L); // テーブル
 	for (const auto& k : validTiles)
-		TableAdd(L, (lua_Integer)k, tptr[k]);
+		TableAdd(L, static_cast<lua_Integer>(k), tptr[k]);
 }
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, InfoByTile<MachihaiTileInfo>& tptr) {
 	lua_newtable(L); // テーブル
 	for (const auto& k : validTiles) {
-		lua_pushinteger(L, (int)k);
+		lua_pushinteger(L, static_cast<int>(k));
 		lua_newtable(L);
 		TableAdd(L, "flag", tptr[k].MachihaiFlag);
-		if (tptr[k].MachihaiFlag) TableAdd(L, "count", (lua_Integer)tptr[k].MachihaiCount);
+		if (tptr[k].MachihaiFlag) TableAdd(L, "count", static_cast<lua_Integer>(tptr[k].MachihaiCount));
 		lua_settable(L, -3);
 	}
 }
@@ -67,10 +67,10 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 				tmpGameStat->Player[player].Hand[i].red = Normal;
 			} else if (lua_istable(L, -1)) { // 牌があった
 				lua_getfield(L, -1, "tile");
-				tmpGameStat->Player[player].Hand[i].tile = (TileCode)lua_tointeger(L, -1);
+				tmpGameStat->Player[player].Hand[i].tile = static_cast<TileCode>(lua_tointeger(L, -1));
 				lua_pop(L, 1);
 				lua_getfield(L, -1, "red");
-				tmpGameStat->Player[player].Hand[i].red = (doraCol)lua_tointeger(L, -1);
+				tmpGameStat->Player[player].Hand[i].red = static_cast<doraCol>(lua_tointeger(L, -1));
 				lua_pop(L, 1);
 			} // 変なことになっていたら無視
 			lua_pop(L, 1);
@@ -90,10 +90,10 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	TableAdd(L, "ismahjong", evaluation.isValid); // あがっていればtrue
 	if (evaluation.isValid) {
 		TableAdd(L, "isvalid", yaku::yakuCalculator::checkShibari(&tmpGameStat, &evaluation)); // 縛りを満たしているか
-		TableAdd(L, "fu", (lua_Integer)evaluation.BasePoints); // 符
-		TableAdd(L, "han", (lua_Integer)(evaluation.TotalHan())); // 飜
-		TableAdd(L, "mangan", (double)(evaluation.TotalSemiMangan()) / 2.0); // 満貫
-		TableAdd(L, "points", (double)evaluation.AgariPoints); // 点数
+		TableAdd(L, "fu", static_cast<lua_Integer>(evaluation.BasePoints)); // 符
+		TableAdd(L, "han", static_cast<lua_Integer>(evaluation.TotalHan())); // 飜
+		TableAdd(L, "mangan", static_cast<double>(evaluation.TotalSemiMangan()) / 2.0); // 満貫
+		TableAdd(L, "points", static_cast<double>(evaluation.AgariPoints)); // 点数
 	}
 	return 1;
 }
@@ -101,7 +101,7 @@ int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 /* ツモ番のプレイヤー番号 */
 int aiscript::table::functable::gametbl::luafunc::getactiveplayer(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
-	lua_pushinteger(L, (int)getGameStatAddr(L)->CurrentPlayer.Active + 1);
+	lua_pushinteger(L, static_cast<int>(getGameStatAddr(L)->CurrentPlayer.Active) + 1);
 	return 1;
 }
 
@@ -110,7 +110,7 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, (int)Wind2Tile((uint8_t)(gameStat->GameRound / 4)));
+	lua_pushinteger(L, static_cast<int>(Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))));
 	return 1;
 }
 
@@ -137,8 +137,8 @@ int aiscript::table::functable::gametbl::luafunc::getcurrentdiscard(lua_State* c
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	lua_newtable(L); // 戻り値を格納するテーブル
-	TableAdd(L, "tile", (lua_Integer)gameStat->CurrentDiscard.tile);
-	TableAdd(L, "red", (lua_Integer)gameStat->CurrentDiscard.red);
+	TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->CurrentDiscard.tile));
+	TableAdd(L, "red", static_cast<lua_Integer>(gameStat->CurrentDiscard.red));
 	return 1;
 }
 
@@ -165,8 +165,8 @@ int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L)
 	for (uint8_t i = 1; i <= gameStat->Player[player].DiscardPointer; i++) {
 		lua_pushnumber(L, i);
 		lua_newtable(L);
-		TableAdd(L, "tile", (lua_Integer)gameStat->Player[player].Discard[i].tcode.tile);
-		TableAdd(L, "red", (lua_Integer)gameStat->Player[player].Discard[i].tcode.red);
+		TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Discard[i].tcode.tile));
+		TableAdd(L, "red", static_cast<lua_Integer>(gameStat->Player[player].Discard[i].tcode.red));
 		TableAdd(L, "through", gameStat->Player[player].Discard[i].isDiscardThrough);
 		TableAdd(L, "riichi", (gameStat->Player[player].Discard[i].dstat == discardRiichi) ||
 			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
@@ -190,7 +190,7 @@ int aiscript::table::functable::gametbl::luafunc::getdoukasen(lua_State* const L
 	int n = chkargnum(L, 1, 1);
 	if (getGameStatAddr(L)->DoukasenPlayer == -1)
 		lua_pushnil(L); // 導火線なしの時はnil
-	else lua_pushinteger(L, (int)getGameStatAddr(L)->DoukasenPlayer + 1);
+	else lua_pushinteger(L, static_cast<int>(getGameStatAddr(L)->DoukasenPlayer + 1));
 	return 1;
 }
 
@@ -211,7 +211,7 @@ int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) 
 		if (gameStat->Player[player].FlowerFlag.Bamboo) ++k;
 		lua_pushinteger(L, k);
 	} else { // 三麻は抜き北
-		lua_pushinteger(L, (int)gameStat->Player[player].NorthFlag);
+		lua_pushinteger(L, static_cast<int>(gameStat->Player[player].NorthFlag));
 	}
 	return 1;
 }
@@ -227,8 +227,8 @@ int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 			/* 牌があったらサプテーブルに変換、なかったらnilのまま放置 */
 			lua_pushnumber(L, i + 1);
 			lua_newtable(L);
-			TableAdd(L, "tile", (lua_Integer)gameStat->Player[player].Hand[i].tile);
-			TableAdd(L, "red", (lua_Integer)gameStat->Player[player].Hand[i].red);
+			TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Hand[i].tile));
+			TableAdd(L, "red", static_cast<lua_Integer>(gameStat->Player[player].Hand[i].red));
 			lua_settable(L, -3);
 		}
 	}
@@ -240,7 +240,7 @@ int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, (int)Wind2Tile((uint8_t)gameStat->playerwind(player)));
+	lua_pushinteger(L, static_cast<int>(Wind2Tile(static_cast<uint8_t>(gameStat->playerwind(player)))));
 	return 1;
 }
 
@@ -252,12 +252,12 @@ int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
 	lua_newtable(L); // 戻り値を格納するテーブル
 	for (uint8_t i = 1; i <= gameStat->Player[player].MeldPointer; i++) {
 		lua_pushinteger(L, i); lua_newtable(L);
-		TableAdd(L, "tile", (lua_Integer)gameStat->Player[player].Meld[i].tile);
+		TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Meld[i].tile));
 		lua_newtable(L);
 		for (int k = 0; k < (gameStat->Player[player].Meld[i].mstat >= meldQuadConcealed ? 4 : 3); k++)
-			TableAdd(L, k + 1, (lua_Integer)gameStat->Player[player].Meld[i].red[k]);
+			TableAdd(L, k + 1, static_cast<lua_Integer>(gameStat->Player[player].Meld[i].red[k]));
 		lua_setfield(L, -2, "red");
-		TableAdd(L, "type", (lua_Integer)gameStat->Player[player].Meld[i].mstat);
+		TableAdd(L, "type", static_cast<lua_Integer>(gameStat->Player[player].Meld[i].mstat));
 		lua_settable(L, -3);
 	}
 	return 1;
@@ -335,7 +335,7 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
 	ShantenType type = shantenAll;
-	if ((n >= 3) && (lua_isnumber(L, 3))) type = (ShantenType)lua_tointeger(L, 3);
+	if ((n >= 3) && (lua_isnumber(L, 3))) type = static_cast<ShantenType>(lua_tointeger(L, 3));
 	Shanten s = ShantenAnalyzer::calcShanten(&tmpGameStat, player, type);
 	if (s == ShantenImpossible) lua_pushnil(L);
 	else lua_pushinteger(L, ShantenAnalyzer::calcShanten(&tmpGameStat, player, type));
@@ -351,8 +351,8 @@ int aiscript::table::functable::gametbl::luafunc::gettenpaistat(lua_State* const
 	// ---------------------------------------------------------------------
 	lua_newtable(L);
 	TableAdd(L, "isfuriten", status.FuritenFlag);
-	TableAdd(L, "total", (lua_Integer)status.MachihaiTotal);
-	TableAdd(L, "kinds", (lua_Integer)status.MachiMen);
+	TableAdd(L, "total", static_cast<lua_Integer>(status.MachihaiTotal));
+	TableAdd(L, "kinds", static_cast<lua_Integer>(status.MachiMen));
 	pushTileTable(L, status.Machihai); lua_setfield(L, -2, "bytile");
 	return 1;
 }
@@ -448,7 +448,7 @@ int aiscript::table::functable::gametbl::luafunc::getwareme(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	if (getGameStatAddr(L)->WaremePlayer == -1)
 		lua_pushnil(L); // 割れ目なしの時はnil
-	else lua_pushinteger(L, (int)getGameStatAddr(L)->WaremePlayer + 1);
+	else lua_pushinteger(L, static_cast<int>(getGameStatAddr(L)->WaremePlayer) + 1);
 	return 1;
 }
 
@@ -458,12 +458,12 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 返り値を格納
-	const TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
-	const char windname[4][8] = {"East", "South", "West", "North",};
+	constexpr TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
+	constexpr char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
 		if (windtiles[i] ==
-			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // 場風牌
+			Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))) // 場風牌
 			flag = true;
 		else if (windtiles[i] ==
 			Wind2Tile(gameStat->playerwind(player))) // 自風牌

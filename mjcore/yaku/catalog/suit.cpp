@@ -24,15 +24,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		[](const MENTSU_ANALYSIS* const analysis, const char* const haishiki) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
-				if ((analysis->TileCount[i + 1] >= (int)(haishiki[0] - _T('0'))) &&
-					(analysis->TileCount[i + 2] >= (int)(haishiki[1] - _T('0'))) &&
-					(analysis->TileCount[i + 3] >= (int)(haishiki[2] - _T('0'))) &&
-					(analysis->TileCount[i + 4] >= (int)(haishiki[3] - _T('0'))) &&
-					(analysis->TileCount[i + 5] >= (int)(haishiki[4] - _T('0'))) &&
-					(analysis->TileCount[i + 6] >= (int)(haishiki[5] - _T('0'))) &&
-					(analysis->TileCount[i + 7] >= (int)(haishiki[6] - _T('0'))) &&
-					(analysis->TileCount[i + 8] >= (int)(haishiki[7] - _T('0'))) &&
-					(analysis->TileCount[i + 9] >= (int)(haishiki[8] - _T('0'))) ) yakuFlag = true;
+				if ((analysis->TileCount[i + 1] >= static_cast<int>(haishiki[0] - _T('0'))) &&
+					(analysis->TileCount[i + 2] >= static_cast<int>(haishiki[1] - _T('0'))) &&
+					(analysis->TileCount[i + 3] >= static_cast<int>(haishiki[2] - _T('0'))) &&
+					(analysis->TileCount[i + 4] >= static_cast<int>(haishiki[3] - _T('0'))) &&
+					(analysis->TileCount[i + 5] >= static_cast<int>(haishiki[4] - _T('0'))) &&
+					(analysis->TileCount[i + 6] >= static_cast<int>(haishiki[5] - _T('0'))) &&
+					(analysis->TileCount[i + 7] >= static_cast<int>(haishiki[6] - _T('0'))) &&
+					(analysis->TileCount[i + 8] >= static_cast<int>(haishiki[7] - _T('0'))) &&
+					(analysis->TileCount[i + 9] >= static_cast<int>(haishiki[8] - _T('0'))) ) yakuFlag = true;
 			return yakuFlag;
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -328,13 +328,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				bool yakuFlag = false;
 				if (analysis->shanten[shantenRegular] == -1) {
 					int yakuFlagCount = 0;
-					const TileCode targetKezi[] = {CharacterOne, CharacterNine,};
-					const TileCode targetShunzi[] = {CharacterOne, CharacterSeven,};
+					constexpr TileCode targetKezi[] = {CharacterOne, CharacterNine,};
+					constexpr TileCode targetShunzi[] = {CharacterOne, CharacterSeven,};
 					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, 2, targetShunzi, 2, false) == 0)
 						yakuFlag = true;
 				} else if (analysis->shanten[shantenPairs] == -1) {
 					int yakuFlagCount = 0;
-					const TileCode targetDuizi[] = {CharacterOne, CharacterNine,};
+					constexpr TileCode targetDuizi[] = {CharacterOne, CharacterNine,};
 					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi, 2) == 0)
 						yakuFlag = true;
 				}
@@ -437,7 +437,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 						(PinMian == SizeOfMeldBuffer - 1) &&
 						(analysis->DuiziCount[GreenDragon] >= 1));
 				} else if (analysis->shanten[shantenPairs] == -1) {
-					for (int i = (int)CircleOne; i <= (int)CircleNine; i++)
+					for (int i = static_cast<int>(CircleOne); i <= static_cast<int>(CircleNine); i++)
 						PinMian += analysis->TileCount[i];
 					return (isshoku(analysis, false) &&
 						(PinMian == NumOfTilesInHand - 2) &&
@@ -516,7 +516,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			{
 				TileCode tc;
 				if (analysis->shanten[shantenRegular] == -1)
-				for (int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
+				for (unsigned int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
 					SizeOfMeldBuffer : NumOfTilesInHand); i++) {
 						if (analysis->shanten[shantenRegular] == -1) tc = analysis->MianziDat[i].tile;
 						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;

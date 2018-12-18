@@ -36,7 +36,7 @@ inline void deltacalcminus(const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>
 }
 #endif /* GUOBIAO */
 
-const int CAP_normal = -1;
+constexpr int CAP_normal = -1;
 void calcAgariPoints(const GameTable* gameStat, LargeNum& agariPoint,
 	const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, int Mode = CAP_normal);
 

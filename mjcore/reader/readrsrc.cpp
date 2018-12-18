@@ -38,7 +38,7 @@ void LoadFileInResource(int name, int type, size_t& size, const uint8_t*& data) 
 		ifs.seekg(0, ifs.beg);
 		assert(size > 0);
 		filedat.insert(std::make_pair(name, std::vector<char>()));
-		filedat[name].resize(size, (char)0);
+		filedat[name].resize(size, static_cast<char>0);
 		ifs.read(&filedat[name][0], size);
 		data = reinterpret_cast<const uint8_t*>(&filedat[name][0]);
 	}

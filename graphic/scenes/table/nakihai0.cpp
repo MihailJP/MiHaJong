@@ -31,9 +31,9 @@ void ShowNakihai::NakihaiKamicha(const GameTable* gameStat, PlayerID targetPlaye
 	assert((tile->mstat == meldTripletExposedLeft) || (tile->mstat == meldQuadAddedLeft) ||
 		(tile->mstat == meldSequenceExposedLower) || (tile->mstat == meldSequenceExposedMiddle) ||
 		(tile->mstat == meldSequenceExposedUpper));
-	const TileCode tileL = (tile->mstat == meldSequenceExposedMiddle) ? (TileCode)(tile->tile + 1) : ((tile->mstat == meldSequenceExposedUpper) ? (TileCode)(tile->tile + 2) : tile->tile);
-	const TileCode tileC = (tile->mstat == meldSequenceExposedLower) ? (TileCode)(tile->tile + 1) : tile->tile;
-	const TileCode tileR = (tile->mstat == meldSequenceExposedUpper) ? (TileCode)(tile->tile + 1) : ((tile->mstat == meldSequenceExposedLower) || (tile->mstat == meldSequenceExposedMiddle) ? (TileCode)(tile->tile + 2) : tile->tile);
+	const TileCode tileL = (tile->mstat == meldSequenceExposedMiddle) ? static_cast<TileCode>(tile->tile + 1) : ((tile->mstat == meldSequenceExposedUpper) ? static_cast<TileCode>(tile->tile + 2) : tile->tile);
+	const TileCode tileC = (tile->mstat == meldSequenceExposedLower) ? static_cast<TileCode>(tile->tile + 1) : tile->tile;
+	const TileCode tileR = (tile->mstat == meldSequenceExposedUpper) ? static_cast<TileCode>(tile->tile + 1) : ((tile->mstat == meldSequenceExposedLower) || (tile->mstat == meldSequenceExposedMiddle) ? static_cast<TileCode>(tile->tile + 2) : tile->tile);
 	const doraCol redL = (tile->mstat == meldSequenceExposedMiddle) ? tile->red[1] : ((tile->mstat == meldSequenceExposedUpper) ? tile->red[2] : tile->red[0]);
 	const doraCol redC = ((tile->mstat == meldSequenceExposedMiddle) || (tile->mstat == meldSequenceExposedUpper)) ? tile->red[0] : tile->red[1];
 	const doraCol redR = (tile->mstat == meldSequenceExposedUpper) ? tile->red[1] : tile->red[2];

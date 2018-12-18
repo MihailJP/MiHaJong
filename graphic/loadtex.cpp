@@ -26,12 +26,13 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	using namespace Gdiplus;
 #endif
-	assert(((intptr_t)resource & 0xffff0000) == 0); // 上位ワードが0なら文字列ではなくリソース番号とみなされる(Win32APIの仕様)
-	if (Textures.find((intptr_t)resource) != Textures.end()) { // 既にロード済みのテクスチャ
+	auto resourceID = reinterpret_cast<intptr_t>(resource);
+	assert((resourceID & 0xffff0000) == 0); // 上位ワードが0なら文字列ではなくリソース番号とみなされる(Win32APIの仕様)
+	if (Textures.find(resourceID) != Textures.end()) { // 既にロード済みのテクスチャ
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-		Textures[(intptr_t)resource]->AddRef();
+		Textures[resourceID]->AddRef();
 #endif
-		*texture = Textures[(intptr_t)resource];
+		*texture = Textures[resourceID];
 		return;
 	} else { // ロードされていない場合
 #ifdef _WIN32
@@ -40,16 +41,16 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		DWORD pngSize = SizeofResource(GraphicDLL, Resource);
 		void* pngData = LockResource(ResourceMem);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-		Textures[(intptr_t)resource] = nullptr;
+		Textures[resourceID] = nullptr;
 		HRESULT result = 
 			D3DXCreateTextureFromFileInMemoryEx(device, pngData, pngSize, D3DX_DEFAULT, D3DX_DEFAULT, 0, 0,
 			D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_FILTER_TRIANGLE | D3DX_FILTER_DITHER, D3DX_DEFAULT,
-			0x00000000, nullptr, nullptr, &(Textures[(intptr_t)resource]));
+			0x00000000, nullptr, nullptr, &(Textures[resourceID]));
 		UnlockResource(ResourceMem);
 		switch (result) {
 		case D3D_OK:
-			Textures[(intptr_t)resource]->AddRef();
-			*texture = Textures[(intptr_t)resource];
+			Textures[resourceID]->AddRef();
+			*texture = Textures[resourceID];
 			return; // Congratulations, your texture has been loaded.
 		case D3DERR_NOTAVAILABLE:
 			throw _T("テクスチャの生成に失敗しました。");
@@ -65,12 +66,12 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			throw _T("テクスチャの生成に失敗しました。原因不明のエラーです。");
 		}
 #else
-		Textures[(intptr_t)resource] = 0;
+		Textures[resourceID] = 0;
 		glEnable(GL_TEXTURE_2D);
-		glGenTextures(1, &Textures[(intptr_t)resource]);
-		TextureWidth[Textures[(intptr_t)resource]] =
-		TextureHeight[Textures[(intptr_t)resource]] = 0;
-		glBindTexture(GL_TEXTURE_2D, Textures[(intptr_t)resource]);
+		glGenTextures(1, &Textures[resourceID]);
+		TextureWidth[Textures[resourceID]] =
+		TextureHeight[Textures[resourceID]] = 0;
+		glBindTexture(GL_TEXTURE_2D, Textures[resourceID]);
 		HGLOBAL resBuf = GlobalAlloc(GMEM_MOVEABLE, pngSize);
 		void* pResBuf = GlobalLock(resBuf);
 		Bitmap* bitmap = nullptr;
@@ -89,8 +90,8 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data.Width, data.Height, 0,
 					GL_BGRA_EXT, GL_UNSIGNED_BYTE, data.Scan0);
 				bitmap->UnlockBits(&data);
-				TextureWidth[Textures[(intptr_t)resource]] = data.Width;
-				TextureHeight[Textures[(intptr_t)resource]] = data.Height;
+				TextureWidth[Textures[resourceID]] = data.Width;
+				TextureHeight[Textures[resourceID]] = data.Height;
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -99,19 +100,19 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		UnlockResource(ResourceMem);
 		if (stream) stream->Release();
 		delete bitmap;
-		*texture = Textures[(intptr_t)resource];
+		*texture = Textures[resourceID];
 		return;
 #endif
 #else /* _WIN32 */
 		/* テクスチャの仮初期化 */
-		Textures[(intptr_t)resource] = 0;
+		Textures[resourceID] = 0;
 		glEnable(GL_TEXTURE_2D);
-		glGenTextures(1, &Textures[(intptr_t)resource]);
-		TextureWidth[Textures[(intptr_t)resource]] =
-		TextureHeight[Textures[(intptr_t)resource]] = 0;
-		glBindTexture(GL_TEXTURE_2D, Textures[(intptr_t)resource]);
+		glGenTextures(1, &Textures[resourceID]);
+		TextureWidth[Textures[resourceID]] =
+		TextureHeight[Textures[resourceID]] = 0;
+		glBindTexture(GL_TEXTURE_2D, Textures[resourceID]);
 		/* ファイルをオープン */
-		std::string fileName = dataFileName((intptr_t)resource);
+		std::string fileName = dataFileName(resourceID);
 		CodeConv::tstring fileNameT = CodeConv::EnsureTStr(fileName);
 		FILE* pngFile = fopen(fileName.c_str(), "rb");
 		if (!pngFile)
@@ -148,8 +149,8 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16,
 			nullptr);
 		png_byte** rows = png_get_rows(pngPtr, infoPtr);
-		const unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
-		const unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
+		constexpr unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
+		constexpr unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
 		unsigned pngChannels = png_get_channels(pngPtr, infoPtr);
 		char* imageDat = new char[pngWidth * pngHeight * 4];
 		for (int y = 0; y < pngHeight; ++y) {
@@ -179,8 +180,8 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pngWidth, pngHeight, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, imageDat);
-		TextureWidth[Textures[(intptr_t)resource]] = pngWidth;
-		TextureHeight[Textures[(intptr_t)resource]] = pngHeight;
+		TextureWidth[Textures[resourceID]] = pngWidth;
+		TextureHeight[Textures[resourceID]] = pngHeight;
 		/* 解放 */
 		delete[] imageDat;
 		png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);

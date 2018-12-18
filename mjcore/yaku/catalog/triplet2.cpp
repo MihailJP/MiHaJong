@@ -1,4 +1,5 @@
 ﻿#include "../catalog.h"
+#include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #ifndef GUOBIAO
@@ -20,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 			_T("全双刻"), yaku::yakuCalculator::Yaku::yval_24,
-			_T("碰碰和"), _T("断幺"),
+			PengPengHu, _T("断幺"),
 #else /* GUOBIAO */
 			_T("偶数対々和"), get_yaku_han("even_toitoi"),
 			_T("対々和"), _T("断幺九"),
@@ -164,7 +165,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			if ((analysis->KangziCount[tc] >= 1) &&
 				(analysis->KeziCount[tc + step] >= 1) &&
 				(analysis->KangziCount[tc + step] == 0) &&
-				(analysis->MianziDat[0].tile == (TileCode)(tc + step * 2)) )
+				(analysis->MianziDat[0].tile == static_cast<TileCode>(tc + step * 2)) )
 				return true;
 			if ((analysis->KangziCount[tc + step * 2] >= 1) &&
 				(analysis->KeziCount[tc + step] >= 1) &&
@@ -181,7 +182,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int k = 1; k <= 3; k++)
-					yakuFlag = yakuFlag || haouben(analysis, (TileCode)(TileSuitBamboos + k), 3);
+					yakuFlag = yakuFlag || haouben(analysis, static_cast<TileCode>(TileSuitBamboos + k), 3);
 				return yakuFlag;
 			}
 		));
@@ -192,7 +193,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				bool yakuFlag = false;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					for (int k = 1; k <= 3; k++)
-						yakuFlag = yakuFlag || haouben(analysis, (TileCode)(i + k), 3);
+						yakuFlag = yakuFlag || haouben(analysis, static_cast<TileCode>(i + k), 3);
 				return yakuFlag;
 			}
 		));
@@ -204,7 +205,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				bool yakuFlag = false;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					for (int k = 1; k <= 7; k++)
-						yakuFlag = yakuFlag || haouben(analysis, (TileCode)(i + k), 1);
+						yakuFlag = yakuFlag || haouben(analysis, static_cast<TileCode>(i + k), 1);
 				return yakuFlag;
 			}
 		));
@@ -516,11 +517,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				TileCode tCode[TileSuitHonors / TileSuitStep * 2];
 				bool yakuFlag = false;
 				for (int i = 0; i < 36; i++) {
-					int num1 = (int)(pattern[i * 2] - _T('0'));
-					int num2 = (int)(pattern[i * 2 + 1] - _T('0'));
+					int num1 = static_cast<int>(pattern[i * 2] - _T('0'));
+					int num2 = static_cast<int>(pattern[i * 2 + 1] - _T('0'));
 					for (int k = 0; k < TileSuitHonors / TileSuitStep * 2; k += 2) {
-						tCode[k] = (TileCode)(k / 2 * TileSuitStep + num1);
-						tCode[k + 1] = (TileCode)(k / 2 * TileSuitStep + num2);
+						tCode[k] = static_cast<TileCode>(k / 2 * TileSuitStep + num1);
+						tCode[k + 1] = static_cast<TileCode>(k / 2 * TileSuitStep + num2);
 					}
 					if (yaku::countingFacility::countSpecMentz(
 						analysis->MianziDat, tCode, TileSuitHonors / TileSuitStep * 2, nullptr, 0, false) == SizeOfMeldBuffer)
@@ -657,7 +658,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				return (nowTime.wMonth == 12) && (nowTime.wDay == 25);
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				return ((nowTime.tm_mon + 1) == 12) && (nowTime.tm_mday == 25);
 #endif /*_WIN32*/
 			};
@@ -696,7 +698,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				return (nowTime.wMonth == 1) && (nowTime.wDay <= 2);
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
-				tm nowTime = *localtime(&nowTimeVal);
+				tm nowTime;
+				localtime_s(&nowTime, &nowTimeVal);
 				return ((nowTime.tm_mon + 1) == 1) && (nowTime.tm_mday <= 2);
 #endif /*_WIN32*/
 			};

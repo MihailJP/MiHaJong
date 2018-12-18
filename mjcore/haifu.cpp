@@ -42,7 +42,7 @@ haifu::HaifuStreams haifu::XhaifuP;
 #ifdef GUOBIAO
 namespace { // 席替え後のプレイヤー番号対照
 	unsigned currWindNum = 0;
-	const unsigned playerNumberList[4][4] = {
+	constexpr unsigned playerNumberList[4][4] = {
 		{0, 1, 2, 3}, {1, 0, 3, 2}, {2, 3, 1, 0}, {3, 2, 0, 1}
 	};
 }
@@ -54,9 +54,9 @@ void haifu::tools::haifuskipX(PlayerID targetPlayer) {
 	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == sNorth)) return; // 四人三麻で北家だったら帰る
 	checkCycle();
 #ifdef GUOBIAO
-	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)targetPlayer] << _T("\" />") << std::endl;
+	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(targetPlayer)] << _T("\" />") << std::endl;
 #else /* GUOBIAO */
-	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)targetPlayer << _T("\" />") << std::endl;
+	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(targetPlayer) << _T("\" />") << std::endl;
 #endif /* GUOBIAO */
 }
 void haifu::tools::haifuskip(
@@ -100,19 +100,19 @@ void haifu::tools::recordDoraStream(CodeConv::tostringstream* const x, TileCode 
 /* 牌を記録する */
 void haifu::tools::recordTile_Inline(Tile tlCode, bool rotate) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
-		Xtilerefcode[(int)tlCode.tile + (int)tlCode.red * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Inline(Tile tlCode, doraCol kakanCol) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
-		Xtilerefcode[(int)tlCode.tile + (int)kakanCol * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(kakanCol) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(kakanCol) << _T(" /><tile tile=\"") <<
-		Xtilerefcode[(int)tlCode.tile + (int)tlCode.red * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Table(Tile tlCode, CodeConv::tstring tagName, bool keepOpen) {
 	XhaifuBufferBody << _T('<') << tagName << _T(" tile=\"") <<
-		Xtilerefcode[(int)tlCode.tile + (int)tlCode.red * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red);
 	if (!keepOpen) XhaifuBufferBody << _T(" />") << std::endl;
 }
@@ -121,9 +121,9 @@ void haifu::tools::haifuwritetsumohai(
 	PlayerID ActivePlayer, Tile tlCode,CodeConv::tstring XAttr) {
 		checkCycle();
 #ifdef GUOBIAO
-		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)ActivePlayer] << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(ActivePlayer)] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)ActivePlayer << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(ActivePlayer) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 		XhaifuBufferBody << _T("\t\t\t\t\t");
 		recordTile_Table(tlCode, _T("pick"), true);
@@ -228,8 +228,9 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タ�
 		_T("</") << tagName << _T(">") << std::endl;
 #else /*_WIN32*/
 	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
-	tm currTime = *localtime(&tempus.tv_sec);
-	const signed long tz = []() -> signed long {
+	tm currTime;
+	localtime_s(&currTime, &tempus.tv_sec);
+	constexpr signed long tz = []() -> signed long {
 		time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
 		tm* tmDat = gmtime(&t1); // 協定世界時を算出
 		time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
@@ -328,9 +329,9 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		// 親の１巡目
 		tools::checkCycle(true);
 #ifdef GUOBIAO
-		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)gameStat->CurrentPlayer.Active] << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(gameStat->CurrentPlayer.Active)] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 	} else if (gameStat->statOfActive().Tsumohai().tile == NoTile) {
 		// 鳴いた直後 (何もしない)
@@ -339,9 +340,9 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 		discard_through = true;
 		tools::checkCycle();
 #ifdef GUOBIAO
-		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)gameStat->CurrentPlayer.Active] << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(gameStat->CurrentPlayer.Active)] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 	} else {
 		tools::haifuwritetsumohai(gameStat->CurrentPlayer.Active, gameStat->statOfActive().Tsumohai(), _T(""));
@@ -430,9 +431,9 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 			if (gameStat->TianHuFlag) {
 				checkCycle(true);
 #ifdef GUOBIAO
-				XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)gameStat->CurrentPlayer.Active] << _T("\">") << std::endl;
+				XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(gameStat->CurrentPlayer.Active)] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-				XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
+				XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 				XhaifuBufferBody << _T("\t\t\t\t\t");
 				recordTile_Table(gameStat->statOfActive().Hand[DiscardTileIndex.id], _T("pick"), true);
@@ -442,9 +443,9 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 					// ツモってきた牌と同じだった
 					checkCycle();
 #ifdef GUOBIAO
-					XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)gameStat->CurrentPlayer.Active] << _T("\">") << std::endl;
+					XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(gameStat->CurrentPlayer.Active)] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-					XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
+					XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 					XhaifuBufferBody << _T("\t\t\t\t\t");
 					recordTile_Table(gameStat->statOfActive().Hand[DiscardTileIndex.id], _T("pick"), true);
@@ -458,9 +459,9 @@ void haifu::tools::kan_sub::recordKanOrFlower(
 		} else {
 			checkCycle();
 #ifdef GUOBIAO
-			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][(int)gameStat->CurrentPlayer.Active] << _T("\">") << std::endl;
+			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(gameStat->CurrentPlayer.Active)] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << (int)gameStat->CurrentPlayer.Active << _T("\">") << std::endl;
+			XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 			XhaifuBufferBody << _T("\t\t\t\t\t");
 			recordTile_Table(gameStat->statOfActive().Hand[DiscardTileIndex.id], _T("pick"), true);
@@ -532,7 +533,7 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 			_T("east"), _T("south"), _T("west"), _T("north"), _T("white"), _T("green"), _T("red"),
 		};
 #ifdef GUOBIAO
-		const bool eastOnly = false;
+		constexpr bool eastOnly = false;
 #else /* GUOBIAO */
 		const bool eastOnly = RuleData::chkRule("game_length", "twice_east_game") || RuleData::chkRule("game_length", "east_only_game");
 #endif /* GUOBIAO */
@@ -543,13 +544,13 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 #endif /* GUOBIAO */
 			_T("\" />") << std::endl;
 		XhaifuBuffer << _T("\t\t\t<result>") << ResultDesc << _T("</result>") << std::endl;
-		XhaifuBuffer << _T("\t\t\t<dice face1=\"") << (int)gameStat->Dice[0].Number <<
-			_T("\" face2=\"") << (int)gameStat->Dice[1].Number << _T("\" />") << std::endl;
+		XhaifuBuffer << _T("\t\t\t<dice face1=\"") << static_cast<int>(gameStat->Dice[0].Number) <<
+			_T("\" face2=\"") << static_cast<int>(gameStat->Dice[1].Number) << _T("\" />") << std::endl;
 #ifndef GUOBIAO
 		if (RuleData::chkRule("dice_roll", "roll_twice"))
 #endif /* GUOBIAO */
-			XhaifuBuffer << _T("\t\t\t<dice face1=\"") << (int)gameStat->Dice[2].Number <<
-			_T("\" face2=\"") << (int)gameStat->Dice[3].Number << _T("\" />") << std::endl;
+			XhaifuBuffer << _T("\t\t\t<dice face1=\"") << static_cast<int>(gameStat->Dice[2].Number) <<
+			_T("\" face2=\"") << static_cast<int>(gameStat->Dice[3].Number) << _T("\" />") << std::endl;
 #ifndef GUOBIAO
 		XhaifuBuffer << _T("\t\t\t<dora>") << std::endl <<
 			XhaifuP.dora.str() << _T("\t\t\t</dora>") << std::endl;
@@ -750,14 +751,14 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		o << _T(" → ") <<
 			gameStat->Player[player].PlayerScore.to_str(_T(""), _T("△")) << _T(" (") <<
-			((LargeNum)gameStat->Player[player].PlayerScore -
+			(gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str(_T("+"), _T("-")) <<
 			_T(")");
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		o << _T(" チップ: ") <<
 			((gameStat->Player[player].playerChip >= 0) ? _T("+") : _T("")) <<
-			(int)gameStat->Player[player].playerChip;
+			gameStat->Player[player].playerChip;
 
 #endif /* GUOBIAO */
 	{
@@ -770,20 +771,20 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 	// XML用出力
 	const CodeConv::tstring nomDeVent[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
 #ifdef GUOBIAO
-	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << playerNumberList[currWindNum][(int)player] << _T("\" wind=\"") <<
+	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << playerNumberList[currWindNum][static_cast<int>(player)] << _T("\" wind=\"") <<
 #else /* GUOBIAO */
-	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << (int)player << _T("\" wind=\"") <<
+	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << static_cast<int>(player) << _T("\" wind=\"") <<
 #endif /* GUOBIAO */
 		nomDeVent[wind] << _T("\" score=\"")
 		<< origPoint[player].to_str_plain() << _T('"');
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		XhaifuBuffer << _T(" delta=\"") <<
-			((LargeNum)gameStat->Player[player].PlayerScore -
+			(gameStat->Player[player].PlayerScore -
 			origPoint[player]).to_str_plain() << _T('"');
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("chip")) // チップありの時
 		XhaifuBuffer << _T(" chip=\"") <<
-			(int)gameStat->Player[player].playerChip << _T('"');
+			static_cast<int>(gameStat->Player[player].playerChip) << _T('"');
 	{
 		CodeConv::tstring tmpStr;
 		if (gameStat->Player[player].AgariHouki) { // アガリ放棄
@@ -836,17 +837,17 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 #ifdef GUOBIAO
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << playerNumberList[currWindNum][k] << _T("\">") << std::endl;
 #else /* GUOBIAO */
-		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << (int)k << _T("\">") << std::endl;
+		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << static_cast<int>(k) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 		if (gameStat->chkGameType(SanmaT))
-			if (((OrigTurn % Players) + i) >= ACTUAL_PLAYERS)
+			if (((OrigTurn % static_cast<int>(Players)) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
 		// 副露面子を出力する
 		finalformWriter::hfFinalForm(gameStat, k, RoundEndType);
 		finalformWriter::hfFlower(gameStat, k);
 		finalformWriter::hfExposedMeld(gameStat, k);
 		// 点棒状況を書き出す
-		hfScoreWriteOut(gameStat, k, (seatAbsolute)i, RoundEndType);
+		hfScoreWriteOut(gameStat, k, static_cast<seatAbsolute>(i), RoundEndType);
 		// 色々書き出し
 		XhaifuBufferBody << _T("\t\t\t</final-hand>") << std::endl;
 	}
@@ -903,7 +904,8 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
 #else /*_WIN32*/
 	time_t tempus = time(nullptr);
-	tm ltime = *localtime(&tempus);
+	tm ltime;
+	localtime_s(&ltime, &tempus);
 	filename2 << std::setw(4) << std::setfill('0') << (ltime.tm_year + 1900);
 	filename2 << std::setw(2) << std::setfill('0') << (ltime.tm_mon + 1);
 	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_mday << "_";

@@ -25,13 +25,13 @@ void ButtonPic::setText(unsigned ButtonID) {
 	const unsigned Width = std::get<3>(mySprites[ButtonID]), Height = std::get<4>(mySprites[ButtonID]);
 	const CodeConv::tstring& caption = std::get<6>(mySprites[ButtonID]);
 	const bool adjustWidth = std::get<7>(mySprites[ButtonID]);
-	const int xpos = (int)((float)(X + (6.0f * Width / 156.0f)) / Geometry::WindowScale());
-	const int ypos = (int)((float)(Y + (6.0f * Height / 48.0f)) / Geometry::WindowScale());
+	const int xpos = static_cast<int>(static_cast<float>(X + (6.0f * Width / 156.0f)) / Geometry::WindowScale());
+	const int ypos = static_cast<int>(static_cast<float>(Y + (6.0f * Height / 48.0f)) / Geometry::WindowScale());
 	const unsigned w = myTextRenderer->strWidthByCols(caption);
 	myTextRenderer->NewText(ButtonID, caption,
-		(w < 8) ? xpos + (9 * (8 - w) * (Width / 156.0f / Geometry::WindowScale())) : xpos, ypos,
+		(w < 8) ? xpos + static_cast<int>(9.0f * (8.0f - static_cast<float>(w)) * (static_cast<float>(Width) / 156.0f / Geometry::WindowScale())) : xpos, ypos,
 		Height / 48.0f / Geometry::WindowScale(),
-		((w > 8) ? 8.0f / (float)w : 1.0f) * (adjustWidth ? ((float)Geometry::WindowWidth * 0.75 / (float)Geometry::WindowHeight) : 1.0f),
+		((w > 8) ? 8.0f / static_cast<float>(w) : 1.0f) * (adjustWidth ? Scene::WidthRate() : 1.0f),
 		(std::get<0>(mySprites[ButtonID]) == clear) ? 0x3fffffff : 0xffffffff);
 }
 
@@ -61,9 +61,9 @@ void ButtonPic::Render() {
 		unsigned width = std::get<3>(k), height = std::get<4>(k);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 		TransformMatrix mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
-		D3DXMatrixTranslation(&mat2, (float)(-X), (float)(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
-		D3DXMatrixScaling(&mat2, (float)width / 156.0f, (float)height / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
-		D3DXMatrixTranslation(&mat2, (float)X, (float)Y, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
+		D3DXMatrixTranslation(&mat2, static_cast<float>(-X), static_cast<float>(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
+		D3DXMatrixScaling(&mat2, static_cast<float>(width) / 156.0f, static_cast<float>(height) / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
+		D3DXMatrixTranslation(&mat2, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
 #else
 		glPushMatrix(); glLoadIdentity();
 		// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい

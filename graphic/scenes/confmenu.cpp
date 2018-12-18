@@ -7,6 +7,7 @@
 #ifndef _WIN32
 #include "../keycode.h"
 #endif /*_WIN32*/
+#include <cassert>
 
 namespace mihajong_graphic {
 
@@ -23,17 +24,14 @@ ConfigMenuProto::~ConfigMenuProto() {
 }
 
 void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption) {
-	const float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 	myButtonPic->setButton(btnID, ButtonPic::clear,
-		X * (WidthRate * Geometry::WindowScale()), Y * Geometry::WindowScale(),
-		Width * (WidthRate * Geometry::WindowScale()), Height * Geometry::WindowScale(),
+		scaleX(X), scaleY(Y), scaleW(Width), scaleH(Height),
 		0xffffffff, caption, true);
 	setRegion(btnID + btnRegionStart, X, Y, X + Width, Y + Height);
 }
 
 void ConfigMenuProto::Render() {
 	clearWithGameTypeColor(); // バッファクリア
-	float WidthRate = Geometry::WindowWidth * 0.75 / Geometry::WindowHeight; // アス比×0.75(横幅調整用)
 #ifndef _WIN32
 	if (!menuInitFlag) {
 		objInit();
@@ -41,7 +39,7 @@ void ConfigMenuProto::Render() {
 	}
 #endif /*_WIN32*/
 	{
-		myTextRenderer->NewText(123, Caption(), 540 * WidthRate, 25, 2.0f, WidthRate, 0xffffffff);
+		myTextRenderer->NewText(123, Caption(), adjX(540), 25, 2.0f, WidthRate(), 0xffffffff);
 	}
 	ShowMessageBelow();
 	ShowPageCaption();
@@ -76,7 +74,8 @@ void ConfigMenuProto::BtnEvent_Content_Item_Prev(unsigned short val) {
 }
 void ConfigMenuProto::BtnEvent_Content_Item_Next(unsigned short val) {
 	sound::Play(sound::IDs::sndCursor);
-	if ((menuCursor += val) >= numberOfItems()) menuCursor = numberOfItems() - 1;
+	assert(numberOfItems() > 0);
+	if (static_cast<unsigned>(menuCursor += val) >= numberOfItems()) menuCursor = numberOfItems() - 1;
 	myTimer.skipTo(0); redrawItems();
 }
 void ConfigMenuProto::BtnEvent_Content_Page_Prev() {
@@ -86,7 +85,7 @@ void ConfigMenuProto::BtnEvent_Content_Page_Prev() {
 }
 void ConfigMenuProto::BtnEvent_Content_Page_Next() {
 	sound::Play(sound::IDs::sndClick);
-	if ((menuCursor += itemsPerPage()) >= numberOfItems()) menuCursor -= itemsPerPage();
+	if (static_cast<unsigned>(menuCursor += itemsPerPage()) >= numberOfItems()) menuCursor -= itemsPerPage();
 	myTimer.skipTo(0); redrawItems();
 }
 
@@ -99,7 +98,7 @@ void ConfigMenuProto::BtnEvent_Button_Prev() {
 }
 void ConfigMenuProto::BtnEvent_Button_Next() {
 	sound::Play(sound::IDs::sndCursor);
-	if ((++buttonCursor) >= numberOfButtons()) buttonCursor = 0;
+	if (static_cast<unsigned>(++buttonCursor) >= numberOfButtons()) buttonCursor = 0;
 	for (unsigned i = 0; i < numberOfButtons(); i++)
 		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
 	myTimer.skipTo(0); redrawItems();
@@ -115,7 +114,7 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 	const bool keyDown = od->dwData;
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	const bool keyDown = od->type == KeyPress;
+	constexpr bool keyDown = od->type == KeyPress;
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
@@ -175,9 +174,7 @@ void ConfigMenuProto::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
 void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 {
-	const int scaledX = (int)((float)X / Geometry::WindowScale() / ((float)Geometry::WindowWidth * 0.75f / (float)Geometry::WindowHeight));
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
-	const int region = whichRegion(scaledX, scaledY);
+	const int region = whichRegion(scaleInvX(X), scaleInvY(Y));
 #if 0
 	{
 		CodeConv::tostringstream o;
@@ -188,7 +185,8 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 	}
 #endif
 	auto setcursor = [&]() -> void {
-		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+		assert(itemsPerPage() > 0);
+		if ((region >= 0) && (region <= (static_cast<int>(itemsPerPage()) - 1))) {
 			if ((region != menuCursor % itemsPerPage()) || (buttonCursor != -1)) {
 				sound::Play(sound::IDs::sndCursor);
 				menuCursor = menuCursor / itemsPerPage() * itemsPerPage() + region;
@@ -197,7 +195,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 				myTimer.skipTo(0); redrawItems();
 			}
 		}
-		else if ((region >= btnRegionStart) && (region <= (btnRegionStart + numberOfButtons() - 1))) {
+		else if ((region >= static_cast<int>(btnRegionStart)) && (region <= static_cast<int>(btnRegionStart + numberOfButtons() - 1))) {
 			if (region != (buttonCursor + btnRegionStart)) {
 				sound::Play(sound::IDs::sndCursor);
 				buttonCursor = region - btnRegionStart;
@@ -222,19 +220,21 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 		break;
 #ifdef _WIN32
 	case DIMOFS_Z: // ホイールの操作
-		if ((region >= 0) && (region <= (itemsPerPage() - 1))) {
+		assert(itemsPerPage() > 0);
+		if ((region >= 0) && (region <= static_cast<int>(itemsPerPage() - 1))) {
 			setcursor();
-			if ((LONG)od->dwData > 0) BtnEvent_Content_Roll_Up();
-			else if ((LONG)od->dwData < 0) BtnEvent_Content_Roll_Down();
+			if (static_cast<LONG>(od->dwData) > 0) BtnEvent_Content_Roll_Up();
+			else if (static_cast<LONG>(od->dwData) < 0) BtnEvent_Content_Roll_Down();
 		} else if (region == 40) {
-			if ((LONG)od->dwData > 0)
+			if (static_cast<LONG>(od->dwData) > 0)
 				BtnEvent_Content_Page_Next();
-			else if ((LONG)od->dwData < 0)
+			else if (static_cast<LONG>(od->dwData) < 0)
 				BtnEvent_Content_Page_Prev();
 		}
 		break;
 	case DIMOFS_BUTTON0: // 左クリック
-		if ((od->dwData) && (region >= 0) && (region <= (itemsPerPage() - 1)))
+		assert(itemsPerPage() > 0);
+		if ((od->dwData) && (region >= 0) && (region <= static_cast<int>(itemsPerPage() - 1)))
 #else /*_WIN32*/
 	case ButtonPress: // マウスの左ボタン
 		if ((od->xbutton.button == Button1) && (region >= 0) && (region <= (itemsPerPage() - 1)))
@@ -244,7 +244,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 			BtnEvent_Content_Roll_Up();
 		}
 #ifdef _WIN32
-		else if ((region >= btnRegionStart) && (region < (btnRegionStart + numberOfButtons()))) {
+		else if ((region >= static_cast<int>(btnRegionStart)) && (region < static_cast<int>(btnRegionStart + numberOfButtons()))) {
 			setcursor();
 			if (od->dwData) BtnEvent_OK_Down();
 			else BtnEvent_OK_Up();
@@ -293,7 +293,7 @@ CodeConv::tstring ConfigMenuProto::verInfoText() {
 	return o.str();
 #else /*_WIN32*/
 	CodeConv::tostringstream o;
-	time_t Zeitzahl = time(nullptr); tm Zeit = *localtime(&Zeitzahl);
+	time_t Zeitzahl = time(nullptr); tm Zeit; = localtime_s(&Zeit, &Zeitzahl);
 	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
 		std::setw(4) << (Zeit.tm_year + 1900) << _T("年") <<
 		std::setw(2) << (Zeit.tm_mon + 1) << _T("月") <<

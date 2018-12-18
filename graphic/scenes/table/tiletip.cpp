@@ -35,7 +35,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		CodeConv::tostringstream o;
 		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::shantenAll);
 		if (shanten > 0) { // 不聴の時は向聴表示
-			o << (int)shanten << _T("向聴");
+			o << static_cast<int>(shanten) << _T("向聴");
 		} else {
 			/* 待ち牌の数を表示 */
 			MachihaiInfo machiInfo = utils::chkFuriten(&tmpGameStat, tmpGameStat.PlayerID);
@@ -44,12 +44,12 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 			if (machiInfo.MachihaiTotal == 0)
 				o << _T("純 カ ラ");
 			else
-				o << _T("あと") << std::setw(2) << std::setfill(_T(' ')) << (int)machiInfo.MachihaiTotal << _T("枚");
+				o << _T("あと") << std::setw(2) << std::setfill(_T(' ')) << static_cast<int>(machiInfo.MachihaiTotal) << _T("枚");
 			/* 待ち牌表示 */
 			int i = 0;
 			for (int j = 1; j < TileNonflowerMax; ++j) {
 				if (machiInfo.Machihai[j].MachihaiFlag) {
-					myTileRenderer->NewTile(i, (TileCode)j, Normal,
+					myTileRenderer->NewTile(i, static_cast<TileCode>(j), Normal,
 						TipX + myTextRenderer->strWidthByPix(o.str()) + 20 + i * (ShowTile::VertTileWidth + 2),
 						TipY + (ShowTile::VertTileHeight / 2) - 6,
 						Portrait, Obverse,

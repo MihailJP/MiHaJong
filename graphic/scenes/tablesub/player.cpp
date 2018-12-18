@@ -46,17 +46,17 @@ TableSubscenePlayerProto::~TableSubscenePlayerProto() {
 }
 
 std::int32_t TableSubscenePlayerProto::timeout() {
-	return timeout_val - (int)((double)myTimer.elapsed() / ((double)timeResolution / 1000.0));
+	return timeout_val - static_cast<int>(static_cast<double>(myTimer.elapsed()) / (static_cast<double>(timeResolution) / 1000.0));
 }
 
 void TableSubscenePlayerProto::showTimeout() {
-	static double prevTime = (double)timeout() / 1000.0;
-	double timeLeft = (double)timeout() / 1000.0;
+	static double prevTime = static_cast<double>(timeout()) / 1000.0;
+	double timeLeft = static_cast<double>(timeout()) / 1000.0;
 	CodeConv::tostringstream(o); o << std::setw(4) << std::fixed << std::setprecision(1) << timeLeft;
 	myTextRenderer->NewText(0, o.str().c_str(), timeX, timeY);
 	myTextRenderer->Render();
 	for (int i = 0; i <= 5; ++i)
-		if ((prevTime > (double)i) && (timeLeft <= (double)i))
+		if ((prevTime > static_cast<double>(i)) && (timeLeft <= static_cast<double>(i)))
 			sound::Play(sound::IDs::sndClock); // カウントダウンの音を鳴らす
 	prevTime = timeLeft;
 }

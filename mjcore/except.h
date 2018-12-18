@@ -59,11 +59,11 @@ extern const uintptr_t errorInfoPtr[1];
 #define Raise(exceptionCode,message) {fatal(message); \
 	setStruct(message); \
 	std::cerr << __FILE__ << ' ' << __LINE__ << ':' << CodeConv::toANSI(message) << std::endl; \
-	throw (unsigned long)exceptionCode;}
+	throw static_cast<unsigned long>exceptionCode;}
 #define RaiseTolerant(exceptionCode,message) {error(message); \
 	setStruct(message); \
 	std::cerr << __FILE__ << ' ' << __LINE__ << ':' << CodeConv::toANSI(message) << std::endl; \
-	throw (unsigned long)exceptionCode;}
+	throw static_cast<unsigned long>exceptionCode;}
 #endif /*_WIN32*/
 #endif
 

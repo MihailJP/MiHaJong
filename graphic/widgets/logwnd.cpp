@@ -70,19 +70,19 @@ LogWindow::~LogWindow() {
 TransformMatrix LogWindow::getMatrix(int X, int Y, unsigned width) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix mat, mat1; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat1);
-	D3DXMatrixTranslation(&mat, -X, -Y, 0.0f);
-	D3DXMatrixScaling(&mat1, (float)(width * halffontsz) / 77.0f, 1.0f, 0.0f);
+	D3DXMatrixTranslation(&mat, -static_cast<float>(X), -static_cast<float>(Y), 0.0f);
+	D3DXMatrixScaling(&mat1, static_cast<float>(width * halffontsz) / 77.0f, 1.0f, 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
-	D3DXMatrixTranslation(&mat1, X, Y, 0.0f);
+	D3DXMatrixTranslation(&mat1, static_cast<float>(X), static_cast<float>(Y), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 	D3DXMatrixScaling(&mat1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXMatrixMultiply(&mat, &mat, &mat1);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
 	// 横幅拡大は不要
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
 	glPopMatrix();
 #endif
@@ -120,7 +120,7 @@ void LogWindow::Render() {
 	}
 	if (reconstFlag) {
 		unsigned linenum = 0;
-		for (unsigned i = (unsigned)(max(0, (signed)lines.size() - (signed)height)); i < lines.size(); ++i) { // ログの最後の部分を表示
+		for (unsigned i = static_cast<unsigned>(max(0, static_cast<signed>(lines.size()) - static_cast<signed>(height))); i < lines.size(); ++i) { // ログの最後の部分を表示
 		//for (unsigned i = 0; i < min(height, lines.size()); ++i) { // ログの最初の部分を表示
 			myTextRenderer->NewText(linenum, lines[i], x, y + lineheight * linenum);
 			++linenum;

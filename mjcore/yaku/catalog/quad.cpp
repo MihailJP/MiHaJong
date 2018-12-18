@@ -1,5 +1,6 @@
 ﻿#include "../catalog.h"
 #include "../../../astro/astro.h"
+#include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 #ifndef GUOBIAO
@@ -20,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
 		_T("四杠"), yaku::yakuCalculator::Yaku::yval_88,
-		_T("碰碰和"), _T("単調将"),
+		PengPengHu, _T("単調将"),
 #else /* GUOBIAO */
 		_T("四槓子"), get_yaku_han("suukantsu"),
 		_T("対々和"),
@@ -200,7 +201,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				GetTimeZoneInformation(&Zeitzone); // タイムゾーンを取得する
 				GetLocalTime(&Zeit); // WINAPIを使ってローカル時刻を取得
 				SYSTEMTIME HeuteMitternacht = {Zeit.wYear, Zeit.wMonth, Zeit.wDayOfWeek, Zeit.wDay, 0, 0, 0, 0}; // 当日0時のSYSTEMTIME
-				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)Zeitzone.Bias / 1440.0); // ローカル時間で当日0時のユリウス日
+				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - (static_cast<double>(Zeitzone.Bias) / 1440.0); // ローカル時間で当日0時のユリウス日
 #else /*_WIN32*/
 				const signed long Zeitzone = []() -> signed long {
 					time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
@@ -210,14 +211,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 				}();
 				timespec Zeitzahl; tm Zeit, ZeitMitternacht;
 				clock_gettime(CLOCK_REALTIME, &Zeitzahl);
-				memcpy(&Zeit, localtime(&Zeitzahl.tv_sec), sizeof (tm));
-				memcpy(&ZeitMitternacht, localtime(&Zeitzahl.tv_sec), sizeof (tm));
-				timespec HeuteMitternacht; memset (&HeuteMitternacht, 0, sizeof (timespec));
+				localtime_s(&Zeit, &Zeitzahl.tv_sec);
+				localtime_s(&ZeitMitternacht, &Zeitzahl.tv_sec);
+				timespec HeuteMitternacht; memset(&HeuteMitternacht, 0, sizeof (timespec));
 				ZeitMitternacht.tm_year = Zeit.tm_year;
 				ZeitMitternacht.tm_mon = Zeit.tm_mon;
 				ZeitMitternacht.tm_mday = Zeit.tm_mday;
 				HeuteMitternacht.tv_sec = mktime(&ZeitMitternacht);
-				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - ((double)(Zeitzone / 60) / 1440.0);
+				double JulianischeDatum = systime_to_julian(&HeuteMitternacht) - (static_cast<double>(Zeitzone / 60) / 1440.0);
 #endif /*_WIN32*/
 				return /* 翌日が立春か判定する。立春とは太陽が黄経315度の子午線を通過する日である。 */
 					(sun_ecliptic_longitude(JulianischeDatum + 1.0) <= 315.0) &&
