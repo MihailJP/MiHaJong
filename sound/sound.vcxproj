@@ -163,7 +163,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -181,7 +181,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -199,7 +199,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -217,7 +217,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;VORBIS_SUPPORT;USE_XAUDIO2;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -238,7 +238,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -261,7 +261,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -284,7 +284,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
@@ -307,7 +307,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUND_EXPORTS;WITH_DIRECTX;MIDI_SUPPORT;USE_XAUDIO2;VORBIS_SUPPORT;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DXSDK_DIR)include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
