@@ -122,34 +122,42 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|Win32'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug(Wide)|x64'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|Win32'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release(Wide)|x64'">
     <TargetExt>.bin</TargetExt>
     <IncludePath>$(ProjectDir)libogg\include\;$(ProjectDir)libvorbis\include\;$(IncludePath)</IncludePath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
