@@ -346,8 +346,8 @@ struct RISE_SET_HOUR convert_hour (double hour_rise_ut, double hour_set_ut, doub
 	ans.hour_rise =  (int) rise_local;
 	ans.hour_set  =  (int)set_local;
 
-	ans.min_rise  = floor((rise_local-ans.hour_rise)*60+0.5);
-	ans.min_set   = floor((set_local-ans.hour_set)*60+0.5);
+	ans.min_rise  = (int)floor((rise_local-ans.hour_rise)*60+0.5);
+	ans.min_set   = (int)floor((set_local-ans.hour_set)*60+0.5);
 
 	if (ans.min_rise>=60) {
 		ans.min_rise -=60;
@@ -370,7 +370,7 @@ EXPORT struct RISE_SET_HOUR sunrise (int year, int month, int day, double lon, d
 	double* h1 = &h.hour_rise_ut; double* h2 = &h.hour_set_ut;
 	int d;
 
-	d = days_since_2000_Jan_0( year, month, day ) + 0.5 - lon / 360.0;
+	d = (int)((double)days_since_2000_Jan_0( year, month, day ) + 0.5 - lon / 360.0);
 	h = sun_rise_set(d, lon, lat,altit/*,15.0*/);
 	return convert_hour(*h1,*h2,TZ, isdst);
 }

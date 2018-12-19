@@ -27,9 +27,9 @@ LargeNum endround::agari::agaricalc(const LargeNum& AgariPointRaw, int agariBair
 }
 LargeNum endround::agari::agaricalc(const LargeNum& AgariPointRaw, rat agariBairitsu, rat agariBairitsu2, int agariCount, rat agariBairitsu3, int agariCount2) {
 	LargeNum agariPointArray = (AgariPointRaw * agariBairitsu.getNumerator() / agariBairitsu.getDenominator() + 99) / 100 * 100;
-	for (unsigned i = 0; i < agariCount; ++i)
+	for (int i = 0; i < agariCount; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu2.getNumerator() / agariBairitsu2.getDenominator() + 99) / 100 * 100;
-	for (unsigned i = 0; i < agariCount2; ++i)
+	for (int i = 0; i < agariCount2; ++i)
 		agariPointArray += (AgariPointRaw * agariBairitsu3.getNumerator() / agariBairitsu3.getDenominator() + 99) / 100 * 100;
 	return agariPointArray;
 }
@@ -73,7 +73,7 @@ namespace {
 	void calcAgariPoints_Pao( // 包適用時
 		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, int Mode)
 	{
-		const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
+		const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : static_cast<PlayerID>(Mode);
 		const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
 		if (gameStat->playerwind(AgariPlayer) == sEast) { // 親の和了り
 			if (TsumoAgari) { // ツモアガリ(包の人が一人払い)
@@ -278,7 +278,7 @@ void endround::agari::calcAgariPoints(
 	const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw,
 	InfoByPlayer<LargeNum>& PointDelta, int Mode)
 {
-	const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : (PlayerID)Mode;
+	const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : static_cast<PlayerID>(Mode);
 	const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
 #ifdef GUOBIAO
 	if (TsumoAgari) // 中国ルール：ツモアガリ
@@ -671,7 +671,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		OyaAgari = gameStat->CurrentPlayer.Agari; // 親の和了り
 	LargeNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
-	assert(agariPoint > (LargeNum)0);
+	assert(agariPoint > 0);
 #ifndef GUOBIAO
 	calculateWaremeDelta(gameStat);
 #endif /* GUOBIAO */

@@ -1,18 +1,18 @@
 ﻿#include "catalog.h"
 
 /* 一色組み合わせ表 */
-const std::array<char[8], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome5 = {
+constexpr std::array<char[8], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome5 = {
 	"00000","11111","22222",
 };
-const std::array<char[8], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome4 = {
+constexpr std::array<char[8], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome4 = {
 	"0000","1111","2222",
 };
-const std::array<char[4], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome3 = {
+constexpr std::array<char[4], 3> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_monochrome3 = {
 	"000","111","222",
 };
 
 /* 二色組み合わせ表 */
-const std::array<char[8], 90> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome5 = {
+constexpr std::array<char[8], 90> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome5 = {
 	"00001","00002","00010","00011","00020","00022","00100","00101","00110","00111",
 	"00200","00202","00220","00222","01000","01001","01010","01011","01100","01101",
 	"01110","01111","02000","02002","02020","02022","02200","02202","02220","02222",
@@ -23,7 +23,7 @@ const std::array<char[8], 90> yaku::yakuCalculator::YakuCatalog::catalogInit::pa
 	"21121","21122","21211","21212","21221","21222","22000","22002","22020","22022",
 	"22111","22112","22121","22122","22200","22202","22211","22212","22220","22221",
 };
-const std::array<char[8], 42> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome4 = {
+constexpr std::array<char[8], 42> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome4 = {
 	"0001","0002","0010","0011","0020","0022","0100",
 	"0101","0110","0111","0200","0202","0220","0222",
 	"1000","1001","1010","1011","1100","1101","1110",
@@ -31,14 +31,14 @@ const std::array<char[8], 42> yaku::yakuCalculator::YakuCatalog::catalogInit::pa
 	"2000","2002","2020","2022","2111","2112","2121",
 	"2122","2200","2202","2211","2212","2220","2221",
 };
-const std::array<char[4], 18> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome3 = {
+constexpr std::array<char[4], 18> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_bichrome3 = {
 	"001","002","010","011","020","022",
 	"100","101","110","112","121","122",
 	"200","202","211","212","220","221",
 };
 
 /* 三色組み合わせ表 */
-const std::array<char[8], 150> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome5 = {
+constexpr std::array<char[8], 150> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome5 = {
 	"00012","00021","00102","00112","00120","00121","00122","00201","00210","00211",
 	"00212","00221","01002","01012","01020","01021","01022","01102","01112","01120",
 	"01121","01122","01200","01201","01202","01210","01211","01212","01220","01221",
@@ -55,7 +55,7 @@ const std::array<char[8], 150> yaku::yakuCalculator::YakuCatalog::catalogInit::p
 	"21102","21110","21120","21200","21201","21202","21210","21220","22001","22010",
 	"22011","22012","22021","22100","22101","22102","22110","22120","22201","22210",
 };
-const std::array<char[8], 36> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome4 = {
+constexpr std::array<char[8], 36> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome4 = {
 	"0012","0021","0102","0112","0120","0121",
 	"0122","0201","0210","0211","0212","0221",
 	"1002","1012","1020","1021","1022","1102",
@@ -63,6 +63,6 @@ const std::array<char[8], 36> yaku::yakuCalculator::YakuCatalog::catalogInit::pa
 	"2001","2010","2011","2012","2021","2100",
 	"2101","2102","2110","2120","2201","2210",
 };
-const std::array<char[4], 6> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome3 = {
+constexpr std::array<char[4], 6> yaku::yakuCalculator::YakuCatalog::catalogInit::parsedat_trichrome3 = {
 	"012","021","102","120","201","210",
 };

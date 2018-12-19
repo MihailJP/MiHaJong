@@ -85,7 +85,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sLeft:
-		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 上家側の山 */
+		for (int i = 0; i < (static_cast<int>(std::get<2>(yamahaiAttr)) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 上家側の山 */
 			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));
@@ -113,7 +113,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 		break;
 	case sSelf:
-		for (int i = 0; i < (std::get<2>(yamahaiAttr) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 自分の山 */
+		for (int i = 0; i < (static_cast<int>(std::get<2>(yamahaiAttr)) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 自分の山 */
 			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
 			bool dora = (k  >= gameStat->DoraPointer) && (k <= std::get<3>(yamahaiAttr));

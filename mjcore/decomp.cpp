@@ -27,15 +27,15 @@ void Data::decompress(int FileID_) {
 	int result;
 	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
 	assert(size > 13);
-	uint8_t* compressedData = (uint8_t *)malloc(size+1);
+	uint8_t* compressedData = new uint8_t[size+1];
 	memcpy(compressedData, compressedBuf, size);
 	compressedData[size] = 0;
-	decompressedSize = *((size_t *)(compressedData+5));
-	DecompressedData = (uint8_t *)malloc(decompressedSize);
+	decompressedSize = *(reinterpret_cast<size_t *>(compressedData+5));
+	DecompressedData = new uint8_t[decompressedSize];
 	result = LzmaUncompress(DecompressedData, &decompressedSize,
-		(const uint8_t *)(compressedData+13),
-		(SizeT *)&size, (const uint8_t *)compressedData, 5);
-	free(compressedData); compressedData = nullptr;
+		reinterpret_cast<const uint8_t *>(compressedData+13),
+		reinterpret_cast<SizeT *>(&size), reinterpret_cast<const uint8_t *>(compressedData), 5);
+	delete[] compressedData; compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
 		o << _T("LZMAストリームのデコードに失敗しました。ファイルが壊れている虞があります。") <<
@@ -60,7 +60,7 @@ std::string Data::bytesToHexString(std::vector<uint8_t> byteStr) {
 	for (unsigned int i = 0; i < byteStr.size(); i++) {
 		std::ostringstream o;
 		o.setf(std::ios::right); o.fill('0'); o.width(2);
-		o << std::hex << (int)byteStr[i];
+		o << std::hex << static_cast<int>(byteStr[i]);
 		hx += o.str();
 	}
 	return hx;
@@ -99,7 +99,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 		ErrorInfo *errStat = nullptr;
 		switch (e->ExceptionRecord->ExceptionCode) {
 		case EXCEPTION_MJCORE_DECOMPRESSION_FAILURE:
-			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
+			errStat = reinterpret_cast<ErrorInfo *>(e->ExceptionRecord->ExceptionInformation[0]);
 			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("LZMA decompression error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 #ifdef _MSC_VER
@@ -108,7 +108,7 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 			abort();
 #endif
 		case EXCEPTION_MJCORE_HASH_MISMATCH:
-			errStat = (ErrorInfo *)(e->ExceptionRecord->ExceptionInformation[0]);
+			errStat = reinterpret_cast<ErrorInfo *>(e->ExceptionRecord->ExceptionInformation[0]);
 			MessageBox(nullptr, CodeConv::EnsureTStr(errStat->msg).c_str(), _T("SHA256 verification error"),
 				MB_OK | MB_ICONERROR | MB_SETFOREGROUND);
 #ifdef _MSC_VER
@@ -129,14 +129,14 @@ Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDiges
 }
 
 Data::~Data() {
-	free(DecompressedData); DecompressedData = nullptr;
+	delete[] DecompressedData; DecompressedData = nullptr;
 }
 
 LPCTSTR Data::Description = nullptr;
-const uint8_t Data::expectedDigest[32] = {0,};
+constexpr uint8_t Data::expectedDigest[32] = {0,};
 
 LPCTSTR file_mentz_dat::Description = _T("面子構成データベース");
-const uint8_t file_mentz_dat::expectedDigest[32] = {
+constexpr uint8_t file_mentz_dat::expectedDigest[32] = {
 	0x38, 0x27, 0x3a, 0x13, 0x49, 0x94, 0xd3, 0x77,
 	0x0e, 0x09, 0x05, 0xd4, 0xf5, 0xf7, 0xbb, 0x30,
 	0x81, 0x0a, 0x9f, 0x8d, 0xd4, 0x4d, 0xe8, 0x24,

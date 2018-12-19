@@ -27,18 +27,18 @@ SpriteRenderer::~SpriteRenderer() {
 
 /* インスタンス化 */
 SpriteRenderer* SpriteRenderer::instantiate(DevicePtr device) {
-	if (renderer.find((intptr_t)device) != renderer.end()) { // デバイスに対応するスプライトがすでにある
-		return renderer[(intptr_t)device];
+	if (renderer.find(reinterpret_cast<intptr_t>(device)) != renderer.end()) { // デバイスに対応するスプライトがすでにある
+		return renderer[reinterpret_cast<intptr_t>(device)];
 	} else { // デバイスに対応するスプライトは初回の使用(初期化が必要)
-		renderer[(intptr_t)device] = new SpriteRenderer(device);
-		return renderer[(intptr_t)device];
+		renderer[reinterpret_cast<intptr_t>(device)] = new SpriteRenderer(device);
+		return renderer[reinterpret_cast<intptr_t>(device)];
 	}
 }
 
 void SpriteRenderer::delInstance(DevicePtr device) {
-	if (renderer.find((intptr_t)device) != renderer.end()) {
-		delete renderer[(intptr_t)device];
-		renderer.erase((intptr_t)device);
+	if (renderer.find(reinterpret_cast<intptr_t>(device)) != renderer.end()) {
+		delete renderer[reinterpret_cast<intptr_t>(device)];
+		renderer.erase(reinterpret_cast<intptr_t>(device));
 	}
 }
 
@@ -68,13 +68,13 @@ void SpriteRenderer::ShowSprite(
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
 	D3DXMatrixScaling(&defaultMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXVECTOR3 Center(CenterX, CenterY, 0);
-	D3DXVECTOR3 Pos((float)X, (float)Y, 0);
+	D3DXVECTOR3 Center(static_cast<float>(CenterX), static_cast<float>(CenterY), 0.0f);
+	D3DXVECTOR3 Pos(static_cast<float>(X), static_cast<float>(Y), 0.0f);
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->Flush();
 #else
-	const TransformMatrix defaultMatrix = {
+	constexpr TransformMatrix defaultMatrix = {
 		Geometry::WindowScale(), 0,                                                         0, 0,
 		0,                       Geometry::WindowScale(),                                   0, 0,
 		0,                       0,                                                         1, 0,
@@ -96,14 +96,14 @@ void SpriteRenderer::ShowSprite(
 
 	glBegin(GL_QUADS);
 	glColor4d(
-		(double)((color & 0x00ff0000) >> 16) / 255.0,
-		(double)((color & 0x0000ff00) >>  8) / 255.0,
-		(double)((color & 0x000000ff)      ) / 255.0,
-		(double)((color & 0xff000000) >> 24) / 255.0);
-	const double lpos = (double)txRect->left   / (double)getTextureWidth (nullptr, texture);
-	const double rpos = (double)txRect->right  / (double)getTextureWidth (nullptr, texture);
-	const double tpos = (double)txRect->top    / (double)getTextureHeight(nullptr, texture);
-	const double bpos = (double)txRect->bottom / (double)getTextureHeight(nullptr, texture);
+		static_cast<double>((color & 0x00ff0000) >> 16) / 255.0,
+		static_cast<double>((color & 0x0000ff00) >>  8) / 255.0,
+		static_cast<double>((color & 0x000000ff)      ) / 255.0,
+		static_cast<double>((color & 0xff000000) >> 24) / 255.0);
+	constexpr double lpos = static_cast<double>(txRect->left  ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	constexpr double rpos = static_cast<double>(txRect->right ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	constexpr double tpos = static_cast<double>(txRect->top   ) / static_cast<double>(getTextureHeight(nullptr, texture));
+	constexpr double bpos = static_cast<double>(txRect->bottom) / static_cast<double>(getTextureHeight(nullptr, texture));
 	glTexCoord2d(lpos, bpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, bpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));

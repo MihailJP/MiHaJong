@@ -11,17 +11,17 @@
 namespace mihajong_structs {
 
 // 牌の種類
-const unsigned int TileCodeMaximum    = 200;
-const unsigned int TileSuitStep       =  10;
-const unsigned int TileNumeralColors  =   3;
+constexpr unsigned int TileCodeMaximum    = 200;
+constexpr unsigned int TileSuitStep       =  10;
+constexpr unsigned int TileNumeralColors  =   3;
 
-const unsigned int TileSuitCharacters = TileSuitStep * 0;
-const unsigned int TileSuitCircles    = TileSuitStep * 1;
-const unsigned int TileSuitBamboos    = TileSuitStep * 2;
-const unsigned int TileSuitHonors     = TileSuitStep * TileNumeralColors;
-const unsigned int TileNonflowerMax   = TileSuitStep   + TileSuitHonors;
-const unsigned int TileSuitFlowers    = TileSuitStep * 12;
-const unsigned int TileFlowerMax      = TileSuitStep   + TileSuitFlowers;
+constexpr unsigned int TileSuitCharacters = TileSuitStep * 0;
+constexpr unsigned int TileSuitCircles    = TileSuitStep * 1;
+constexpr unsigned int TileSuitBamboos    = TileSuitStep * 2;
+constexpr unsigned int TileSuitHonors     = TileSuitStep * TileNumeralColors;
+constexpr unsigned int TileNonflowerMax   = TileSuitStep   + TileSuitHonors;
+constexpr unsigned int TileSuitFlowers    = TileSuitStep * 12;
+constexpr unsigned int TileFlowerMax      = TileSuitStep   + TileSuitFlowers;
 
 enum TileCode : uint8_t { // 牌のコード
 	NoTile = 0,
@@ -90,14 +90,14 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByTile:添字が範囲外です (") << (int)tile << _T(")");
+			o << _T("InfoByTile:添字が範囲外です (") << static_cast<int>(tile) << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];
 		}
 	}
 	const T& operator[](const int tile) const {
-		return InfoByTile::operator[]((TileCode)tile);
+		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
 	T& operator[](const TileCode tile) {
 		if ((tile >= NoTile)&&(tile < TileNonflowerMax))
@@ -107,14 +107,14 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 		else {
 #ifdef MJCORE_EXPORTS
 			CodeConv::tostringstream o;
-			o << _T("InfoByTile:添字が範囲外です (") << (int)tile << _T(")");
+			o << _T("InfoByTile:添字が範囲外です (") << static_cast<int>(tile) << _T(")");
 			RaiseTolerant(EXCEPTION_MJCORE_SUBSCRIPT_OUT_OF_RANGE, o.str().c_str());
 #endif
 			return val[NoTile];
 		}
 	}
 	T& operator[](const int tile) {
-		return InfoByTile::operator[]((TileCode)tile);
+		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
 };
 

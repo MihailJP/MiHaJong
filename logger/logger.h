@@ -30,7 +30,7 @@ public:
 	bool isWorthOutputting(LogLevel ll) {return (logLevel >= ll);}
 	tstring msg() {return tstring(messageTxt);}
 	tstring toString() {
-		tm tempus; _localtime64_s(&tempus, &(this->issueTime.time));
+		tm tempus; localtime_s(&tempus, &(this->issueTime.time));
 		tostringstream o;
 		// 日付
 		o << setw(4) << setfill(_T('0')) << (tempus.tm_year + 1900);

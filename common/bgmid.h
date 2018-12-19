@@ -3,8 +3,8 @@
 namespace sound {
   namespace IDs {
 
-	const unsigned BgmStart = 0u;
-	const unsigned BgmRounds = 28u;
+	constexpr unsigned BgmStart = 0u;
+	constexpr unsigned BgmRounds = 28u;
 	enum BgmID : unsigned {
 		musRichi1 = BgmStart + BgmRounds,
 		musRichi2,
@@ -28,9 +28,9 @@ namespace sound {
 		musFinal,
 		musShibari,
 	};
-	const unsigned BgmEnd = musShibari;
+	constexpr unsigned BgmEnd = musShibari;
 
-	const unsigned SndStart = BgmEnd + 1;
+	constexpr unsigned SndStart = BgmEnd + 1;
 	enum SoundID : unsigned {
 		sndDahai1 = SndStart,
 		sndDahai2,
@@ -52,9 +52,9 @@ namespace sound {
 		sndSignal,
 		sndClock,
 	};
-	const unsigned SndEnd = sndClock;
+	constexpr unsigned SndEnd = sndClock;
 
-	const unsigned VoxStart = SndEnd + 1;
+	constexpr unsigned VoxStart = SndEnd + 1;
 	enum VSoundID : unsigned {
 		voxChi = VoxStart,
 		voxPon,
@@ -70,7 +70,7 @@ namespace sound {
 		voxSijiarichi,
 		voxRonFurikomi,
 	};
-	const unsigned VoxEnd = voxRonFurikomi;
+	constexpr unsigned VoxEnd = voxRonFurikomi;
 
   }
 }

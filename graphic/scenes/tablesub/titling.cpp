@@ -19,11 +19,11 @@ void TableSubsceneTitling::FadeinStr(const std::wstring& str) {
 	const unsigned len = myTextRenderer->strWidthByCols(str);
 	if ((Zeit >= Anfang) && (Zeit < Ende)) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
-			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f),
-			(uint32_t)((int)((float)(Zeit - Anfang) / (float)(Ende - Anfang) * 255.0f)) << 24 | 0x00ffffff);
+			1.0f, (len > 8 ? 8.0f / static_cast<float>(len) : 1.0f),
+			static_cast<uint32_t>(static_cast<int>(static_cast<float>(Zeit - Anfang) / static_cast<float>(Ende - Anfang) * 255.0f)) << 24 | 0x00ffffff);
 	} else if (Zeit >= Ende) {
 		myTextRenderer->NewText(0, CodeConv::EnsureTStr(str), TableSize / 2 - (56 * (len > 8 ? 8 :len)), TableSize / 2 - 192,
-			1.0f, (len > 8 ? 8.0f / (float)len : 1.0f));
+			1.0f, (len > 8 ? 8.0f / static_cast<float>(len) : 1.0f));
 	}
 }
 

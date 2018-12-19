@@ -27,7 +27,7 @@ const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProto
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR));
 	InitScorePanel();
-	const Region nullRegion = {0, 0, -1, -1};
+	constexpr Region nullRegion = {0, 0, -1, -1};
 	for (int i = 0; i < NumOfCheckBoxes; ++i) {
 		checkBoxes[i] = new CheckBox(manipulator->getDevice(), labels[i], Geometry::BaseSize + 20, 940 + i * 40);
 		setRegion(i + CheckboxRegionOffset,
@@ -124,8 +124,8 @@ void TableProtoScene::MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y)
 void TableProtoScene::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 {
-	const int scaledX = (int)((float)X / Geometry::WindowScale());
-	const int scaledY = (int)((float)Y / Geometry::WindowScale());
+	const int scaledX = static_cast<int>(static_cast<float>(X) / Geometry::WindowScale());
+	const int scaledY = static_cast<int>(static_cast<float>(Y) / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCheckBox = (region >= CheckboxRegionOffset) &&
 		(region < (CheckboxRegionOffset + NumOfCheckBoxes));
@@ -178,24 +178,24 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	initialized = false;
 }
 void TableProtoScene::ScoreBoard::objInit() {
-	const int x = xpos, y = ypos;
+	constexpr int x = xpos, y = ypos;
 #endif /*_WIN32*/
 	// 行列の構築
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	TransformMatrix tmpmtx;
 	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
-	D3DXMatrixTranslation(&tmpmtx, (float)(-x) * Geometry::WindowScale(), (float)(-y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
+	D3DXMatrixTranslation(&tmpmtx, static_cast<float>(-x) * Geometry::WindowScale(), static_cast<float>(-y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 	D3DXMatrixScaling(&tmpmtx, wScale, 1.0f, 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
-	D3DXMatrixTranslation(&tmpmtx, (float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
+	D3DXMatrixTranslation(&tmpmtx, static_cast<float>(x) * Geometry::WindowScale(), static_cast<float>(y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
 #else
 	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, (float)Geometry::WindowHeight, 0.0f);
-	glTranslatef((float)x * Geometry::WindowScale(), -(float)y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
+	glTranslatef(static_cast<float>(x) * Geometry::WindowScale(), -static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
 	glScalef(wScale, 1.0f, 1.0f);
-	glTranslatef(-(float)x * Geometry::WindowScale(), (float)y * Geometry::WindowScale(), 0.0f);
+	glTranslatef(-static_cast<float>(x) * Geometry::WindowScale(), static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
 	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -(float)Geometry::WindowHeight, 0.0f);
+	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
 	glGetFloatv(GL_MODELVIEW_MATRIX, &myMatrix[0]);
 	glPopMatrix();
 #endif
@@ -209,7 +209,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 }
 
 TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return (ScoreMode)((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
+	return static_cast<ScoreMode>((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -220,7 +220,7 @@ void TableProtoScene::ScoreBoard::Render() {
 	}
 #endif /*_WIN32*/
 	RECT rect = {0, 0, PanelWidth, PanelHeight};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos, (int)ypos,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos), static_cast<int>(ypos),
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
 	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))) {
 		renderWind();
@@ -235,10 +235,10 @@ void TableProtoScene::ScoreBoard::renderWind() {
 	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
 	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	RECT rect = {
-		static_cast<int32_t>(WindCharX + WindCharWidth * ((int)wind    )), WindCharY,
-		static_cast<int32_t>(WindCharX + WindCharWidth * ((int)wind + 1)), WindCharY + WindCharHeight
+		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
+		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
 	};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + WindPosX, (int)ypos + WindPosY,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos) + WindPosX, static_cast<int>(ypos) + WindPosY,
 		WindCharWidth, WindCharHeight,
 		(wind == sEast) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
 		&rect, 0, 0, &myMatrix);
@@ -249,7 +249,7 @@ void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, Argb
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num    )), NumCharY,
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
 	};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + x, (int)ypos + y,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos) + x, static_cast<int>(ypos) + y,
 		NumCharWidth, NumCharHeight, color, &rect, 0, 0, &myMatrix);
 }
 
@@ -281,7 +281,7 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 		const LargeNum* const score = (scoreMode == scoreDiff) ?
 			&playerScoreDiff :
 			&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
-		const int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+		constexpr int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
 		int sign;
 		if      (*score > 0) sign =  1;
 		else if (*score < 0) sign = -1;
@@ -355,7 +355,7 @@ void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor co
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
 	};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, (int)xpos + ScoreUnitPosX, (int)ypos + ScoreUnitPosY,
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos) + ScoreUnitPosX, static_cast<int>(ypos) + ScoreUnitPosY,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, color, &rect, 0, 0, &myMatrix);
 }
 
@@ -364,7 +364,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 	const unsigned tmpWidth = nameText->strWidthByCols(pName);
 	nameText->NewText(0,
 		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : pName),
-		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / (float)tmpWidth) : 1.0f) * wScale);
+		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / static_cast<float>(tmpWidth)) : 1.0f) * wScale);
 	nameText->Render();
 }
 

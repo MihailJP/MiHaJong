@@ -30,13 +30,13 @@
 #ifndef GUOBIAO
 void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
 	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
-	yStat->AgariPoints = (LargeNum)yStat->BasePoints; // 原点
+	yStat->AgariPoints = yStat->BasePoints; // 原点
 	if (totalHan >= -2) {
 		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints *= 2;
 	} else {
 		for (int i = 0; i < (totalHan + 2); i++) yStat->AgariPoints /= 2;
 	}
-	if (yStat->AgariPoints <= (LargeNum)0) yStat->AgariPoints = (LargeNum)1; // 最低1点にはなるようにする
+	if (yStat->AgariPoints <= 0) yStat->AgariPoints = 1; // 最低1点にはなるようにする
 }
 #endif /* GUOBIAO */
 
@@ -44,12 +44,12 @@ void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
 void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 #ifdef GUOBIAO
 	/* 中国ルールでは単に足し算するだけ、複雑な計算は不要 */
-	yStat->AgariPoints = (LargeNum)yStat->CoreHan + yStat->FlowerQuantity;
+	yStat->AgariPoints = static_cast<LargeNum>(yStat->CoreHan) + yStat->FlowerQuantity;
 #else /* GUOBIAO */
 	/* 縛りを満たしてなかったら0を返す
 	   点数が0ならコア部分で錯和と判断される……はず */
 	if ((yStat->CoreHan <= 0)&&(yStat->CoreSemiMangan <= 0)) {
-		yStat->AgariPoints = (LargeNum)0;
+		yStat->AgariPoints = 0;
 		return;
 	}
 
@@ -59,24 +59,24 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 	if (!RuleData::chkRuleApplied("limitless")) { // 通常ルールの場合
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下
 			doubling(yStat); // 計算を実行
-			if (yStat->AgariPoints > (LargeNum)2000) yStat->AgariPoints = (LargeNum)2000; // 満貫
-			if (totalSemiMangan == 2) yStat->AgariPoints = (LargeNum)2000; // 固定満貫の場合
+			if (yStat->AgariPoints > 2000) yStat->AgariPoints = 2000; // 満貫
+			if (totalSemiMangan == 2) yStat->AgariPoints = 2000; // 固定満貫の場合
 		}
-		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = (LargeNum)3000; // 跳満
+		else if ((totalHan < 8) && (totalSemiMangan < 4)) yStat->AgariPoints = 3000; // 跳満
 		else if (((totalHan < 10) || ((totalHan == 10) && (RuleData::chkRule("sanbaiman_border", "11han_or_more")))) &&
-			(totalSemiMangan < 6)) yStat->AgariPoints = (LargeNum)4000; // 倍満
+			(totalSemiMangan < 6)) yStat->AgariPoints = 4000; // 倍満
 		else if (((totalHan < 12) || ((totalHan == 12) && (RuleData::chkRule("kazoe_border", "13han_or_more")))) &&
-			(totalSemiMangan < 8)) yStat->AgariPoints = (LargeNum)6000; // 三倍満
+			(totalSemiMangan < 8)) yStat->AgariPoints = 6000; // 三倍満
 		else if ((totalSemiMangan < 8) && (RuleData::chkRule("kazoe_border", "no")))
-			yStat->AgariPoints = (LargeNum)6000; // 三倍満
-		else if (totalSemiMangan < 16) yStat->AgariPoints = (LargeNum)8000; // 役満 or 数え
-		else yStat->AgariPoints = (LargeNum)(8000 * (totalSemiMangan / 8)); // ダブル役満以上
+			yStat->AgariPoints = 6000; // 三倍満
+		else if (totalSemiMangan < 16) yStat->AgariPoints = 8000; // 役満 or 数え
+		else yStat->AgariPoints = 8000 * (totalSemiMangan / 8); // ダブル役満以上
 	} else { // 青天井ルールの場合
-		if (totalSemiMangan >= 8) yStat->AgariPoints = (LargeNum)2500000; // 役満を固定点にするルール
-		else if (totalSemiMangan >= 6) yStat->AgariPoints = (LargeNum)1875000;
-		else if (totalSemiMangan >= 4) yStat->AgariPoints = (LargeNum)1250000;
-		else if (totalSemiMangan >= 3) yStat->AgariPoints = (LargeNum)937500;
-		else if (totalSemiMangan >= 2) yStat->AgariPoints = (LargeNum)625000;
+		if (totalSemiMangan >= 8) yStat->AgariPoints = 2500000; // 役満を固定点にするルール
+		else if (totalSemiMangan >= 6) yStat->AgariPoints = 1875000;
+		else if (totalSemiMangan >= 4) yStat->AgariPoints = 1250000;
+		else if (totalSemiMangan >= 3) yStat->AgariPoints = 937500;
+		else if (totalSemiMangan >= 2) yStat->AgariPoints = 625000;
 		else doubling(yStat); // 計算する
 	}
 
@@ -124,7 +124,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	switch (analysis->MianziDat[0].tile) { /* 風牌は条件によって役牌 */
 	case EastWind: case SouthWind: case WestWind: case NorthWind:
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile((uint8_t)(gameStat->GameRound / 4))) // 場風牌
+			Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))) // 場風牌
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
 			Wind2Tile(gameStat->playerwind(analysis->player))) // 自風牌
@@ -233,7 +233,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 	/* 終了処理 */
 	CodeConv::tostringstream o; o << _T("この手牌は [") << fu << _T("] 符です。"); trace(o.str().c_str());
-	analysis->BasePoint = (uint8_t)fu;
+	analysis->BasePoint = static_cast<uint8_t>(fu);
 #endif /* GUOBIAO */
 }
 
@@ -521,19 +521,19 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
 			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
-				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
+				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 #elif defined(_WIN32)
 			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			_tcsncat(result->yakumanNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\r\n"),
-				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
+				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #else
 			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			_tcsncat(result->yakumanNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\n"),
-				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
+				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
@@ -544,19 +544,19 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
 			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
-				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
+				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
 #elif defined(_WIN32)
 			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			_tcsncat(result->yakumanNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\r\n"),
-				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
+				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #else
 			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			_tcsncat(result->yakumanNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
 			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\n"),
-				(int)((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
+				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
@@ -660,8 +660,8 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 	/* 切り上げ満貫の処理 */
 	if ((RuleData::chkRuleApplied("round_to_mangan")) && // 切り上げ満貫ルールがONで
 		(!RuleData::chkRuleApplied("limitless")) && // 青天井ルールでない場合
-		(result->AgariPoints == (LargeNum)1920)) // 子の7700・親の11600なら
-			result->AgariPoints = (LargeNum)2000; // 満貫にする
+		(result->AgariPoints == 1920)) // 子の7700・親の11600なら
+			result->AgariPoints = 2000; // 満貫にする
 #endif /* GUOBIAO */
 	/* 終了処理 */
 	return;
@@ -685,7 +685,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	YAKUSTAT result;
-	const ParseMode pMode = {NoTile, Ke_Shun};
+	constexpr ParseMode pMode = {NoTile, Ke_Shun};
 	// 計算を実行
 	THREADLIB::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
 	myThread.join(); // 同期
@@ -712,8 +712,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	MVCONTAINER::vector<THREADLIB::thread> myThreads;
 	for (int i = 0; i < 160; i++) {
-		calcprm[i].pMode.AtamaCode = (TileCode)(i / 4);
-		calcprm[i].pMode.Order = (ParseOrder)(i % 4);
+		calcprm[i].pMode.AtamaCode = static_cast<TileCode>(i / 4);
+		calcprm[i].pMode.Order = static_cast<ParseOrder>(i % 4);
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 	}
 	// 計算を実行
@@ -735,14 +735,14 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, PlayerID targetPlayer) {
 	// 役判定
 	CodeConv::tostringstream o;
-	o << _T("役判定処理を開始 プレイヤー [") << (int)targetPlayer << _T("]");
+	o << _T("役判定処理を開始 プレイヤー [") << static_cast<int>(targetPlayer) << _T("]");
 	debug(o.str().c_str());
 	// 初期化
 	YAKUSTAT yakuInfo;
 	// シャンテン数をチェック
 	Shanten shanten[SHANTEN_PAGES];
 	for (int i = 0; i < SHANTEN_PAGES; i++)
-		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, (ShantenType)i);
+		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, static_cast<ShantenType>(i));
 	// 和了ってるか判定(和了ってなかった場合十三不塔か判定する)
 	if (shanten[shantenAll] > -1) {
 #ifndef GUOBIAO

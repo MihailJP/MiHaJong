@@ -33,7 +33,7 @@ namespace client {
 		bool isFailed (); // 接続失敗したかどうか
 		bool isFinished (); // 待機用スレッドが終わったかどうか
 		CodeConv::tstring getPlayerName (unsigned id); // プレイヤー名
-		const char* getRules (unsigned line);
+		constexpr char* getRules (unsigned line);
 		int getClientNumber (); // クライアント番号
 	};
 	

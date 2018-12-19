@@ -1,16 +1,17 @@
 #include "proto.h"
+#include "../geometry.h"
 
 namespace mihajong_graphic {
 
 int Scene::whichRegion(int X, int Y) {
 	int regionNum = -1;
-	for (int i = 0; i < regions.size(); i++)
+	for (unsigned int i = 0; i < regions.size(); i++)
 		if ((X >= regions[i].Left) &&(Y >= regions[i].Top) && (X <= regions[i].Right) && (Y <= regions[i].Bottom))
-			regionNum = i;
+			regionNum = static_cast<int>(i);
 	return regionNum;
 }
 
-const Scene::Region Scene::NullRegion = {0, 0, -1, -1};
+constexpr Scene::Region Scene::NullRegion = {0, 0, -1, -1};
 
 void Scene::setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom) {
 	if (regions.size() <= regionID)
@@ -24,6 +25,33 @@ void Scene::setRegion(unsigned regionID, const Region& region) {
 	setRegion(regionID, region.Left, region.Top, region.Right, region.Bottom);
 }
 
+float Scene::WidthRate() {
+	return static_cast<float>(Geometry::WindowWidth) * 0.75f / static_cast<float>(Geometry::WindowHeight);
+}
+
+int Scene::scaleX(int x) {
+	return static_cast<int>(static_cast<float>(x) * (WidthRate() * Geometry::WindowScale()));
+}
+int Scene::scaleY(int y) {
+	return static_cast<int>(static_cast<float>(y) * Geometry::WindowScale());
+}
+unsigned int Scene::scaleW(unsigned int width) {
+	return static_cast<unsigned int>(static_cast<float>(width) * (WidthRate() * Geometry::WindowScale()));
+}
+unsigned int Scene::scaleH(unsigned int height) {
+	return static_cast<unsigned int>(static_cast<float>(height) * Geometry::WindowScale());
+}
+int Scene::scaleInvX(int x) {
+	return static_cast<int>(static_cast<float>(x) / WidthRate() / Geometry::WindowScale());
+}
+int Scene::scaleInvY(int y) {
+	return static_cast<int>(static_cast<float>(y) / Geometry::WindowScale());
+}
+int Scene::adjX(int x) {
+	return static_cast<int>(static_cast<float>(x) * WidthRate());
+}
+
+
 #ifdef _WIN32
 void Scene::PadInput(LPDIDEVICEOBJECTDATA od) {
 	DIDEVICEOBJECTDATA tmpObjDat;
@@ -32,7 +60,7 @@ void Scene::PadInput(LPDIDEVICEOBJECTDATA od) {
 	tmpObjDat.dwSequence = od->dwSequence;
 	tmpObjDat.dwTimeStamp = od->dwTimeStamp;
 	tmpObjDat.uAppData = od->uAppData;
-	signed short axisVal = tmpObjDat.dwData;
+	signed short axisVal = static_cast<short>(tmpObjDat.dwData);
 	switch (od->dwOfs) {
 	case DIJOFS_X:
 		if (axisVal < 0)

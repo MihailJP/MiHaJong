@@ -22,8 +22,8 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-const double TableSubsceneAgariScreenProto::yakuInterval = 0.75;
-const double TableSubsceneAgariScreenProto::yakuAnimStartSecond = 2.0;
+constexpr double TableSubsceneAgariScreenProto::yakuInterval = 0.75;
+constexpr double TableSubsceneAgariScreenProto::yakuAnimStartSecond = 2.0;
 
 TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(DevicePtr device) : TableSubscene(device) {
 	myDevice = device;
@@ -82,15 +82,15 @@ ArgbColor TableSubsceneAgariScreenProto::baseColor() {
 
 void TableSubsceneAgariScreenProto::renderWindow() {
 	const double Zeit = seconds();
-	const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
+	const int yOffset = (Zeit >= 1.0) ? 0 : static_cast<int>(pow(1.0 - Zeit, 2) * static_cast<double>(Geometry::BaseSize));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(
 		windowTexture, BaseX, BaseY - yOffset, yakuWndWidth, yakuWndHeight, baseColor());
 }
 
 bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
-	const double anmTime = 0.5;
+	constexpr double anmTime = 0.5;
 	const double Zeit = seconds() - (yakuAnimStartSecond + yakuInterval * yakuNum);
-	const int xOffset = (Zeit >= anmTime) ? 0 : (int)(pow(2.0 * (anmTime - Zeit), 2) * (double)(yakuWndWidth / 5));
+	const int xOffset = (Zeit >= anmTime) ? 0 : static_cast<int>(pow(2.0 * (anmTime - Zeit), 2) * static_cast<double>(yakuWndWidth / 5));
 	if (Zeit <= 0) {
 		myTextRenderer->DelText(yakuNum * 2);
 		myTextRenderer->DelText(yakuNum * 2 + 1);
@@ -121,12 +121,12 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		// 幅計算
 		const float compressRate = [this](const CodeConv::tstring& str) -> float {
 			const int cols = myTextRenderer->strWidthByCols(str);
-			return (cols > 12) ? (8.0f / (float)cols) : 1.0f;
+			return (cols > 12) ? (8.0f / static_cast<float>(cols)) : 1.0f;
 		} (yakuList[yakuNum].first);
 		// 表示
-		const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (baseColor() & 0x00ffffff));
+		const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - static_cast<int>((anmTime - Zeit) * 300)) << 24 | (baseColor() & 0x00ffffff));
 		const int x = BaseX + ((yakuNum % 2 == 0) ? 50 : 390);
-		const int y = BaseY + 200;
+		constexpr int y = BaseY + 200;
 		myTextRenderer->NewText(yakuNum * 2, yakuList[yakuNum].first,
 			x + xOffset, y + (yakuNum / 2) * 50,
 			1.0f, compressRate, color);
@@ -140,8 +140,8 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 void TableSubsceneAgariScreenProto::renderYakuName() {
 	for (unsigned i = 0; i < yakuList.size(); ++i) {
 		const bool isShown = renderYakuName(i);
-		if (isShown && (maxShown < (signed)i)) {
-			maxShown = (signed)i;
+		if (isShown && (maxShown < static_cast<signed>(i))) {
+			maxShown = static_cast<signed>(i);
 			sound::Play(sound::IDs::sndYakulst1);
 		}
 	}
@@ -195,10 +195,10 @@ void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gam
 	ShowTehai::Reconstruct(gameStat, gameStat->CurrentPlayer.Agari,
 		[this](seatRelative) -> std::tuple<int, int> {
 			const double Zeit = myCaller->seconds();
-			const int yOffset = (Zeit >= 1.0) ? 0 : (int)(pow(1.0 - Zeit, 2) * (double)Geometry::BaseSize);
+			const int yOffset = (Zeit >= 1.0) ? 0 : static_cast<int>(pow(1.0 - Zeit, 2) * static_cast<double>(Geometry::BaseSize));
 			return std::make_tuple(BaseX + 28, handPosY - yOffset);
 		},
-		sSelf, [](int){return (ArgbColor)0xffffffff;},
+		sSelf, [](int){return static_cast<ArgbColor>(0xffffffff);},
 		[](const int*, const int*, int){});
 }
 
@@ -310,9 +310,9 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 	const int DoraPosEnd = numberOfTiles - tileIdOffset() - gameStat->DeadTiles;
 	for (int i = DoraPosStart; i > DoraPosEnd; i -= 2) {
 		const int tileIndex = (i - DoraPosStart) / (-2);
-		const double Zeit = myCaller->seconds() - (startTime() + (double)tileIndex * 0.0625);
+		const double Zeit = myCaller->seconds() - (startTime() + static_cast<double>(tileIndex) * 0.0625);
 		if (Zeit >= 0.0) {
-			const ArgbColor color = (Zeit >= 0.325) ? 0xffffffff : ((255 - (int)((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
+			const ArgbColor color = (Zeit >= 0.325) ? 0xffffffff : ((255 - static_cast<int>((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
 			tileObj->NewTile(tileIndex,
 				(gameStat->DoraPointer <= i) ? gameStat->Deck[i].tile : BackSide,
 				(gameStat->DoraPointer <= i) ? gameStat->Deck[i].red : Normal,
@@ -359,32 +359,32 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 	}
 	if (YakuResult::getYakuStat().isYakuman) return;
 	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // 中国ルールでは不要な情報なので
-	const double anmTime = 0.75;
+	constexpr double anmTime = 0.75;
 	CodeConv::tostringstream o;
 	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("符") <<
 		std::setw(2) << std::setfill(_T(' ')) << YakuResult::getYakuStat().TotalHan() << _T("飜");
-	const int x = BaseX + yakuWndWidth - 32 - 27 * 9;
-	const int y = BaseY + 650;
-	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	constexpr int x = BaseX + yakuWndWidth - 32 - 27 * 9;
+	constexpr int y = BaseY + 650;
+	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - static_cast<int>((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	txtRenderer->NewText(0, o.str(), x, y, 1.0f, (YakuResult::getYakuStat().TotalHan() >= 100) ? (1.5f * 0.9f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
-	const double anmTime = 0.75;
+	constexpr double anmTime = 0.75;
 	const CodeConv::tstring scoreTxt = YakuResult::getAgariScore().to_str(_T(""), _T("-"));
 	assert(scoreTxt != _T("0"));
 	const unsigned txtWidthNoAdj = digitRenderer->strWidthByCols(scoreTxt) / 2u;
 	const unsigned txtWidth = std::min(txtWidthNoAdj, 6u);
 	const int x = BaseX + yakuWndWidth - 24 - 72 * txtWidth;
-	const int y = BaseY + 700;
-	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
-	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	constexpr int y = BaseY + 700;
+	const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * static_cast<float>(anmTime - Zeit), 2) + 1.0f);
+	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - static_cast<int>((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	digitRenderer->NewText(0, scoreTxt,
-		x - (int)(36.0f * (float)txtWidth * (scale - 1.0f)),
-		y - (int)(48.0f * (scale - 1.0f)),
+		x - static_cast<int>(36.0f * static_cast<float>(txtWidth) * (scale - 1.0f)),
+		y - static_cast<int>(48.0f * (scale - 1.0f)),
 		scale,
-		(txtWidthNoAdj < 6) ? 1.5f : (float)(1.5 * 6.0 / (double)txtWidthNoAdj),
+		(txtWidthNoAdj < 6) ? 1.5f : static_cast<float>(1.5 * 6.0 / static_cast<double>(txtWidthNoAdj)),
 		color);
 	if ((timeFlag) && (Zeit >= 2.0)) {
 		ui::UIEvent->set(0);
@@ -395,7 +395,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 	if ((GameStatus::gameStat()->gameType & RichiMJ) && rules::chkRule("limitless", "no")) {
 		const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 		if (Zeit <= 0.0) return;
-		const double anmTime = 0.75;
+		constexpr double anmTime = 0.75;
 
 		const unsigned score = static_cast<unsigned>(YakuResult::getYakuStat().AgariPoints);
 		CodeConv::tstring tmptxt; unsigned strWidth = 0;
@@ -427,14 +427,14 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 		}
 
 		if (strWidth) {
-			const int x = BaseX + 30;
-			const int y = BaseY + 720;
-			const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * (float)(anmTime - Zeit), 2) + 1.0f);
-			const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+			constexpr int x = BaseX + 30;
+			constexpr int y = BaseY + 720;
+			const float scale = (Zeit >= anmTime) ? 1.0f : (pow(2.5f * static_cast<float>(anmTime - Zeit), 2) + 1.0f);
+			const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - static_cast<int>((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 			txtRenderer->NewText(1, tmptxt,
-				x - (int)(54.0f * (scale - 1.0f)),
-				y - (int)(36.0f * (scale - 1.0f)),
-				2.0f * scale, 6.0f / (float)strWidth, color);
+				x - static_cast<int>(54.0f * (scale - 1.0f)),
+				y - static_cast<int>(36.0f * (scale - 1.0f)),
+				2.0f * scale, 6.0f / static_cast<float>(strWidth), color);
 		}
 	}
 }
@@ -444,7 +444,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
 	if (YakuResult::getYakuStat().isYakuman) return;
-	const double anmTime = 0.75;
+	constexpr double anmTime = 0.75;
 	CodeConv::tostringstream o;
 	o << _T("チップ") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
 	if (GameStatus::gameStat()->TsumoAgariFlag) {
@@ -454,9 +454,9 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 			o << _T("ｘ３");
 	}
 	o << _T("枚");
-	const int x = BaseX + yakuWndWidth - 32 - 27 * 10;
-	const int y = BaseY + yakuWndHeight - 70;
-	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - (int)((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
+	constexpr int x = BaseX + yakuWndWidth - 32 - 27 * 10;
+	constexpr int y = BaseY + yakuWndHeight - 70;
+	const ArgbColor color = (Zeit >= anmTime) ? baseColor() : ((255 - static_cast<int>((anmTime - Zeit) * 300)) << 24 | (0x00ffffff & baseColor()));
 	txtRenderer->NewText(2, o.str(), x, y, 1.0f, (GameStatus::gameStat()->TsumoAgariFlag) ? (1.5f * 5.0f / 7.0f) : 1.5f, color);
 }
 void TableSubsceneAgariScreenProto::ShowScore::Reconstruct() {
@@ -474,10 +474,10 @@ void TableSubsceneAgariScreenProto::ShowScore::Render() {
 void TableSubsceneAgariScreenProto::skipEvent() {
 	if (seconds() < yakuAnimStartSecond) {
 		sound::Play(sound::IDs::sndClick);
-		myTimer.skipTo(yakuAnimStartSecond * 1000000);
+		myTimer.skipTo(static_cast<TimerMicrosec>(yakuAnimStartSecond * 1000000));
 	} else if (seconds() < (yakuAnimStartSecond + yakuInterval * yakuList.size())) {
 		sound::Play(sound::IDs::sndClick);
-		myTimer.skipTo((yakuAnimStartSecond + yakuInterval * yakuList.size()) * 1000000);
+		myTimer.skipTo(static_cast<TimerMicrosec>((yakuAnimStartSecond + yakuInterval * yakuList.size()) * 1000000));
 	} else {
 		sound::Play(sound::IDs::sndClick);
 		ui::UIEvent->set(0);
