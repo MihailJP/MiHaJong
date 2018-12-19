@@ -38,7 +38,6 @@
     <ProjectGuid>{B8BE6218-14FF-4C17-9213-3D99E093EF86}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>mjcore</RootNamespace>
-    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -38,7 +38,6 @@
     <ProjectGuid>{7B39960B-D346-465D-A9D0-8FDA45A62664}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>socket</RootNamespace>
-    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
