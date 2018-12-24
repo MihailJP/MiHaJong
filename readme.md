@@ -1,6 +1,6 @@
 MiHaJong: Japanese Mahjong with a lot of local rules implemented
 ================================================================
-Copyright (c) 2008-2013 MihailJP, Part of rights reserved
+Copyright (c) 2008-2013, 2018 MihailJP
 
 
 はじめに
@@ -18,9 +18,8 @@ Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 
 動作環境
 --------
-- Windows版はWindows XP/Vista/7、Direct X 9 (June 2010) 以降
+- Windows版はWindows 7/10、Direct X 9 (June 2010) 以降
 - Linux版はX11(xlib)、OpenGL(GLX)、OpenAL、libpng、libluaが必要
-- HTML形式、XML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
 インストールのしかた
@@ -47,7 +46,7 @@ Vista 以降をお使いの場合で C:\Program Files 以下にインストー�
 
 あそびかた
 ----------
-　playing.md をご覧ください。
+　[playing.md](doc/playing.md) をご覧ください。
 
 
 中国麻将について
@@ -78,14 +77,15 @@ MiHaJongでは、基本的に2006年版のルールに準拠していますが�
 
 MihailJPの開発環境
 ------------------
-- OS：Windows 7 Home Premium 32bit (Service Pack 1)
+- OS：Windows 10 Home 64bit
 - OS：OpenSUSE 12.3 x86_64
-- 物理メモリ：4GB（32bit OSでは3.2GB使用可能）
-- CPU：Intel Core i5 760 2.80GHz（場合により2.66GHzにダウンクロック）
-- 開発環境：Visual C++ 2013 Express (Windows)、GCC 4.7 (Linux)
-- 画像編集ツール：GIMP 2.6
+- 物理メモリ：12GB
+- CPU：Intel Core i7 860
+- GPU：GeForce GTX 950
+- 開発環境：Visual Studio Community 2017 (Windows)、GCC 4.7 (Linux)
+- 画像編集ツール：GIMP 2.8
 - テキストエディタ：Mery、Notepad++、Kate
-- Gitクライアント：Cygwin GIT (Windows)、GIT (Linux)
+- Gitクライアント：GitHub Desktop (Windows)、GIT (Linux)
 
 
 ビルドに別途必要なもの
@@ -117,8 +117,8 @@ Linux版の制限
 ライセンスについて
 ------------------
 　ソースコードはMITライセンスでリリースされます。
-　その他については、ドキュメントに記載されています。
-　[license.md](doc/license.md) をご覧ください。
+その他については、ドキュメントに記載されています。
+[license.md](doc/license.md) をご覧ください。
 
 
 バージョン履歴
