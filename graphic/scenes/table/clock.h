@@ -12,10 +12,10 @@ private:
 	TexturePtr myTexture;
 	void setClockMatrix(TransformMatrix* matrix, float angle = 0.0f);
 private:
-	static const int clockPosX = 460;
-	static const int clockPosY = 460;
+	static int clockPosX;
+	static int clockPosY;
 	static const unsigned clockDiameter = 512u;
-	static const unsigned scaledClockDiameter = 160u;
+	static unsigned scaledClockDiameter;
 private:
 	void renderMoon();
 	void renderShadow();

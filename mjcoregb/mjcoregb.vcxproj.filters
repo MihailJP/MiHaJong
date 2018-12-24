@@ -60,9 +60,6 @@
     <ClCompile Include="..\mjcore\agari.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="..\mjcore\chat.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="..\mjcore\decomp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -252,9 +249,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\mjcore\agari.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mjcore\chat.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\mjcore\confitms.h">

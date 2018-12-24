@@ -10,7 +10,6 @@
 #include "../common/largenum.h"
 #include "envtbl.h"
 #include "../common/version.h"
-#include "chat.h"
 #include "ruletbl.h"
 #include "yaku/yaku.h"
 
@@ -761,12 +760,6 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 			gameStat->Player[player].playerChip;
 
 #endif /* GUOBIAO */
-	{
-		CodeConv::tostringstream p;
-		p << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName << _T("(") <<
-			windName(wind) << _T(") ") << o.str();
-		chat::chatobj->sysmsg(p.str());
-	}
 					
 	// XML用出力
 	const CodeConv::tstring nomDeVent[4] = {_T("east"), _T("south"), _T("west"), _T("north")};
@@ -915,9 +908,6 @@ void haifu::haifusave(const GameTable* const gameStat) {
 
 	/* ファイル書き出し */
 	std::ofstream fileout;
-	fileout.open((filename1.str() + std::string("_chat_") + // チャットログ
-		filename2.str() + std::string(".txt")).c_str());
-	fileout << CodeConv::EncodeStr(chat::chatobj->getlog()); fileout.close();
 	fileout.open((filename1.str() + std::string("_haifu_") + // XML形式牌譜
 		filename2.str() + std::string(".xml")).c_str());
 	fileout << CodeConv::EncodeStr(XMLhaifuBuffer.str()); fileout.close();

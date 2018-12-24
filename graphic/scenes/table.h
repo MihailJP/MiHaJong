@@ -4,7 +4,6 @@
 #include "../geometry.h"
 #include <tuple>
 #include <functional>
-#include "../widgets/logwnd.h"
 #include "../widgets/editbox.h"
 #include "tablesub/tblsubs.h"
 #include "../text.h"
@@ -21,9 +20,6 @@ protected:
 	static const unsigned int DeckPosV = (TableSize / 2) - 300;
 	TexturePtr tBorder; // 卓の枠
 	TexturePtr tBaize; // 羅紗地
-	logwnd::LogWindow* logWindow; // ログウィンドウ
-	EditBox* chatInput; // チャット入力欄
-	static const unsigned ChatInputRegion = 99;
 	TextRenderer* myTextRenderer; // 文字表示
 #ifndef _WIN32
 	bool reconstructFlag;
@@ -81,9 +77,7 @@ public:
 	~GameTableScreen();
 	void Render();
 #ifdef _WIN32
-	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
-	void KeyboardInput(WPARAM wParam, LPARAM lParam);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
 	/* TODO: Linuxでは日本語入力が未実装 */

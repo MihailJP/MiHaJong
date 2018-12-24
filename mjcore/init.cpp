@@ -14,7 +14,6 @@
 #include "../graphic/graphic.h"
 #include "yaku/yaku.h"
 #include "ruletbl.h"
-#include "chat.h"
 
 #ifdef _WIN32
 MJCORE void initapp(GameTypeID gameType, HWND hwnd)
@@ -95,7 +94,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,
-			getName, chat::sendchat, isAboveBase, isStandAlone);
+			getName, nullptr, isAboveBase, isStandAlone);
 	}
 
 	/* 音源を初期化 */

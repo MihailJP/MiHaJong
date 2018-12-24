@@ -7,7 +7,6 @@
 #include "envtbl.h"
 #include "tileutil.h"
 #include "func.h"
-#include "chat.h"
 #include <sstream>
 #include <iomanip>
 #include "../common/nmrules.h"
@@ -26,16 +25,6 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 		gameStat->Player[player].ConnectionLost = true;
 		CodeConv::tostringstream o; o << _T("プレイヤー [") << static_cast<int>(player) << _T("] の回線切断を検知しました。");
 		warn(o.str().c_str());
-	}
-	{
-		CodeConv::tostringstream o; 
-		if (player == -1)
-			o << _T("*** サーバーとの接続が切れました。");
-		else
-			o << _T("*** ") << EnvTable::Instantiate()->PlayerDat[player].PlayerName <<
-			_T("(") << windName(gameStat->playerwind(player)) << _T(") の接続が切れました。");
-		chat::appendchat(o.str().c_str());
-		chat::appendchat(_T("*** この局はツモ切り、次局からCPUが代走します。"));
 	}
 }
 RemoteDahai::RemoteDahai (GameTable* const gStat) {

@@ -19,7 +19,6 @@ isPao_type isPao = nullptr;
 isPaoAgari_type isPaoAgari = nullptr;
 bgmplay_type bgmplay = nullptr;
 getName_type getName = nullptr;
-sendchat_type sendchat = nullptr;
 isAboveBase_type isAboveBase = nullptr;
 isStandAlone_type isStandAlone = nullptr;
 
@@ -40,7 +39,7 @@ EXPORT void setfunc(
 	isPaoAgari_type ptr_isPaoAgari,
 	bgmplay_type ptr_bgmplay,
 	getName_type ptr_getName,
-	sendchat_type ptr_sendchat,
+	void*,
 	isAboveBase_type ptr_isAboveBase,
 	isStandAlone_type ptr_isStandAlone)
 {
@@ -60,7 +59,6 @@ EXPORT void setfunc(
 	isPaoAgari = ptr_isPaoAgari;
 	bgmplay = ptr_bgmplay;
 	getName = ptr_getName;
-	sendchat = ptr_sendchat;
 	isAboveBase = ptr_isAboveBase;
 	isStandAlone = ptr_isStandAlone;
 }

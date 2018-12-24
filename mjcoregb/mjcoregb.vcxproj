@@ -208,7 +208,6 @@
     <ClCompile Include="..\mjcore\ai\filesel.cpp" />
     <ClCompile Include="..\mjcore\ai\gftbl.cpp" />
     <ClCompile Include="..\mjcore\ai\riskchk.cpp" />
-    <ClCompile Include="..\mjcore\chat.cpp" />
     <ClCompile Include="..\mjcore\data\confitem_csv.cpp" />
     <ClCompile Include="..\mjcore\data\confitem_ini.cpp" />
     <ClCompile Include="..\mjcore\data\prefitem_csv.cpp" />
@@ -292,7 +291,6 @@
     <ClInclude Include="..\mjcore\ai\class.h" />
     <ClInclude Include="..\mjcore\ai\functbl.h" />
     <ClInclude Include="..\mjcore\ai\filesel.h" />
-    <ClInclude Include="..\mjcore\chat.h" />
     <ClInclude Include="..\mjcore\confitms.h" />
     <ClInclude Include="..\mjcore\data\confitem_csv.h" />
     <ClInclude Include="..\mjcore\data\confitem_ini.h" />

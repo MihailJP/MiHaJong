@@ -6,7 +6,6 @@
 #include "filesel.h"
 #include "../gametbl.h"
 #include "../logging.h"
-#include "../chat.h"
 #include "../../common/strcode.h"
 
 constexpr DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
@@ -25,7 +24,7 @@ bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, cons
 				o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(function_name) << _T("] の取得に失敗しました"); error(o.str().c_str());
 				info(_T("このスクリプトは使用できません。デフォルトAI(ツモ切り)に切り替えます。"));
 				status[PlayerID].scriptLoaded = false;
-				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
+				error(o.str().c_str());
 				return true;
 			} else {
 				o << _T("グローバルシンボル [") << CodeConv::EnsureTStr(function_name) << _T("] の取得に失敗しました。無視します。");
@@ -49,8 +48,6 @@ bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, cons
 			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
 			}
 			error(o.str().c_str());
-			if (is_mandatory)
-				chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 			if (std::string(function_name) == std::string(fncname_discard))
 				warn(_T("関数呼び出しに失敗したため、ツモ切りとみなします"));
 			else
@@ -116,7 +113,6 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
 		}
 		error(o.str().c_str());
-		chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 	} else {
 		CodeConv::tostringstream o;
 		o << _T("スクリプトファイル [") << CodeConv::EnsureTStr(filename) << _T("] を読み込みました。");
@@ -136,7 +132,6 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
 			}
 			error(o.str().c_str());
-			chat::chatobj->sysmsg(CodeConv::tstring(_T("*** ")) + o.str());
 		} else {
 			/* 実行完了 */
 			info(_T("スクリプトの実行に成功しました"));

@@ -171,7 +171,6 @@
     <ClCompile Include="init.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loadtex.cpp" />
-    <ClCompile Include="widgets\logwnd.cpp" />
     <ClCompile Include="rule.cpp" />
     <ClCompile Include="scenes\result.cpp" />
     <ClCompile Include="scenes\fps.cpp" />
@@ -252,7 +251,6 @@
     <ClInclude Include="init.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="loadtex.h" />
-    <ClInclude Include="widgets\logwnd.h" />
     <ClInclude Include="pi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="rule.h" />

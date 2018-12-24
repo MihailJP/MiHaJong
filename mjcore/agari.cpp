@@ -10,7 +10,6 @@
 #include "haifu.h"
 #include "envtbl.h"
 #include "endround.h"
-#include "chat.h"
 #include "ruletbl.h"
 #include "tileutil.h"
 #include <cassert>
@@ -627,25 +626,22 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	LargeNum AgariPointRaw = yakuInfo.AgariPoints;
 	if (AgariPlayerPriority == -1) AgariPlayerPriority = gameStat->CurrentPlayer.Agari;
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
-	CodeConv::tstring tmpResultDesc;
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {
-		case sEast:  tmpResultDesc += _T("東家"); break;
-		case sSouth: tmpResultDesc += _T("南家"); break;
-		case sWest:  tmpResultDesc += _T("西家"); break;
-		case sNorth: tmpResultDesc += _T("北家"); break;
+		case sEast:  ResultDesc += _T("東家"); break;
+		case sSouth: ResultDesc += _T("南家"); break;
+		case sWest:  ResultDesc += _T("西家"); break;
+		case sNorth: ResultDesc += _T("北家"); break;
 	}
 	if (gameStat->TsumoAgariFlag) {
-		tmpResultDesc += _T("のツモ和了り");
+		ResultDesc += _T("のツモ和了り");
 	} else {
 		switch (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi)) {
-			case sEast:  tmpResultDesc += _T("が東家からロン和了り"); break;
-			case sSouth: tmpResultDesc += _T("が南家からロン和了り"); break;
-			case sWest:  tmpResultDesc += _T("が西家からロン和了り"); break;
-			case sNorth: tmpResultDesc += _T("が北家からロン和了り"); break;
+			case sEast:  ResultDesc += _T("が東家からロン和了り"); break;
+			case sSouth: ResultDesc += _T("が南家からロン和了り"); break;
+			case sWest:  ResultDesc += _T("が西家からロン和了り"); break;
+			case sNorth: ResultDesc += _T("が北家からロン和了り"); break;
 		}
 	}
-	ResultDesc += tmpResultDesc;
-	writeChat(tmpResultDesc);
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	const int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
@@ -762,15 +758,12 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::None);
 #else /* GUOBIAO */
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
-	CodeConv::tstring tmpResultDesc;
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {
-		case sEast:  tmpResultDesc += _T("東家のチョンボ"); break;
-		case sSouth: tmpResultDesc += _T("南家のチョンボ"); break;
-		case sWest:  tmpResultDesc += _T("西家のチョンボ"); break;
-		case sNorth: tmpResultDesc += _T("北家のチョンボ"); break;
+		case sEast:  ResultDesc += _T("東家のチョンボ"); break;
+		case sSouth: ResultDesc += _T("南家のチョンボ"); break;
+		case sWest:  ResultDesc += _T("西家のチョンボ"); break;
+		case sNorth: ResultDesc += _T("北家のチョンボ"); break;
 	}
-	ResultDesc += tmpResultDesc + _T("です");
-	writeChat(tmpResultDesc);
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	sound::util::bgmplay(sound::IDs::musRyuukyoku);
 	/* 誤ロンまたは誤ツモ */

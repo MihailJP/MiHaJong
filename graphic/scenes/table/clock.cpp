@@ -14,9 +14,18 @@ constexpr float pi = 3.1415927f;
 
 namespace mihajong_graphic {
 
+unsigned GameTableScreen::Clock::scaledClockDiameter;
+int GameTableScreen::Clock::clockPosX;
+int GameTableScreen::Clock::clockPosY;
+
 GameTableScreen::Clock::Clock(GameTableScreen* caller) {
+	constexpr unsigned int clockPadding = 10u;
+	constexpr int clockCenterY = 300;
 	parent = caller;
 	parent->LoadTexture(&myTexture, MAKEINTRESOURCE(IDB_PNG_MOON_CLOCK));
+	scaledClockDiameter = Geometry::SidebarWidth() < (clockDiameter + clockPadding) ? Geometry::SidebarWidth() - clockPadding : clockDiameter;
+	clockPosX = (Geometry::SidebarWidth() - scaledClockDiameter) / 2 + Geometry::BaseSize;
+	clockPosY = clockCenterY - scaledClockDiameter / 2;
 }
 
 GameTableScreen::Clock::~Clock() {

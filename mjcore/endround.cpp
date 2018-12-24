@@ -13,7 +13,6 @@
 #include "../graphic/graphic.h"
 #include "tileutil.h"
 #include "haifu.h"
-#include "chat.h"
 #include "agari.h"
 #include "envtbl.h"
 #include <cmath>
@@ -191,7 +190,6 @@ namespace {
 		using namespace CodeConv;
 		if (ResultDesc) {
 			sound::Play(soundNum);
-			writeChat(*ResultDesc);
 			Subscene(subsceneCode);
 			mihajong_graphic::ui::WaitUIWithTimeout(3000);
 		}
@@ -225,7 +223,6 @@ namespace {
 			case 4: TenpaiCountTxt = _T("４人聴牌"); break;
 		}
 		ResultDesc = _T("荒牌流局、") + TenpaiCountTxt;
-		writeChat(ResultDesc + _T("です"));
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
 		mihajong_graphic::ui::WaitUIWithTimeout(5000);
@@ -396,7 +393,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % Players))
 			ResultDesc = _T("北家の九種九牌");
 		else ResultDesc = _T("九種九牌"); // ←決して実行されないはず
-		writeChat(ResultDesc);
 		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
 
 		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
@@ -490,7 +486,6 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 				}
 			}
 			ResultDesc += _T("の流し満貫");
-			writeChat(ResultDesc);
 		}
 		sound::Play(sound::IDs::sndPage);
 		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall);
