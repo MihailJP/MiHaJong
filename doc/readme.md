@@ -1,6 +1,6 @@
 MiHaJong: Japanese Mahjong with a lot of local rules implemented
 ================================================================
-Copyright (c) 2008-2013 MihailJP, Part of rights reserved
+Copyright (c) 2008-2013, 2018 MihailJP
 
 
 はじめに
@@ -118,6 +118,8 @@ Linux版の制限
 
 ライセンスについて
 ------------------
+　ソースコードはMITライセンスでリリースされます。
+　その他については、ドキュメントに記載されています。
 　[license.md](./license.md) をご覧ください。
 
 
