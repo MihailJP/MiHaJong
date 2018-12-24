@@ -158,7 +158,6 @@ void GameTableScreen::RenderTable() {
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBaize, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	SpriteRenderer::instantiate(caller->getDevice())->ShowSprite(tBorder, 0, 0, Geometry::BaseSize, Geometry::BaseSize);
 	Reconstruct(GameStatus::retrGameStat());
-	clockPanel->Render();
 	richibouReconst->Render();
 	diceReconst->Render();
 	trayReconst->Render();
@@ -175,6 +174,7 @@ void GameTableScreen::RenderSideBar() {
 	ShowSidebar();
 	ShowStatus(GameStatus::gameStat());
 	ShowScorePanel();
+	clockPanel->Render();
 }
 
 void GameTableScreen::checkTimeout() {
