@@ -78,6 +78,22 @@
 				</span>
 			</xsl:if>
 		</h2>
+		<xsl:if test="round-description/dice">
+			<p>
+				<xsl:text>サイコロ :</xsl:text>
+				<xsl:for-each select="round-description/dice">
+					<xsl:text> </xsl:text>
+					<span class="dice">
+						<xsl:call-template name="dice-face">
+							<xsl:with-param name="val" select="@face1" />
+						</xsl:call-template>
+						<xsl:call-template name="dice-face">
+							<xsl:with-param name="val" select="@face2" />
+						</xsl:call-template>
+					</span>
+				</xsl:for-each>
+			</p>
+		</xsl:if>
 		<p>結果：<xsl:value-of select="round-description/result" /></p>
 		<table>
 			<xsl:variable name="cols" select="40" />
@@ -101,13 +117,11 @@
 						<xsl:call-template name="stylize-sign">
 							<xsl:with-param name="val" select="@score" />
 						</xsl:call-template>
-						<xsl:if test="@score-after">
+						<xsl:if test="@delta">
 							<xsl:text> → </xsl:text>
 							<xsl:call-template name="stylize-sign">
-								<xsl:with-param name="val" select="@score-after" />
+								<xsl:with-param name="val" select="number(@score)+number(@delta)" />
 							</xsl:call-template>
-						</xsl:if>
-						<xsl:if test="@delta">
 							<xsl:text> (</xsl:text>
 							<xsl:call-template name="stylize-sign">
 								<xsl:with-param name="val" select="@delta" />
@@ -120,8 +134,30 @@
 								<xsl:with-param name="val" select="@chip" />
 							</xsl:call-template>
 						</xsl:if>
+						<xsl:if test="@comment">
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="@comment" />
+						</xsl:if>
 					</td>
 				</tr>
+				<!-- プレイヤー別の情報：あがっていたら役を表示 -->
+				<xsl:if test="yaku">
+					<tr>
+						<td colspan="{$cols}">
+							<xsl:for-each select="yaku">
+								<xsl:if test="position() &gt; 1">
+									<xsl:text>、</xsl:text>
+								</xsl:if>
+								<xsl:value-of select="@name" />
+								<xsl:if test="@value">
+									<xsl:text> (</xsl:text>
+									<xsl:value-of select="@value" />
+									<xsl:text>)</xsl:text>
+								</xsl:if>
+							</xsl:for-each>
+						</td>
+					</tr>
+				</xsl:if>
 				<!-- プレイヤー別の情報：配牌 -->
 				<tr>
 					<td class="label">配牌</td>
@@ -585,6 +621,20 @@
 			<xsl:otherwise>
 				<xsl:value-of select="$val" />
 			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- サイコロの目（１〜６） -->
+	<xsl:template name="dice-face">
+		<xsl:param name="val" />
+		<xsl:choose>
+			<xsl:when test="$val =  1" >&#x2680;</xsl:when>
+			<xsl:when test="$val =  2" >&#x2681;</xsl:when>
+			<xsl:when test="$val =  3" >&#x2682;</xsl:when>
+			<xsl:when test="$val =  4" >&#x2683;</xsl:when>
+			<xsl:when test="$val =  5" >&#x2684;</xsl:when>
+			<xsl:when test="$val =  6" >&#x2685;</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$val" /></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

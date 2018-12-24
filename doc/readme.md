@@ -22,7 +22,7 @@ Copyright (c) 2008-2013 MihailJP, Part of rights reserved
 --------
 - Windows版はWindows XP/Vista/7、Direct X 9 (June 2010) 以降
 - Linux版はX11(xlib)、OpenGL(GLX)、OpenAL、libpng、libluaが必要
-- HTML形式、XML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
+- XML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
 インストールのしかた
