@@ -16,6 +16,7 @@ private:
 	void zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF);
 	void menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF);
 	void menuLabels();
+	void versionInfo();
 	unsigned menuCursor;
 public:
 	TitleScreen(ScreenManipulator* const manipulator);
