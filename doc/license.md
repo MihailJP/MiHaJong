@@ -1,32 +1,35 @@
 MiHaJong ライセンス
 ===================
-Copyright (c) 2008-2013 MihailJP, Part of rights reserved
+Copyright (c) 2008-2013, 2018 MihailJP
 
 
 ライセンスについて
 ------------------
 　このソフトウェアはどなたでも無償でご使用いただけますが、著作権を放棄するものではありません。
 
-　ソフトウェア全体としては、次のライセンスで提供されるものとします。使用した素材などの利用条件は後述してあります。
+　ソフトウェア全体としては、MITライセンスで提供されるものとします。使用した素材などの利用条件は後述してあります。
 
-> Copyright (c) 2008-2013 MihailJP, Part of rights reserved.
+> Copyright (c) 2008-2013, 2018 MihailJP
 > 
-> 　ソースコード形式かバイナリ形式か、変更するかしないかを問わず、以下の条件を満たす場合に限り、再頒布および使用が許可されます。
+> MIT License
 > 
-> - ソースコードを再頒布する場合、上記の著作権表示、本条件一覧、および下記免責条項を含めること。
-> - バイナリ形式で再頒布する場合、頒布物に付属のドキュメント等の資料に、上記の著作権表示、本条件一覧、および下記免責条項を含めること。
-> - 本ソフトウェアで使用されている画像、音声、その他のコンポーネントに追加の使用条件が設定されているものがある場合は、その条件にも従うこと。
-> - 書面による特別の許可なしに、本ソフトウェアから派生した製品の宣伝または販売促進に、
->   MihailJPの名前またはコントリビューターの名前を使用してはならない。
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
 > 
-> **　本ソフトウェアは、著作権者およびコントリビューターによって「現状のまま」提供されており、
-> 明示黙示を問わず、商業的な使用可能性、および特定の目的に対する適合性に関する暗黙の保証も含め、
-> またそれに限定されない、いかなる保証もありません。
-> 著作権者もコントリビューターも、事由のいかんを問わず、 損害発生の原因いかんを問わず、
-> かつ責任の根拠が契約であるか厳格責任であるか（過失その他の）不法行為であるかを問わず、
-> 仮にそのような損害が発生する可能性を知らされていたとしても、本ソフトウェアの使用によって発生した
-> （代替品または代用サービスの調達、使用の喪失、データの喪失、利益の喪失、業務の中断も含め、またそれに限定されない）
-> 直接損害、間接損害、偶発的な損害、特別損害、懲罰的損害、または結果損害について、一切責任を負わないものとします。**
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
 
 
 使用した牌画データの元データについて

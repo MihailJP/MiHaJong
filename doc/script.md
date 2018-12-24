@@ -1,6 +1,6 @@
 MiHaJong AI用スクリプト説明
 ===========================
-Copyright (c) 2008-2013 MihailJP, Part of rights reserved
+Copyright (c) 2008-2013, 2018 MihailJP
 
 
 はじめに

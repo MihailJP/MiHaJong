@@ -1,6 +1,6 @@
 MiHaJong バージョン履歴
 =======================
-Copyright (c) 2008-2013 MihailJP, Part of rights reserved
+Copyright (c) 2008-2013, 2018 MihailJP
 
 
 バージョン履歴
