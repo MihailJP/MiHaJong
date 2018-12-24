@@ -339,6 +339,6 @@ int aiscript::table::functable::say(lua_State* const L) {
 			if (i < n) msgstr += _T(" ");
 		}
 	}
-	warn("mihajong.sayは廃止されました。");
+	warn(_T("mihajong.sayは廃止されました。"));
 	return 0;
 }
