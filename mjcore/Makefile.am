@@ -29,10 +29,8 @@ libmihajong_la_SOURCES = \
 	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
 	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h
 nodist_libmihajong_la_SOURCES = \
-	data/confitem_csv.cpp data/confitem_ini.cpp data/prefitem_csv.cpp \
-	data/prefitem_ini.cpp data/rankval_csv.cpp \
-	data/confitem_csv.h data/confitem_ini.h data/prefitem_csv.h \
-	data/prefitem_ini.h data/rankval_csv.h
+	data/confitem_csv.cpp data/confitem_ini.cpp data/rankval_csv.cpp \
+	data/confitem_csv.h data/confitem_ini.h data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
 libmihajong_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihajong_la_CXXFLAGS = -DMJCORE_EXPORTS
@@ -70,12 +68,11 @@ endif
 dist_pkgdata_DATA = \
 	data/mentz.dat.lzma
 nodist_pkgdata_DATA = \
-	data/confitem.csv.lzma data/confitem.ini.lzma data/prefitem.csv.lzma \
-	data/prefitem.ini.lzma data/rankval.csv.lzma
+	data/confitem.csv.lzma data/confitem.ini.lzma data/rankval.csv.lzma
 EXTRA_DIST = \
 	mjcore.vcxproj mjcore.vcxproj.filters mjcore.vcxproj.user \
 	lua/README \
-	data/confitem.csv data/confitem.ini data/prefitem.csv data/prefitem.ini \
+	data/confitem.csv data/confitem.ini \
 	data/rankval.csv
 if WITH_WINAPI
 libmihajong_la_SOURCES += \
@@ -111,20 +108,6 @@ data/confitem.ini.lzma: data/confitem.ini
 data/confitem_ini.h: data/confitem.ini.lzma
 	true
 data/confitem_ini.cpp: data/confitem.ini.lzma
-	true
-
-data/prefitem.csv.lzma: data/prefitem.csv
-	../auxtools/compress.rb data/prefitem.csv
-data/prefitem_csv.h: data/prefitem.csv.lzma
-	true
-data/prefitem_csv.cpp: data/prefitem.csv.lzma
-	true
-
-data/prefitem.ini.lzma: data/prefitem.ini
-	../auxtools/compress.rb data/prefitem.ini
-data/prefitem_ini.h: data/prefitem.ini.lzma
-	true
-data/prefitem_ini.cpp: data/prefitem.ini.lzma
 	true
 
 data/rankval.csv.lzma: data/rankval.csv

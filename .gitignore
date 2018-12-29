@@ -22,7 +22,6 @@ mjcore/mjcore.opensdf
 mjcore/data/*.cpp
 mjcore/data/*.h
 mjcore/data/confitem*.lzma
-mjcore/data/prefitem*.lzma
 mjcore/data/rankval.csv.lzma
 astro/Debug/
 astro/Release/

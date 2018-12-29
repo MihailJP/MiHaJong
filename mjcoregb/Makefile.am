@@ -29,10 +29,8 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/reader/csv2arry.h ../mjcore/reader/ini2map.h ../mjcore/reader/readrsrc.h \
 	../mjcore/yaku/catalog.h ../mjcore/yaku/yaku.h ../mjcore/yaku/yvalue.h ../mjcore/yaku/ykclass.h ../mjcore/yaku/yk_tools.h
 nodist_libmihagbmj_la_SOURCES = \
-	../mjcore/data/confitem_csv.cpp ../mjcore/data/confitem_ini.cpp ../mjcore/data/prefitem_csv.cpp \
-	../mjcore/data/prefitem_ini.cpp ../mjcore/data/rankval_csv.cpp \
-	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/prefitem_csv.h \
-	../mjcore/data/prefitem_ini.h ../mjcore/data/rankval_csv.h
+	../mjcore/data/confitem_csv.cpp ../mjcore/data/confitem_ini.cpp ../mjcore/data/rankval_csv.cpp \
+	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihagbmj_la_SOURCES)
 libmihagbmj_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihagbmj_la_CXXFLAGS = -DGUOBIAO -DMJCORE_EXPORTS
@@ -70,13 +68,11 @@ endif
 dist_pkgdata_DATA = \
 	../mjcore/data/mentz.dat.lzma
 nodist_pkgdata_DATA = \
-	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/prefitem.csv.lzma \
-	../mjcore/data/prefitem.ini.lzma ../mjcore/data/rankval.csv.lzma
+	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/rankval.csv.lzma
 EXTRA_DIST = \
 	mjcoregb.vcxproj mjcoregb.vcxproj.filters mjcoregb.vcxproj.user \
 	../mjcore/lua/README \
-	../mjcore/data/confitem.csv ../mjcore/data/confitem.ini ../mjcore/data/prefitem.csv ../mjcore/data/prefitem.ini \
-	../mjcore/data/rankval.csv
+	../mjcore/data/confitem.csv ../mjcore/data/confitem.ini ../mjcore/data/rankval.csv
 if WITH_WINAPI
 libmihagbmj_la_SOURCES += \
 	../mjcore/lzma/LzFindMt.c ../mjcore/lzma/Threads.c ../mjcore/lzma/LzFindMt.h ../mjcore/lzma/Threads.h \
@@ -111,20 +107,6 @@ CLEANFILES = $(libmihagbmj_la_BUILT_SOURCES) \
 ../mjcore/data/confitem_ini.h: ../mjcore/data/confitem.ini.lzma
 	true
 ../mjcore/data/confitem_ini.cpp: ../mjcore/data/confitem.ini.lzma
-	true
-
-../mjcore/data/prefitem.csv.lzma: ../mjcore/data/prefitem.csv
-	../auxtools/compress.rb ../mjcore/data/prefitem.csv
-../mjcore/data/prefitem_csv.h: ../mjcore/data/prefitem.csv.lzma
-	true
-../mjcore/data/prefitem_csv.cpp: ../mjcore/data/prefitem.csv.lzma
-	true
-
-../mjcore/data/prefitem.ini.lzma: ../mjcore/data/prefitem.ini
-	../auxtools/compress.rb ../mjcore/data/prefitem.ini
-../mjcore/data/prefitem_ini.h: ../mjcore/data/prefitem.ini.lzma
-	true
-../mjcore/data/prefitem_ini.cpp: ../mjcore/data/prefitem.ini.lzma
 	true
 
 ../mjcore/data/rankval.csv.lzma: ../mjcore/data/rankval.csv

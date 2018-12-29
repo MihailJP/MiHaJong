@@ -177,12 +177,6 @@
     <ClCompile Include="..\mjcore\data\confitem_ini.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
-    <ClCompile Include="..\mjcore\data\prefitem_csv.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mjcore\data\prefitem_ini.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
     <ClCompile Include="..\mjcore\data\rankval_csv.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
@@ -402,12 +396,6 @@
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
     <ClInclude Include="..\mjcore\data\confitem_ini.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mjcore\data\prefitem_csv.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mjcore\data\prefitem_ini.h">
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
     <ClInclude Include="..\mjcore\data\rankval_csv.h">

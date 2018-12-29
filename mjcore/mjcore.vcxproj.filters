@@ -246,12 +246,6 @@
     <ClCompile Include="rankval.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="data\prefitem_csv.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
-    <ClCompile Include="data\prefitem_ini.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
     <ClCompile Include="conffile\conffile.cpp">
       <Filter>ソース ファイル\conffile</Filter>
     </ClCompile>
@@ -424,12 +418,6 @@
     </ClInclude>
     <ClInclude Include="rankval.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="data\prefitem_csv.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
-    <ClInclude Include="data\prefitem_ini.h">
-      <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
     <ClInclude Include="confitms.h">
       <Filter>ヘッダー ファイル</Filter>

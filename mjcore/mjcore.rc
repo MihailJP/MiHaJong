@@ -16,8 +16,6 @@ IDR_LZMA_STREA1    LZMA_STREAM    "data/mentz.dat.lzma"
 IDR_LZMA_STREA2    LZMA_STREAM    "data/confitem.csv.lzma"
 IDR_LZMA_STREA3    LZMA_STREAM    "data/confitem.ini.lzma"
 IDR_LZMA_STREA4    LZMA_STREAM    "data/rankval.csv.lzma"
-IDR_LZMA_STREA5    LZMA_STREAM    "data/prefitem.csv.lzma"
-IDR_LZMA_STREA6    LZMA_STREAM    "data/prefitem.ini.lzma"
 
 
 
