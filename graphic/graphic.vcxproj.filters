@@ -192,9 +192,6 @@
     <ClCompile Include="widgets\button.cpp">
       <Filter>ソース ファイル\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\editbox.cpp">
-      <Filter>ソース ファイル\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\checkbox.cpp">
       <Filter>ソース ファイル\widgets</Filter>
     </ClCompile>
@@ -387,9 +384,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="widgets\button.h">
-      <Filter>ヘッダー ファイル\widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="widgets\editbox.h">
       <Filter>ヘッダー ファイル\widgets</Filter>
     </ClInclude>
     <ClInclude Include="widgets\checkbox.h">

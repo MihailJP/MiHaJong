@@ -164,7 +164,6 @@
     <ClCompile Include="calltext.cpp" />
     <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="widgets\checkbox.cpp" />
-    <ClCompile Include="widgets\editbox.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="finscore.cpp" />
     <ClCompile Include="font.cpp" />
@@ -241,7 +240,6 @@
     <ClInclude Include="calltext.h" />
     <ClInclude Include="chrwidth.h" />
     <ClInclude Include="widgets\checkbox.h" />
-    <ClInclude Include="widgets\editbox.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="extchar.h" />
