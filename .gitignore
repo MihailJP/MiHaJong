@@ -111,3 +111,5 @@ mentzdat/test/testprog
 doc/*.html
 compile
 .vs/
+*.aps
+!config/config.h
