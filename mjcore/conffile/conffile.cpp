@@ -42,14 +42,11 @@ void ConfigFile::load() {
 		bool prefFileExists = exist(preferenceFile.c_str()); // 設定ファイルがあるかどうか調べる
 		if (prefFileExists) { // 設定ファイル読み込み
 			CodeConv::tifstream file(preferenceFile.c_str());
-			{
 #ifdef UNICODE
-				const std::locale locale(".65001");
+			file.imbue(std::locale(".65001"));
 #else /* UNICODE */
-				const std::locale locale(".932"));
+			file.imbue(std::locale(".932"));
 #endif /* UNICODE */
-				file.imbue(locale);
-			}
 			CodeConv::tstring line, text;
 			while (std::getline(file, line)) text += line + _T("\n");
 			INIParser::parseini(configMap, text.c_str());
@@ -63,14 +60,11 @@ ConfigFile::ConfigFile() : preferenceFile(confPath() + "config.ini") {
 
 void ConfigFile::save() {
 	CodeConv::tofstream file(preferenceFile);
-	{
 #ifdef UNICODE
-		const std::locale locale(".65001");
+	file.imbue(std::locale(".65001"));
 #else /* UNICODE */
-		const std::locale locale(".932"));
+	file.imbue(std::locale(".932"));
 #endif /* UNICODE */
-		file.imbue(locale);
-	}
 	file << _T("MiHaJong Configuration File\n\n");
 	file << _T("[preferences]\n\n");
 	file << _T("; プレイヤー名\n");
