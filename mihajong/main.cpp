@@ -24,7 +24,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	unsigned width, height; bool fullscreen;
 
 	/* ウィンドウ設定情報を先行読み込み */
-	preferenceInit();
 	getWindowSize(&width, &height, &fullscreen);
 
 	/* ウィンドウを初期化する */

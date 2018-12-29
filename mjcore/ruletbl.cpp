@@ -23,9 +23,12 @@
 #include "confitms.h"
 #include "shanten.h"
 
+#include "conffile/conffile.h"
+
 // -------------------------------------------------------------------------
 
 typedef std::map<std::string, int8_t> RULETBL;
+ConfigFile::ConfigFile RuleData::confFile;
 
 // -------------------------------------------------------------------------
 
@@ -64,35 +67,6 @@ void RuleConfigData::configinit_ini() { // コンフィグ文字列変換用INI�
 	delete inifile;
 }
 #endif /* GUOBIAO */
-
-// -------------------------------------------------------------------------
-
-template class ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE>;
-class PreferenceData : public ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE> {
-	friend class ReqChecker;
-private:
-	void configinit_csv();
-	void configinit_ini();
-public:
-	PreferenceData() : ConfigData<PREFERENCE_ITEMS, RULES_IN_PAGE, RULE_IN_LINE>(_T("preferences")) {}
-	PreferenceData(const PreferenceData&) = delete; // Delete unexpected copy constructor
-	PreferenceData& operator= (const PreferenceData&) = delete; // Delete unexpected assign operator
-};
-namespace {
-	PreferenceData preferenceTableData;
-}
-
-void PreferenceData::configinit_csv() { // コンフィグ用CSVを読み込む
-	Compressed::file_prefitem_csv* csvfile = new Compressed::file_prefitem_csv();
-	ConfigData::configinit_csv(csvfile);
-	delete csvfile;
-}
-
-void PreferenceData::configinit_ini() { // コンフィグ文字列変換用INIを読み込む
-	Compressed::file_prefitem_ini* inifile = new Compressed::file_prefitem_ini();
-	ConfigData::configinit_ini(inifile);
-	delete inifile;
-}
 
 // -------------------------------------------------------------------------
 
@@ -165,22 +139,11 @@ void RuleData::configinit() { // コンフィグ用CSVを読み込む
 	ruleTableData.configinit();
 }
 
-void RuleData::preference_init() { // コンフィグ用CSVを読み込む
-	preferenceTableData.configinit();
-}
-
 void RuleData::storeRule(const char** ruleTxt) { // UI→Core ルール設定転送
 	ruleTableData.storeRule(ruleTxt);
 }
 void RuleData::exportRule(char** ruleTxt) { // Core→UI ルール設定転送
 	ruleTableData.exportRule(ruleTxt);
-}
-
-void RuleData::storePref(const char** ruleTxt) { // UI→Core 環境設定転送
-	preferenceTableData.storeRule(ruleTxt);
-}
-void RuleData::exportPref(char** ruleTxt) { // Core→UI 環境設定転送
-	preferenceTableData.exportRule(ruleTxt);
 }
 
 std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを取得する
@@ -189,14 +152,6 @@ std::string RuleData::chkRule(std::string RuleTag) { // ルール設定タグを
 const char* RuleData::chkRule(const char* RuleTag) { // ルール設定タグを取得する
 	static std::string ruledat;
 	ruledat = chkRule(std::string(RuleTag));
-	return ruledat.c_str();
-}
-std::string RuleData::chkPreference(std::string RuleTag) { // ルール設定タグを取得する
-	return preferenceTableData.chkRule(RuleTag);
-}
-const char* RuleData::chkPreference(const char* RuleTag) { // ルール設定タグを取得する
-	static std::string ruledat;
-	ruledat = chkPreference(std::string(RuleTag));
 	return ruledat.c_str();
 }
 bool RuleData::chkRule(std::string RuleTag, std::string Expectation) { // ルール設定
@@ -211,18 +166,6 @@ bool RuleData::chkRule(const char* RuleTag, const char* Expectation) { // ルー
 	return chkRule(std::string(RuleTag), std::string(Expectation));
 }
 #endif /*_WIN32*/
-bool RuleData::chkPreference(std::string RuleTag, std::string Expectation) { // ルール設定
-	return preferenceTableData.chkRule(RuleTag, Expectation);
-}
-#ifdef _WIN32
-BOOL RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ルール設定
-	return chkPreference(std::string(RuleTag), std::string(Expectation)) ? TRUE : FALSE;
-}
-#else /*_WIN32*/
-bool RuleData::chkPreference(const char* RuleTag, const char* Expectation) { // ルール設定
-	return chkPreference(std::string(RuleTag), std::string(Expectation));
-}
-#endif /*_WIN32*/
 bool RuleData::chkRuleApplied(std::string RuleTag) { // ルール設定
 	return ruleTableData.chkRuleApplied(RuleTag);
 }
@@ -232,36 +175,16 @@ int RuleData::getRule(std::string RuleTag) {
 int RuleData::getRule(uint16_t RuleID) { // ルール設定を取得する(旧仕様)
 	return ruleTableData.getRule(RuleID);
 }
-int RuleData::getPreference(std::string RuleTag) {
-	return preferenceTableData.getRule(RuleTag);
-}
-int RuleData::getPreference(uint16_t RuleID) { // 環境設定を取得する(旧仕様)
-	return preferenceTableData.getRule(RuleID);
-}
-const char* RuleData::getPreferenceRawStr(uint16_t RuleID) { // 環境設定を取得する(旧仕様)
-	static std::string ruletag;
-	ruletag = preferenceTableData.chkRule(RuleID);
-	return ruletag.c_str();
-}
 int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruleTableData.getRuleSize(RuleID);
-}
-int RuleData::getPreferenceSize(uint16_t RuleID) { // 環境項目のアイテム数
-	return preferenceTableData.getRuleSize(RuleID);
 }
 
 void RuleData::getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	ruleTableData.getRuleName(txt, bufsize, RuleID);
 }
-void RuleData::getPreferenceName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	preferenceTableData.getRuleName(txt, bufsize, RuleID);
-}
 
 void RuleData::getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
 	ruleTableData.getRuleDescription(txt, bufsize, RuleID);
-}
-void RuleData::getPreferenceDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID) {
-	preferenceTableData.getRuleDescription(txt, bufsize, RuleID);
 }
 
 std::string RuleData::getRuleItemTag(uint16_t RuleID, int index) {
@@ -273,9 +196,6 @@ std::string RuleData::getRuleItemTag(std::string RuleTag, int index) {
 
 void RuleData::getRuleTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
 	ruleTableData.getRuleTxt(txt, bufsize, RuleID, index);
-}
-void RuleData::getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index) {
-	preferenceTableData.getRuleTxt(txt, bufsize, RuleID, index);
 }
 
 int RuleData::loadConfigFile(const char* const filename) {
@@ -291,13 +211,6 @@ int RuleData::saveConfigFile(const char* const filename) {
 #else /* GUOBIAO */
 	return ruleTableData.saveConfigFile(filename);
 #endif /* GUOBIAO */
-}
-
-int RuleData::loadPreferenceFile(const char* const filename) {
-	return preferenceTableData.loadConfigFile(filename);
-}
-int RuleData::savePreferenceFile(const char* const filename) {
-	return preferenceTableData.saveConfigFile(filename);
 }
 
 std::string RuleData::getRuleMaskExpr(const std::string& RuleTag) {
@@ -326,38 +239,10 @@ const char* RuleData::ruleDigit() {
 	return ruleTableData.ruleDigit();
 }
 
-unsigned RuleData::getPreferenceInputSize(uint16_t RuleID) {
-	return preferenceTableData.getRuleStrBufLen(RuleID);
-}
-
-void RuleData::setPreferenceFreeStr(uint16_t RuleID, const char* str) {
-	preferenceTableData.setFreeStr(RuleID, str);
-}
-
-void RuleData::applyPreference() {
-	sound::util::setvolume();
-}
-
 // -------------------------------------------------------------------------
 
-MJCORE void preferenceInit() {
-	std::string preferenceFile = confpath::confPath() + "config.ini";
-	RuleData::preference_init();
-	const bool prefFileExists = exist(preferenceFile.c_str()); // 設定ファイルがあるかどうか調べる
-	if (prefFileExists) {
-		RuleData::loadPreferenceFile(preferenceFile.c_str()); // 設定ファイル読み込み
-	}
-}
-
 MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen) {
-	std::string sizeConf(RuleData::chkPreference("scrsize"));
-	REGEX::smatch matchDat;
-	if (REGEX::regex_match(sizeConf, matchDat, REGEX::regex("scr_(\\d+)_(\\d+)"))) {
-		*width = atoi(matchDat[1].str().c_str());
-		*height = atoi(matchDat[2].str().c_str());
-	} else {
-		*width = 1024; *height = 768;
-	}
-	std::string fsConf(RuleData::chkPreference((std::string)"screen"));
-	*fullscreen = (fsConf == std::string("fullscreen"));
+	*width = RuleData::confFile.screenResolutionX();
+	*height = RuleData::confFile.screenResolutionY();
+	*fullscreen = RuleData::confFile.fullScreen();
 }

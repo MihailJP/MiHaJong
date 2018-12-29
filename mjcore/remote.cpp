@@ -288,8 +288,7 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 	serverAddr = "";
 	RuleData::exportRule(RuleConfPtr);
 
-	const std::string nomen(RuleData::chkPreference((std::string)"name"));
-	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
+	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(RuleData::confFile.playerName()));
 	mihajong_socket::server::start(Nomen.c_str(), gamePort, ACTUAL_PLAYERS, RuleConfPtr);
 
 	int numOfClientsPrev = 0; int numOfClients = 0;
@@ -326,11 +325,14 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 
 void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort) {
 	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
-	serverAddr = RuleData::chkPreference((std::string)"server");
+	serverAddr
+		= std::to_string((int)RuleData::confFile.serverAddress().first() ) + "."
+		+ std::to_string((int)RuleData::confFile.serverAddress().second()) + "."
+		+ std::to_string((int)RuleData::confFile.serverAddress().third() ) + "."
+		+ std::to_string((int)RuleData::confFile.serverAddress().fourth());
 	EnvTable::Instantiate()->GameMode = EnvTable::Client;
 
-	const std::string nomen(RuleData::chkPreference((std::string)"name"));
-	const CodeConv::tstring Nomen(CodeConv::EnsureTStr(nomen));
+	const CodeConv::tstring Nomen(RuleData::confFile.playerName());
 
 	mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneConnecting);
 	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), gamePort, ACTUAL_PLAYERS);

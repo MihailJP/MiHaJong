@@ -33,36 +33,41 @@ typedef const char* (*RetrieveStr)(uint16_t /*RuleID*/);
 typedef void (*SetStr)(uint16_t /*RuleID*/, const char* /*str*/);
 
 #ifdef GRAPHIC_EXPORTS
-extern RetrieveTxt getRuleName, getPreferenceName;
-extern RetrieveTxt getRuleDescription, getPreferenceDescription;
-extern RetrieveTxtIndex getRuleTxt, getPreferenceTxt;
-extern RetrieveInt getRule, getPreference;
-extern RetrieveInt getRuleSize, getPreferenceSize;
+extern RetrieveTxt getRuleName;
+extern RetrieveTxt getRuleDescription;
+extern RetrieveTxtIndex getRuleTxt;
+extern RetrieveInt getRule;
+extern RetrieveInt getRuleSize;
 extern CheckDep reqFailed;
 extern RetrieveCaption getPageCaption;
-extern RuleWrite storeRule, storePref;
-extern RuleRead exportRule, exportPref;
-extern ConfSave saveConfigFile, savePreferenceFile;
-extern CheckRule chkRule, chkPreference;
-extern RetrieveUInt getPreferenceInputSize;
-extern RetrieveStr getPreferenceRawStr;
-extern SetStr setPreferenceFreeStr;
+extern RuleWrite storeRule;
+extern RuleRead exportRule;
+extern ConfSave saveConfigFile;
+extern CheckRule chkRule;
 extern const char* digit;
-extern std::string conffile, preffile;
+extern std::string conffile;
 #endif
 
 EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
 	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
-	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit,
-	RuleWrite fpStorePref, RuleRead fpExportPref, ConfSave fpSavePreferenceFile,
-	RetrieveTxt fpGetPreferenceName, RetrieveTxt fpGetPreferenceDesc, RetrieveTxtIndex fpGetPreferenceTxt,
-	RetrieveInt fpGetPreference, RetrieveInt fpGetPreferenceSize,
-	RetrieveUInt fpGetPreferenceInputSize, RetrieveStr fpGetPreferenceRawStr, SetStr fpSetPreferenceFreeStr,
-	CheckRule fpChkPreference);
+	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit);
 
-EXPORT void setconffile(const char* filename, const char* filename2);
+EXPORT void setconffile(const char* filename);
+
+}
+
+namespace preferences {
+
+#ifdef GRAPHIC_EXPORTS
+extern bool blackTile;
+extern std::uint32_t serverAddress;
+std::string serverIP();
+#endif
+
+EXPORT void useBlackTile(bool);
+EXPORT void setServerAddr(std::uint32_t);
 
 }
 }

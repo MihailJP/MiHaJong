@@ -85,18 +85,11 @@ void sound::util::bgmplay(unsigned ID) {
 /* 音量設定を反映 */
 void sound::util::setvolume() {
 	using namespace sound;
-	auto getvolume = [] (std::string ruleTag) -> double {
-		const std::string chipRule(RuleData::chkPreference(ruleTag));
-		REGEX::smatch matchDat; int volperc = 100;
-		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("vol_(\\d+)")))
-			volperc = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
-		return static_cast<double>(volperc) / 100.0;
-	};
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
 		if (BGM_Mode[i] != None)
-			SetVolume(i, getvolume("bgmvolume"));
+			SetVolume(i, static_cast<double>(RuleData::confFile.bgmVolume()) / 100.0);
 	for (unsigned i = IDs::SndStart; i <= IDs::SndEnd; i++)
-		SetVolume(i, getvolume("sndvolume"));
+		SetVolume(i, static_cast<double>(RuleData::confFile.soundVolume()) / 100.0);
 	for (unsigned i = IDs::VoxStart; i <= IDs::VoxEnd; i++)
-		SetVolume(i, getvolume("sndvolume"));
+		SetVolume(i, static_cast<double>(RuleData::confFile.soundVolume()) / 100.0);
 }

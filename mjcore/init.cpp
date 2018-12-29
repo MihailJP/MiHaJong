@@ -38,7 +38,6 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 		configFile = confpath::confPath() + "mihassnm.ini";
 		break;
 	}
-	std::string preferenceFile = confpath::confPath() + "config.ini";
 
 #ifdef _WIN32 /* Windows版でのみ実装 */
 	/* ログ初期化 */
@@ -60,9 +59,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 
 	/* 設定ファイル読み込み */
 	{
-		mihajong_graphic::rules::setconffile(configFile.c_str(), preferenceFile.c_str());
 		bool cnfFileExists = exist(configFile.c_str()); // 設定ファイルがあるかどうか調べる
-		bool prefFileExists = exist(preferenceFile.c_str()); // 設定ファイルがあるかどうか調べる
 		RuleData::configinit();
 		if (!cnfFileExists) {
 			info(_T("ルール設定ファイルが見つかりません。デフォルトの設定を使用します。"));
@@ -71,30 +68,23 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			info(_T("ルール設定ファイルが見つかりました。読み込みを開始します。"));
 			RuleData::loadConfigFile(configFile.c_str()); // 設定ファイル読み込み
 		}
-		if (!prefFileExists) {
-			info(_T("環境設定ファイルが見つかりません。デフォルトの設定を使用します。"));
-			RuleData::savePreferenceFile(preferenceFile.c_str()); // デフォルトのコンフィグデータを作成
-		} else {
-			info(_T("環境設定ファイルが見つかりました。読み込みを開始します。"));
-			RuleData::loadPreferenceFile(preferenceFile.c_str()); // 設定ファイル読み込み
-		}
 		// UI用のDLLに関数の場所を教える
 		mihajong_graphic::rules::setfunc(
 			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
 			RuleData::getRule, RuleData::getRuleSize, RuleData::reqFailed,
 			RuleData::getPageCaption, RuleData::storeRule, RuleData::exportRule,
-			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit(),
-			RuleData::storePref, RuleData::exportPref, RuleData::savePreferenceFile,
-			RuleData::getPreferenceName, RuleData::getPreferenceDescription, RuleData::getPreferenceTxt,
-			RuleData::getPreference, RuleData::getPreferenceSize,
-			RuleData::getPreferenceInputSize, RuleData::getPreferenceRawStr, RuleData::setPreferenceFreeStr,
-			RuleData::chkPreference);
+			RuleData::saveConfigFile, RuleData::chkRule, RuleData::ruleDigit());
 		mihajong_graphic::utils::setfunc(
 			playerRelative, RelativePositionOf, calcRank, chkFuriten,
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,
 			getName, nullptr, isAboveBase, isStandAlone);
+		{
+			using namespace mihajong_graphic::preferences;
+			useBlackTile(RuleData::confFile.blackTile());
+			setServerAddr(RuleData::confFile.serverAddress());
+		}
 	}
 
 	/* 音源を初期化 */

@@ -55,6 +55,12 @@
     <Filter Include="Common\ヘッダー ファイル">
       <UniqueIdentifier>{834c7435-6b4b-40ac-8d8f-b07686000495}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\conffile">
+      <UniqueIdentifier>{8ae2c06c-aaec-4097-90cb-0b725bcf885e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\conffile">
+      <UniqueIdentifier>{a4ffaef5-c1c5-47a0-90db-466f70c9e0f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shanten.cpp">
@@ -245,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="data\prefitem_ini.cpp">
       <Filter>ソース ファイル\data</Filter>
+    </ClCompile>
+    <ClCompile Include="conffile\conffile.cpp">
+      <Filter>ソース ファイル\conffile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -484,6 +493,9 @@
     </ClInclude>
     <ClInclude Include="..\common\gametype.h">
       <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="conffile\conffile.h">
+      <Filter>ヘッダー ファイル\conffile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

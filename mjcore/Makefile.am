@@ -6,6 +6,7 @@ libmihajong_la_SOURCES = \
 	rankval.cpp remote.cpp result.cpp shanten.cpp ruletbl.cpp sound.cpp \
 	tileutil.cpp \
 	ai/aiscript.cpp ai/functbl.cpp ai/filesel.cpp ai/gftbl.cpp ai/riskchk.cpp \
+	conffile/conffile.cpp \
 	reader/csv2arry.cpp reader/ini2map.cpp reader/readrsrc.cpp \
 	yaku/catalog.cpp yaku/suittbl.cpp yaku/yaku.cpp yaku/ykclass.cpp \
 	yaku/yk_tools.cpp \
@@ -21,6 +22,7 @@ libmihajong_la_SOURCES = \
 	random.h rankval.h rational.h regex.h remote.h result.h shanten.h \
 	resource.h ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
 	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \
+	conffile/conffile.h \
 	lzma/Alloc.c lzma/LzFind.c lzma/LzmaDec.c lzma/LzmaLib.c lzma/Sha256.c \
 	lzma/Alloc.h lzma/LzFind.h lzma/LzHash.h lzma/LzmaDec.h lzma/LzmaLib.h \
 	lzma/RotateDefs.h lzma/Sha256.h lzma/Types.h \

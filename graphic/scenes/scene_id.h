@@ -6,7 +6,6 @@ enum sceneID { // シーン番号
 	sceneSplash, // スプラッシュスクリーン的なシーン
 	sceneTitle, // タイトル画面
 	sceneConfig, // コンフィグ画面
-	sceneSetting, // 環境設定画面
 	sceneServerWaiting, // サーバー待機画面
 	sceneClientWaiting, // クライアント待機画面
 	sceneWaitingError, // 接続失敗

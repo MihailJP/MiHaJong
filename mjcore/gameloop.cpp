@@ -138,7 +138,6 @@ void startgame(GameTypeID gameType) {
 		GameTable* gameStat = initializeGameTable(gameType);
 		info(_T("ゲーム情報を初期化しました。"));
 		mihajong_socket::server::rotation_reset();
-		RuleData::applyPreference(); // 環境設定を反映
 		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
 	start:
@@ -151,7 +150,7 @@ void startgame(GameTypeID gameType) {
 		case 1:
 			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
-				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::chkPreference("name"));
+				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::confFile.playerName());
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
 			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM2");
 			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM3");
@@ -170,11 +169,6 @@ void startgame(GameTypeID gameType) {
 			mihajong_graphic::ui::WaitUI();
 			goto start;
 		case 5:
-			mihajong_graphic::Transit(mihajong_graphic::sceneSetting);
-			mihajong_graphic::ui::WaitUI();
-			RuleData::applyPreference(); // 環境設定を反映
-			goto start;
-		case 6:
 			return;
 		}
 		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // 親決めの処理

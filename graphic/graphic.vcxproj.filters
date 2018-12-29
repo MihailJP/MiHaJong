@@ -201,9 +201,6 @@
     <ClCompile Include="scenes\table\tiletip.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
-    <ClCompile Include="scenes\setting.cpp">
-      <Filter>ソース ファイル\scenes</Filter>
-    </ClCompile>
     <ClCompile Include="scenes\confmenu.cpp">
       <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
@@ -403,9 +400,6 @@
     </ClInclude>
     <ClInclude Include="graphic.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scenes\setting.h">
-      <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\confmenu.h">
       <Filter>ヘッダー ファイル\scenes</Filter>

@@ -6,6 +6,7 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/rankval.cpp ../mjcore/remote.cpp ../mjcore/result.cpp ../mjcore/shanten.cpp ../mjcore/ruletbl.cpp ../mjcore/sound.cpp \
 	../mjcore/tileutil.cpp \
 	../mjcore/ai/aiscript.cpp ../mjcore/ai/functbl.cpp ../mjcore/ai/filesel.cpp ../mjcore/ai/gftbl.cpp ../mjcore/ai/riskchk.cpp \
+	../mjcore/conffile/conffile.cpp \
 	../mjcore/reader/csv2arry.cpp ../mjcore/reader/ini2map.cpp ../mjcore/reader/readrsrc.cpp \
 	../mjcore/yaku/catalog.cpp ../mjcore/yaku/suittbl.cpp ../mjcore/yaku/yaku.cpp ../mjcore/yaku/ykclass.cpp \
 	../mjcore/yaku/yk_tools.cpp \
@@ -21,6 +22,7 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/regex.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
 	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tilecode.h ../mjcore/tileutil.h \
 	../mjcore/ai/aiscript.h ../mjcore/ai/class.h ../mjcore/ai/functbl.h ../mjcore/ai/filesel.h \
+	../mjcore/conffile/conffile.h \
 	../mjcore/lzma/Alloc.c ../mjcore/lzma/LzFind.c ../mjcore/lzma/LzmaDec.c ../mjcore/lzma/LzmaLib.c ../mjcore/lzma/Sha256.c \
 	../mjcore/lzma/Alloc.h ../mjcore/lzma/LzFind.h ../mjcore/lzma/LzHash.h ../mjcore/lzma/LzmaDec.h ../mjcore/lzma/LzmaLib.h \
 	../mjcore/lzma/RotateDefs.h ../mjcore/lzma/Sha256.h ../mjcore/lzma/Types.h \

@@ -55,6 +55,12 @@
     <Filter Include="Common\ヘッダー ファイル">
       <UniqueIdentifier>{ac6a9dbe-6b04-422c-854c-7e672bcdd9c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\conffile">
+      <UniqueIdentifier>{fbebb2c4-b6af-4aa5-8fdb-418951af62e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\conffile">
+      <UniqueIdentifier>{f22b245f-2a6f-4dfe-81c1-e63565522517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\mjcore\agari.cpp">
@@ -245,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="..\mjcore\yaku\catalog\yaojiu.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\conffile\conffile.cpp">
+      <Filter>ソース ファイル\conffile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -484,6 +493,9 @@
     </ClInclude>
     <ClInclude Include="..\common\gametype.h">
       <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\conffile\conffile.h">
+      <Filter>ヘッダー ファイル\conffile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
