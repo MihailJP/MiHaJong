@@ -247,7 +247,12 @@
     <ClCompile Include="..\mjcore\logging.cpp" />
     <ClCompile Include="..\mjcore\lzma\Alloc.c" />
     <ClCompile Include="..\mjcore\lzma\LzFind.c" />
-    <ClCompile Include="..\mjcore\lzma\LzFindMt.c" />
+    <ClCompile Include="..\mjcore\lzma\LzFindMt.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\mjcore\lzma\LzmaDec.c" />
     <ClCompile Include="..\mjcore\lzma\LzmaLib.c" />
     <ClCompile Include="..\mjcore\lzma\Sha256.c" />

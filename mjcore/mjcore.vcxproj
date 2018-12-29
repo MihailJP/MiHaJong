@@ -247,7 +247,12 @@
     <ClCompile Include="logging.cpp" />
     <ClCompile Include="lzma\Alloc.c" />
     <ClCompile Include="lzma\LzFind.c" />
-    <ClCompile Include="lzma\LzFindMt.c" />
+    <ClCompile Include="lzma\LzFindMt.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="lzma\LzmaDec.c" />
     <ClCompile Include="lzma\LzmaLib.c" />
     <ClCompile Include="lzma\Sha256.c" />
