@@ -330,7 +330,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				ikki_tsuukan(analysis, &yakuFlag, &yakuCol);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // 嵌張待ちで
-					(analysis->PlayerStat->Hand[NumOfTilesInHand].tile == (yakuCol + 5)) // 和了牌が5
+					(analysis->PlayerStat->Hand[TsumohaiIndex].tile == (yakuCol + 5)) // 和了牌が5
 					);
 			}
 		));
@@ -434,7 +434,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->KeziCount[NorthWind] >= 1) && // 北の刻子があり
 					((analysis->MianziDat[0].tile / TileSuitStep) == (yakuCol / TileSuitStep)) && // 一色になっていて
-					(analysis->PlayerStat->Hand[NumOfTilesInHand].tile == (yakuCol + 5)) // 和了牌が5
+					(analysis->PlayerStat->Hand[TsumohaiIndex].tile == (yakuCol + 5)) // 和了牌が5
 					);
 			}
 		));
