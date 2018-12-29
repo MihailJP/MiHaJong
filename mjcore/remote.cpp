@@ -104,6 +104,9 @@ void RemoteDahai::thread () {
 			}
 		}
 	}
+	else {
+		return; // 意味がないので何もしないで帰る
+	}
 	{
 		using namespace mihajong_socket::protocol;
 		if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {

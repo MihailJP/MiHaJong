@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iomanip>
 #include <typeinfo>
+#include <cassert>
 #include "logging.h"
 
 HINSTANCE dllInst;
@@ -52,6 +53,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 	HANDLE hThread = GetCurrentThread();
 
 	PIMAGEHLP_SYMBOL pSymbol = reinterpret_cast<PIMAGEHLP_SYMBOL>(GlobalAlloc(GMEM_FIXED, 16384));
+	assert(pSymbol != nullptr);
 	pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
 	SymInitialize(GetCurrentProcess(), nullptr, TRUE);
 
@@ -123,6 +125,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 		fatal(lmsg.str().c_str()); dmsg << lmsg.str() << std::endl; lmsg.str(_T(""));
 
 		pSymbol = reinterpret_cast<PIMAGEHLP_SYMBOL>(GlobalAlloc(GMEM_FIXED, 16384));
+		assert(pSymbol != nullptr);
 		pSymbol->SizeOfStruct = 16384; pSymbol->MaxNameLength = 16384 - sizeof(IMAGEHLP_SYMBOL);
 		SymInitialize(GetCurrentProcess(), nullptr, TRUE);
 		for (unsigned int i = 0; true; i++) {

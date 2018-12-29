@@ -247,6 +247,7 @@ sound::SoundData::~SoundData() {
 /* コンストラクタ(スーパークラス) */
 sound::SoundData::SoundData() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
+	memset(&bufInfo, 0, sizeof(bufInfo));
 	voice = nullptr;
 #endif
 }

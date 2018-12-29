@@ -80,6 +80,7 @@ private:
 		ParseMode pMode;
 		MENTSU_ANALYSIS analysis;
 		YAKUSTAT result;
+		CalculatorParam() : pMode(), analysis(), result() {}
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_trivially_copyable<CalculatorParam>::value, "CalculatorParam is not trivially copyable");

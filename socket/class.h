@@ -41,7 +41,7 @@ private:
 	MUTEXLIB::recursive_mutex threadExistenceMutex;
 	uint16_t portnum;
 public:
-	Sock () {} // ソケット初期化
+	Sock () : isServer(false) {	memset(&addr, 0, sizeof addr); } // ソケット初期化
 	explicit Sock (uint16_t port); // サーバー開始
 	Sock (const std::string& destination, uint16_t port); // クライアント接続
 	Sock (const Sock&) = delete; // Delete unexpected copy constructor

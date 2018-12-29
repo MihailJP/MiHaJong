@@ -83,7 +83,7 @@ __declspec(dllexport) void initLogger(const char* fname) {
 #endif
 	hThread = CreateThread(NULL, 0, Logger::LoggerThread, reinterpret_cast<LPVOID>(logger),
 		CREATE_SUSPENDED, &threadID);
-	ResumeThread(hThread);
+	if (hThread) ResumeThread(hThread);
 }
 
 /* メッセージをキューに登録 */

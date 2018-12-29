@@ -30,6 +30,8 @@ mihajong_socket::Sock::Sock (const std::string& destination, uint16_t port) { //
 		o << _T("ソケットオブジェクトコンストラクタ(クライアント) 宛先 [") << CodeConv::EnsureTStr(destination) << _T("] ポート [") << port << _T("]");
 		info(o.str().c_str());
 	}
+	isServer = false;
+	memset(&addr, 0, sizeof addr);
 	this->connect(destination, port); // 接続
 	info(_T("コンストラクタの処理が完了しました"));
 }
@@ -46,6 +48,8 @@ mihajong_socket::Sock::Sock (uint16_t port) { // サーバ接続
 		o << _T("ソケットオブジェクトコンストラクタ(サーバ) ポート [") << port << _T("]");
 		info(o.str().c_str());
 	}
+	isServer = true;
+	memset(&addr, 0, sizeof addr);
 	this->listen(port); // 接続
 	info(_T("コンストラクタの処理が完了しました"));
 }
@@ -241,6 +245,8 @@ mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	errtype = errNone; errcode = 0;
 	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
 	terminate_time = 0;
+	listenerSock = nullptr;
+	memset(&myAddr, 0, sizeof myAddr);
 }
 
 mihajong_socket::Sock::network_thread::~network_thread() {

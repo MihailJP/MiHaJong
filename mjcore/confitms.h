@@ -96,6 +96,7 @@ public:
 	void setFreeStr(uint16_t RuleID, std::string data);
 public:
 	CONFDAT_CLASS(CodeConv::tstring sectionName = _T("rules")) {
+		memset(&ruleConf[0][0], 0, sizeof ruleConf);
 		mySectionName = sectionName;
 	}
 	ConfigData(const ConfigData&) = delete; // Delete unexpected copy constructor

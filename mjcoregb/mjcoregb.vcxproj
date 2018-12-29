@@ -216,9 +216,19 @@
     <ClCompile Include="..\mjcore\conffile\conffile.cpp" />
     <ClCompile Include="..\mjcore\agari.cpp" />
     <ClCompile Include="..\mjcore\ai\aiscript.cpp" />
-    <ClCompile Include="..\mjcore\ai\functbl.cpp" />
+    <ClCompile Include="..\mjcore\ai\functbl.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\mjcore\ai\filesel.cpp" />
-    <ClCompile Include="..\mjcore\ai\gftbl.cpp" />
+    <ClCompile Include="..\mjcore\ai\gftbl.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\mjcore\ai\riskchk.cpp" />
     <ClCompile Include="..\mjcore\data\confitem_csv.cpp" />
     <ClCompile Include="..\mjcore\data\confitem_ini.cpp" />

@@ -69,6 +69,8 @@ void sound::SoundManipulator::InitXAudio(Window hWnd)
 }
 
 sound::SoundManipulator::SoundManipulator() {
+	mVoice = nullptr;
+	xAudio = nullptr;
 	InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
@@ -83,6 +85,8 @@ sound::SoundManipulator::SoundManipulator(HWND hWnd)
 sound::SoundManipulator::SoundManipulator(Window hWnd)
 #endif /* _WIN32 */
 {
+	mVoice = nullptr;
+	xAudio = nullptr;
 	InitXAudio(hWnd);
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)

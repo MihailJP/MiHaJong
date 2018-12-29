@@ -90,6 +90,7 @@ void Data::verify(LPCTSTR Description_, const uint8_t* const expectedDigest_) {
 }
 
 Data::Data(LPCTSTR Description_, int FileID_, const uint8_t* const expectedDigest_) { // 初期化
+	memset(actualDigest, 0, sizeof actualDigest);
 	try {
 		decompress(FileID_);
 		verify(Description_, expectedDigest_);

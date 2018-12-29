@@ -8,6 +8,7 @@ namespace mihajong_graphic {
 
 ITextRenderer::ITextRenderer(DevicePtr device) {
 	myDevice = device;
+	font = nullptr; fontmap = nullptr;
 }
 TextRenderer::TextRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMap::instantiate();
@@ -195,6 +196,21 @@ unsigned ITextRenderer::strWidthByPix(const std::wstring& str) {
 }
 unsigned ITextRenderer::strWidthByPix(const std::string& str) {
 	return strWidthByCols(str) * (FontWidth() - FontPadding() * 2) / 2;
+}
+
+/* 未初期化にならないように */
+ITextRenderer::StringAttr::StringAttr() {
+	X = 0, Y = 0;
+	scale = 0.0f, width = 0.0f;
+	color = 0;
+}
+ITextRenderer::SpriteAttr::SpriteAttr() {
+	chr_id = 0;
+	isFullWidth = false;
+	X = 0, Y = 0;
+	widthScale = 0.0f, heightScale = 0.0f;
+	color = 0;
+	memset(&matrix, 0, sizeof matrix);
 }
 
 }

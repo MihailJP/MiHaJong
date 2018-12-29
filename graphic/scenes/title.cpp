@@ -28,6 +28,7 @@ namespace mihajong_graphic {
 // -------------------------------------------------------------------------
 
 TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	sTitleLogo = {nullptr, nullptr, nullptr};
 	TitleSprite::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
