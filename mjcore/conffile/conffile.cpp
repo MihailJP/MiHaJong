@@ -43,9 +43,9 @@ void ConfigFile::load() {
 		if (prefFileExists) { // 設定ファイル読み込み
 			CodeConv::tifstream file(preferenceFile.c_str());
 #ifdef UNICODE
-			file.imbue(std::locale(".65001"));
+			(void)file.imbue(std::locale(".65001"));
 #else /* UNICODE */
-			file.imbue(std::locale(".932"));
+			(void)file.imbue(std::locale(".932"));
 #endif /* UNICODE */
 			CodeConv::tstring line, text;
 			while (std::getline(file, line)) text += line + _T("\n");
@@ -61,9 +61,9 @@ ConfigFile::ConfigFile() : preferenceFile(confPath() + "config.ini") {
 void ConfigFile::save() {
 	CodeConv::tofstream file(preferenceFile);
 #ifdef UNICODE
-	file.imbue(std::locale(".65001"));
+	(void)file.imbue(std::locale(".65001"));
 #else /* UNICODE */
-	file.imbue(std::locale(".932"));
+	(void)file.imbue(std::locale(".932"));
 #endif /* UNICODE */
 	file << _T("MiHaJong Configuration File\n\n");
 	file << _T("[preferences]\n\n");
