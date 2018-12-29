@@ -69,22 +69,30 @@ void ConfigMenuProto::BtnEvent_Cancel_Down() {
 
 void ConfigMenuProto::BtnEvent_Content_Item_Prev(unsigned short val) {
 	sound::Play(sound::IDs::sndCursor);
+	assert(val <= 40);
+	assert(menuCursor >= 0);
 	if ((menuCursor -= val) < 0) menuCursor = 0;
 	myTimer.skipTo(0); redrawItems();
 }
 void ConfigMenuProto::BtnEvent_Content_Item_Next(unsigned short val) {
 	sound::Play(sound::IDs::sndCursor);
 	assert(numberOfItems() > 0);
+	assert(val <= 40);
+	assert(menuCursor < 32000);
 	if (static_cast<unsigned>(menuCursor += val) >= numberOfItems()) menuCursor = numberOfItems() - 1;
 	myTimer.skipTo(0); redrawItems();
 }
 void ConfigMenuProto::BtnEvent_Content_Page_Prev() {
 	sound::Play(sound::IDs::sndClick);
+	assert(itemsPerPage() <= 40);
+	assert(menuCursor >= 0);
 	if ((menuCursor -= itemsPerPage()) < 0) menuCursor += itemsPerPage();
 	myTimer.skipTo(0); redrawItems();
 }
 void ConfigMenuProto::BtnEvent_Content_Page_Next() {
 	sound::Play(sound::IDs::sndClick);
+	assert(itemsPerPage() <= 40);
+	assert(menuCursor < 32000);
 	if (static_cast<unsigned>(menuCursor += itemsPerPage()) >= numberOfItems()) menuCursor -= itemsPerPage();
 	myTimer.skipTo(0); redrawItems();
 }
