@@ -34,3 +34,8 @@
 #define GRAPHIC_MINOR_VER 3
 #define GRAPHIC_PATCH_VER 0
 #define GRAPHIC_VER "2.3.0"
+
+#define CONFIG_MAJOR_VER 2
+#define CONFIG_MINOR_VER 3
+#define CONFIG_PATCH_VER 0
+#define CONFIG_VER "2.3.0"

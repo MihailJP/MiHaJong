@@ -47,15 +47,9 @@ public:
 #define FILEID_CONFITEM_CSV IDR_LZMA_STREA2
 #define FILEID_CONFITEM_INI IDR_LZMA_STREA3
 #define FILEID_RANKVAL_CSV IDR_LZMA_STREA4
-#define FILEID_PREFITEM_CSV IDR_LZMA_STREA5
-#define FILEID_PREFITEM_INI IDR_LZMA_STREA6
 #define FILEDESC_CONFITEM_CSV _T("ルール定義ファイル")
 #define FILEDESC_CONFITEM_INI _T("ルールタグ翻訳ファイル")
 #define FILEDESC_RANKVAL_CSV _T("ウマ定義ファイル")
-#define FILEDESC_PREFITEM_CSV _T("環境設定項目定義ファイル")
-#define FILEDESC_PREFITEM_INI _T("環境設定項目タグ翻訳ファイル")
 #include "data/confitem_csv.h"
 #include "data/confitem_ini.h"
 #include "data/rankval_csv.h"
-#include "data/prefitem_csv.h"
-#include "data/prefitem_ini.h"

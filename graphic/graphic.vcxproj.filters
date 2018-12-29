@@ -192,17 +192,11 @@
     <ClCompile Include="widgets\button.cpp">
       <Filter>ソース ファイル\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="widgets\editbox.cpp">
-      <Filter>ソース ファイル\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\checkbox.cpp">
       <Filter>ソース ファイル\widgets</Filter>
     </ClCompile>
     <ClCompile Include="scenes\table\tiletip.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
-    </ClCompile>
-    <ClCompile Include="scenes\setting.cpp">
-      <Filter>ソース ファイル\scenes</Filter>
     </ClCompile>
     <ClCompile Include="scenes\confmenu.cpp">
       <Filter>ソース ファイル\scenes</Filter>
@@ -392,9 +386,6 @@
     <ClInclude Include="widgets\button.h">
       <Filter>ヘッダー ファイル\widgets</Filter>
     </ClInclude>
-    <ClInclude Include="widgets\editbox.h">
-      <Filter>ヘッダー ファイル\widgets</Filter>
-    </ClInclude>
     <ClInclude Include="widgets\checkbox.h">
       <Filter>ヘッダー ファイル\widgets</Filter>
     </ClInclude>
@@ -403,9 +394,6 @@
     </ClInclude>
     <ClInclude Include="graphic.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scenes\setting.h">
-      <Filter>ヘッダー ファイル\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\confmenu.h">
       <Filter>ヘッダー ファイル\scenes</Filter>

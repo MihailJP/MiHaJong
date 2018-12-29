@@ -157,7 +157,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="scenes\confmenu.cpp" />
-    <ClCompile Include="scenes\setting.cpp" />
     <ClCompile Include="scenes\table\clock.cpp" />
     <ClCompile Include="scenes\table\tiletip.cpp" />
     <ClCompile Include="scenes\waiting.cpp" />
@@ -165,7 +164,6 @@
     <ClCompile Include="calltext.cpp" />
     <ClCompile Include="chrwidth.cpp" />
     <ClCompile Include="widgets\checkbox.cpp" />
-    <ClCompile Include="widgets\editbox.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="finscore.cpp" />
     <ClCompile Include="font.cpp" />
@@ -235,7 +233,6 @@
     <ClInclude Include="directx.h" />
     <ClInclude Include="graphic.h" />
     <ClInclude Include="scenes\confmenu.h" />
-    <ClInclude Include="scenes\setting.h" />
     <ClInclude Include="scenes\table\clock.h" />
     <ClInclude Include="scenes\table\tiletip.h" />
     <ClInclude Include="scenes\waiting.h" />
@@ -243,7 +240,6 @@
     <ClInclude Include="calltext.h" />
     <ClInclude Include="chrwidth.h" />
     <ClInclude Include="widgets\checkbox.h" />
-    <ClInclude Include="widgets\editbox.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="exports.h" />
     <ClInclude Include="extchar.h" />

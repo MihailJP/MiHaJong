@@ -205,6 +205,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="conffile\conffile.cpp" />
     <ClCompile Include="agari.cpp" />
     <ClCompile Include="ai\aiscript.cpp" />
     <ClCompile Include="ai\functbl.cpp" />
@@ -213,8 +214,6 @@
     <ClCompile Include="ai\riskchk.cpp" />
     <ClCompile Include="data\confitem_csv.cpp" />
     <ClCompile Include="data\confitem_ini.cpp" />
-    <ClCompile Include="data\prefitem_csv.cpp" />
-    <ClCompile Include="data\prefitem_ini.cpp" />
     <ClCompile Include="data\rankval_csv.cpp" />
     <ClCompile Include="decomp.cpp" />
     <ClCompile Include="discard.cpp" />
@@ -270,6 +269,7 @@
     <ClCompile Include="yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="conffile\conffile.h" />
     <ClInclude Include="..\common\bgmid.h" />
     <ClInclude Include="..\common\chrono.h" />
     <ClInclude Include="..\common\clock.h" />
@@ -297,8 +297,6 @@
     <ClInclude Include="confitms.h" />
     <ClInclude Include="data\confitem_csv.h" />
     <ClInclude Include="data\confitem_ini.h" />
-    <ClInclude Include="data\prefitem_csv.h" />
-    <ClInclude Include="data\prefitem_ini.h" />
     <ClInclude Include="data\rankval_csv.h" />
     <ClInclude Include="decomp.h" />
     <ClInclude Include="discard.h" />

@@ -4,13 +4,14 @@
 #include <functional>
 #include "mjexport.h"
 #include "../common/strcode.h"
+#include "conffile/conffile.h"
 
 #ifdef MJCORE_EXPORTS
 
 class RuleData {
 public:
+	static ConfigFile::ConfigFile confFile;
 	static void configinit();
-	static void preference_init();
 	static void storeRule(const char** ruleTxt);
 	static void exportRule(char** ruleTxt);
 	static void getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
@@ -41,29 +42,6 @@ public:
 	static void getPageCaption(LPTSTR const caption, unsigned bufsize, uint8_t page);
 	static const char* ruleDigit();
 	static void forEachRule(std::function<void (std::string, std::string)> f);
-public:
-	static void storePref(const char** ruleTxt);
-	static void exportPref(char** ruleTxt);
-	static int loadPreferenceFile(const char* const filename);
-	static int savePreferenceFile(const char* const filename);
-	static void getPreferenceName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
-	static void getPreferenceDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
-	static void getPreferenceTxt(LPTSTR const txt, unsigned bufsize, uint16_t RuleID, uint8_t index);
-	static int getPreference(std::string RuleTag);
-	static int getPreference(uint16_t RuleID);
-	static std::string chkPreference(std::string RuleTag);
-	static const char* chkPreference(const char* RuleTag);
-	static const char* getPreferenceRawStr(uint16_t RuleID);
-	static int getPreferenceSize(uint16_t RuleID);
-	static unsigned getPreferenceInputSize(uint16_t RuleID);
-	static void setPreferenceFreeStr(uint16_t RuleID, const char* str);
-	static void applyPreference();
-	static bool chkPreference(std::string RuleTag, std::string Expectation);
-#ifdef _WIN32
-	static BOOL chkPreference(const char* RuleTag, const char* Expectation);
-#else /*_WIN32*/
-	static bool chkPreference(const char* RuleTag, const char* Expectation);
-#endif /*_WIN32*/
 public: /* Monostate class: cannot be instantiated */
 	RuleData() = delete;
 	RuleData(const RuleData&) = delete;
@@ -74,6 +52,4 @@ public: /* Monostate class: cannot be instantiated */
 int getRule(int RuleID);
 #endif
 
-MJCORE void preferenceInit();
 MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen);
-

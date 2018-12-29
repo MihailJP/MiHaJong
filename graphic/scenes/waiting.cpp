@@ -119,7 +119,7 @@ CodeConv::tstring ClientWait::waiting_desc_str() {
 	switch (subsceneID) {
 	case cliwSubsceneConnecting:
 		{
-			const std::string addr(rules::getPreferenceRawStr(1 /*hardcoded*/));
+			const std::string addr(preferences::serverIP());
 			const CodeConv::tstring msg(CodeConv::EnsureTStr(addr) + _T("に接続しています"));
 			return msg;
 		}
@@ -138,7 +138,7 @@ ConnectionWaitFailed::ConnectionWaitFailed(ScreenManipulator* const manipulator)
 ConnectionWaitFailed::~ConnectionWaitFailed() {
 }
 void ConnectionWaitFailed::Render() {
-	const std::string addr(rules::getPreferenceRawStr(1 /*hardcoded*/));
+	const std::string addr(preferences::serverIP());
 	const CodeConv::tstring errmsg(CodeConv::EnsureTStr(addr) + _T("に接続できませんでした"));
 	clearWithGameTypeColor();
 	showCentered(0, _T("接続失敗"), 300, 3.0f, false);

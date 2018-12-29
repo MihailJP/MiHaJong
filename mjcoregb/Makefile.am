@@ -6,6 +6,7 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/rankval.cpp ../mjcore/remote.cpp ../mjcore/result.cpp ../mjcore/shanten.cpp ../mjcore/ruletbl.cpp ../mjcore/sound.cpp \
 	../mjcore/tileutil.cpp \
 	../mjcore/ai/aiscript.cpp ../mjcore/ai/functbl.cpp ../mjcore/ai/filesel.cpp ../mjcore/ai/gftbl.cpp ../mjcore/ai/riskchk.cpp \
+	../mjcore/conffile/conffile.cpp \
 	../mjcore/reader/csv2arry.cpp ../mjcore/reader/ini2map.cpp ../mjcore/reader/readrsrc.cpp \
 	../mjcore/yaku/catalog.cpp ../mjcore/yaku/suittbl.cpp ../mjcore/yaku/yaku.cpp ../mjcore/yaku/ykclass.cpp \
 	../mjcore/yaku/yk_tools.cpp \
@@ -21,16 +22,15 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/regex.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
 	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tilecode.h ../mjcore/tileutil.h \
 	../mjcore/ai/aiscript.h ../mjcore/ai/class.h ../mjcore/ai/functbl.h ../mjcore/ai/filesel.h \
+	../mjcore/conffile/conffile.h \
 	../mjcore/lzma/Alloc.c ../mjcore/lzma/LzFind.c ../mjcore/lzma/LzmaDec.c ../mjcore/lzma/LzmaLib.c ../mjcore/lzma/Sha256.c \
 	../mjcore/lzma/Alloc.h ../mjcore/lzma/LzFind.h ../mjcore/lzma/LzHash.h ../mjcore/lzma/LzmaDec.h ../mjcore/lzma/LzmaLib.h \
 	../mjcore/lzma/RotateDefs.h ../mjcore/lzma/Sha256.h ../mjcore/lzma/Types.h \
 	../mjcore/reader/csv2arry.h ../mjcore/reader/ini2map.h ../mjcore/reader/readrsrc.h \
 	../mjcore/yaku/catalog.h ../mjcore/yaku/yaku.h ../mjcore/yaku/yvalue.h ../mjcore/yaku/ykclass.h ../mjcore/yaku/yk_tools.h
 nodist_libmihagbmj_la_SOURCES = \
-	../mjcore/data/confitem_csv.cpp ../mjcore/data/confitem_ini.cpp ../mjcore/data/prefitem_csv.cpp \
-	../mjcore/data/prefitem_ini.cpp ../mjcore/data/rankval_csv.cpp \
-	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/prefitem_csv.h \
-	../mjcore/data/prefitem_ini.h ../mjcore/data/rankval_csv.h
+	../mjcore/data/confitem_csv.cpp ../mjcore/data/confitem_ini.cpp ../mjcore/data/rankval_csv.cpp \
+	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihagbmj_la_SOURCES)
 libmihagbmj_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihagbmj_la_CXXFLAGS = -DGUOBIAO -DMJCORE_EXPORTS
@@ -68,13 +68,11 @@ endif
 dist_pkgdata_DATA = \
 	../mjcore/data/mentz.dat.lzma
 nodist_pkgdata_DATA = \
-	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/prefitem.csv.lzma \
-	../mjcore/data/prefitem.ini.lzma ../mjcore/data/rankval.csv.lzma
+	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/rankval.csv.lzma
 EXTRA_DIST = \
 	mjcoregb.vcxproj mjcoregb.vcxproj.filters mjcoregb.vcxproj.user \
 	../mjcore/lua/README \
-	../mjcore/data/confitem.csv ../mjcore/data/confitem.ini ../mjcore/data/prefitem.csv ../mjcore/data/prefitem.ini \
-	../mjcore/data/rankval.csv
+	../mjcore/data/confitem.csv ../mjcore/data/confitem.ini ../mjcore/data/rankval.csv
 if WITH_WINAPI
 libmihagbmj_la_SOURCES += \
 	../mjcore/lzma/LzFindMt.c ../mjcore/lzma/Threads.c ../mjcore/lzma/LzFindMt.h ../mjcore/lzma/Threads.h \
@@ -109,20 +107,6 @@ CLEANFILES = $(libmihagbmj_la_BUILT_SOURCES) \
 ../mjcore/data/confitem_ini.h: ../mjcore/data/confitem.ini.lzma
 	true
 ../mjcore/data/confitem_ini.cpp: ../mjcore/data/confitem.ini.lzma
-	true
-
-../mjcore/data/prefitem.csv.lzma: ../mjcore/data/prefitem.csv
-	../auxtools/compress.rb ../mjcore/data/prefitem.csv
-../mjcore/data/prefitem_csv.h: ../mjcore/data/prefitem.csv.lzma
-	true
-../mjcore/data/prefitem_csv.cpp: ../mjcore/data/prefitem.csv.lzma
-	true
-
-../mjcore/data/prefitem.ini.lzma: ../mjcore/data/prefitem.ini
-	../auxtools/compress.rb ../mjcore/data/prefitem.ini
-../mjcore/data/prefitem_ini.h: ../mjcore/data/prefitem.ini.lzma
-	true
-../mjcore/data/prefitem_ini.cpp: ../mjcore/data/prefitem.ini.lzma
 	true
 
 ../mjcore/data/rankval.csv.lzma: ../mjcore/data/rankval.csv
