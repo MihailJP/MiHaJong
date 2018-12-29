@@ -132,7 +132,7 @@ BEGIN
             VALUE "FileDescription", "MiHaJong configuration tool"
             VALUE "FileVersion", CONFIG_VER
             VALUE "InternalName", "config.exe"
-            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2018 MihailJP"
+            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2019 MihailJP"
             VALUE "OriginalFilename", "config.exe"
             VALUE "ProductName", "MiHaJong"
             VALUE "ProductVersion", MIHAJONG_VER

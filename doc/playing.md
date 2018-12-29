@@ -1,6 +1,6 @@
 MiHaJong 遊び方説明
 ===================
-Copyright (c) 2008-2013, 2018 MihailJP
+Copyright (c) 2008-2013, 2019 MihailJP
 
 
 基本ルール

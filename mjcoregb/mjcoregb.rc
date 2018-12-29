@@ -45,7 +45,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "FileDescription", "MiHaJong core module for Guobiao Majiang"
             VALUE "FileVersion", MJCORE_VER
             VALUE "InternalName", "mjcoregb"
-            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2018 MihailJP\nLZMA SDK by Igor Pavlov, under public domain.\nLua interpreter Copyright (C) 1994-2012 Lua.org, PUC-Rio."
+            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2019 MihailJP\nLZMA SDK by Igor Pavlov, under public domain.\nLua interpreter Copyright (C) 1994-2012 Lua.org, PUC-Rio."
             VALUE "LegalTrademarks", ""
             VALUE "OriginalFilename", "mjcoregb.bin"
             VALUE "PrivateBuild", ""

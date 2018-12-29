@@ -45,7 +45,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "FileDescription", "MiHaJong"
             VALUE "FileVersion", MIHAJONG_VER
             VALUE "InternalName", "mihaysnm"
-            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2018 MihailJP"
+            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2019 MihailJP"
             VALUE "LegalTrademarks", ""
             VALUE "OriginalFilename", "mihaysnm.exe"
             VALUE "PrivateBuild", ""
