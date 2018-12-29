@@ -284,7 +284,8 @@ void mihajong_socket::Sock::network_thread::chkError () { // エラーをチェ�
 }
 
 int mihajong_socket::Sock::network_thread::reader() { // 受信処理
-	unsigned char buf[bufsize] = {0,};
+	auto buf = new unsigned char[bufsize];
+	memset(buf, 0, bufsize);
 #ifdef _WIN32
 	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
 	DWORD recvsz; DWORD flag = 0;
@@ -313,6 +314,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			break; // データがない場合
 		default: // エラー処理
 			errtype = errRecv; errcode = err; terminated = true; connected = false;
+			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
 #else /* _WIN32 */
@@ -321,17 +323,20 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 			break; // データがない場合
 		default: // エラー処理
 			errtype = errRecv; errcode = errno; terminated = true; connected = false;
+			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
 #endif /* _WIN32 */
 	}
 	if (terminated && (terminate_time != 0) && (terminate_time + disconnection_timeout < getCurrentTime())) // タイムアウト用
 		receive_ended = true; // 受信待機を中止
+	delete[] buf, buf = nullptr;
 	return 0;
 }
 
 int mihajong_socket::Sock::network_thread::writer() { // 送信処理
-	unsigned char buf[bufsize] = {0,};
+	auto buf = new unsigned char[bufsize];
+	memset(buf, 0, bufsize);
 #ifdef _WIN32
 	WSABUF buffer; buffer.buf = reinterpret_cast<CHAR*>(buf); buffer.len = bufsize;
 	DWORD sendsz = 0;
@@ -361,6 +366,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 			break; // このエラーは無視する
 		default:
 			errtype = errSend; errcode = err; terminated = true; connected = false;
+			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
 	}
@@ -371,10 +377,12 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 			break; // このエラーは無視する
 		default:
 			errtype = errSend; errcode = errno; terminated = true; connected = false;
+			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
 	}
 #endif /* _WIN32 */
+	delete[] buf, buf = nullptr;
 	return 0;
 }
 
