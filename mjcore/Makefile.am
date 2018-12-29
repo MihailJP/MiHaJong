@@ -1,8 +1,8 @@
 lib_LTLIBRARIES = libmihajong.la
 libmihajong_la_SOURCES = \
-	agari.cpp chat.cpp decomp.cpp discard.cpp dllmain.cpp endround.cpp \
+	agari.cpp decomp.cpp discard.cpp dllmain.cpp endround.cpp \
 	envtbl.cpp func.cpp fuuro.cpp gameloop.cpp gametbl.cpp haifu.cpp init.cpp \
-	largenum.cpp logging.cpp main.cpp mouda.cpp prepare.cpp random.cpp \
+	logging.cpp main.cpp mouda.cpp prepare.cpp random.cpp \
 	rankval.cpp remote.cpp result.cpp shanten.cpp ruletbl.cpp sound.cpp \
 	tileutil.cpp \
 	ai/aiscript.cpp ai/functbl.cpp ai/filesel.cpp ai/gftbl.cpp ai/riskchk.cpp \
@@ -15,9 +15,9 @@ libmihajong_la_SOURCES = \
 	yaku/catalog/triplet1.cpp yaku/catalog/triplet2.cpp \
 	yaku/catalog/triplet3.cpp yaku/catalog/yaojiu.cpp \
 	yaku/catalog/shisanbd.cpp \
-	agari.h chat.h confitms.h decomp.h discard.h dllmain.h endround.h \
+	agari.h confitms.h decomp.h discard.h dllmain.h endround.h \
 	endtype.h envtbl.h except.h func.h fuuro.h gameloop.h gametbl.h haifu.h \
-	init.h largenum.h logging.h main.h mjexport.h mjimport.h mouda.h prepare.h \
+	init.h logging.h main.h mjexport.h mjimport.h mouda.h prepare.h \
 	random.h rankval.h rational.h regex.h remote.h result.h shanten.h \
 	resource.h ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
 	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \

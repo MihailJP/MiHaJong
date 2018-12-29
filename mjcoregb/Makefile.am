@@ -1,8 +1,8 @@
 lib_LTLIBRARIES = libmihagbmj.la
 libmihagbmj_la_SOURCES = \
-	../mjcore/agari.cpp ../mjcore/chat.cpp ../mjcore/decomp.cpp ../mjcore/discard.cpp ../mjcore/dllmain.cpp ../mjcore/endround.cpp \
+	../mjcore/agari.cpp ../mjcore/decomp.cpp ../mjcore/discard.cpp ../mjcore/dllmain.cpp ../mjcore/endround.cpp \
 	../mjcore/envtbl.cpp ../mjcore/func.cpp ../mjcore/fuuro.cpp ../mjcore/gameloop.cpp ../mjcore/gametbl.cpp ../mjcore/haifu.cpp ../mjcore/init.cpp \
-	../mjcore/largenum.cpp ../mjcore/logging.cpp ../mjcore/main.cpp ../mjcore/mouda.cpp ../mjcore/prepare.cpp ../mjcore/random.cpp \
+	../mjcore/logging.cpp ../mjcore/main.cpp ../mjcore/mouda.cpp ../mjcore/prepare.cpp ../mjcore/random.cpp \
 	../mjcore/rankval.cpp ../mjcore/remote.cpp ../mjcore/result.cpp ../mjcore/shanten.cpp ../mjcore/ruletbl.cpp ../mjcore/sound.cpp \
 	../mjcore/tileutil.cpp \
 	../mjcore/ai/aiscript.cpp ../mjcore/ai/functbl.cpp ../mjcore/ai/filesel.cpp ../mjcore/ai/gftbl.cpp ../mjcore/ai/riskchk.cpp \
@@ -15,9 +15,9 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/yaku/catalog/triplet1.cpp ../mjcore/yaku/catalog/triplet2.cpp \
 	../mjcore/yaku/catalog/triplet3.cpp ../mjcore/yaku/catalog/yaojiu.cpp \
 	../mjcore/yaku/catalog/shisanbd.cpp \
-	../mjcore/agari.h ../mjcore/chat.h ../mjcore/confitms.h ../mjcore/decomp.h ../mjcore/discard.h ../mjcore/dllmain.h ../mjcore/endround.h \
+	../mjcore/agari.h ../mjcore/confitms.h ../mjcore/decomp.h ../mjcore/discard.h ../mjcore/dllmain.h ../mjcore/endround.h \
 	../mjcore/endtype.h ../mjcore/envtbl.h ../mjcore/except.h ../mjcore/func.h ../mjcore/fuuro.h ../mjcore/gameloop.h ../mjcore/gametbl.h ../mjcore/haifu.h \
-	../mjcore/init.h ../mjcore/largenum.h ../mjcore/logging.h ../mjcore/main.h ../mjcore/mjexport.h ../mjcore/mjimport.h ../mjcore/mouda.h ../mjcore/prepare.h \
+	../mjcore/init.h ../mjcore/logging.h ../mjcore/main.h ../mjcore/mjexport.h ../mjcore/mjimport.h ../mjcore/mouda.h ../mjcore/prepare.h \
 	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/regex.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
 	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tilecode.h ../mjcore/tileutil.h \
 	../mjcore/ai/aiscript.h ../mjcore/ai/class.h ../mjcore/ai/functbl.h ../mjcore/ai/filesel.h \
