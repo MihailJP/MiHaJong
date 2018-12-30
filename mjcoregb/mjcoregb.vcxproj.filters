@@ -485,6 +485,9 @@
     <ClInclude Include="..\mjcore\conffile\conffile.h">
       <Filter>ヘッダー ファイル\conffile</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\scrmode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcoregb.rc">

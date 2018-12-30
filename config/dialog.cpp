@@ -96,11 +96,11 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	controls.emplace(IDC_IPADDRESS1, new IPaddress(hWnd, IDC_IPADDRESS1));
 	controls.emplace(IDC_COMBO2, new ComboBox(hWnd, IDC_COMBO2, monitorList));
 
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.fullScreen());
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set((!confFile.fullScreen()) && (!confFile.borderlessMode()));
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.scrMode() == ScreenMode::scrModeFullscreen);
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set(confFile.scrMode() == ScreenMode::scrModeWindowed);
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO3])->set(!confFile.blackTile());
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->set(confFile.blackTile());
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->set(confFile.borderlessMode());
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->set(confFile.scrMode() == ScreenMode::scrModeBorderless);
 	dynamic_cast<TextBox*>(controls[IDC_EDIT2])->set(confFile.playerName());
 	dynamic_cast<Slider*>(controls[IDC_SLIDER1])->set(confFile.bgmVolume() / 5);
 	dynamic_cast<Slider*>(controls[IDC_SLIDER2])->set(confFile.soundVolume() / 5);
@@ -112,17 +112,20 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 		dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->set(confFile.serverAddress());
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
 
-	controls[IDC_COMBO1]->enable(!confFile.borderlessMode());
-	controls[IDC_COMBO2]->enable(confFile.borderlessMode());
+	controls[IDC_COMBO1]->enable(confFile.scrMode() != ScreenMode::scrModeBorderless);
+	controls[IDC_COMBO2]->enable(confFile.scrMode() == ScreenMode::scrModeBorderless);
 }
 
 void ConfigDialog::okButtonPressed() {
 	using namespace ControlWrapper;
 
+
 	if (dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->get())
-		confFile.fullScreen(true);
+		confFile.scrMode(ScreenMode::scrModeFullscreen);
+	else if (dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->get())
+		confFile.scrMode(ScreenMode::scrModeBorderless);
 	else
-		confFile.borderlessMode(dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->get());
+		confFile.scrMode(ScreenMode::scrModeWindowed);
 	confFile.blackTile(dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->get());
 	confFile.playerName(dynamic_cast<TextBox*>(controls[IDC_EDIT2])->get());
 	confFile.bgmVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER1])->get() * 5);

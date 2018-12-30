@@ -2,6 +2,7 @@
 
 #include <string>
 #include "../../common/strcode.h"
+#include "../../common/scrmode.h"
 #include <fstream>
 #include <regex>
 #include <cassert>
@@ -110,17 +111,24 @@ void ConfigFile::playerName(const CodeConv::tstring& val) {
 }
 
 /* フルスクリーン/ウィンドウ設定 */
-bool ConfigFile::fullScreen() {
-	return configMap[_T("preferences")][_T("screen")] == _T("fullscreen");
+ScreenMode::ScreenMode ConfigFile::scrMode() {
+	using namespace ScreenMode;
+	return configMap[_T("preferences")][_T("screen")] == _T("borderless") ? scrModeBorderless
+		: configMap[_T("preferences")][_T("screen")] == _T("fullscreen") ? scrModeFullscreen : scrModeWindowed;
 }
-void ConfigFile::fullScreen(bool val) {
-	configMap[_T("preferences")][_T("screen")] = val ? _T("fullscreen") : _T("windowed");
-}
-bool ConfigFile::borderlessMode() {
-	return configMap[_T("preferences")][_T("screen")] == _T("borderless");
-}
-void ConfigFile::borderlessMode(bool val) {
-	configMap[_T("preferences")][_T("screen")] = val ? _T("borderless") : _T("windowed");
+void ConfigFile::scrMode(ScreenMode::ScreenMode val) {
+	using namespace ScreenMode;
+	switch (val) {
+	case scrModeBorderless:
+		configMap[_T("preferences")][_T("screen")] = _T("borderless");
+		break;
+	case scrModeFullscreen:
+		configMap[_T("preferences")][_T("screen")] = _T("fullscreen");
+		break;
+	case scrModeWindowed:
+		configMap[_T("preferences")][_T("screen")] = _T("windowed");
+		break;
+	}
 }
 
 /* 解像度設定 */
@@ -169,7 +177,7 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 }
 
 unsigned int ConfigFile::screenResolutionX() {
-	if (borderlessMode()) {
+	if (scrMode() == ScreenMode::scrModeBorderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
 		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
@@ -199,7 +207,7 @@ unsigned int ConfigFile::screenResolutionX() {
 	}
 }
 unsigned int ConfigFile::screenResolutionY() {
-	if (borderlessMode()) {
+	if (scrMode() == ScreenMode::scrModeBorderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
 		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);

@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <tchar.h>
 #include "../reader/ini2map.h"
+#include "../../common/scrmode.h"
 
 namespace ConfigFile {
 
@@ -53,8 +54,7 @@ public:
 	void save();
 public:
 	CodeConv::tstring playerName(); void playerName(const CodeConv::tstring&);
-	bool fullScreen(); void fullScreen(bool);
-	bool borderlessMode(); void borderlessMode(bool);
+	ScreenMode::ScreenMode scrMode(); void scrMode(ScreenMode::ScreenMode);
 	bool blackTile(); void blackTile(bool);
 	unsigned int bgmVolume(); void bgmVolume(unsigned int);
 	unsigned int soundVolume(); void soundVolume(unsigned int);

@@ -68,6 +68,9 @@
     <ClInclude Include="..\mjcore\conffile\conffile.h">
       <Filter>ヘッダー ファイル\conffile</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\scrmode.h">
+      <Filter>ヘッダー ファイル\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="config.rc">
