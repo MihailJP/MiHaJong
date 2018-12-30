@@ -20,8 +20,9 @@ int CALLBACK Dialog::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM l
 			activeInstance->okButtonPressed();
 			EndDialog(hwndDlg, IDOK);
 			return TRUE;
+		default:
+			return activeInstance->controlPressed(LOWORD(wParam));
 		}
-		return FALSE;
 	case WM_CLOSE:
 		EndDialog(hwndDlg, IDCANCEL);
 		return TRUE;
@@ -110,6 +111,9 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	if (confFile.serverAddress())
 		dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->set(confFile.serverAddress());
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
+
+	controls[IDC_COMBO1]->enable(!confFile.borderlessMode());
+	controls[IDC_COMBO2]->enable(confFile.borderlessMode());
 }
 
 void ConfigDialog::okButtonPressed() {
@@ -128,6 +132,21 @@ void ConfigDialog::okButtonPressed() {
 	confFile.serverAddress(dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->get());
 
 	confFile.save();
+}
+
+BOOL ConfigDialog::controlPressed(WORD id) {
+	switch (id) {
+	case IDC_RADIO1: case IDC_RADIO2:
+		controls[IDC_COMBO1]->enable(true);
+		controls[IDC_COMBO2]->enable(false);
+		return TRUE;
+	case IDC_RADIO5:
+		controls[IDC_COMBO1]->enable(false);
+		controls[IDC_COMBO2]->enable(true);
+		return TRUE;
+	default:
+		return FALSE;
+	}
 }
 
 }

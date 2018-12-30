@@ -20,6 +20,7 @@ protected:
 	std::map<int, ControlWrapper::DialogControl*> controls;
 	virtual void initWrapper(HWND) = 0 {};
 	virtual void okButtonPressed() = 0 {}
+	virtual BOOL controlPressed(WORD) {return FALSE;}
 public:
 	Dialog(HINSTANCE hInstance, int dialogID) : hInstance(hInstance), dialogID(dialogID) {};
 	Dialog(const Dialog&) = delete;
@@ -34,6 +35,7 @@ private:
 protected:
 	virtual void initWrapper(HWND) override;
 	virtual void okButtonPressed() override;
+	virtual BOOL controlPressed(WORD) override;
 public:
 	explicit ConfigDialog(HINSTANCE hInstance) : Dialog(hInstance, IDD_DIALOG1) {};
 };

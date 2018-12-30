@@ -24,6 +24,7 @@ public:
 	DialogControl(const DialogControl&) = delete;
 	DialogControl& operator=(const DialogControl&) = delete;
 	virtual ~DialogControl() = 0 {};
+	void enable(bool);
 };
 
 class TextBox : public DialogControl {
