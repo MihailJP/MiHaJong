@@ -52,7 +52,7 @@ void ConfigFile::load() {
 #endif /* UNICODE */
 			CodeConv::tstring line, text;
 			while (std::getline(file, line)) text += line + _T("\n");
-			INIParser::parseini(configMap, text.c_str());
+			INIParser::parseini(configMap, text.c_str(), false);
 		}
 	}
 }
