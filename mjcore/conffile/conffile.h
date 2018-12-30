@@ -54,9 +54,11 @@ public:
 public:
 	CodeConv::tstring playerName(); void playerName(const CodeConv::tstring&);
 	bool fullScreen(); void fullScreen(bool);
+	bool borderlessMode(); void borderlessMode(bool);
 	bool blackTile(); void blackTile(bool);
 	unsigned int bgmVolume(); void bgmVolume(unsigned int);
 	unsigned int soundVolume(); void soundVolume(unsigned int);
+	unsigned int monitorNumber(); void monitorNumber(unsigned int);
 	ScreenConfig screenResolution(); void screenResolution(ScreenConfig);
 	unsigned int screenResolutionX(); unsigned int screenResolutionY();
 	IPval serverAddress(); void serverAddress(IPval);

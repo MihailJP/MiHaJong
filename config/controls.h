@@ -1,20 +1,17 @@
 ﻿#pragma once
 
+#define NOMINMAX
 #include <Windows.h>
 #include <tchar.h>
 #include <vector>
 #include <string>
 
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
 #ifdef UNICODE
 typedef std::wstring tstring;
+#define to_tstring std::to_wstring
 #else /* UNICODE */
 typedef std::string tstring;
+#define to_tstring std::to_string
 #endif /* UNICODE */
 
 namespace ControlWrapper {

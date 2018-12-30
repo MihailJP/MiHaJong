@@ -1,4 +1,6 @@
 ﻿#include "dialog.h"
+#include <WinUser.h>
+#include <cassert>
 
 namespace DialogWrapper {
 
@@ -40,6 +42,32 @@ Dialog::~Dialog() {
 	}
 }
 
+std::vector<tstring> monitors() {
+	std::vector<tstring> monitorList;
+
+	DISPLAY_DEVICE device, monitor;
+	memset(&device,  0, sizeof device );
+	memset(&monitor, 0, sizeof monitor);
+	device .cb = sizeof(DISPLAY_DEVICE);
+	monitor.cb = sizeof(DISPLAY_DEVICE);
+
+	for (int i = 0; EnumDisplayDevices(nullptr, i, &device, 0) != 0; ++i) {
+		if (device.StateFlags & DISPLAY_DEVICE_ACTIVE) {
+			HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
+			if (hdc) {
+				EnumDisplayDevices(device.DeviceName, 0, &monitor, 0);
+				int width = GetDeviceCaps(hdc, HORZRES), height = GetDeviceCaps(hdc, VERTRES);
+				monitorList.push_back(
+					to_tstring(i + 1) + _T(" : ") + tstring(monitor.DeviceString)
+					+ _T(", ") + to_tstring(width) + _T("x") + to_tstring(height));
+				DeleteDC(hdc);
+			}
+		}
+	}
+
+	return monitorList;
+}
+
 void ConfigDialog::initWrapper(HWND hWnd) {
 	using namespace ControlWrapper;
 
@@ -53,37 +81,50 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 		_T("WUXGA (1920 x 1200)"),
 		});
 
+	const auto monitorList(monitors());
+
 	controls.emplace(IDC_EDIT2, new TextBox(hWnd, IDC_EDIT2, 32));
 	controls.emplace(IDC_RADIO1, new RadioButton(hWnd, IDC_RADIO1));
 	controls.emplace(IDC_RADIO2, new RadioButton(hWnd, IDC_RADIO2));
 	controls.emplace(IDC_RADIO3, new RadioButton(hWnd, IDC_RADIO3));
 	controls.emplace(IDC_RADIO4, new RadioButton(hWnd, IDC_RADIO4));
+	controls.emplace(IDC_RADIO5, new RadioButton(hWnd, IDC_RADIO5));
 	controls.emplace(IDC_SLIDER1, new Slider(hWnd, IDC_SLIDER1, 0, 20, 5));
 	controls.emplace(IDC_SLIDER2, new Slider(hWnd, IDC_SLIDER2, 0, 20, 5));
 	controls.emplace(IDC_COMBO1, new ComboBox(hWnd, IDC_COMBO1, resolutionList));
 	controls.emplace(IDC_IPADDRESS1, new IPaddress(hWnd, IDC_IPADDRESS1));
+	controls.emplace(IDC_COMBO2, new ComboBox(hWnd, IDC_COMBO2, monitorList));
 
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.fullScreen());
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set(!confFile.fullScreen());
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set((!confFile.fullScreen()) && (!confFile.borderlessMode()));
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO3])->set(!confFile.blackTile());
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->set(confFile.blackTile());
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->set(confFile.borderlessMode());
 	dynamic_cast<TextBox*>(controls[IDC_EDIT2])->set(confFile.playerName());
 	dynamic_cast<Slider*>(controls[IDC_SLIDER1])->set(confFile.bgmVolume() / 5);
 	dynamic_cast<Slider*>(controls[IDC_SLIDER2])->set(confFile.soundVolume() / 5);
-	dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(confFile.screenResolution());
+	if (confFile.screenResolution() == ConfigFile::screenInvalid)
+		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(ConfigFile::screenXGA);
+	else
+		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(confFile.screenResolution());
 	if (confFile.serverAddress())
 		dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->set(confFile.serverAddress());
+	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
 }
 
 void ConfigDialog::okButtonPressed() {
 	using namespace ControlWrapper;
 
-	confFile.fullScreen(dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->get());
+	if (dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->get())
+		confFile.fullScreen(true);
+	else
+		confFile.borderlessMode(dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->get());
 	confFile.blackTile(dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->get());
 	confFile.playerName(dynamic_cast<TextBox*>(controls[IDC_EDIT2])->get());
 	confFile.bgmVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER1])->get() * 5);
 	confFile.soundVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER2])->get() * 5);
 	confFile.screenResolution(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->get()));
+	confFile.monitorNumber(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->get() + 1));
 	confFile.serverAddress(dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->get());
 
 	confFile.save();
