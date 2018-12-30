@@ -22,6 +22,7 @@ enum ScreenConfig : int {
 	screenUXGA,   // 1600 x 1200
 	screenFullHD, // 1920 x 1080
 	screenWUXGA,  // 1920 x 1200
+	screenDefaultRes = screenXGA,
 };
 
 struct IPval {

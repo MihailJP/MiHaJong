@@ -8,6 +8,9 @@
 namespace ConfigFile {
 
 typedef std::basic_regex<TCHAR> tregex;
+inline CodeConv::tstring lower(const CodeConv::tstring& str) {
+	return std::tolower(str, std::locale::classic());
+}
 
 /* コンフィグのパス */
 std::string ConfigFile::confPath() {
@@ -123,7 +126,7 @@ ScreenConfig ConfigFile::screenResolution() {
 	try {
 		return scrConfList.at(configMap[_T("preferences")][_T("scrsize")]);
 	} catch (std::out_of_range&) {
-		return screenInvalid;
+		return screenDefaultRes;
 	}
 }
 void ConfigFile::screenResolution(ScreenConfig val) {
