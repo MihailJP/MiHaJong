@@ -5,6 +5,7 @@
 #include "mjexport.h"
 #include "../common/strcode.h"
 #include "conffile/conffile.h"
+#include "../common/scrmode.h"
 
 #ifdef MJCORE_EXPORTS
 
@@ -52,4 +53,4 @@ public: /* Monostate class: cannot be instantiated */
 int getRule(int RuleID);
 #endif
 
-MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen);
+MJCORE void getWindowSize(unsigned* width, unsigned* height, ScreenMode::ScreenMode* fullscreen, unsigned* monitor);

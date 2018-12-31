@@ -21,9 +21,9 @@ ULONG_PTR gdiplusToken;
 #endif
 
 #ifdef _WIN32
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, bool fullscreen)
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor)
 #else /*_WIN32*/
-EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, bool fullscreen)
+EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor)
 #endif /*_WIN32*/
 {
 	/* ウィンドウの初期化 */
@@ -31,7 +31,7 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);
 #endif
 	try {
-		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, fullscreen);
+		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, scrMode, monitor);
 		ui::UIEvent = new ui::UI_Event();
 		ui::cancellableWait = new ui::CancellableWait();
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();

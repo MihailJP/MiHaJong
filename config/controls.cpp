@@ -3,6 +3,12 @@
 
 namespace ControlWrapper {
 
+void DialogControl::enable(bool val) {
+	EnableWindow(hWnd, val);
+}
+
+
+
 bool RadioButton::get() {
 	return (bool)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 }

@@ -141,6 +141,7 @@
     <ClCompile Include="..\mjcore\reader\ini2map.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\scrmode.h" />
     <ClInclude Include="..\common\strcode.h" />
     <ClInclude Include="..\mjcore\conffile\conffile.h" />
     <ClInclude Include="config.h" />

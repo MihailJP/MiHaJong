@@ -2,12 +2,17 @@
 
 #include <string>
 #include "../../common/strcode.h"
+#include "../../common/scrmode.h"
 #include <fstream>
 #include <regex>
+#include <cassert>
 
 namespace ConfigFile {
 
 typedef std::basic_regex<TCHAR> tregex;
+inline CodeConv::tstring lower(const CodeConv::tstring& str) {
+	return std::tolower(str, std::locale::classic());
+}
 
 /* コンフィグのパス */
 std::string ConfigFile::confPath() {
@@ -49,7 +54,7 @@ void ConfigFile::load() {
 #endif /* UNICODE */
 			CodeConv::tstring line, text;
 			while (std::getline(file, line)) text += line + _T("\n");
-			INIParser::parseini(configMap, text.c_str());
+			INIParser::parseini(configMap, text.c_str(), false);
 		}
 	}
 }
@@ -75,12 +80,19 @@ void ConfigFile::save() {
 	file << _T("; フルスクリーン/ウィンドウの別\n");
 	file << _T("; フルスクリーンにするには、\"fullscreen\"を、\n");
 	file << _T("; ウィンドウモードにするには、\"windowed\"を指定します。\n");
+	file << _T("; なお、\"borderless\"を指定すると、ウィンドウを全画面に表示します。\n");
 	file << _T("; デフォルトではウィンドウモードです。\n");
 	file << _T("screen=") << configMap[_T("preferences")][_T("screen")] << _T("\n\n");
 	file << _T("; ウィンドウサイズ/解像度\n");
 	file << _T("; ウィンドウモードではウィンドウサイズ、フルスクリーンでは解像度を設定します。\n");
 	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga\n");
+	file << _T("; screenが\"borderless\"のときは無視されます。\n");
 	file << _T("scrsize=") << configMap[_T("preferences")][_T("scrsize")] << _T("\n\n");
+	file << _T("; モニタ番号\n");
+	file << _T("; 擬似フルスクリーン(borderless)モードで使用するモニタの番号を指定します。\n");
+	file << _T("; 番号は1から始まります。\n");
+	file << _T("; screenが\"borderless\"以外のときは無視されます。\n");
+	file << _T("monitor=") << configMap[_T("preferences")][_T("monitor")] << _T("\n\n");
 	file << _T("; BGM音量\n");
 	file << _T("; 0～100の数値を指定してください。\n");
 	file << _T("bgmvolume=") << configMap[_T("preferences")][_T("bgmvolume")] << _T("\n\n");
@@ -102,11 +114,24 @@ void ConfigFile::playerName(const CodeConv::tstring& val) {
 }
 
 /* フルスクリーン/ウィンドウ設定 */
-bool ConfigFile::fullScreen() {
-	return configMap[_T("preferences")][_T("screen")] == _T("fullscreen");
+ScreenMode::ScreenMode ConfigFile::scrMode() {
+	using namespace ScreenMode;
+	return configMap[_T("preferences")][_T("screen")] == _T("borderless") ? scrModeBorderless
+		: configMap[_T("preferences")][_T("screen")] == _T("fullscreen") ? scrModeFullscreen : scrModeWindowed;
 }
-void ConfigFile::fullScreen(bool val) {
-	configMap[_T("preferences")][_T("screen")] = val ? _T("fullscreen") : _T("windowed");
+void ConfigFile::scrMode(ScreenMode::ScreenMode val) {
+	using namespace ScreenMode;
+	switch (val) {
+	case scrModeBorderless:
+		configMap[_T("preferences")][_T("screen")] = _T("borderless");
+		break;
+	case scrModeFullscreen:
+		configMap[_T("preferences")][_T("screen")] = _T("fullscreen");
+		break;
+	case scrModeWindowed:
+		configMap[_T("preferences")][_T("screen")] = _T("windowed");
+		break;
+	}
 }
 
 /* 解像度設定 */
@@ -123,7 +148,7 @@ ScreenConfig ConfigFile::screenResolution() {
 	try {
 		return scrConfList.at(configMap[_T("preferences")][_T("scrsize")]);
 	} catch (std::out_of_range&) {
-		return screenInvalid;
+		return screenDefaultRes;
 	}
 }
 void ConfigFile::screenResolution(ScreenConfig val) {
@@ -153,8 +178,26 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 		throw std::out_of_range("invalid value for screen resolution");
 	}
 }
+
 unsigned int ConfigFile::screenResolutionX() {
-	switch (screenResolution()) {
+	if (scrMode() == ScreenMode::scrModeBorderless) {
+		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
+		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
+		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
+		int width = 0;
+		if (hdc) {
+			width = GetDeviceCaps(hdc, HORZRES);
+			DeleteDC(hdc);
+		}
+		assert(monitorNumber() != 1 || width > 0);
+		if (width == 0) {
+			monitorNumber(1);
+			return screenResolutionX();
+		} else {
+			return width;
+		}
+	} else {
+		switch (screenResolution()) {
 		case screenSVGA:   return  800u;
 		case screenXGA:    return 1024u;
 		case screenFWXGA:  return 1366u;
@@ -163,10 +206,28 @@ unsigned int ConfigFile::screenResolutionX() {
 		case screenFullHD: return 1920u;
 		case screenWUXGA:  return 1920u;
 		default:           return    0u;
+		}
 	}
 }
 unsigned int ConfigFile::screenResolutionY() {
-	switch (screenResolution()) {
+	if (scrMode() == ScreenMode::scrModeBorderless) {
+		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
+		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
+		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
+		int height = 0;
+		if (hdc) {
+			height = GetDeviceCaps(hdc, VERTRES);
+			DeleteDC(hdc);
+		}
+		assert(monitorNumber() != 1 || height > 0);
+		if (height == 0) {
+			monitorNumber(1);
+			return screenResolutionY();
+		} else {
+			return height;
+		}
+	} else {
+		switch (screenResolution()) {
 		case screenSVGA:   return  600u;
 		case screenXGA:    return  768u;
 		case screenFWXGA:  return  768u;
@@ -175,13 +236,27 @@ unsigned int ConfigFile::screenResolutionY() {
 		case screenFullHD: return 1080u;
 		case screenWUXGA:  return 1200u;
 		default:           return    0u;
+		}
 	}
+}
+
+/* モニタ番号 */
+unsigned int ConfigFile::monitorNumber() {
+	const auto valTxt(configMap[_T("preferences")][_T("monitor")]);
+	try {
+		return std::stoul(valTxt);
+	} catch (std::invalid_argument&) {
+		return 1u;
+	}
+}
+void ConfigFile::monitorNumber(unsigned int val) {
+	configMap[_T("preferences")][_T("monitor")] = to_tstring(val);
 }
 
 /* BGM音量 */
 unsigned int ConfigFile::bgmVolume() {
 	const tregex r(_T("vol_")); // 互換用設定
-	auto valTxt(std::regex_replace(configMap[_T("preferences")][_T("bgmvolume")], r, _T("")));
+	const auto valTxt(std::regex_replace(configMap[_T("preferences")][_T("bgmvolume")], r, _T("")));
 	try {
 		return std::stoul(valTxt);
 	} catch (std::invalid_argument&) {
@@ -195,7 +270,7 @@ void ConfigFile::bgmVolume(unsigned int val) {
 /* 効果音音量 */
 unsigned int ConfigFile::soundVolume() {
 	const tregex r(_T("vol_")); // 互換用設定
-	auto valTxt(std::regex_replace(configMap[_T("preferences")][_T("sndvolume")], r, _T("")));
+	const auto valTxt(std::regex_replace(configMap[_T("preferences")][_T("sndvolume")], r, _T("")));
 	try {
 		return std::stoul(valTxt);
 	} catch (std::invalid_argument&) {
@@ -217,7 +292,7 @@ void ConfigFile::blackTile(bool val) {
 
 /* サーバーのアドレス */
 IPval ConfigFile::serverAddress() {
-	auto addr(CodeConv::split(configMap[_T("preferences")][_T("server")], _T('.')));
+	const auto addr(CodeConv::split(configMap[_T("preferences")][_T("server")], _T('.')));
 	try {
 		return IPval(
 			(uint8_t)std::stoul(addr.at(0)),

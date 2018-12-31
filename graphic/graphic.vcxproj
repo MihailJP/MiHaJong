@@ -211,6 +211,7 @@
     <ClCompile Include="yakustat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\scrmode.h" />
     <ClInclude Include="..\common\bgmid.h" />
     <ClInclude Include="..\common\chrono.h" />
     <ClInclude Include="..\common\clock.h" />
