@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <tchar.h>
 #include "../reader/ini2map.h"
+#include "../../common/strcode.h"
 #include "../../common/scrmode.h"
 
 namespace ConfigFile {

@@ -10,6 +10,7 @@
 #include "resource.h"
 #include "../common/thread.h"
 #include "../common/sleep.h"
+#include "../common/scrmode.h"
 
 extern const GameTypeID myGameType;
 
@@ -21,13 +22,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 #endif
 	MSG msg; HWND hwnd;
-	unsigned width, height; bool fullscreen;
+	unsigned width, height, monitor; ScreenMode::ScreenMode scrMode;
 
 	/* ウィンドウ設定情報を先行読み込み */
-	getWindowSize(&width, &height, &fullscreen);
+	getWindowSize(&width, &height, &scrMode, &monitor);
 
 	/* ウィンドウを初期化する */
-	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, fullscreen))
+	if (!mihajong_graphic::InitWindow(hInstance, nCmdShow, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, scrMode, monitor))
 		exit(1); // 失敗したら終了
 	
 	/* スタート */

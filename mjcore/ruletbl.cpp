@@ -241,8 +241,9 @@ const char* RuleData::ruleDigit() {
 
 // -------------------------------------------------------------------------
 
-MJCORE void getWindowSize(unsigned* width, unsigned* height, bool* fullscreen) {
+MJCORE void getWindowSize(unsigned* width, unsigned* height, ScreenMode::ScreenMode* scrMode, unsigned* monitor) {
 	*width = RuleData::confFile.screenResolutionX();
 	*height = RuleData::confFile.screenResolutionY();
-	*fullscreen = RuleData::confFile.fullScreen();
+	*scrMode = RuleData::confFile.scrMode();
+	*monitor = RuleData::confFile.monitorNumber();
 }

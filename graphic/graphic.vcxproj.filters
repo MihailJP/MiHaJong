@@ -464,6 +464,9 @@
     <ClInclude Include="..\common\gametype.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\scrmode.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc">
