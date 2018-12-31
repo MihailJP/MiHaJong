@@ -118,6 +118,7 @@ struct ITextRenderer::StringAttr {
 	int X, Y;
 	float scale, width;
 	ArgbColor color;
+	StringAttr();
 };
 
 struct ITextRenderer::SpriteAttr {
@@ -127,6 +128,7 @@ struct ITextRenderer::SpriteAttr {
 	float widthScale, heightScale;
 	ArgbColor color;
 	TransformMatrix matrix;
+	SpriteAttr();
 };
 
 }

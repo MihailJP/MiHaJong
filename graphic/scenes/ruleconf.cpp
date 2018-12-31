@@ -10,6 +10,7 @@
 namespace mihajong_graphic {
 
 RuleConfigScene::RuleConfigScene(ScreenManipulator* const manipulator) : ConfigMenuProto(manipulator) {
+	memset(rulestat, 0, sizeof rulestat);
 	for (unsigned short i = 0; i < RULESIZE; i++)
 		rulestat[i] = rules::getRule(i);
 	char* RuleConfPtr[RULE_LINES];

@@ -102,6 +102,7 @@ CodeConv::tstring ServerWait::waiting_desc_str() {
 // -------------------------------------------------------------------------
 
 ClientWait::ClientWait(ScreenManipulator* const manipulator) : ConnectionWaitingProto(manipulator) {
+	subsceneID = cliwSubsceneNone;
 }
 ClientWait::~ClientWait() {
 }

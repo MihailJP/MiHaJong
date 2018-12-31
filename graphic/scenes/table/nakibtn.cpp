@@ -309,6 +309,7 @@ end:
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 	caller = parent;
 	cursor = CursorDisabled; sunkenButton = NoSunkenButton;
+	currentButtonSet = btnSetNormal;
 	buttons = new ButtonPic(caller->caller->getDevice());
 	ChangeButtonSet(btnSetNormal);
 };

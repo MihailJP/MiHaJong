@@ -25,8 +25,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DigitGroups];
 
 	LargeNum() {
-		for (int i = 0; i < DigitGroups; ++i)
-			digitGroup[i] = 0;
+		memset(digitGroup, 0, sizeof digitGroup);
 	}
 
 	void fix() { // 正規形に直す

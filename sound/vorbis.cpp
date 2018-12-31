@@ -13,6 +13,7 @@
 #include <sstream>
 #include <iomanip>
 #include "../common/strcode.h"
+#include <cassert>
 
 /* OGGファイル読み込み */
 void sound::OggData::Prepare(const std::string& filename) {
@@ -28,6 +29,7 @@ void sound::OggData::Prepare(const std::string& filename) {
 	if ((file = fopen(filename.c_str(), "rb")) == nullptr)
 #endif
 		throw CodeConv::tstring(_T("ファイルを開けませんでした"));
+	assert(file != nullptr);
 	OggVorbis_File* ovFile(new OggVorbis_File());
 	if (ov_open(file, ovFile, nullptr, 0)) {
 		fclose(file); throw CodeConv::tstring(_T("Ogg Vorbis ファイルではありません"));

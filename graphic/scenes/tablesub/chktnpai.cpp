@@ -6,6 +6,7 @@
 namespace mihajong_graphic {
 
 TableSubsceneCheckTenpai::TableSubsceneCheckTenpai(DevicePtr device) : TableSubsceneCallFadeProto(device) {
+	memset(tenpaiflag, 0, sizeof tenpaiflag);
 	txtRenderer = new TextRenderer(device);
 	tileRenderer = new ShowTile(device);
 	RecalcTenpaiFlag();

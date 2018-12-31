@@ -16,6 +16,7 @@ public:
 	public:
 		CodeConv::tstring PlayerName;
 		int8_t RemotePlayerFlag;
+		PlayerLabel() : RemotePlayerFlag(0) {}
 	};
 
 	enum ClientType : int32_t {

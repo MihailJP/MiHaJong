@@ -28,6 +28,7 @@ namespace mihajong_graphic {
 // -------------------------------------------------------------------------
 
 TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	sTitleLogo = {nullptr, nullptr, nullptr};
 	TitleSprite::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
@@ -42,11 +43,11 @@ TitleScreen::~TitleScreen() {
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
 	double t = (static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame) - static_cast<double>(startF)) / 2.0;
-	if ((t >= 0.0f) && (t < (static_cast<float>(endF - startF) * 1.1118f)))
+	if ((t >= 0.0) && (t < (static_cast<double>(endF - startF) * 1.1118)))
 		sprite->show(X, Y,
 			powf(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f, 2.0f) + 0.8f,
 			static_cast<int>(96.0f * (2.0f - sqrt(abs(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f)))));
-	else if (t >= (static_cast<float>(endF - startF) * 1.1118f))
+	else if (t >= (static_cast<double>(endF - startF) * 1.1118))
 		sprite->show(X, Y, 1.0f, 128);
 }
 

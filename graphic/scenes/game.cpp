@@ -25,6 +25,7 @@ const std::array<CodeConv::tstring, TableProtoScene::NumOfCheckBoxes> TableProto
 };
 
 TableProtoScene::TableProtoScene(ScreenManipulator* const manipulator) : Scene(manipulator) {
+	scorePanel = {}; checkBoxes = {};
 	LoadTexture(&tSideBar, MAKEINTRESOURCE(IDB_PNG_SDBAR));
 	InitScorePanel();
 	constexpr Region nullRegion = {0, 0, -1, -1};
@@ -331,6 +332,8 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		else if (sign == -1) color = ledColorGreen;
 		else                 color = ledColorOrange;
 		break;
+	default:
+		color = ledColorGreen; // 一応
 	}
 
 	if ((scoreMode != scoreDiff) || (playerID() != GameStatus::gameStat()->PlayerID)) {

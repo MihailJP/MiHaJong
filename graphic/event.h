@@ -31,7 +31,7 @@ class UI_Event : public Event { // UIの入力が完了したかどうかを表�
 private:
 	uint32_t retValue;
 public:
-	UI_Event() : Event(false, false) {}
+	UI_Event() : Event(false, false), retValue(0) {}
 	UI_Event(const UI_Event&) = delete; // Delete unexpected copy constructor
 	UI_Event& operator= (const UI_Event&) = delete; // Delete unexpected assign operator
 	~UI_Event() {}
@@ -43,7 +43,7 @@ class CancellableWait : public Event { // UIの入力が完了したかどうか
 private:
 	uint32_t retValue;
 public:
-	CancellableWait() : Event(false, false) {}
+	CancellableWait() : Event(false, false), retValue(0) {}
 	CancellableWait(const CancellableWait&) = delete; // Delete unexpected copy constructor
 	CancellableWait& operator= (const CancellableWait&) = delete; // Delete unexpected assign operator
 	~CancellableWait() {}

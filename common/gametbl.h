@@ -242,6 +242,8 @@ struct PlayerTable { // プレイヤーの状態を格納
 
 	const Tile& Tsumohai() const {return Hand[TsumohaiIndex];} /* 自摸牌 (immutable) */
 	      Tile& Tsumohai()       {return Hand[TsumohaiIndex];} /* 自摸牌 (mutable) */
+
+	PlayerTable() { memset(this, 0, sizeof(PlayerTable)); }
 };
 static_assert(std::is_trivially_copyable<PlayerTable>::value, "PlayerTable is not trivially copyable");
 static_assert(std::is_standard_layout<PlayerTable>::value, "PlayerTable is not standard layout");
@@ -323,6 +325,7 @@ struct GameTable { // 卓の情報を格納する
 		return (static_cast<int>(RinshanPointer) - (static_cast<int>(DeadTiles) - 1) - static_cast<int>(TilePointer));
 	}
 
+	GameTable() { memset(this, 0, sizeof(GameTable)); }
 };
 static_assert(std::is_trivially_copyable<GameTable>::value, "GameTable is not trivially copyable");
 static_assert(std::is_standard_layout<GameTable>::value, "GameTable is not standard layout");

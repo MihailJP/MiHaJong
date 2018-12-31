@@ -12,7 +12,7 @@ namespace input {
 class InputDevice {
 protected:
 	LPDIRECTINPUTDEVICE8 myInputDevice;
-	InputDevice() = default;
+	InputDevice() : myInputDevice(nullptr) {}
 public:
 	LPDIRECTINPUTDEVICE8 getDevice() {return myInputDevice;}
 	InputDevice(const InputDevice&) = delete; // Delete unexpected copy constructor
