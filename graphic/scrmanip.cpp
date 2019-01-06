@@ -111,6 +111,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 }
 #ifdef _WIN32
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
+	pd3d = 0;
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
@@ -122,6 +123,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 }
 #else /*_WIN32*/
 ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, bool fullscreen) {
+	pd3d = 0;
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
 	redrawFlag = false;
 	pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
@@ -192,9 +194,6 @@ void ScreenManipulator::transit(sceneID scene) {
 		break;
 	case sceneConfig:
 		myScene = new RuleConfigScene(this); redrawFlag = true;
-		break;
-	case sceneSetting:
-		myScene = new PreferenceConfigScene(this); redrawFlag = true;
 		break;
 	case sceneServerWaiting:
 		myScene = new ServerWait(this); redrawFlag = true;

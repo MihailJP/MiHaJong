@@ -93,6 +93,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mihagbmj", "mihajong\mihagb
 		{27244CEE-FABD-4DBB-B22B-62EDE623C754} = {27244CEE-FABD-4DBB-B22B-62EDE623C754}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "config", "config\config.vcxproj", "{239083E7-5779-4C04-ACB6-3D6CB1F43F54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -209,6 +211,14 @@ Global
 		{3C096F3C-4160-4242-A143-BFC5108A9297}.Release|Win32.Build.0 = Release|Win32
 		{3C096F3C-4160-4242-A143-BFC5108A9297}.Release|x64.ActiveCfg = Release|x64
 		{3C096F3C-4160-4242-A143-BFC5108A9297}.Release|x64.Build.0 = Release|x64
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Debug|Win32.ActiveCfg = Debug|Win32
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Debug|Win32.Build.0 = Debug|Win32
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Debug|x64.ActiveCfg = Debug|x64
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Debug|x64.Build.0 = Debug|x64
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Release|Win32.ActiveCfg = Release|Win32
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Release|Win32.Build.0 = Release|Win32
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Release|x64.ActiveCfg = Release|x64
+		{239083E7-5779-4C04-ACB6-3D6CB1F43F54}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

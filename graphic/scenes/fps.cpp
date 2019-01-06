@@ -8,6 +8,8 @@
 namespace mihajong_graphic {
 
 FPSIndicator::FPSIndicator(ScreenManipulator* const manipulator) : Scene(manipulator) {
+	LastRecalcTime = 0;
+	currentFPS = 0.0f;
 	textRenderer = new TextRenderer(caller->getDevice());
 	fpsstr[0] = 0;
 }

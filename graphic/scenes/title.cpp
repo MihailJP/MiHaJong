@@ -29,6 +29,7 @@ namespace mihajong_graphic {
 // -------------------------------------------------------------------------
 
 TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	sTitleLogo = {nullptr, nullptr, nullptr};
 	TitleSprite::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
@@ -43,11 +44,11 @@ TitleScreen::~TitleScreen() {
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
 	double t = (static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame) - static_cast<double>(startF)) / 2.0;
-	if ((t >= 0.0f) && (t < (static_cast<float>(endF - startF) * 1.1118f)))
+	if ((t >= 0.0) && (t < (static_cast<double>(endF - startF) * 1.1118)))
 		sprite->show(X, Y,
 			powf(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f, 2.0f) + 0.8f,
 			static_cast<int>(96.0f * (2.0f - sqrt(abs(static_cast<float>(static_cast<double>(endF - startF) - t) / static_cast<float>(endF - startF) * 4.0f)))));
-	else if (t >= (static_cast<float>(endF - startF) * 1.1118f))
+	else if (t >= (static_cast<double>(endF - startF) * 1.1118))
 		sprite->show(X, Y, 1.0f, 128);
 }
 
@@ -109,11 +110,11 @@ void TitleScreen::menuLabels() {
 		return static_cast<int>((static_cast<int>(Geometry::BaseSize * 2 / 3) - static_cast<int>(1.6 * 18 * cols)) * WidthRate());
 	};
 	menuLabelSlide(0, _T("Standalone Game"), center(15), 400, 120, 180);
-	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 480, 125, 180);
-	menuLabelSlide(2, _T("Network Game (Client)"), center(21), 560, 130, 180);
-	menuLabelSlide(3, _T("Rule Configuration"), center(18), 640, 135, 180);
-	menuLabelSlide(4, _T("System Configuration"), center(20), 720, 140, 180);
-	menuLabelSlide(5, _T("Exit"), center(4), 800, 145, 180);
+	menuLabelSlide(1, _T("Network Game (Server)"), center(21), 500, 125, 180);
+	menuLabelSlide(2, _T("Network Game (Client)"), center(21), 600, 130, 180);
+	menuLabelSlide(3, _T("Rule Configuration"), center(18), 700, 135, 180);
+	menuLabelSlide(4, _T("Exit"), center(4), 800, 140, 180);
+	myTextRenderer->Render();
 }
 
 void TitleScreen::versionInfo() {
@@ -169,13 +170,13 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	case DIK_UP: case DIK_K: // カーソル上
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
-			if (--menuCursor == 0) menuCursor = 6;
+			if (--menuCursor == 0) menuCursor = 5;
 		}
 		break;
 	case DIK_DOWN: case DIK_J: // カーソル下
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
-			if (++menuCursor > 6) menuCursor = 1;
+			if (++menuCursor > 5) menuCursor = 1;
 		}
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
@@ -197,8 +198,8 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	case DIK_ESCAPE: case DIK_X: // キャンセル
 		if (flag) {
 			sound::Play(sound::IDs::sndClick);
-			if (menuCursor != 6) {
-				menuCursor = 6; // Exitにカーソルを合わせる
+			if (menuCursor != 5) {
+				menuCursor = 5; // Exitにカーソルを合わせる
 			} else {
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			}
@@ -237,7 +238,7 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 		if (flag1) {
 			switch (region) {
-			case 0: case 1: case 2: case 3: case 4: case 5:
+			case 0: case 1: case 2: case 3: case 4:
 				if (region != (menuCursor - 1)) {
 					sound::Play(sound::IDs::sndCursor);
 					menuCursor = region + 1;

@@ -1,6 +1,6 @@
 MiHaJong: Japanese Mahjong with a lot of local rules implemented
 ================================================================
-Copyright (c) 2008-2013, 2018 MihailJP
+Copyright (c) 2008-2013, 2019 MihailJP
 
 
 はじめに

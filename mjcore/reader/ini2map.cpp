@@ -1,15 +1,30 @@
 ﻿#include "ini2map.h"
 
 #include <cstring>
+#include <locale>
 
-void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini) {
-	/*
-	 *  CSVをパースして配列の配列オブジェクトに代入する
-	 *
-	 *  制限事項
-	 *  ・CRを無視します
-	 *  ・最初のセクション宣言までは無視されます
-	 */
+/*
+  CSVをパースして配列の配列オブジェクトに代入する
+
+  制限事項
+  ・CRを無視します
+  ・最初のセクション宣言までは無視されます
+*/
+void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini, bool case_sensitive) {
+
+	// 大文字と小文字を区別しない設定のときは小文字にする
+	auto lower = [case_sensitive](const CodeConv::tstring& str) -> CodeConv::tstring {
+		if (case_sensitive) {
+			return str;
+		} else {
+			CodeConv::tstring result;
+			for (auto i = str.begin(); i != str.end(); ++i) {
+				result += std::tolower(*i, std::locale::classic());
+			}
+			return result;
+		}
+	};
+
 	inimap.clear(); // まずリセットする
 	CodeConv::tstring tmpstr; // 作業用文字列
 	CodeConv::tstring currentsection; // 現在有効なセクション名
@@ -24,12 +39,12 @@ void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini) {
 			if (firstchr) continue; // null line
 			else if (issectionname) { // End of the section declaration
 				if (!section.empty()) {
-					inimap.insert(IniMapMap::value_type(currentsection, section)); section.clear();
+					inimap.insert(IniMapMap::value_type(lower(currentsection), section)); section.clear();
 				}
 				currentsection = tmpstr; tmpstr.clear();
 			}
 			else if ((!iscomment) && (isrecordentity)) { // End of the record
-				section.insert(RECORD::value_type(recordname, tmpstr)); tmpstr.clear(); recordname.clear();
+				section.insert(RECORD::value_type(lower(recordname), lower(tmpstr))); tmpstr.clear(); recordname.clear();
 			}
 			else if (!iscomment) { // Invalid: just ignore it
 				tmpstr.clear(); recordname.clear();
@@ -56,9 +71,9 @@ void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini) {
 		}
 	}
 	if ((!firstchr) && (!iscomment) && (isrecordentity)) { // End of the record, without an NL
-		section.insert(RECORD::value_type(recordname, tmpstr)); tmpstr.clear(); recordname.clear();
+		section.insert(RECORD::value_type(lower(recordname), lower(tmpstr))); tmpstr.clear(); recordname.clear();
 	}
 	if (!section.empty()) {
-		inimap.insert(IniMapMap::value_type(currentsection, section)); section.clear();
+		inimap.insert(IniMapMap::value_type(lower(currentsection), section)); section.clear();
 	}
 }

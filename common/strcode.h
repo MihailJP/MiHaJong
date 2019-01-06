@@ -37,6 +37,7 @@ typedef const char* LPCTSTR;
 #endif /* _WIN32 */
 #include <string>
 #include <sstream>
+#include <fstream>
 
 #ifdef UNICODE
 #define PON L"碰"
@@ -197,6 +198,8 @@ inline std::string WIDEtoANSI(std::wstring str) {
 typedef std::basic_string<TCHAR> tstring;
 typedef std::basic_ostringstream<TCHAR> tostringstream;
 typedef std::basic_istringstream<TCHAR> tistringstream;
+typedef std::basic_ifstream<TCHAR> tifstream;
+typedef std::basic_ofstream<TCHAR> tofstream;
 #ifdef UNICODE
 inline std::string toANSI(std::wstring str) {return WIDEtoANSI(str);}
 inline std::string toUTF8(std::wstring str) {return WIDEtoUTF8(str);}
@@ -205,6 +208,7 @@ inline std::wstring DecodeStr(std::string str) {return UTF8toWIDE(str);}
 inline std::string EncodeStr(std::wstring str) {return WIDEtoUTF8(str);}
 inline std::wstring EnsureTStr(std::string str) {return ANSItoWIDE(str);}
 inline std::wstring EnsureTStr(std::wstring str) {return str;}
+#define to_tstring std::to_wstring
 #else
 inline std::string toANSI(std::string str) {return str;}
 inline std::string toUTF8(std::string str) {return WIDEtoUTF8(ANSItoWIDE(str));}
@@ -213,6 +217,7 @@ inline std::string DecodeStr(std::string str) {return str;}
 inline std::string EncodeStr(std::string str) {return str;}
 inline std::string EnsureTStr(std::string str) {return str;}
 inline std::string EnsureTStr(std::wstring str) {return WIDEtoANSI(str);}
+#define to_tstring std::to_string
 #endif
 
 template<class CharT, class Traits = std::char_traits<CharT> >

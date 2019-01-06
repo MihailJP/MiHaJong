@@ -4,7 +4,6 @@
 #include "../geometry.h"
 #include <tuple>
 #include <functional>
-#include "../widgets/editbox.h"
 #include "tablesub/tblsubs.h"
 #include "../text.h"
 #include "../../common/mutex.h"
@@ -80,7 +79,6 @@ public:
 	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
 	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
 #else /*_WIN32*/
-	/* TODO: Linuxでは日本語入力が未実装 */
 	void KeyboardInput(const XEvent* od);
 	void MouseInput(const XEvent* od, int X, int Y);
 #endif /*_WIN32*/

@@ -55,6 +55,12 @@
     <Filter Include="Common\ヘッダー ファイル">
       <UniqueIdentifier>{834c7435-6b4b-40ac-8d8f-b07686000495}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\conffile">
+      <UniqueIdentifier>{8ae2c06c-aaec-4097-90cb-0b725bcf885e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\conffile">
+      <UniqueIdentifier>{a4ffaef5-c1c5-47a0-90db-466f70c9e0f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shanten.cpp">
@@ -240,11 +246,8 @@
     <ClCompile Include="rankval.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="data\prefitem_csv.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
-    <ClCompile Include="data\prefitem_ini.cpp">
-      <Filter>ソース ファイル\data</Filter>
+    <ClCompile Include="conffile\conffile.cpp">
+      <Filter>ソース ファイル\conffile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,12 +419,6 @@
     <ClInclude Include="rankval.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="data\prefitem_csv.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
-    <ClInclude Include="data\prefitem_ini.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
     <ClInclude Include="confitms.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -483,6 +480,12 @@
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\gametype.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="conffile\conffile.h">
+      <Filter>ヘッダー ファイル\conffile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\scrmode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

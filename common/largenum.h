@@ -25,8 +25,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DigitGroups];
 
 	LargeNum() {
-		for (int i = 0; i < DigitGroups; ++i)
-			digitGroup[i] = 0;
+		memset(digitGroup, 0, sizeof digitGroup);
 	}
 
 	void fix() { // 正規形に直す
@@ -147,7 +146,8 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 				&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
 					&& (abs(digitGroup[0]) <= 54'775'807))))
 		{
-			return static_cast<int64_t>(digitGroup[2]) * 1'000'000'000'000'000LL + digitGroup[1] * 100'000'000 + digitGroup[0];
+			return static_cast<int64_t>(digitGroup[2]) * 1'000'000'000'000'000LL
+				+ static_cast<int64_t>(digitGroup[1]) * 100'000'000 + digitGroup[0];
 		} else { // OVERFLOW
 			return (*this >= 0 ? 1 : -1) * std::numeric_limits<int64_t>::max();
 		}

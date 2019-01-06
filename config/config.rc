@@ -1,0 +1,161 @@
+﻿// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+#include "../common/version.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 (日本) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 247, 248
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MiHaJong 環境設定"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,136,227,50,14
+    PUSHBUTTON      "キャンセル",IDCANCEL,190,227,50,14
+    GROUPBOX        "プレイヤー名",IDC_STATIC,6,6,114,30,WS_GROUP
+    EDITTEXT        IDC_EDIT2,12,18,102,14,ES_AUTOHSCROLL
+    GROUPBOX        "サーバーのアドレス",IDC_STATIC,126,6,114,30,WS_GROUP
+    CONTROL         "",IDC_IPADDRESS1,"SysIPAddress32",WS_TABSTOP,132,18,100,15
+    GROUPBOX        "画面設定",IDC_STATIC,6,42,234,48,WS_GROUP
+    CONTROL         "フルスクリーン",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,54,57,10
+    CONTROL         "ウィンドウ",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,72,54,42,10
+    COMBOBOX        IDC_COMBO1,120,52,114,96,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "擬似フルスクリーン",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,74,72,10
+    COMBOBOX        IDC_COMBO2,84,72,150,96,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "BGM音量",IDC_STATIC,6,96,234,42,WS_GROUP
+    CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | TBS_BOTH | WS_TABSTOP,12,108,222,24
+    GROUPBOX        "効果音音量",IDC_STATIC,6,144,234,42,WS_GROUP
+    CONTROL         "",IDC_SLIDER2,"msctls_trackbar32",TBS_AUTOTICKS | TBS_BOTH | WS_TABSTOP,12,156,222,24
+    GROUPBOX        "牌の種類",IDC_STATIC,6,192,234,30,WS_GROUP
+    CONTROL         "通常",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,204,32,10
+    CONTROL         "ブラック牌",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,108,204,45,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 240
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 241
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION CONFIG_MAJOR_VER,CONFIG_MINOR_VER,CONFIG_PATCH_VER,0
+ PRODUCTVERSION MIHAJONG_MAJOR_VER,MIHAJONG_MINOR_VER,MIHAJONG_PATCH_VER,0
+ FILEFLAGSMASK 0x1L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS      VOS_NT_WINDOWS32
+ FILETYPE    VFT_DLL
+ FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "FileDescription", "MiHaJong configuration tool"
+            VALUE "FileVersion", CONFIG_VER
+            VALUE "InternalName", "config.exe"
+            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2019 MihailJP"
+            VALUE "OriginalFilename", "config.exe"
+            VALUE "ProductName", "MiHaJong"
+            VALUE "ProductVersion", MIHAJONG_VER
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+END
+
+#endif    // 日本語 (日本) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

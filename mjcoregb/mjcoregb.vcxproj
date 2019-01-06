@@ -70,21 +70,25 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.bin</TargetExt>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.bin</TargetExt>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.bin</TargetExt>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.bin</TargetExt>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,6 +104,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
       <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +137,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
       <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,6 +171,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,6 +199,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <AdditionalIncludeDirectories>..\mjcore\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>4717;4700;4172;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -205,16 +213,25 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\mjcore\conffile\conffile.cpp" />
     <ClCompile Include="..\mjcore\agari.cpp" />
     <ClCompile Include="..\mjcore\ai\aiscript.cpp" />
-    <ClCompile Include="..\mjcore\ai\functbl.cpp" />
+    <ClCompile Include="..\mjcore\ai\functbl.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\mjcore\ai\filesel.cpp" />
-    <ClCompile Include="..\mjcore\ai\gftbl.cpp" />
+    <ClCompile Include="..\mjcore\ai\gftbl.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\mjcore\ai\riskchk.cpp" />
     <ClCompile Include="..\mjcore\data\confitem_csv.cpp" />
     <ClCompile Include="..\mjcore\data\confitem_ini.cpp" />
-    <ClCompile Include="..\mjcore\data\prefitem_csv.cpp" />
-    <ClCompile Include="..\mjcore\data\prefitem_ini.cpp" />
     <ClCompile Include="..\mjcore\data\rankval_csv.cpp" />
     <ClCompile Include="..\mjcore\decomp.cpp" />
     <ClCompile Include="..\mjcore\discard.cpp" />
@@ -230,7 +247,12 @@
     <ClCompile Include="..\mjcore\logging.cpp" />
     <ClCompile Include="..\mjcore\lzma\Alloc.c" />
     <ClCompile Include="..\mjcore\lzma\LzFind.c" />
-    <ClCompile Include="..\mjcore\lzma\LzFindMt.c" />
+    <ClCompile Include="..\mjcore\lzma\LzFindMt.c">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26115;26117;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\mjcore\lzma\LzmaDec.c" />
     <ClCompile Include="..\mjcore\lzma\LzmaLib.c" />
     <ClCompile Include="..\mjcore\lzma\Sha256.c" />
@@ -270,6 +292,8 @@
     <ClCompile Include="..\mjcore\yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\scrmode.h" />
+    <ClInclude Include="..\mjcore\conffile\conffile.h" />
     <ClInclude Include="..\common\bgmid.h" />
     <ClInclude Include="..\common\chrono.h" />
     <ClInclude Include="..\common\clock.h" />
@@ -297,8 +321,6 @@
     <ClInclude Include="..\mjcore\confitms.h" />
     <ClInclude Include="..\mjcore\data\confitem_csv.h" />
     <ClInclude Include="..\mjcore\data\confitem_ini.h" />
-    <ClInclude Include="..\mjcore\data\prefitem_csv.h" />
-    <ClInclude Include="..\mjcore\data\prefitem_ini.h" />
     <ClInclude Include="..\mjcore\data\rankval_csv.h" />
     <ClInclude Include="..\mjcore\decomp.h" />
     <ClInclude Include="..\mjcore\discard.h" />

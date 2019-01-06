@@ -11,9 +11,9 @@ enum LogLevel {Trace, Debug, Info, Warn, Error, Fatal, Off};
 class LogMsg {
 private:
 	LogLevel logLevel;
-	LogMsg() {}
 	tstring messageTxt;
 	_timeb issueTime;
+	LogMsg() : logLevel(Off) { memset(&issueTime, 0, sizeof issueTime); }
 protected:
 	LogMsg( LogLevel ll, const tstring& txt ) {
 		this->logLevel = ll;

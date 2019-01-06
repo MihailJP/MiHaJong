@@ -82,29 +82,60 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ウィ�
 	else return;
 }
 
-void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) {
+struct RectList {
+	int cnt = 0;
+	LPRECT rect = nullptr;
+};
+
+BOOL CALLBACK monitorInfoCallback(HMONITOR, HDC, LPRECT monRect, LPARAM lParam) {
+	auto rect = reinterpret_cast<RectList*>(lParam);
+	rect->rect[rect->cnt].top    = monRect->top;
+	rect->rect[rect->cnt].bottom = monRect->bottom;
+	rect->rect[rect->cnt].left   = monRect->left;
+	rect->rect[rect->cnt].right  = monRect->right;
+	++(rect->cnt);
+	return TRUE;
+}
+
+void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::ScreenMode scrMode, unsigned monitor) {
 	RECT WindowRect;
 	WindowRect.left = 0; WindowRect.right = WindowWidth;
 	WindowRect.top = 0; WindowRect.bottom = WindowHeight;
 	DWORD ExStyle = 0;
 	DWORD Style;
 #ifndef WITH_DIRECTX
-	if (fullscreen) {
+	if (scrMode == ScreenMode::scrModeFullscreen) {
 		Style = WS_POPUP;
 	} else {
 #endif
-		Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-		AdjustWindowRectEx(&WindowRect, Style, FALSE, ExStyle);
+		if (scrMode == ScreenMode::scrModeBorderless) {
+			Style = WS_POPUP;
+			int n = GetSystemMetrics(SM_CMONITORS);
+			RectList rectList;
+			rectList.cnt = 0;
+			rectList.rect = new RECT[n];
+			memset(&rectList.rect, 0, n * sizeof(RECT));
+			EnumDisplayMonitors(nullptr, nullptr, monitorInfoCallback, reinterpret_cast<LPARAM>(&rectList));
+			WindowRect.left   = rectList.rect[monitor - 1].left;
+			WindowRect.right  = rectList.rect[monitor - 1].right;
+			WindowRect.top    = rectList.rect[monitor - 1].top;
+			WindowRect.bottom = rectList.rect[monitor - 1].bottom;
+			delete[] rectList.rect, rectList.rect = nullptr;
+		} else {
+			Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+			AdjustWindowRectEx(&WindowRect, Style, FALSE, ExStyle);
+		}
 #ifndef WITH_DIRECTX
 	}
 #endif
 	hWnd = CreateWindowEx(
 		ExStyle, myWindowClassName, WindowCaption, Style,
 #ifdef WITH_DIRECTX
-		CW_USEDEFAULT, CW_USEDEFAULT,
+		ScreenMode::scrModeBorderless ? WindowRect.left : CW_USEDEFAULT,
+		ScreenMode::scrModeBorderless ? WindowRect.top : CW_USEDEFAULT,
 #else
-		fullscreen ? 0 : CW_USEDEFAULT,
-		fullscreen ? 0 : CW_USEDEFAULT,
+		scrMode == ScreenMode::scrModeBorderless ? WindowRect.left : ScreenMode::scrModeFullscreen ? 0 : CW_USEDEFAULT,
+		scrMode == ScreenMode::scrModeBorderless ? WindowRect.top : ScreenMode::scrModeFullscreen ? 0 : CW_USEDEFAULT,
 #endif
 		WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
 		nullptr, nullptr, hThisInst, nullptr);
@@ -115,7 +146,7 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, bool fullscreen) 
 #ifndef WITH_DIRECTX
 	/* フルスクリーンにする処理(WinAPI) */
 	/* DirectXの場合はDirectX側の設定でできるが、OpenGLの場合はWinAPIで設定が必要(GLUTは使用しない) */
-	if (fullscreen) {
+	if (scrMode == ScreenMode::scrModeFullscreen) {
 		DEVMODE dMode; ZeroMemory(&dMode, sizeof dMode);
 		dMode.dmSize = sizeof dMode;
 		dMode.dmPelsWidth = WindowWidth;
@@ -157,7 +188,7 @@ bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシ�
 	}
 }
 
-void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
+void MainWindow::initWindow(void* hThisInst, int nWinMode, ScreenMode::ScreenMode scrMode, unsigned monitor) {
 	XInitThreads();
 	disp = XOpenDisplay(nullptr); // 接続先ディスプレイは DISPLAY で指定
 	if (disp == nullptr) throw _T("ディスプレイに接続出来ません。Cannot connect to display.");
@@ -193,18 +224,18 @@ void MainWindow::initWindow(void* hThisInst, int nWinMode, bool fullscreen) {
 #endif /*_WIN32*/
 
 #ifdef _WIN32
-MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
+MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height,ScreenMode::ScreenMode scrMode, unsigned monitor) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindowClass(hThisInst, icon);
-	initWindow(hThisInst, nWinMode, fullscreen);
-	myScreenManipulator = new ScreenManipulator(hWnd, fullscreen);
-	myInputManipulator = new input::InputManipulator(hWnd, fullscreen);
+	initWindow(hThisInst, nWinMode, scrMode, monitor);
+	myScreenManipulator = new ScreenManipulator(hWnd, scrMode == ScreenMode::scrModeFullscreen);
+	myInputManipulator = new input::InputManipulator(hWnd, scrMode == ScreenMode::scrModeFullscreen);
 }
 #else /*_WIN32*/
-MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, bool fullscreen) {
+MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
-	initWindow(hThisInst, nWinMode, fullscreen);
-	myScreenManipulator = new ScreenManipulator(disp, hWnd, fullscreen);
+	initWindow(hThisInst, nWinMode, scrMode, monitor);
+	myScreenManipulator = new ScreenManipulator(disp, hWnd, scrMode == ScreenMode::scrModeFullscreen);
 }
 #endif /*_WIN32*/
 

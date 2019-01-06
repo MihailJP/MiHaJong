@@ -408,8 +408,8 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 	if (Mode == FuuroDaiminkan) {
 		/* バグ防止の為 */
 		for (PlayerID i = 0; i < Players; i++) {
-			gameStat->Player[i].Hand[NumOfTilesInHand].tile = NoTile;
-			gameStat->Player[i].Hand[NumOfTilesInHand].red = Normal;
+			gameStat->Player[i].Hand[TsumohaiIndex].tile = NoTile;
+			gameStat->Player[i].Hand[TsumohaiIndex].red = Normal;
 		}
 #ifndef GUOBIAO
 		/* 大明槓の包判定用 */

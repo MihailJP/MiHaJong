@@ -13,6 +13,7 @@ EnvTable::EnvTable() {
 	}
 	GameMode = Unavailable;
 	WatchModeFlag = false;
+	bgColorR = bgColorG = bgColorB = 0;
 }
 
 LPCTSTR getName(PlayerID playerID) {

@@ -55,6 +55,12 @@
     <Filter Include="Common\ヘッダー ファイル">
       <UniqueIdentifier>{ac6a9dbe-6b04-422c-854c-7e672bcdd9c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\conffile">
+      <UniqueIdentifier>{fbebb2c4-b6af-4aa5-8fdb-418951af62e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\conffile">
+      <UniqueIdentifier>{f22b245f-2a6f-4dfe-81c1-e63565522517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\mjcore\agari.cpp">
@@ -171,12 +177,6 @@
     <ClCompile Include="..\mjcore\data\confitem_ini.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
-    <ClCompile Include="..\mjcore\data\prefitem_csv.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mjcore\data\prefitem_ini.cpp">
-      <Filter>ソース ファイル\data</Filter>
-    </ClCompile>
     <ClCompile Include="..\mjcore\data\rankval_csv.cpp">
       <Filter>ソース ファイル\data</Filter>
     </ClCompile>
@@ -245,6 +245,9 @@
     </ClCompile>
     <ClCompile Include="..\mjcore\yaku\catalog\yaojiu.cpp">
       <Filter>ソース ファイル\yaku\catalog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mjcore\conffile\conffile.cpp">
+      <Filter>ソース ファイル\conffile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,12 +398,6 @@
     <ClInclude Include="..\mjcore\data\confitem_ini.h">
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
-    <ClInclude Include="..\mjcore\data\prefitem_csv.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mjcore\data\prefitem_ini.h">
-      <Filter>ヘッダー ファイル\data</Filter>
-    </ClInclude>
     <ClInclude Include="..\mjcore\data\rankval_csv.h">
       <Filter>ヘッダー ファイル\data</Filter>
     </ClInclude>
@@ -483,6 +480,12 @@
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\gametype.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mjcore\conffile\conffile.h">
+      <Filter>ヘッダー ファイル\conffile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\scrmode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

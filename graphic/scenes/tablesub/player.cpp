@@ -38,6 +38,7 @@ int getTimeRule(const char* ruleTag, int dflt_msec) {
 
 
 TableSubscenePlayerProto::TableSubscenePlayerProto(DevicePtr device) : TableSubscene(device) {
+	timeout_val = 0;
 	myTextRenderer = new TextRenderer(device);
 }
 

@@ -5,7 +5,7 @@ libmihajong_graphic_la_SOURCES = \
 	showtile.cpp sprite.cpp text.cpp timer.cpp utils.cpp window.cpp \
 	yakustat.cpp \
 	scenes/confmenu.cpp scenes/fps.cpp scenes/game.cpp scenes/proto.cpp \
-	scenes/result.cpp scenes/ruleconf.cpp scenes/setting.cpp scenes/splash.cpp \
+	scenes/result.cpp scenes/ruleconf.cpp scenes/splash.cpp \
 	scenes/sysscr.cpp scenes/table.cpp scenes/title.cpp scenes/waiting.cpp \
 	scenes/tablesub/agariscr.cpp scenes/tablesub/call.cpp \
 	scenes/tablesub/callval.cpp scenes/tablesub/chktnpai.cpp \
@@ -16,14 +16,13 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/nakihai0.cpp scenes/table/richibou.cpp \
 	scenes/table/showdice.cpp scenes/table/sutehai.cpp scenes/table/tehai.cpp \
 	scenes/table/tehai0.cpp scenes/table/tiletip.cpp scenes/table/yamahai.cpp \
-	widgets/button.cpp widgets/checkbox.cpp widgets/editbox.cpp \
-	widgets/logwnd.cpp \
+	widgets/button.cpp widgets/checkbox.cpp \
 	calltext.h chrwidth.h directx.h event.h exports.h extchar.h finscore.h \
 	font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h pi.h \
 	resource.h rule.h scrmanip.h showtile.h sprite.h text.h timer.h utils.h \
 	window.h yakustat.h \
 	scenes/confmenu.h scenes/fps.h scenes/game.h scenes/proto.h \
-	scenes/result.h scenes/ruleconf.h scenes/setting.h scenes/scenes.h \
+	scenes/result.h scenes/ruleconf.h scenes/scenes.h \
 	scenes/splash.h scenes/scene_id.h scenes/sysscr.h scenes/table.h \
 	scenes/title.h scenes/waiting.h \
 	scenes/tablesub/agariscr.h scenes/tablesub/call.h \
@@ -36,7 +35,7 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/naki_id.h scenes/table/richibou.h scenes/table/showdice.h \
 	scenes/table/sutehai.h scenes/table/tehai.h scenes/table/tehai0.h \
 	scenes/table/tiletip.h scenes/table/yamahai.h \
-	widgets/button.h widgets/checkbox.h widgets/editbox.h widgets/logwnd.h
+	widgets/button.h widgets/checkbox.h
 libmihajong_graphic_la_LDFLAGS = -no-undefined -release $(VERSION)
 libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS
 if WITH_DIRECTX

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <cassert>
 #ifdef _WIN32
 #include <windows.h>
 #endif /*_WIN32*/
@@ -648,6 +649,9 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
 		meldTile[2].tile = TileCode(meld.tile + 1); meldTile[2].red = meld.red[1];
 		meldTile[0].tile = TileCode(meld.tile + 2); meldTile[0].red = meld.red[2];
+	default:
+		// This must not occur...
+		throw std::invalid_argument("Not a sequence meld!");
 	}
 	for (int i = 0; i < 3; i++) {
 		XhaifuBufferBody << _T("\t\t\t\t\t");
@@ -667,7 +671,7 @@ inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID
 	XhaifuBufferBody << std::endl;
 }
 void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player, MeldCode meld) {
-	int tiles, interrupt; CodeConv::tstring meldDirection;
+	int tiles = 0, interrupt = 0; CodeConv::tstring meldDirection;
 	switch (meld.mstat) {
 	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
 		meldDirection = _T(" meld-direction=\"left\"");

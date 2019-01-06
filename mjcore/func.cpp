@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <imagehlp.h>
 #include <direct.h>
+#include <VersionHelpers.h>
 #else /*_WIN32*/
 #include <sys/stat.h>
 #include <unistd.h>
@@ -150,10 +151,7 @@ namespace confpath {
 	/* Vista/7を使っているかどうか */
 #ifdef _WIN32
 	bool isVista() {
-		OSVERSIONINFO versionInfo;
-		versionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		if (GetVersionEx(&versionInfo) == 0) return false;
-		return ((versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)&&(versionInfo.dwMajorVersion >= 6));
+		return IsWindowsVistaOrGreater();
 	}
 #else /*_WIN32*/
 	bool isVista() { /* Windowsじゃない */

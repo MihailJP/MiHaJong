@@ -16,8 +16,6 @@ IDR_LZMA_STREA1    LZMA_STREAM    "../mjcore/data/mentz.dat.lzma"
 IDR_LZMA_STREA2    LZMA_STREAM    "../mjcore/data/confitem.csv.lzma"
 IDR_LZMA_STREA3    LZMA_STREAM    "../mjcore/data/confitem.ini.lzma"
 IDR_LZMA_STREA4    LZMA_STREAM    "../mjcore/data/rankval.csv.lzma"
-IDR_LZMA_STREA5    LZMA_STREAM    "../mjcore/data/prefitem.csv.lzma"
-IDR_LZMA_STREA6    LZMA_STREAM    "../mjcore/data/prefitem.ini.lzma"
 
 
 
@@ -47,7 +45,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
             VALUE "FileDescription", "MiHaJong core module for Guobiao Majiang"
             VALUE "FileVersion", MJCORE_VER
             VALUE "InternalName", "mjcoregb"
-            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2018 MihailJP\nLZMA SDK by Igor Pavlov, under public domain.\nLua interpreter Copyright (C) 1994-2012 Lua.org, PUC-Rio."
+            VALUE "LegalCopyright", "Copyright (c) 2008-2013, 2019 MihailJP\nLZMA SDK by Igor Pavlov, under public domain.\nLua interpreter Copyright (C) 1994-2012 Lua.org, PUC-Rio."
             VALUE "LegalTrademarks", ""
             VALUE "OriginalFilename", "mjcoregb.bin"
             VALUE "PrivateBuild", ""
