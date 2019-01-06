@@ -14,10 +14,15 @@ void INIParser::parseini(IniMapMap& inimap, LPCTSTR ini, bool case_sensitive) {
 
 	// 大文字と小文字を区別しない設定のときは小文字にする
 	auto lower = [case_sensitive](const CodeConv::tstring& str) -> CodeConv::tstring {
-		if (case_sensitive)
+		if (case_sensitive) {
 			return str;
-		else
-			return std::tolower(str, std::locale::classic());
+		} else {
+			CodeConv::tstring result;
+			for (auto i = str.begin(); i != str.end(); ++i) {
+				result += std::tolower(*i, std::locale::classic());
+			}
+			return result;
+		}
 	};
 
 	inimap.clear(); // まずリセットする

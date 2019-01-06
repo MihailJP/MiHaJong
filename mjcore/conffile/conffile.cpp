@@ -6,12 +6,17 @@
 #include <fstream>
 #include <regex>
 #include <cassert>
+#include <locale>
 
 namespace ConfigFile {
 
 typedef std::basic_regex<TCHAR> tregex;
-inline CodeConv::tstring lower(const CodeConv::tstring& str) {
-	return std::tolower(str, std::locale::classic());
+CodeConv::tstring lower(const CodeConv::tstring& str) {
+	CodeConv::tstring result;
+	for (auto i = str.begin(); i != str.end(); ++i) {
+		result += std::tolower(*i, std::locale::classic());
+	}
+	return result;
 }
 
 /* コンフィグのパス */
