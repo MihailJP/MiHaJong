@@ -296,24 +296,11 @@ void ConfigFile::blackTile(bool val) {
 }
 
 /* サーバーのアドレス */
-IPval ConfigFile::serverAddress() {
-	const auto addr(CodeConv::split(configMap[_T("preferences")][_T("server")], _T('.')));
-	try {
-		return IPval(
-			(uint8_t)std::stoul(addr.at(0)),
-			(uint8_t)std::stoul(addr.at(1)),
-			(uint8_t)std::stoul(addr.at(2)),
-			(uint8_t)std::stoul(addr.at(3)));
-	} catch (std::out_of_range&) {
-		return IPval(0u);
-	}
+CodeConv::tstring ConfigFile::serverAddress() {
+	return configMap[_T("preferences")][_T("server")];
 }
-void ConfigFile::serverAddress(IPval addr) {
-	configMap[_T("preferences")][_T("server")] =
-		to_tstring(static_cast<unsigned int>(addr.first())) + _T(".") +
-		to_tstring(static_cast<unsigned int>(addr.second())) + _T(".") +
-		to_tstring(static_cast<unsigned int>(addr.third())) + _T(".") +
-		to_tstring(static_cast<unsigned int>(addr.fourth()));
+void ConfigFile::serverAddress(const CodeConv::tstring& addr) {
+	configMap[_T("preferences")][_T("server")] = addr;
 }
 
 }

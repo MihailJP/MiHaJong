@@ -57,13 +57,5 @@ public:
 	void set(LONG);
 };
 
-class IPaddress : public DialogControl {
-public:
-	IPaddress(HWND hWnd, int nIDDlgItem) : DialogControl(hWnd, nIDDlgItem) {}
-	DWORD get();
-	void set(BYTE, BYTE, BYTE, BYTE);
-	void set(DWORD);
-};
-
 
 }

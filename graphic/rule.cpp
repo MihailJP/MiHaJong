@@ -46,20 +46,16 @@ EXPORT void setconffile(const char* filename) {
 namespace preferences {
 
 bool blackTile = false;
-std::uint32_t serverAddress = 0u;
+std::string serverAddress;
 
 std::string serverIP() {
-	return
-		std::to_string((serverAddress & 0xff000000) >> 24) + "." +
-		std::to_string((serverAddress & 0x00ff0000) >> 16) + "." +
-		std::to_string((serverAddress & 0x0000ff00) >>  8) + "." +
-		std::to_string((serverAddress & 0x000000ff)      );
+	return serverAddress;
 }
 
 EXPORT void useBlackTile(bool val) {
 	blackTile = val;
 }
-EXPORT void setServerAddr(std::uint32_t addr) {
+EXPORT void setServerAddr(const char* addr) {
 	serverAddress = addr;
 }
 
