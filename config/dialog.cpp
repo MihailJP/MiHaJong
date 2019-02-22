@@ -85,6 +85,7 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	const auto monitorList(monitors());
 
 	controls.emplace(IDC_EDIT2, new TextBox(hWnd, IDC_EDIT2, 32));
+	controls.emplace(IDC_EDIT3, new TextBox(hWnd, IDC_EDIT3, 64));
 	controls.emplace(IDC_RADIO1, new RadioButton(hWnd, IDC_RADIO1));
 	controls.emplace(IDC_RADIO2, new RadioButton(hWnd, IDC_RADIO2));
 	controls.emplace(IDC_RADIO3, new RadioButton(hWnd, IDC_RADIO3));
@@ -93,7 +94,6 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	controls.emplace(IDC_SLIDER1, new Slider(hWnd, IDC_SLIDER1, 0, 20, 5));
 	controls.emplace(IDC_SLIDER2, new Slider(hWnd, IDC_SLIDER2, 0, 20, 5));
 	controls.emplace(IDC_COMBO1, new ComboBox(hWnd, IDC_COMBO1, resolutionList));
-	controls.emplace(IDC_IPADDRESS1, new IPaddress(hWnd, IDC_IPADDRESS1));
 	controls.emplace(IDC_COMBO2, new ComboBox(hWnd, IDC_COMBO2, monitorList));
 
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.scrMode() == ScreenMode::scrModeFullscreen);
@@ -108,8 +108,8 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(ConfigFile::screenXGA);
 	else
 		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(confFile.screenResolution());
-	if (confFile.serverAddress())
-		dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->set(confFile.serverAddress());
+	if (!confFile.serverAddress().empty())
+		dynamic_cast<TextBox*>(controls[IDC_EDIT3])->set(confFile.serverAddress());
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
 
 	controls[IDC_COMBO1]->enable(confFile.scrMode() != ScreenMode::scrModeBorderless);
@@ -132,7 +132,7 @@ void ConfigDialog::okButtonPressed() {
 	confFile.soundVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER2])->get() * 5);
 	confFile.screenResolution(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->get()));
 	confFile.monitorNumber(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->get() + 1));
-	confFile.serverAddress(dynamic_cast<IPaddress*>(controls[IDC_IPADDRESS1])->get());
+	confFile.serverAddress(dynamic_cast<TextBox*>(controls[IDC_EDIT3])->get());
 
 	confFile.save();
 }

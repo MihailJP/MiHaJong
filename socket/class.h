@@ -10,6 +10,7 @@
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
+#include <WS2tcpip.h>
 #endif
 #else /* _WIN32 */
 #include <sys/socket.h>
@@ -33,15 +34,14 @@ private:
 	class network_thread; // スレッド(スーパークラス)
 	class client_thread; // クライアントのスレッド
 	class server_thread; // サーバーのスレッド
-	static uint32_t addr2var(const std::string& address); // アドレスを取得
 	bool isServer;
-	sockaddr_in addr;
+	addrinfo* addrInfo;
 	SocketDescriptor sock, lsock;
 	network_thread* threadPtr;
 	MUTEXLIB::recursive_mutex threadExistenceMutex;
-	uint16_t portnum;
+	uint16_t portnum();
 public:
-	Sock () : isServer(false) {	memset(&addr, 0, sizeof addr); } // ソケット初期化
+	Sock () : isServer(false), addrInfo(nullptr), sock(0), lsock(0), threadPtr(nullptr) {} // ソケット初期化
 	explicit Sock (uint16_t port); // サーバー開始
 	Sock (const std::string& destination, uint16_t port); // クライアント接続
 	Sock (const Sock&) = delete; // Delete unexpected copy constructor
@@ -70,7 +70,7 @@ public:
 	static void thread(network_thread* Instance); // スレッドを起動するための処理
 	virtual void startThread () = 0; // スレッドを開始する
 	bool isConnected (); // 接続済かを返す関数
-	void setaddr (const sockaddr_in destination); // 接続先を設定する
+	void setaddr (const addrinfo* destination); // 接続先を設定する
 	void setsock (SocketDescriptor* const socket, SocketDescriptor* const lsocket = nullptr); // ソケットを設定する
 	void terminate (); // 切断する
 	void chkError (); // エラーをチェックし、もしエラーだったら例外を投げる
@@ -94,7 +94,7 @@ protected:
 	volatile bool receiver_closed; // 受信が全て終わったかのフラグ
 	volatile TimerMicrosec terminate_time; // 打ち切り命令の時間
 	static const TimerMicrosec disconnection_timeout = 3000000ULL; // 切断処理タイムアウト
-	sockaddr_in myAddr; // アドレス情報[親スレッドから書き込み]
+	const addrinfo* myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
 	MUTEXLIB::recursive_mutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
 	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
