@@ -113,7 +113,7 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
 
 	controls[IDC_COMBO1]->enable(confFile.scrMode() != ScreenMode::scrModeBorderless);
-	controls[IDC_COMBO2]->enable(confFile.scrMode() == ScreenMode::scrModeBorderless);
+	controls[IDC_COMBO2]->enable(confFile.scrMode() != ScreenMode::scrModeFullscreen);
 }
 
 void ConfigDialog::okButtonPressed() {
@@ -139,9 +139,13 @@ void ConfigDialog::okButtonPressed() {
 
 BOOL ConfigDialog::controlPressed(WORD id) {
 	switch (id) {
-	case IDC_RADIO1: case IDC_RADIO2:
+	case IDC_RADIO1:
 		controls[IDC_COMBO1]->enable(true);
 		controls[IDC_COMBO2]->enable(false);
+		return TRUE;
+	case IDC_RADIO2:
+		controls[IDC_COMBO1]->enable(true);
+		controls[IDC_COMBO2]->enable(true);
 		return TRUE;
 	case IDC_RADIO5:
 		controls[IDC_COMBO1]->enable(false);

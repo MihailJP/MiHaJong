@@ -103,6 +103,29 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::Scree
 	WindowRect.top = 0; WindowRect.bottom = WindowHeight;
 	DWORD ExStyle = 0;
 	DWORD Style;
+	if (scrMode != ScreenMode::scrModeFullscreen) {
+		int n = GetSystemMetrics(SM_CMONITORS);
+		RectList rectList;
+		rectList.cnt = 0;
+		rectList.rect = new RECT[n]{};
+		EnumDisplayMonitors(nullptr, nullptr, monitorInfoCallback, reinterpret_cast<LPARAM>(&rectList));
+		if (scrMode == ScreenMode::scrModeBorderless) {
+			auto& dispRect = rectList.rect[monitor - 1];
+			WindowRect.left = dispRect.left;
+			WindowRect.right = dispRect.right;
+			WindowRect.top = dispRect.top;
+			WindowRect.bottom = dispRect.bottom;
+		} else {
+			auto& dispRect = rectList.rect[monitor - 1];
+			const int paddingX = (dispRect.right - dispRect.left - static_cast<int>(WindowWidth)) / 2;
+			const int paddingY = (dispRect.bottom - dispRect.top - static_cast<int>(WindowHeight)) / 2;
+			WindowRect.left = dispRect.left + paddingX;
+			WindowRect.right = dispRect.right - paddingX;
+			WindowRect.top = dispRect.top + paddingY;
+			WindowRect.bottom = dispRect.bottom - paddingY;
+		}
+		delete[] rectList.rect, rectList.rect = nullptr;
+	}
 #ifndef WITH_DIRECTX
 	if (scrMode == ScreenMode::scrModeFullscreen) {
 		Style = WS_POPUP;
@@ -110,17 +133,6 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::Scree
 #endif
 		if (scrMode == ScreenMode::scrModeBorderless) {
 			Style = WS_POPUP;
-			int n = GetSystemMetrics(SM_CMONITORS);
-			RectList rectList;
-			rectList.cnt = 0;
-			rectList.rect = new RECT[n];
-			memset(&rectList.rect, 0, n * sizeof(RECT));
-			EnumDisplayMonitors(nullptr, nullptr, monitorInfoCallback, reinterpret_cast<LPARAM>(&rectList));
-			WindowRect.left   = rectList.rect[monitor - 1].left;
-			WindowRect.right  = rectList.rect[monitor - 1].right;
-			WindowRect.top    = rectList.rect[monitor - 1].top;
-			WindowRect.bottom = rectList.rect[monitor - 1].bottom;
-			delete[] rectList.rect, rectList.rect = nullptr;
 		} else {
 			Style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 			AdjustWindowRectEx(&WindowRect, Style, FALSE, ExStyle);
