@@ -645,10 +645,12 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
 		meldTile[0].tile = TileCode(meld.tile + 1); meldTile[0].red = meld.red[1];
 		meldTile[2].tile = TileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+		break;
 	case meldSequenceExposedUpper:
 		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
 		meldTile[2].tile = TileCode(meld.tile + 1); meldTile[2].red = meld.red[1];
 		meldTile[0].tile = TileCode(meld.tile + 2); meldTile[0].red = meld.red[2];
+		break;
 	default:
 		// This must not occur...
 		throw std::invalid_argument("Not a sequence meld!");
