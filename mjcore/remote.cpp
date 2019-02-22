@@ -327,12 +327,9 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 }
 
 void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort) {
+	auto tmpAddr(RuleData::confFile.serverAddress());
 	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
-	serverAddr
-		= std::to_string((int)RuleData::confFile.serverAddress().first() ) + "."
-		+ std::to_string((int)RuleData::confFile.serverAddress().second()) + "."
-		+ std::to_string((int)RuleData::confFile.serverAddress().third() ) + "."
-		+ std::to_string((int)RuleData::confFile.serverAddress().fourth());
+	serverAddr = CodeConv::toANSI(tmpAddr);
 	EnvTable::Instantiate()->GameMode = EnvTable::Client;
 
 	const CodeConv::tstring Nomen(RuleData::confFile.playerName());

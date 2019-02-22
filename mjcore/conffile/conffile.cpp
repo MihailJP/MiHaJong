@@ -80,9 +80,11 @@ void ConfigFile::save() {
 	file << _T("; プレイヤー名\n");
 	file << _T("name=") << configMap[_T("preferences")][_T("name")] << _T("\n\n");
 	file << _T("; サーバーのアドレス\n");
-	file << _T("; IPv4形式で入力してください。IPv6には現在対応していません。\n");
+	file << _T("; 有効なIPv6またはIPv4アドレス、もしくはホスト名(DNS名前解決されます)。\n");
+	file << _T("; IPv4アドレスを指定時はIPv4-mapped IPv6に変換されます。\n");
 	file << _T("server=") << configMap[_T("preferences")][_T("server")] << _T("\n\n");
 	file << _T("; フルスクリーン/ウィンドウの別\n");
+	file << _T("; Windows版のみ。Linux版では無視されます。\n");
 	file << _T("; フルスクリーンにするには、\"fullscreen\"を、\n");
 	file << _T("; ウィンドウモードにするには、\"windowed\"を指定します。\n");
 	file << _T("; なお、\"borderless\"を指定すると、ウィンドウを全画面に表示します。\n");
@@ -94,9 +96,10 @@ void ConfigFile::save() {
 	file << _T("; screenが\"borderless\"のときは無視されます。\n");
 	file << _T("scrsize=") << configMap[_T("preferences")][_T("scrsize")] << _T("\n\n");
 	file << _T("; モニタ番号\n");
-	file << _T("; 擬似フルスクリーン(borderless)モードで使用するモニタの番号を指定します。\n");
+	file << _T("; Windows版のみ。Linux版では無視されます。\n");
+	file << _T("; 使用するモニタの番号を指定します。\n");
 	file << _T("; 番号は1から始まります。\n");
-	file << _T("; screenが\"borderless\"以外のときは無視されます。\n");
+	file << _T("; screenが\"fullscreen\"のときは無視されます。\n");
 	file << _T("monitor=") << configMap[_T("preferences")][_T("monitor")] << _T("\n\n");
 	file << _T("; BGM音量\n");
 	file << _T("; 0～100の数値を指定してください。\n");
@@ -296,24 +299,11 @@ void ConfigFile::blackTile(bool val) {
 }
 
 /* サーバーのアドレス */
-IPval ConfigFile::serverAddress() {
-	const auto addr(CodeConv::split(configMap[_T("preferences")][_T("server")], _T('.')));
-	try {
-		return IPval(
-			(uint8_t)std::stoul(addr.at(0)),
-			(uint8_t)std::stoul(addr.at(1)),
-			(uint8_t)std::stoul(addr.at(2)),
-			(uint8_t)std::stoul(addr.at(3)));
-	} catch (std::out_of_range&) {
-		return IPval(0u);
-	}
+CodeConv::tstring ConfigFile::serverAddress() {
+	return configMap[_T("preferences")][_T("server")];
 }
-void ConfigFile::serverAddress(IPval addr) {
-	configMap[_T("preferences")][_T("server")] =
-		to_tstring(static_cast<unsigned int>(addr.first())) + _T(".") +
-		to_tstring(static_cast<unsigned int>(addr.second())) + _T(".") +
-		to_tstring(static_cast<unsigned int>(addr.third())) + _T(".") +
-		to_tstring(static_cast<unsigned int>(addr.fourth()));
+void ConfigFile::serverAddress(const CodeConv::tstring& addr) {
+	configMap[_T("preferences")][_T("server")] = addr;
 }
 
 }

@@ -40,7 +40,7 @@ protected:
 protected:
 	CodeConv::tstring mySectionName;
 protected:
-	char ruleConf[Lines][LineBatch + 1];
+	char ruleConf[Lines][LineBatch + 1]{};
 	RULETBL Rules;
 	std::array<std::string, NumOfItems> nametbl;
 	CSVReader::CsvVecVec confdat;
@@ -96,7 +96,6 @@ public:
 	void setFreeStr(uint16_t RuleID, std::string data);
 public:
 	CONFDAT_CLASS(CodeConv::tstring sectionName = _T("rules")) {
-		memset(&ruleConf[0][0], 0, sizeof ruleConf);
 		mySectionName = sectionName;
 	}
 	ConfigData(const ConfigData&) = delete; // Delete unexpected copy constructor
@@ -322,33 +321,14 @@ CONFDAT_TEMPLATE std::string CONFDAT_CLASS::getRuleItemTag(std::string RuleTag, 
 
 CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 	using namespace CodeConv;
-#ifdef _MSC_VER
-	errno_t err;
-#endif
-	FILE* conffile;
-#ifdef _MSC_VER
-	if (err = fopen_s(&conffile, filename, "r")) { // オープンし、失敗したら
-#else
-	if ((conffile = fopen(filename, "r")) == nullptr) { // オープンし、失敗したら
-#endif
-		tostringstream o;
-		o << _T("設定ファイルのオープンに失敗しました。");
-#ifdef _MSC_VER
-		o << _T("エラーコード [") << err << _T("]");
-#endif
-		error(o.str().c_str());
-		//fclose(conffile); // ファイルを閉じる ←ここではconffileはぬるぽなので不要
+
+	std::ifstream conffile;
+	conffile.open(filename, std::ios::in);
+	if (conffile.fail()) { // オープンし、失敗したら
+		error(_T("設定ファイルのオープンに失敗しました。"));
 		return -1;
 	} else { // 正しくオープンされたら
-		fseek(conffile, 0, SEEK_END); long filesize = ftell(conffile); rewind(conffile); // ファイルサイズを取得
-		long bufsize = (filesize | (sizeof(int) - 1)) + 1;
-		char* const filedat = new char[bufsize]; // バッファを確保
-		memset(filedat, 0, bufsize); // バッファをゼロクリア
-#ifdef _MSC_VER
-		fread_s(filedat, bufsize, sizeof(char), filesize, conffile); // 読み込み
-#else
-		fread(filedat, sizeof(char), filesize, conffile); // 読み込み
-#endif
+		std::string filedat((std::istreambuf_iterator<char>(conffile)), std::istreambuf_iterator<char>()); // 読み込み
 		{
 			INIParser::IniMapMap config_ini; // INIパース結果を格納する「マップのマップ」
 			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INIをパースする
@@ -408,8 +388,6 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 			debug(_T("現在の設定の内部表現")); for (int i = 0; i < Lines; i++) debug(EnsureTStr(ruleConf[i]));
 			parseRule(); // データ変換
 		}
-		delete[] filedat; // バッファを解放
-		fclose(conffile); // ファイルを閉じる
 		info(tstring(tstring(_T("設定ファイル [")) + tstring(EnsureTStr(filename)) + tstring(_T("] を読み込みました。"))).c_str());
 		return 0;
 	}

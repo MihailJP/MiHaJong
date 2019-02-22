@@ -71,18 +71,4 @@ void ComboBox::set(int val) {
 	SendMessage(hWnd, CB_SETCURSEL, val, 0);
 }
 
-
-
-DWORD IPaddress::get() {
-	DWORD ip;
-	SendMessage(hWnd, IPM_GETADDRESS, 0, reinterpret_cast<LPARAM>(&ip));
-	return ip;
-}
-void IPaddress::set(DWORD ip) {
-	SendMessage(hWnd, IPM_SETADDRESS, 0, (LPARAM)ip);
-}
-void IPaddress::set(BYTE first, BYTE second, BYTE third, BYTE fourth) {
-	set(MAKEIPADDRESS(first, second, third, fourth));
-}
-
 }

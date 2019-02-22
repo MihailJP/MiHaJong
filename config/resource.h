@@ -4,7 +4,7 @@
 //
 #define IDD_DIALOG1                     101
 #define IDC_EDIT2                       1005
-#define IDC_IPADDRESS1                  1006
+#define IDC_EDIT3                       1006
 #define IDC_CHECK1                      1007
 #define IDC_COMBO1                      1008
 #define IDC_SLIDER1                     1009

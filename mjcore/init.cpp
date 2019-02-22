@@ -82,8 +82,9 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			getName, nullptr, isAboveBase, isStandAlone);
 		{
 			using namespace mihajong_graphic::preferences;
+			auto tmpAddr(CodeConv::toANSI(RuleData::confFile.serverAddress()));
 			useBlackTile(RuleData::confFile.blackTile());
-			setServerAddr(RuleData::confFile.serverAddress());
+			setServerAddr(tmpAddr.c_str());
 		}
 	}
 

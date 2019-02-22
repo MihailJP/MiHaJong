@@ -27,21 +27,6 @@ enum ScreenConfig : int {
 	screenDefaultRes = screenXGA,
 };
 
-struct IPval {
-	uint32_t val;
-	IPval() : val(0u) {}
-	IPval(uint32_t addressAsOneVal) : val(addressAsOneVal) {}
-	IPval(uint8_t first, uint8_t second, uint8_t third, uint8_t fourth)
-		: val((uint32_t)first << 24 | (uint32_t)second << 16 |(uint32_t)third << 8 | (uint32_t)fourth) {}
-	uint8_t first()  const {return (uint8_t)((val & 0xff000000) >> 24);}
-	uint8_t second() const {return (uint8_t)((val & 0x00ff0000) >> 16);}
-	uint8_t third()  const {return (uint8_t)((val & 0x0000ff00) >>  8);}
-	uint8_t fourth() const {return (uint8_t)((val & 0x000000ff)      );}
-	operator uint32_t() const {return val;}
-};
-static_assert(std::is_trivially_copyable<IPval>::value, "IPval is not trivially copyable");
-static_assert(std::is_standard_layout<IPval>::value, "IPval is not standard layout");
-
 class ConfigFile {
 private:
 	INIParser::IniMapMap configMap;
@@ -63,7 +48,7 @@ public:
 	unsigned int monitorNumber(); void monitorNumber(unsigned int);
 	ScreenConfig screenResolution(); void screenResolution(ScreenConfig);
 	unsigned int screenResolutionX(); unsigned int screenResolutionY();
-	IPval serverAddress(); void serverAddress(IPval);
+	CodeConv::tstring serverAddress(); void serverAddress(const CodeConv::tstring&);
 };
 
 }

@@ -62,12 +62,12 @@ namespace preferences {
 
 #ifdef GRAPHIC_EXPORTS
 extern bool blackTile;
-extern std::uint32_t serverAddress;
+extern std::string serverAddress;
 std::string serverIP();
 #endif
 
 EXPORT void useBlackTile(bool);
-EXPORT void setServerAddr(std::uint32_t);
+EXPORT void setServerAddr(const char*);
 
 }
 }
