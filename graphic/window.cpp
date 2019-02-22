@@ -113,8 +113,7 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::Scree
 			int n = GetSystemMetrics(SM_CMONITORS);
 			RectList rectList;
 			rectList.cnt = 0;
-			rectList.rect = new RECT[n];
-			memset(&rectList.rect, 0, n * sizeof(RECT));
+			rectList.rect = new RECT[n]{};
 			EnumDisplayMonitors(nullptr, nullptr, monitorInfoCallback, reinterpret_cast<LPARAM>(&rectList));
 			WindowRect.left   = rectList.rect[monitor - 1].left;
 			WindowRect.right  = rectList.rect[monitor - 1].right;
