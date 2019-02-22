@@ -80,7 +80,8 @@ void ConfigFile::save() {
 	file << _T("; プレイヤー名\n");
 	file << _T("name=") << configMap[_T("preferences")][_T("name")] << _T("\n\n");
 	file << _T("; サーバーのアドレス\n");
-	file << _T("; IPv4形式で入力してください。IPv6には現在対応していません。\n");
+	file << _T("; 有効なIPv6またはIPv4アドレス、もしくはホスト名(DNS名前解決されます)。\n");
+	file << _T("; IPv4アドレスを指定時はIPv4-mapped IPv6に変換されます。\n");
 	file << _T("server=") << configMap[_T("preferences")][_T("server")] << _T("\n\n");
 	file << _T("; フルスクリーン/ウィンドウの別\n");
 	file << _T("; Windows版のみ。Linux版では無視されます。\n");
