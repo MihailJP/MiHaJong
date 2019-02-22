@@ -288,7 +288,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				case EastWind: case SouthWind: case WestWind: case NorthWind:
 				case WhiteDragon: case GreenDragon: case RedDragon:
 					++*zipai;
-					/* FALLTHRU */
+					[[fallthrough]];
 				case CharacterOne: case CharacterNine: case CircleOne: case CircleNine:
 				case BambooOne: case BambooNine:
 					++*yaojiu; break;

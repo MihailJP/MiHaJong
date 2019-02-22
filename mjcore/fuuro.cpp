@@ -81,7 +81,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
-		/* FALLTHRU */
+		[[fallthrough]];
 	case FuuroKakan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる

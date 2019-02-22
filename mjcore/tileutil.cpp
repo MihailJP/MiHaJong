@@ -164,7 +164,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				break;
 #else /* GUOBIAO */
 				if (RuleData::chkRule("ankan_conceal", "closed")) break; // 暗槓非開示ルールだったらカウントしない
-				/* FALLTHRU */
+				[[fallthrough]];
 #endif /* GUOBIAO */
 			case meldQuadExposedLeft:   case meldQuadAddedLeft:
 			case meldQuadExposedCenter: case meldQuadAddedCenter:
@@ -236,7 +236,7 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 			// 槓子の時
 			if (gameStat->Player[playerID].Meld[i].red[3] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
-			/* FALLTHRU */
+			[[fallthrough]];
 		case meldTripletExposedLeft: case meldTripletExposedCenter:
 		case meldTripletExposedRight:
 			// 刻子の時(槓子も含む)
