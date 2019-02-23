@@ -1,4 +1,4 @@
-﻿#include "snddata.h"
+﻿#include "vorbis.h"
 #ifdef VORBIS_SUPPORT
 #ifdef __MINGW32__ /* Workaround */
 #undef __MINGW32__
@@ -18,9 +18,7 @@
 /* OGGファイル読み込み */
 void sound::OggData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
-#if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
-#endif
 	// ファイルを開く
 	FILE* file;
 #ifdef _MSC_VER
@@ -60,18 +58,25 @@ void sound::OggData::Prepare(const std::string& filename) {
 		else if (bytes_read)
 			buffer.insert(buffer.end(), &buf[0], &buf[bytes_read]);
 	} while (bytes_read);
+	// ループ位置読み込み
+	const vorbis_comment *comment(ov_comment(ovFile, -1));
+	for (int i = 0; comment->user_comments[i] != nullptr; ++i) {
+		const std::string tag(comment->user_comments[i]);
+		if (tag.substr(0, 10) == "LOOPSTART=")
+			loopStart = std::stoul(tag.substr(10));
+		else if (tag.substr(0, 11) == "LOOPLENGTH=")
+			loopLength = std::stoul(tag.substr(11));
+	}
 	// 読み終わり
 	fclose(file); delete ovFile;
 	delete[] buf; buf = nullptr;
 }
 
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
-#elif defined(USE_XAUDIO2)
+#ifdef USE_XAUDIO2
 sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
-#else
-sound::OggData::OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
-#endif
+#else /* USE_XAUDIO2 */
+sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
+#endif /* USE_XAUDIO2 */
 	Prepare(filename);
 	PrepareBuffer(Engine, looped);
 }

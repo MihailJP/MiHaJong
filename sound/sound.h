@@ -5,11 +5,6 @@
 #else
 #include <X11/Xlib.h>
 #endif
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-#ifdef SOUND_EXPORTS
-#include <dsound.h>
-#endif /* SOUND_EXPORTS */
-#endif /* defined(_WIN32) && defined(WITH_DIRECTX) */
 
 #if !defined(_WIN32)
 #define SOUNDDLL_EXPORT /* */

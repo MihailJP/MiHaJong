@@ -3,35 +3,30 @@
 #ifndef _WIN32
 #include <X11/Xlib.h>
 #endif
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef USE_XAUDIO2
+#include <xaudio2.h>
+#else /* USE_XAUDIO2 */
 #include <AL/al.h>
 #include <AL/alc.h>
-#elif defined(USE_XAUDIO2)
-#include <xaudio2.h>
-#else
-#include <dsound.h>
-#endif
+#endif /* USE_XAUDIO2 */
 #include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <vector>
-#include "snddata.h"
+#include "audioobj.h"
 
 namespace sound {
 
 	/* サウンド操作用クラス */
 	class SoundManipulator {
 	private:
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		ALCdevice* myDevice;
-		ALCcontext* myContext;
-#elif defined(USE_XAUDIO2)
+#ifdef USE_XAUDIO2
 		IXAudio2* xAudio;
 		IXAudio2MasteringVoice* mVoice;
-#else
-		LPDIRECTSOUND8 pDSound;
-		LPDIRECTSOUNDBUFFER mVoice;
-#endif
+#else /* USE_XAUDIO2 */
+		ALCdevice* myDevice;
+		ALCcontext* myContext;
+#endif /* USE_XAUDIO2 */
 		std::vector<AudioData*> sounds;
 #ifdef _WIN32
 		void InitXAudio(HWND hWnd = nullptr);
