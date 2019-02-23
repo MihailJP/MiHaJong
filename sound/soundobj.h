@@ -6,10 +6,8 @@
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #include <AL/al.h>
 #include <AL/alc.h>
-#elif defined(USE_XAUDIO2)
-#include <xaudio2.h>
 #else
-#include <dsound.h>
+#include <xaudio2.h>
 #endif
 #include <cstdint>
 #include <cstring>
@@ -25,12 +23,9 @@ namespace sound {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 		ALCdevice* myDevice;
 		ALCcontext* myContext;
-#elif defined(USE_XAUDIO2)
+#else
 		IXAudio2* xAudio;
 		IXAudio2MasteringVoice* mVoice;
-#else
-		LPDIRECTSOUND8 pDSound;
-		LPDIRECTSOUNDBUFFER mVoice;
 #endif
 		std::vector<AudioData*> sounds;
 #ifdef _WIN32

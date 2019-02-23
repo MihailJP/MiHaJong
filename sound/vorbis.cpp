@@ -18,9 +18,7 @@
 /* OGGファイル読み込み */
 void sound::OggData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
-#if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
-#endif
 	// ファイルを開く
 	FILE* file;
 #ifdef _MSC_VER
@@ -67,10 +65,8 @@ void sound::OggData::Prepare(const std::string& filename) {
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
-#elif defined(USE_XAUDIO2)
-sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #else
-sound::OggData::OggData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
+sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #endif
 	Prepare(filename);
 	PrepareBuffer(Engine, looped);

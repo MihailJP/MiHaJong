@@ -3,10 +3,8 @@
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #include <AL/al.h>
 #include <AL/alc.h>
-#elif defined(USE_XAUDIO2)
-#include <xaudio2.h>
 #else
-#include <dsound.h>
+#include <xaudio2.h>
 #endif
 #include <cstdint>
 #include <cstring>
@@ -27,20 +25,15 @@ namespace sound {
 		std::vector<char> buffer;
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 		ALuint mySource, myBuffer;
-#elif defined(USE_XAUDIO2)
+#else
 		XAUDIO2_BUFFER bufInfo;
 		IXAudio2SourceVoice* voice;
-#else
-		bool withLoop;
-		LPDIRECTSOUNDBUFFER voice;
 #endif
 		virtual void Prepare(const std::string& filename) = 0;
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 		void PrepareBuffer(void*, bool looped = false);
-#elif defined(USE_XAUDIO2)
-		void PrepareBuffer(IXAudio2** Engine, bool looped = false);
 #else
-		void PrepareBuffer(LPDIRECTSOUND8* Engine, bool looped);
+		void PrepareBuffer(IXAudio2** Engine, bool looped = false);
 #endif
 	public:
 		virtual void Play() override;

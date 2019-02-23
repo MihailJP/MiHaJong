@@ -26,37 +26,19 @@ void sound::SoundManipulator::InitXAudio(Window hWnd)
 	}
 
 	/* デバイスの初期化 */
-#if defined(USE_XAUDIO2)
 	UINT32 flags = 0;
 #ifdef _DEBUG
 	flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 	if (FAILED(hr = XAudio2Create(&xAudio, flags))) {
 		CodeConv::tostringstream o; o << _T("XAudio2Create失敗！！ (0x") <<
-#else
-	if (FAILED(hr = DirectSoundCreate8(nullptr, &pDSound, nullptr))) {
-		CodeConv::tostringstream o; o << _T("DirectSoundCreate8失敗！！ (0x") <<
-#endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
-#if !defined(USE_XAUDIO2)
-	pDSound->SetCooperativeLevel(hWnd, DSSCL_PRIORITY);
-#endif
 
 	/* マスターバッファ初期化 */
-#if defined(USE_XAUDIO2)
 	if (FAILED(hr = xAudio->CreateMasteringVoice(&mVoice))) {
 		CodeConv::tostringstream o; o << _T("CreateMasteringVoice失敗！！ (0x") <<
-#else
-	DSBUFFERDESC dsbd;
-	memset(&dsbd, 0, sizeof(DSBUFFERDESC));
-	dsbd.dwSize = sizeof(DSBUFFERDESC);
-	dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER;
-	dsbd.dwBufferBytes = 0;
-	if (FAILED(hr = pDSound->CreateSoundBuffer(&dsbd, &mVoice, nullptr))) {
-		CodeConv::tostringstream o; o << _T("CreateMasteringVoice失敗！！ (0x") <<
-#endif
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");
 		throw o.str();
 	}
@@ -115,20 +97,12 @@ sound::SoundManipulator::~SoundManipulator() {
 		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(myContext); myContext = nullptr;
 	}
-#elif defined(USE_XAUDIO2)
+#else
 	if (mVoice) {
 		mVoice->DestroyVoice(); mVoice = nullptr;
 	}
 	if (xAudio) {
 		xAudio->Release(); xAudio = nullptr;
-	}
-	CoUninitialize();
-#else
-	if (mVoice) {
-		mVoice->Release(); mVoice = nullptr;
-	}
-	if (pDSound) {
-		pDSound->Release(); pDSound = nullptr;
 	}
 	CoUninitialize();
 #endif
@@ -139,20 +113,16 @@ void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filen
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	sounds[ID] = new WaveData(nullptr, filename, looped);
-#elif defined(USE_XAUDIO2)
-	sounds[ID] = new WaveData(&xAudio, filename, looped);
 #else
-	sounds[ID] = new WaveData(&pDSound, filename, looped);
+	sounds[ID] = new WaveData(&xAudio, filename, looped);
 #endif
 }
 void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename, bool looped) {
 	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 	sounds[ID] = new OggData(nullptr, filename, looped);
-#elif defined(USE_XAUDIO2)
-	sounds[ID] = new OggData(&xAudio, filename, looped);
 #else
-	sounds[ID] = new OggData(&pDSound, filename, looped);
+	sounds[ID] = new OggData(&xAudio, filename, looped);
 #endif
 }
 void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filename, bool looped) {

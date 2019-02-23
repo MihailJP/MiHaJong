@@ -24,9 +24,7 @@ void sound::WaveData::GetFormat(std::ifstream& file) {
 	std::uint16_t id; file.read(reinterpret_cast<char*>(&id), 2);
 #ifdef _WIN32
 	if (id == 1) format.wFormatTag = WAVE_FORMAT_PCM;
-#if defined(USE_XAUDIO2)
 	else if (id == 2) format.wFormatTag = WAVE_FORMAT_ADPCM;
-#endif
 	else throw CodeConv::tstring(_T("対応していないフォーマットです"));
 #else /* _WIN32 */
 	if (id != 1)
@@ -55,9 +53,7 @@ void sound::WaveData::ReadWaveData(std::ifstream& file) {
 /* WAVEファイル読み込み */
 void sound::WaveData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
-#if defined(USE_XAUDIO2)
 	std::memset(&bufInfo, 0, sizeof(buffer));
-#endif
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
 	if (!file) throw CodeConv::tstring(_T("ファイルを開けませんでした"));
 	if (!checkTag(file, "RIFF")) throw CodeConv::tstring(_T("RIFFチャンクがないです"));
@@ -78,10 +74,8 @@ void sound::WaveData::Prepare(const std::string& filename) {
 
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 sound::WaveData::WaveData(void* Engine, const std::string& filename, bool looped) {
-#elif defined(USE_XAUDIO2)
-sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #else
-sound::WaveData::WaveData(LPDIRECTSOUND8* Engine, const std::string& filename, bool looped) {
+sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
 #endif
 	Prepare(filename);
 	PrepareBuffer(Engine, looped);
