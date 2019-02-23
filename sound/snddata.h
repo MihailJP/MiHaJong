@@ -111,32 +111,5 @@ namespace sound {
 		}
 #endif
 	};
-	class MidiData : public AudioData {
-#if defined(MIDI_SUPPORT) && defined(_WIN32)
-	private:
-		int myID;
-		bool loopFlag;
-	public:
-		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false);
-		MidiData(const MidiData&) = delete; // Delete unexpected copy constructor
-		MidiData& operator= (const MidiData&) = delete; // Delete unexpected assign operator
-		void Play();
-		void Stop();
-		virtual void setVolume(double volume);
-		virtual ~MidiData();
-#else
-	public:
-		explicit MidiData(unsigned ID, const std::string& filename, bool looped = false) {
-			throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));
-		}
-		MidiData(const MidiData&) = delete; // Delete unexpected copy constructor
-		MidiData& operator= (const MidiData&) = delete; // Delete unexpected assign operator
-		void Play() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
-		void Stop() {throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));}
-		virtual void setVolume(double volume) {
-			throw CodeConv::tstring(_T("このバージョンはMIDIファイルの再生をサポートしていません"));
-		}
-#endif
-	};
 
 }

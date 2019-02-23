@@ -191,6 +191,7 @@
     <ClInclude Include="audioobj.h" />
     <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="midi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="snddata.h" />
     <ClInclude Include="sound.h" />

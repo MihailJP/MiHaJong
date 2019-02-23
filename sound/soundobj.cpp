@@ -1,4 +1,5 @@
 ﻿#include "soundobj.h"
+#include "midi.h"
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
 #endif
