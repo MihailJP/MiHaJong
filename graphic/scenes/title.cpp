@@ -13,6 +13,7 @@
 #ifndef _WIN32
 #include "../keycode.h"
 #endif /*_WIN32*/
+#include "../../common/version.h"
 
 #ifdef max
 #undef max
@@ -116,9 +117,37 @@ void TitleScreen::menuLabels() {
 	myTextRenderer->Render();
 }
 
+void TitleScreen::versionInfo() {
+	constexpr double startFrame = 120.0;
+	constexpr double endFrame = 180.0;
+	const double frames = static_cast<double>(myTimer.elapsed()) / static_cast<double>(timePerFrame);
+	const int realWidth = static_cast<int>(static_cast<float>(Geometry::WindowWidth) / Geometry::WindowScale());
+	const CodeConv::tstring versionText(_T("Version ") _T(MIHAJONG_VER));
+	ArgbColor color;
+	CodeConv::tstring gameTypeText;
+
+	switch (GameStatus::gameStat()->gameType) {
+		case Yonma:     color = 0x0080ff80; gameTypeText = _T(""); break;
+		case Sanma:     color = 0x008080ff; gameTypeText = _T("三人打ち"); break;
+		case Sanma4:    color = 0x0080ffff; gameTypeText = _T("四人三麻"); break;
+		case SanmaS:    color = 0x00ff80ff; gameTypeText = _T("数牌三麻"); break;
+		case GuobiaoMJ: color = 0x00ffff80; gameTypeText = _T("国標麻将"); break;
+		default: assert(false); // This may not occur.
+	}
+	myTextRenderer->NewText(6, versionText,
+		realWidth - static_cast<int>(static_cast<float>(myTextRenderer->strWidthByPix(versionText)) * 1.5f * WidthRate()) - 40,
+		100, 1.5f, WidthRate(),
+		frames >= endFrame ? 0xff000000 | color
+		: frames >= startFrame ? ((static_cast<uint32_t>((frames - startFrame) * 255.0 / (endFrame - startFrame)) << 24) | color)
+		: 0x00ffffff);
+	myTextRenderer->NewText(7, gameTypeText, 40, 40, 2.0f, WidthRate(), 0xff000000 | color);
+}
+
 void TitleScreen::Render() {
 	clearWithGameTypeColor();
 	menuLabels();
+	versionInfo();
+	myTextRenderer->Render();
 	zoomingLogo(sTitleLogo[0],  220, 168,   0, 30);
 	zoomingLogo(sTitleLogo[1],  640, 168,  30, 60);
 	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
