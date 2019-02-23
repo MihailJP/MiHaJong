@@ -1,4 +1,4 @@
-﻿#include "snddata.h"
+﻿#include "vorbis.h"
 #ifdef VORBIS_SUPPORT
 #ifdef __MINGW32__ /* Workaround */
 #undef __MINGW32__
