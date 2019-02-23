@@ -51,6 +51,9 @@
     <ClCompile Include="GuruGuruSMF\GuruGuruSMF4_Cpp_Static.cpp">
       <Filter>GuruGuruSMF\ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="snddata.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sound.h">
@@ -87,6 +90,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="vorbis.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="wave.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
