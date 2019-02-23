@@ -29,6 +29,7 @@ namespace sound {
 #else /* USE_XAUDIO2 */
 		ALuint mySource, myBuffer;
 #endif /* USE_XAUDIO2 */
+		std::uint32_t loopStart = 0u, loopLength = 0u;
 		virtual void Prepare(const std::string& filename) = 0;
 #ifdef USE_XAUDIO2
 		void PrepareBuffer(IXAudio2** Engine, bool looped = false);

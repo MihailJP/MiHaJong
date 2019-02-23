@@ -14,6 +14,8 @@ void sound::SoundData::PrepareBuffer(IXAudio2** Engine, bool looped) {
 	bufInfo.AudioBytes = buffer.size();
 	bufInfo.pAudioData = reinterpret_cast<BYTE*>(&buffer[0]);
 	bufInfo.LoopCount = (looped ? XAUDIO2_LOOP_INFINITE : 0);
+	bufInfo.LoopBegin = loopStart;
+	bufInfo.LoopLength = loopLength;
 	if (FAILED(hr = (*Engine)->CreateSourceVoice(&voice, &format))) {
 		CodeConv::tostringstream o; o << _T("CreateSourceVoice失敗！！ (0x") <<
 			std::hex << std::setw(8) << std::setfill(_T('0')) << hr << _T(")");

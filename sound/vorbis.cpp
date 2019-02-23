@@ -58,6 +58,15 @@ void sound::OggData::Prepare(const std::string& filename) {
 		else if (bytes_read)
 			buffer.insert(buffer.end(), &buf[0], &buf[bytes_read]);
 	} while (bytes_read);
+	// ループ位置読み込み
+	const vorbis_comment *comment(ov_comment(ovFile, -1));
+	for (int i = 0; comment->user_comments[i] != nullptr; ++i) {
+		const std::string tag(comment->user_comments[i]);
+		if (tag.substr(0, 10) == "LOOPSTART=")
+			loopStart = std::stoul(tag.substr(10));
+		else if (tag.substr(0, 11) == "LOOPLENGTH=")
+			loopLength = std::stoul(tag.substr(11));
+	}
 	// 読み終わり
 	fclose(file); delete ovFile;
 	delete[] buf; buf = nullptr;

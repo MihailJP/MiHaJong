@@ -18,7 +18,7 @@ namespace sound {
 #endif /* USE_XAUDIO2 */
 		OggData(const OggData&) = delete; // Delete unexpected copy constructor
 		OggData& operator= (const OggData&) = delete; // Delete unexpected assign operator
-#else
+#else /* VORBIS_SUPPORT */
 	private:
 		void Prepare(const std::string&) {}
 	public:
@@ -34,7 +34,7 @@ namespace sound {
 		virtual void setVolume(double volume) override {
 			throw CodeConv::tstring(_T("Vorbisはサポートされていません"));
 		}
-#endif
+#endif /* VORBIS_SUPPORT */
 	};
 
 }
