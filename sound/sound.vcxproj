@@ -188,6 +188,7 @@
     <ClInclude Include="..\common\mutex.h" />
     <ClInclude Include="..\common\strcode.h" />
     <ClInclude Include="..\common\version.h" />
+    <ClInclude Include="audioobj.h" />
     <ClInclude Include="GuruGuruSMF\GuruGuruSMF4_Cpp.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="resource.h" />

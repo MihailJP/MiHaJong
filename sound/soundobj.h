@@ -15,7 +15,7 @@
 #include <cstring>
 #include <fstream>
 #include <vector>
-#include "snddata.h"
+#include "audioobj.h"
 
 namespace sound {
 

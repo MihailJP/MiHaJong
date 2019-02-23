@@ -12,6 +12,7 @@
 #include <cstring>
 #include <vector>
 #include "../common/strcode.h"
+#include "audioobj.h"
 
 namespace sound {
 
@@ -25,15 +26,6 @@ namespace sound {
 	};
 #endif /* _WIN32 */
 
-	/* サウンドデータクラス */
-	class AudioData {
-		/* 未実装 */
-	public:
-		virtual ~AudioData() {};
-		virtual void Play() = 0;
-		virtual void Stop() = 0;
-		virtual void setVolume(double volume) = 0;
-	};
 	class SoundData : public AudioData {
 	protected:
 #ifdef _WIN32
