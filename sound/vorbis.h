@@ -11,22 +11,22 @@ namespace sound {
 	private:
 		void Prepare(const std::string& filename);
 	public:
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		explicit OggData(void*, const std::string& filename, bool looped = false);
-#else
+#ifdef USE_XAUDIO2
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false);
-#endif
+#else /* USE_XAUDIO2 */
+		explicit OggData(void*, const std::string& filename, bool looped = false);
+#endif /* USE_XAUDIO2 */
 		OggData(const OggData&) = delete; // Delete unexpected copy constructor
 		OggData& operator= (const OggData&) = delete; // Delete unexpected assign operator
 #else
 	private:
 		void Prepare(const std::string&) {}
 	public:
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		explicit OggData(void*, const std::string& filename, bool looped = false) {
-#else
+#ifdef USE_XAUDIO2
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {
-#endif
+#else /* USE_XAUDIO2 */
+		explicit OggData(void*, const std::string& filename, bool looped = false) {
+#endif /* USE_XAUDIO2 */
 			throw CodeConv::tstring(_T("Vorbisはサポートされていません"));
 		}
 		void Play() override {throw CodeConv::tstring(_T("Vorbisはサポートされていません"));}

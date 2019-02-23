@@ -63,11 +63,11 @@ void sound::OggData::Prepare(const std::string& filename) {
 	delete[] buf; buf = nullptr;
 }
 
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
-#else
+#ifdef USE_XAUDIO2
 sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool looped) {
-#endif
+#else /* USE_XAUDIO2 */
+sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
+#endif /* USE_XAUDIO2 */
 	Prepare(filename);
 	PrepareBuffer(Engine, looped);
 }

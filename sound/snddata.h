@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef USE_XAUDIO2
+#include <xaudio2.h>
+#else /* USE_XAUDIO2 */
 #include <AL/al.h>
 #include <AL/alc.h>
-#else
-#include <xaudio2.h>
-#endif
+#endif /* USE_XAUDIO2 */
 #include <cstdint>
 #include <cstring>
 #include <vector>
@@ -23,18 +23,18 @@ namespace sound {
 		WaveFormat format;
 #endif /* _WIN32 */
 		std::vector<char> buffer;
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		ALuint mySource, myBuffer;
-#else
+#ifdef USE_XAUDIO2
 		XAUDIO2_BUFFER bufInfo;
 		IXAudio2SourceVoice* voice;
-#endif
+#else /* USE_XAUDIO2 */
+		ALuint mySource, myBuffer;
+#endif /* USE_XAUDIO2 */
 		virtual void Prepare(const std::string& filename) = 0;
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		void PrepareBuffer(void*, bool looped = false);
-#else
+#ifdef USE_XAUDIO2
 		void PrepareBuffer(IXAudio2** Engine, bool looped = false);
-#endif
+#else /* USE_XAUDIO2 */
+		void PrepareBuffer(void*, bool looped = false);
+#endif /* USE_XAUDIO2 */
 	public:
 		virtual void Play() override;
 		virtual void Stop() override;

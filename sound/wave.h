@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef USE_XAUDIO2
+#include <xaudio2.h>
+#else /* USE_XAUDIO2 */
 #include <AL/al.h>
 #include <AL/alc.h>
-#else
-#include <xaudio2.h>
-#endif
+#endif /* USE_XAUDIO2 */
 #include <cstdint>
 #include <cstring>
 #include "../common/strcode.h"
@@ -31,11 +31,11 @@ namespace sound {
 		void ReadWaveData(std::ifstream& file);
 		void Prepare(const std::string& filename);
 	public:
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		explicit WaveData(void*, const std::string& filename, bool looped = false);
-#else
+#ifdef USE_XAUDIO2
 		explicit WaveData(IXAudio2** Engine, const std::string& filename, bool looped = false);
-#endif
+#else /* USE_XAUDIO2 */
+		explicit WaveData(void*, const std::string& filename, bool looped = false);
+#endif /* USE_XAUDIO2 */
 		WaveData(const WaveData&) = delete; // Delete unexpected copy constructor
 		WaveData& operator= (const WaveData&) = delete; // Delete unexpected assign operator
 	};

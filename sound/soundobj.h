@@ -3,12 +3,12 @@
 #ifndef _WIN32
 #include <X11/Xlib.h>
 #endif
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
+#ifdef USE_XAUDIO2
+#include <xaudio2.h>
+#else /* USE_XAUDIO2 */
 #include <AL/al.h>
 #include <AL/alc.h>
-#else
-#include <xaudio2.h>
-#endif
+#endif /* USE_XAUDIO2 */
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -20,13 +20,13 @@ namespace sound {
 	/* サウンド操作用クラス */
 	class SoundManipulator {
 	private:
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-		ALCdevice* myDevice;
-		ALCcontext* myContext;
-#else
+#ifdef USE_XAUDIO2
 		IXAudio2* xAudio;
 		IXAudio2MasteringVoice* mVoice;
-#endif
+#else /* USE_XAUDIO2 */
+		ALCdevice* myDevice;
+		ALCcontext* myContext;
+#endif /* USE_XAUDIO2 */
 		std::vector<AudioData*> sounds;
 #ifdef _WIN32
 		void InitXAudio(HWND hWnd = nullptr);

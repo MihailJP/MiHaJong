@@ -72,11 +72,11 @@ void sound::WaveData::Prepare(const std::string& filename) {
 	}
 }
 
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-sound::WaveData::WaveData(void* Engine, const std::string& filename, bool looped) {
-#else
+#ifdef USE_XAUDIO2
 sound::WaveData::WaveData(IXAudio2** Engine, const std::string& filename, bool looped) {
-#endif
+#else /* USE_XAUDIO2 */
+sound::WaveData::WaveData(void* Engine, const std::string& filename, bool looped) {
+#endif /* USE_XAUDIO2 */
 	Prepare(filename);
 	PrepareBuffer(Engine, looped);
 }
