@@ -68,6 +68,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			info(_T("ルール設定ファイルが見つかりました。読み込みを開始します。"));
 			RuleData::loadConfigFile(configFile.c_str()); // 設定ファイル読み込み
 		}
+		mihajong_graphic::rules::setconffile(configFile.c_str());
 		// UI用のDLLに関数の場所を教える
 		mihajong_graphic::rules::setfunc(
 			RuleData::getRuleName, RuleData::getRuleDescription, RuleData::getRuleTxt,
