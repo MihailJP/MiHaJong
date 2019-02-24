@@ -39,6 +39,7 @@ void sound::SoundData::PrepareBuffer(void* Engine, bool looped) {
 
 /* 再生 */
 void sound::SoundData::Play() {
+	waitUntilLoaded();
 	Stop();
 #ifdef USE_XAUDIO2
 	HRESULT hr;
@@ -59,6 +60,7 @@ void sound::SoundData::Play() {
 
 /* 停止 */
 void sound::SoundData::Stop() {
+	waitUntilLoaded();
 #ifdef USE_XAUDIO2
 	HRESULT hr;
 	if (FAILED(hr = voice->Stop())) {
@@ -79,6 +81,7 @@ void sound::SoundData::Stop() {
 
 /* 音量設定 */
 void sound::SoundData::setVolume(double volume) {
+	waitUntilLoaded();
 #ifdef USE_XAUDIO2
 	HRESULT hr;
 	double ampvol;
@@ -98,6 +101,7 @@ void sound::SoundData::setVolume(double volume) {
 
 /* デストラクタ */
 sound::SoundData::~SoundData() {
+	waitUntilLoaded();
 #ifdef USE_XAUDIO2
 	if (voice) {
 		voice->Stop();

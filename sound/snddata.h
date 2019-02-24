@@ -11,6 +11,7 @@
 #include <vector>
 #include "../common/strcode.h"
 #include "audioobj.h"
+#include "../common/thread.h"
 
 namespace sound {
 
@@ -30,6 +31,7 @@ namespace sound {
 		ALuint mySource, myBuffer;
 #endif /* USE_XAUDIO2 */
 		std::uint32_t loopStart = 0u, loopLength = 0u;
+		THREADLIB::thread loaderThread;
 		virtual void Prepare(const std::string& filename) = 0;
 #ifdef USE_XAUDIO2
 		void PrepareBuffer(IXAudio2** Engine, bool looped = false);
@@ -44,6 +46,9 @@ namespace sound {
 		SoundData(const SoundData&) = delete; // Delete unexpected copy constructor
 		SoundData& operator= (const SoundData&) = delete; // Delete unexpected assign operator
 		virtual ~SoundData() = 0;
+		void waitUntilLoaded() {
+			if (loaderThread.joinable()) loaderThread.join();
+		}
 	};
 
 }
