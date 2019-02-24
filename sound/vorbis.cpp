@@ -48,16 +48,18 @@ void sound::OggData::Prepare(const std::string& filename) {
 	format.wBitsPerSample = 16;
 	format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
 	// データ読み込み
-	char* buf = new char[1 << 22 /* 4 MiB */]();
+	char* buf = new char[1 << 16 /* 64 KiB */]();
+	buffer.reserve(1u << 24);
 	long bytes_read = 0; int current = 0;
 	do {
-		bytes_read = ov_read(ovFile, buf, (1 << 22) - 1, 0, 2, 1, &current);
+		bytes_read = ov_read(ovFile, buf, (1 << 16) - 1, 0, 2, 1, &current);
 		if (bytes_read == OV_HOLE) throw CodeConv::tstring(_T("読み込みはOV_HOLEで失敗しました"));
 		else if (bytes_read == OV_EBADLINK) throw CodeConv::tstring(_T("読み込みはOV_EBADLINKで失敗しました"));
 		else if (bytes_read == OV_EINVAL) throw CodeConv::tstring(_T("読み込みはOV_EINVALで失敗しました"));
 		else if (bytes_read)
 			buffer.insert(buffer.end(), &buf[0], &buf[bytes_read]);
 	} while (bytes_read);
+	buffer.shrink_to_fit();
 	// ループ位置読み込み
 	const vorbis_comment *comment(ov_comment(ovFile, -1));
 	for (int i = 0; comment->user_comments[i] != nullptr; ++i) {
@@ -77,8 +79,11 @@ sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool loo
 #else /* USE_XAUDIO2 */
 sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
 #endif /* USE_XAUDIO2 */
-	Prepare(filename);
-	PrepareBuffer(Engine, looped);
+	assert(!loaderThread.joinable());
+	loaderThread = THREADLIB::thread([=]() {
+		Prepare(filename);
+		PrepareBuffer(Engine, looped);
+	});
 }
 
 

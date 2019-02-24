@@ -136,6 +136,11 @@ void sound::SoundManipulator::play(unsigned ID) {
 		CodeConv::tostringstream o; o << _T("サウンド ID [") << ID << _T("] は読み込まれてないです");
 		throw o.str();
 	}
+	for (auto snd : sounds) {
+		auto wavSnd = dynamic_cast<SoundData*>(snd);
+		if (wavSnd)
+			wavSnd->waitUntilLoaded();
+	}
 	sounds[ID]->Play();
 }
 
