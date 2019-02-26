@@ -9,6 +9,7 @@
 #include "../socket/socket.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
+#include "sound.h"
 #include "tileutil.h"
 #include "mouda.h"
 #include "fuuro.h"
@@ -138,7 +139,7 @@ void startgame(GameTypeID gameType) {
 		GameTable* gameStat = initializeGameTable(gameType);
 		info(_T("ゲーム情報を初期化しました。"));
 		mihajong_socket::server::rotation_reset();
-		sound::Play(sound::IDs::musTitle); // タイトル曲を流す
+		sound::util::bgmplay(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
 	start:
 		std::string serverAddr;
