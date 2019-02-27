@@ -308,7 +308,7 @@ void yaku::yakuCalculator::countDora
 			case AoDora: ++blue; break;
 		}
 	}
-	for (int i = 1; i < gameStat->Player[targetPlayer].MeldPointer; i++) {
+	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
 			switch (gameStat->Player[targetPlayer].Meld[i].red[j]) {
