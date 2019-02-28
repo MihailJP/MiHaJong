@@ -268,7 +268,7 @@ void TableSubsceneAgariScreenProto::AgariNaki::Render() {
 }
 
 TableSubsceneAgariScreenProto::AgariNaki::AgariNaki(TableSubsceneAgariScreenProto* caller) : ShowNakihai(caller->myDevice) {
-	reconstFlag = false;
+	reconstFlag = true;
 	myCaller = caller;
 }
 
