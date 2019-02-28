@@ -34,6 +34,7 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 		myMainWindow = new MainWindow(hInstance, nCmdShow, icon, width, height, scrMode, monitor);
 		ui::UIEvent = new ui::UI_Event();
 		ui::cancellableWait = new ui::CancellableWait();
+		ui::clickEvent = new ui::ClickEvent();
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}
 #ifdef _WIN32

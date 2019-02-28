@@ -20,6 +20,7 @@ protected:
 	TexturePtr tBorder; // 卓の枠
 	TexturePtr tBaize; // 羅紗地
 	TextRenderer* myTextRenderer; // 文字表示
+	Timer myTimer; // デモ画面の文字点滅用
 #ifndef _WIN32
 	bool reconstructFlag;
 #endif /*_WIN32*/

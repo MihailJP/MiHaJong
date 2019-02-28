@@ -10,6 +10,7 @@ namespace ui {
 
 UI_Event* UIEvent = nullptr;
 CancellableWait* cancellableWait = nullptr;
+ClickEvent* clickEvent = nullptr;
 
 Event::Event(bool initialStat, bool automatic) {
 	isSignaled = initialStat;
@@ -95,6 +96,16 @@ uint32_t CancellableWait::wait(int32_t timeout) {
 	}
 }
 
+uint32_t ClickEvent::wait() {
+	bool result = Event::wait(0);
+	if (result) {
+		sound::Play(sound::IDs::sndClick);
+		return 0;
+	} else {
+		return 0xffffffff;
+	}
+}
+
 EXPORT uint32_t WaitUI() {
 	if (UIEvent) return UIEvent->wait();
 	else return 0xcccccccc;
@@ -103,6 +114,16 @@ EXPORT uint32_t WaitUI() {
 EXPORT uint32_t WaitUIWithTimeout(int32_t timeout) {
 	if (cancellableWait) return cancellableWait->wait(timeout);
 	else return 0xcccccccc;
+}
+
+EXPORT void CheckIfDemoTerminated() {
+	if (clickEvent) {
+		if (clickEvent->wait() == 0) {
+			if (UIEvent) UIEvent->reset();
+			if (cancellableWait) cancellableWait->reset();
+			throw DemonstrationTerminated();
+		}
+	}
 }
 
 }

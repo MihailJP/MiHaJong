@@ -28,6 +28,10 @@
 
 #include "table/naki_id.h"
 
+#ifdef min
+#undef min
+#endif
+
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
@@ -210,6 +214,19 @@ void GameTableScreen::Render() {
 		lock.unlock();
 	}
 	RenderSideBar();
+	if (utils::isWatchMode()) {
+		const CodeConv::tstring DemoMsg(_T("ＤＥＭＯＮＳＴＲＡＴＩＯＮ"));
+		const auto alpha = static_cast<uint32_t>(
+			std::min(255.0,
+				pow(sin(static_cast<double>(myTimer.elapsed()) / 159154.943) / 2.0 + 0.5, 1.5) * 224.0 + 32.0)
+			);
+		myTextRenderer->NewText(255,
+			DemoMsg,
+			Geometry::BaseSize / 2 - myTextRenderer->strWidthByPix(DemoMsg),
+			Geometry::BaseSize / 2,
+			2.0f, 1.0f, (alpha << 24) | 0x00ffffff);
+		myTextRenderer->Render();
+	}
 }
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {
@@ -461,6 +478,11 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
 		if (keyDown) {
+			if (utils::isWatchMode()) {
+				ui::UIEvent->set(0);
+				ui::cancellableWait->set(0);
+				ui::clickEvent->set();
+			}
 			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 			if (lock.owns_lock())
 				mySubScene->skipEvent();
@@ -532,7 +554,13 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 	case ButtonPress: // マウスクリック
 		if (od->xbutton.button == Button1) {
 #endif /*_WIN32*/
-			{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
+			{
+				if (utils::isWatchMode()) {
+					ui::UIEvent->set(0);
+					ui::cancellableWait->set(0);
+					ui::clickEvent->set();
+				}
+				MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 				if (lock.owns_lock())
 					mySubScene->skipEvent();
 			}

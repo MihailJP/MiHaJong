@@ -1,5 +1,7 @@
 ﻿#include "gametbl.h"
 #include <cstring>
+#include "utils.h"
+#include "event.h"
 
 namespace mihajong_graphic {
 
@@ -11,6 +13,8 @@ void GameStatus::updateGameStat(const GameTable* const gameStat) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myModFlag.myCriticalSection);
 	std::memcpy(&myGameStat, gameStat, sizeof(GameTable));
 	myModFlag.myModificationFlag = true;
+	if (utils::isWatchMode && utils::isWatchMode())
+		ui::CheckIfDemoTerminated();
 }
 
 GameTable* GameStatus::gameStat() {

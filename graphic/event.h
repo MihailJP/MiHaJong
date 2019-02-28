@@ -5,10 +5,13 @@
 #include <cstdint>
 #include "../common/mutex.h"
 #include "../common/condvar.h"
+#include <exception>
 
 namespace mihajong_graphic {
 namespace ui {
-	
+
+class DemonstrationTerminated : public std::exception {};
+
 #ifdef GRAPHIC_EXPORTS
 class Event { // イベントの基底クラス
 protected:
@@ -51,12 +54,23 @@ public:
 	uint32_t wait(int32_t timeout);
 };
 
+class ClickEvent : public Event { // UIの入力があったかどうかを表すイベント
+public:
+	ClickEvent() : Event(false, false) {}
+	ClickEvent(const ClickEvent&) = delete; // Delete unexpected copy constructor
+	ClickEvent& operator= (const ClickEvent&) = delete; // Delete unexpected assign operator
+	~ClickEvent() {}
+	uint32_t wait();
+};
+
 extern UI_Event* UIEvent;
 extern CancellableWait* cancellableWait;
+extern ClickEvent* clickEvent;
 #endif
 
 EXPORT uint32_t WaitUI();
 EXPORT uint32_t WaitUIWithTimeout(int32_t timeout);
+EXPORT void CheckIfDemoTerminated();
 
 }
 }

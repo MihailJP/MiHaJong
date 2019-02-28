@@ -37,9 +37,6 @@ EndType doTableTurn(GameTable* const gameStat) {
 	}
 	gameStat->CurrentDiscard.tile = NoTile;
 	gameStat->CurrentDiscard.red = Normal;
-	/* ウォッチモードの時は視点をツモ番の人に移す */
-	if (EnvTable::Instantiate()->WatchModeFlag)
-		gameStat->PlayerID = gameStat->CurrentPlayer.Active;
 	/* 再描画 */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 摸打の処理 */
@@ -78,10 +75,7 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 		o << _T("局番号 [") << gameStat->GameRound << _T("] を開始しました。");
 		info(o.str().c_str());
 	}
-	/* ウォッチモードの時は視点を親に移す */
 	gameStat->CurrentPlayer.Active = -1;
-	if (EnvTable::Instantiate()->WatchModeFlag)
-		gameStat->PlayerID = gameStat->GameRound % Players;
 	/* 破回八連荘の後始末 */
 	if (gameStat->AgariChain == -1) gameStat->AgariChain = 1;
 	/* 半荘の初期化と配牌を行なう */
@@ -171,6 +165,15 @@ void startgame(GameTypeID gameType) {
 			goto start;
 		case 5:
 			return;
+		case 99: // デモ画面
+			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			EnvTable::Instantiate()->PlayerDat[0].PlayerName = _T("[a]COM1");
+			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM2");
+			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM3");
+			EnvTable::Instantiate()->PlayerDat[3].PlayerName = _T("[d]COM4");
+			EnvTable::Instantiate()->WatchModeFlag = true;
+			serverAddr = "";
+			break;
 		}
 		auto PositionArray = SeatShuffler::shuffle(ClientNumber); // 親決めの処理
 		gameinit(&GameStat, gameType, serverAddr, PositionArray, ClientNumber); // 半荘の初期化処理
@@ -178,7 +181,16 @@ void startgame(GameTypeID gameType) {
 		/* 半荘の進行 */
 		bool endFlag = false; int OrigTurn = 0, OrigHonba = 0;
 		do {
-			endFlag = doTableRound(gameStat, OrigTurn, OrigHonba);
+			try {
+				endFlag = doTableRound(gameStat, OrigTurn, OrigHonba);
+			} catch (mihajong_graphic::ui::DemonstrationTerminated&) {
+				// nothing to do
+			}
+			if (EnvTable::Instantiate()->WatchModeFlag) {
+				gameStat = initializeGameTable(gameType);
+				EnvTable::Instantiate()->WatchModeFlag = false;
+				goto start;
+			}
 		} while (!endFlag);
 		// 半荘終了時
 		gameResult(gameStat, OrigTurn, OrigHonba);

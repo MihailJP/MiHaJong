@@ -18,6 +18,7 @@ private:
 	void menuLabels();
 	void versionInfo();
 	unsigned menuCursor;
+	Timer cursorTimeout;
 public:
 	TitleScreen(ScreenManipulator* const manipulator);
 	TitleScreen(const TitleScreen&) = delete; // Delete unexpected copy constructor
