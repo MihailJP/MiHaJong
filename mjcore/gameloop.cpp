@@ -181,7 +181,11 @@ void startgame(GameTypeID gameType) {
 		/* 半荘の進行 */
 		bool endFlag = false; int OrigTurn = 0, OrigHonba = 0;
 		do {
-			endFlag = doTableRound(gameStat, OrigTurn, OrigHonba);
+			try {
+				endFlag = doTableRound(gameStat, OrigTurn, OrigHonba);
+			} catch (mihajong_graphic::ui::DemonstrationTerminated&) {
+				// nothing to do
+			}
 			if (EnvTable::Instantiate()->WatchModeFlag) {
 				gameStat = initializeGameTable(gameType);
 				EnvTable::Instantiate()->WatchModeFlag = false;

@@ -478,6 +478,11 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	/* 決定キー */
 	case DIK_RETURN: case DIK_SPACE: case DIK_Z:
 		if (keyDown) {
+			if (utils::isWatchMode()) {
+				ui::UIEvent->set(0);
+				ui::cancellableWait->set(0);
+				ui::clickEvent->set();
+			}
 			MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 			if (lock.owns_lock())
 				mySubScene->skipEvent();
@@ -549,7 +554,13 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 	case ButtonPress: // マウスクリック
 		if (od->xbutton.button == Button1) {
 #endif /*_WIN32*/
-			{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
+			{
+				if (utils::isWatchMode()) {
+					ui::UIEvent->set(0);
+					ui::cancellableWait->set(0);
+					ui::clickEvent->set();
+				}
+				MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(subSceneCS, MUTEXLIB::try_to_lock);
 				if (lock.owns_lock())
 					mySubScene->skipEvent();
 			}

@@ -615,6 +615,8 @@ namespace {
 #endif /* GUOBIAO */
 			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
 		(void)mihajong_graphic::ui::WaitUI();
+		if (EnvTable::Instantiate()->WatchModeFlag)
+			mihajong_graphic::ui::CheckIfDemoTerminated();
 	}
 
 }
@@ -643,6 +645,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		}
 	}
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
+	if (EnvTable::Instantiate()->WatchModeFlag)
+		mihajong_graphic::ui::CheckIfDemoTerminated();
 	std::uint16_t tmpDoraPointer = origDoraPointer;
 	const int AlicePointer = tmpDoraPointer - yakuInfo.AliceDora * 2 - 2;
 
@@ -654,6 +658,8 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 			sound::Play(sound::IDs::sndMekuri);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			mihajong_graphic::ui::WaitUIWithTimeout(1200);
+			if (EnvTable::Instantiate()->WatchModeFlag)
+				mihajong_graphic::ui::CheckIfDemoTerminated();
 		}
 		gameStat->DoraPointer = tmpDoraPointer;
 		tmpAliceFlag = true;
@@ -754,6 +760,8 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
 	sound::Play(sound::IDs::sndCuohu);
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
+	if (EnvTable::Instantiate()->WatchModeFlag)
+		mihajong_graphic::ui::CheckIfDemoTerminated();
 	gameStat->statOfAgari().AgariHouki = true;
 	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::None);
 #else /* GUOBIAO */
@@ -765,6 +773,8 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 		case sNorth: ResultDesc += _T("北家のチョンボ"); break;
 	}
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
+	if (EnvTable::Instantiate()->WatchModeFlag)
+		mihajong_graphic::ui::CheckIfDemoTerminated();
 	sound::util::bgmplay(sound::IDs::musRyuukyoku);
 	/* 誤ロンまたは誤ツモ */
 	if ((gameStat->AgariSpecialStat == 0) || (gameStat->AgariSpecialStat == 1)) {
@@ -796,6 +806,8 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	}
 	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChonbo);
 	mihajong_graphic::ui::WaitUIWithTimeout(5000);
+	if (EnvTable::Instantiate()->WatchModeFlag)
+		mihajong_graphic::ui::CheckIfDemoTerminated();
 #endif /* GUOBIAO */
 
 	transferChonboPenalty(gameStat, gameStat->CurrentPlayer.Agari);
