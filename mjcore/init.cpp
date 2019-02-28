@@ -80,7 +80,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,
-			getName, nullptr, isAboveBase, isStandAlone);
+			getName, isWatchMode, isAboveBase, isStandAlone);
 		{
 			using namespace mihajong_graphic::preferences;
 			auto tmpAddr(CodeConv::toANSI(RuleData::confFile.serverAddress()));

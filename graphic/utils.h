@@ -27,6 +27,7 @@ typedef bool (*isPao_type)(const GameTable*, PlayerID, PlayerID);
 typedef bool (*isPaoAgari_type)(const GameTable*, PlayerID);
 typedef void (*bgmplay_type)(unsigned);
 typedef LPCTSTR (*getName_type)(PlayerID);
+typedef bool (*isWatchMode_type)();
 typedef bool (*isAboveBase_type)(const GameTable*, PlayerID);
 typedef bool (*isStandAlone_type)();
 
@@ -47,6 +48,7 @@ extern isPao_type isPao;
 extern isPaoAgari_type isPaoAgari;
 extern bgmplay_type bgmplay;
 extern getName_type getName;
+extern isWatchMode_type isWatchMode;
 extern isAboveBase_type isAboveBase;
 extern isStandAlone_type isStandAlone;
 #endif
@@ -68,7 +70,7 @@ EXPORT void setfunc(
 	isPaoAgari_type ptr_isPaoAgari,
 	bgmplay_type ptr_bgmplay,
 	getName_type ptr_getName,
-	void*,
+	isWatchMode_type ptr_isWatchMode,
 	isAboveBase_type ptr_isAboveBase,
 	isStandAlone_type ptr_isStandAlone);
 

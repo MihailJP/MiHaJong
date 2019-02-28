@@ -28,6 +28,10 @@
 
 #include "table/naki_id.h"
 
+#ifdef min
+#undef min
+#endif
+
 namespace mihajong_graphic {
 	
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
@@ -210,6 +214,19 @@ void GameTableScreen::Render() {
 		lock.unlock();
 	}
 	RenderSideBar();
+	if (utils::isWatchMode()) {
+		const CodeConv::tstring DemoMsg(_T("ＤＥＭＯＮＳＴＲＡＴＩＯＮ"));
+		const auto alpha = static_cast<uint32_t>(
+			std::min(255.0,
+				pow(sin(static_cast<double>(myTimer.elapsed()) / 159154.943) / 2.0 + 0.5, 1.5) * 224.0 + 32.0)
+			);
+		myTextRenderer->NewText(255,
+			DemoMsg,
+			Geometry::BaseSize / 2 - myTextRenderer->strWidthByPix(DemoMsg),
+			Geometry::BaseSize / 2,
+			2.0f, 1.0f, (alpha << 24) | 0x00ffffff);
+		myTextRenderer->Render();
+	}
 }
 
 void GameTableScreen::SetSubscene(unsigned int scene_ID) {

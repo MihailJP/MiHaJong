@@ -23,3 +23,7 @@ LPCTSTR getName(PlayerID playerID) {
 bool isStandAlone() {
 	return EnvTable::Instantiate()->GameMode == EnvTable::Standalone;
 }
+
+bool isWatchMode() {
+	return EnvTable::Instantiate()->WatchModeFlag;
+}
