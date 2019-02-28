@@ -650,7 +650,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->CurrentPlayer.Active != i) {
 			gameStat->CurrentPlayer.Passive = i;
-			if (gameStat->CurrentPlayer.Passive == gameStat->PlayerID) {
+			if ((!EnvTable::Instantiate()->WatchModeFlag) && (gameStat->CurrentPlayer.Passive == gameStat->PlayerID)) {
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				playerfuuro(gameStat);
 			} else if (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Passive].RemotePlayerFlag == 0) {
@@ -765,9 +765,6 @@ EndType ronhuproc(GameTable* const gameStat) {
 		threadYield();
 		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, static_cast<seatRelative>(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
-			/* ウォッチモードの場合は和了った人に視点を向ける */
-			if (EnvTable::Instantiate()->WatchModeFlag)
-				gameStat->PlayerID = pl;
 			/* 栄和したことを変数に記録 */
 			RoundEndType = Agari; gameStat->TsumoAgariFlag = false;
 			gameStat->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Active;

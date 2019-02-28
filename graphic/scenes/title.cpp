@@ -151,6 +151,9 @@ void TitleScreen::Render() {
 	zoomingLogo(sTitleLogo[0],  220, 168,   0, 30);
 	zoomingLogo(sTitleLogo[1],  640, 168,  30, 60);
 	zoomingLogo(sTitleLogo[2], 1120, 168,  60, 90);
+	if (cursorTimeout.elapsed() >= 15'000'000uLL) { // デモ画面に移動する
+		ui::UIEvent->set(99);
+	}
 }
 
 #ifdef _WIN32
@@ -171,12 +174,14 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (--menuCursor == 0) menuCursor = 5;
+			cursorTimeout.skipTo(0);
 		}
 		break;
 	case DIK_DOWN: case DIK_J: // カーソル下
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (++menuCursor > 5) menuCursor = 1;
+			cursorTimeout.skipTo(0);
 		}
 		break;
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
@@ -186,6 +191,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			else
 				sound::Play(sound::IDs::sndCuohu);
+			cursorTimeout.skipTo(0);
 #ifdef _WIN32
 		} else if (od->dwData) {
 #else /*_WIN32*/
@@ -193,6 +199,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 			sound::Play(sound::IDs::sndClick);
 			myTimer.skipTo(180 * timePerFrame);
+			cursorTimeout.skipTo(0);
 		}
 		break;
 	case DIK_ESCAPE: case DIK_X: // キャンセル
@@ -203,6 +210,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 			} else {
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			}
+			cursorTimeout.skipTo(0);
 		}
 		break;
 	}
@@ -242,6 +250,7 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 				if (region != (menuCursor - 1)) {
 					sound::Play(sound::IDs::sndCursor);
 					menuCursor = region + 1;
+					cursorTimeout.skipTo(0);
 				}
 				break;
 			}
@@ -265,6 +274,7 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 				sound::Play(sound::IDs::sndClick);
 				myTimer.skipTo(180 * timePerFrame);
 			}
+			cursorTimeout.skipTo(0);
 		}
 		break;
 	}

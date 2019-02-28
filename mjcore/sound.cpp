@@ -6,6 +6,7 @@
 #include "ruletbl.h"
 #include <vector>
 #include "regex.h"
+#include "envtbl.h"
 
 #ifdef None
 #undef None
@@ -61,6 +62,7 @@ void sound::util::soundload(unsigned ID, const char* filename, bool looped) {
 
 /* BGM停止 */
 void sound::util::bgmstop() {
+	if (EnvTable::Instantiate()->WatchModeFlag) return; // デモ画面では無視
 	info(_T("BGM再生を停止します。"));
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
 		if (BGM_Mode[i] != None)
@@ -70,6 +72,7 @@ void sound::util::bgmstop() {
 
 /* ＢＧＭ再生 */
 void sound::util::bgmplay(unsigned ID) {
+	if (EnvTable::Instantiate()->WatchModeFlag) return; // デモ画面では無視
 	CodeConv::tostringstream o;
 	bgmstop();
 	if (sound::Play(ID) == 0) {
