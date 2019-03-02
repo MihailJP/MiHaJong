@@ -84,7 +84,11 @@ CodeConv::tstring haifu::tools::haifudoraClassX(doraCol Akadora) { // 赤牌黒�
 }
 
 void haifu::tools::recordDoraStream(CodeConv::tostringstream* const x, TileCode tmpDora) {
-	*x << _T("\t\t\t\t<tile tile=\"") << Xtilerefcode[tmpDora] << _T("\" />") << std::endl;
+	if (tmpDora == Flower) {
+		*x << _T("\t\t\t\t花") << std::endl;
+	} else {
+		*x << _T("\t\t\t\t<tile tile=\"") << Xtilerefcode[tmpDora] << _T("\" />") << std::endl;
+	}
 }
 
 /* 牌を記録する */
