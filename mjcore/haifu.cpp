@@ -72,16 +72,6 @@ void haifu::tools::haifuskip(
 		}
 }
 
-CodeConv::tstring haifu::tools::haifudoraClass(doraCol Akadora) { // 赤牌黒牌の別(HTML牌譜)
-	switch (Akadora) {
-	case AkaDora:
-		return _T(" class=\"akadora\"");
-	case AoDora:
-		return _T(" class=\"aodora\"");
-	default:
-		return _T("");
-	}
-}
 CodeConv::tstring haifu::tools::haifudoraClassX(doraCol Akadora) { // 赤牌黒牌の別(XML牌譜)
 	switch (Akadora) {
 	case AkaDora:

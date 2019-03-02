@@ -51,7 +51,6 @@ private:
 		static void haifuRecTime(CodeConv::tstring tagName);
 		static void haifuskipX(PlayerID targetPlayer);
 		static void haifuskip(PlayerID PassivePlayer, PlayerID ActivePlayer);
-		static CodeConv::tstring haifudoraClass(doraCol Akadora);
 		static CodeConv::tstring haifudoraClassX(doraCol Akadora);
 		static void recordDoraStream(CodeConv::tostringstream* const x, TileCode tmpDora);
 		static void recordTile_Inline(Tile tlCode, bool rotate);
