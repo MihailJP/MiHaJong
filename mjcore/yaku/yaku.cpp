@@ -53,8 +53,8 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 		return;
 	}
 
-	int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
-	int totalSemiMangan = yStat->CoreSemiMangan + yStat->BonusSemiMangan; // 満貫の半分単位
+	const int totalHan = yStat->CoreHan + yStat->BonusHan; // 合計翻
+	const int totalSemiMangan = yStat->CoreSemiMangan + yStat->BonusSemiMangan; // 満貫の半分単位
 
 	if (!RuleData::chkRuleApplied("limitless")) { // 通常ルールの場合
 		if ((totalHan < 6) && (totalSemiMangan < 3)) { // 満貫以下
@@ -161,7 +161,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 		}
 	}
 	/* 役牌が雀頭ではなく、刻子や槓子がない場合、フラグを立てる */
-	bool NoTriplets = (fu == 20); bool LiangMianFlag = false;
+	const bool NoTriplets = (fu == 20); bool LiangMianFlag = false;
 
 #endif /* GUOBIAO */
 	/* 聴牌形加符 */
@@ -355,7 +355,7 @@ void yaku::yakuCalculator::countDora
 			if (gameStat->Player[targetPlayer].FlowerFlag.Orchid) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Chrys) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Bamboo) ++flower;
-			omote += flower * (gameStat->DoraFlag.Omote[Flower] + 1);
+			omote += flower * gameStat->DoraFlag.Omote[Flower];
 #ifndef GUOBIAO
 			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[Flower];
 #endif /* GUOBIAO */
@@ -400,8 +400,8 @@ void yaku::yakuCalculator::countDora
 	}
 #endif /* GUOBIAO */
 	if (flower) {
-		result->DoraQuantity += omote; result->BonusHan += omote;
-		doraText(result, _T("花牌"), omote);
+		result->DoraQuantity += flower; result->BonusHan += flower;
+		doraText(result, _T("花牌"), flower);
 	}
 }
 

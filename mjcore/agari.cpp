@@ -525,10 +525,10 @@ namespace {
 	void calculateTsumibouDelta(const GameTable* gameStat) { // 積み棒の計算
 		int tsumiboh_rate = 0;
 		REGEX::smatch matchDat;
-		std::string tsumiboh_rate_str(RuleData::chkRule("tsumiboh_rate"));
+		const std::string tsumiboh_rate_str(RuleData::chkRule("tsumiboh_rate"));
 		// MEMORANDUM: 検索対象文字列をin-situで作ってはダメ 必ず引数に渡す前にオブジェクトを作っておくこと
 		if (REGEX::regex_match(tsumiboh_rate_str, matchDat, REGEX::regex("counter_(\\d+)")))
-			tsumiboh_rate = std::atoi(matchDat[1].str().c_str()) / (ACTUAL_PLAYERS - 1);
+			tsumiboh_rate = std::stoi(matchDat[1].str()) / (ACTUAL_PLAYERS - 1);
 		endround::transfer::resetDelta();
 		if (gameStat->TsumoAgariFlag) {
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
@@ -550,7 +550,7 @@ namespace {
 	void chipTransfer(GameTable* gameStat, unsigned subscene, int ChipAmount) {
 		if ((ChipAmount <= 0) || (!RuleData::chkRuleApplied("chip"))) return;
 		endround::transfer::resetDelta();
-		std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
+		const std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
 		if ((!gameStat->TsumoAgariFlag) && (!REGEX::regex_match(limithand_bonus, REGEX::regex("chip_\\d+_each")))) {
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Furikomi, -ChipAmount);
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari   ,  ChipAmount);
