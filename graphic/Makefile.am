@@ -68,7 +68,7 @@ dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
 	data/clock.png \
-	data/dice.png data/editbox.png data/font.chr data/font.png data/frame.png \
+	data/dice.png data/font.chr data/font.png data/frame.png \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png
