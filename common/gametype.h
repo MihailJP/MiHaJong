@@ -7,9 +7,15 @@ namespace mihajong_structs {
 using std::uint8_t;
 
 enum GameTypeID : uint8_t { // 卓の種類(四麻、三麻)指定用
-	Yonma = 0x01, Sanma = 0x02, Sanma4 = 0x04, SanmaS = 0x08,
-	AllSanma = 0x0e, SanmaT = 0x0a, SanmaX = 0x06, RichiMJ = 0x0f,
-	GuobiaoMJ = 0x10,
+	Yonma     = 0x01, // 四人打ち
+	Sanma     = 0x02, // 三人打ち
+	Sanma4    = 0x04, // 四人三麻
+	SanmaS    = 0x08, // 数牌三麻
+	AllSanma  = 0x0e, // 三麻全ルール
+	SanmaT    = 0x0a, // 四人三麻以外の三麻
+	SanmaX    = 0x06, // 二～八萬なしの三麻
+	RichiMJ   = 0x0f, // 日本ルール
+	GuobiaoMJ = 0x10, // 中国ルール
 };
 
 } /* namespace */
