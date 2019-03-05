@@ -23,6 +23,7 @@ void Data::decompress(int FileID_) {
 #else /*_WIN32*/
 	size_t size = 0;
 #endif /*_WIN32*/
+	SizeT size_ = 0;
 	const uint8_t* compressedBuf = nullptr;
 	int result;
 	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
@@ -32,9 +33,10 @@ void Data::decompress(int FileID_) {
 	compressedData[size] = 0;
 	decompressedSize = *(reinterpret_cast<size_t *>(compressedData+5));
 	DecompressedData = new uint8_t[decompressedSize];
+	size_ = size;
 	result = LzmaUncompress(DecompressedData, &decompressedSize,
 		reinterpret_cast<const uint8_t *>(compressedData+13),
-		reinterpret_cast<SizeT *>(&size), reinterpret_cast<const uint8_t *>(compressedData), 5);
+		&size_, reinterpret_cast<const uint8_t *>(compressedData), 5);
 	delete[] compressedData; compressedData = nullptr;
 	if (result != SZ_OK) {
 		CodeConv::tostringstream o;
