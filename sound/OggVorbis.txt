@@ -1,0 +1,9 @@
+For Windows build by VC++:
+First of all, fetch the source code for libogg and libvorbis:
+
+    $ git submodule init && git submodule update
+
+Then, open libogg/win32/VS2015/libogg_static.sln and make a release build of
+libogg_static.lib for each platform.
+After that, open libvorbis/win32/VS2010/vorbis_static.sln and release-build
+libvorbis_static.lib and libvorbisfile_static.lib for each platform.
