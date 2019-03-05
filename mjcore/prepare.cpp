@@ -249,8 +249,7 @@ void SeatShuffler::shuffleSeat () {
 	// 場決め
 	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
 		// 場決め処理
-		std::random_shuffle(TmpPosition.begin(), TmpPosition.end(),
-			[] (unsigned max) {return RndNum::rnd(max);});
+		RndNum::shuffle(TmpPosition);
 		// サーバーであれば結果を送信
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
 			for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
