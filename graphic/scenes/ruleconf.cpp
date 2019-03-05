@@ -187,7 +187,7 @@ void RuleConfigScene::BtnEvent_Content_Roll_Up() {
 void RuleConfigScene::BtnEvent_Content_Roll_Down() {
 	sound::Play(sound::IDs::sndClick);
 	while (true) {
-		if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = rules::getRuleSize(menuCursor) - 1;
+		if ((--rulestat[menuCursor]) < 0) rulestat[menuCursor] = static_cast<int>(rules::getRuleSize(menuCursor) - 1);
 		TCHAR menuitem[128]; rules::getRuleTxt(menuitem, 128, menuCursor, rulestat[menuCursor]);
 		if (CodeConv::tstring(menuitem) != CodeConv::tstring(_T(">>>"))) break;
 	}

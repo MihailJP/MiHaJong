@@ -37,7 +37,7 @@ void ButtonPic::setText(unsigned ButtonID) {
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, ArgbColor color, const CodeConv::tstring& caption, bool adjustWidth) {
 	if (mySprites.size() <= ButtonID)
-		mySprites.resize(ButtonID + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T(""), false));
+		mySprites.resize(static_cast<std::size_t>(ButtonID) + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T(""), false));
 	assert(stat != absent);
 	mySprites[ButtonID] = std::make_tuple(stat, X, Y, Width, Height, color, CodeConv::tstring(caption), adjustWidth);
 	setText(ButtonID);

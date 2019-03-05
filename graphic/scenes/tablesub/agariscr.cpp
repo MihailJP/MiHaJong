@@ -399,7 +399,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 		constexpr double anmTime = 0.75;
 
 		const unsigned score = static_cast<unsigned>(YakuResult::getYakuStat().AgariPoints);
-		CodeConv::tstring tmptxt; unsigned strWidth = 0;
+		CodeConv::tstring tmptxt; std::size_t strWidth = 0;
 		if      (score ==  2000) {tmptxt = _T("満貫");   strWidth = 4;}
 		else if (score ==  3000) {tmptxt = _T("跳満");   strWidth = 4;}
 		else if (score ==  4000) {tmptxt = _T("倍満");   strWidth = 4;}

@@ -27,7 +27,7 @@ void Data::decompress(int FileID_) {
 	int result;
 	LoadFileInResource(FileID_, LZMA_STREAM, size, compressedBuf);
 	assert(size > 13);
-	uint8_t* compressedData = new uint8_t[size+1];
+	uint8_t* compressedData = new uint8_t[static_cast<std::size_t>(size) + 1];
 	memcpy(compressedData, compressedBuf, size);
 	compressedData[size] = 0;
 	decompressedSize = *(reinterpret_cast<size_t *>(compressedData+5));

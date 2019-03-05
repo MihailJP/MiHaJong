@@ -6,7 +6,7 @@ namespace DialogWrapper {
 
 Dialog* Dialog::activeInstance = nullptr;
 
-int CALLBACK Dialog::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+intptr_t CALLBACK Dialog::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 	case WM_INITDIALOG:
 		activeInstance->initWrapper(hwndDlg);

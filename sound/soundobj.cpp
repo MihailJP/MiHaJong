@@ -110,7 +110,7 @@ sound::SoundManipulator::~SoundManipulator() {
 
 /* ファイル読み込み */
 void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filename, bool looped) {
-	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
+	if (sounds.size() <= ID) sounds.resize(static_cast<size_t>(ID) + 1, nullptr); // 配列を拡張
 #ifdef USE_XAUDIO2
 	sounds[ID] = new WaveData(&xAudio, filename, looped);
 #else /* USE_XAUDIO2 */
@@ -118,7 +118,7 @@ void sound::SoundManipulator::readWaveData(unsigned ID, const std::string& filen
 #endif /* USE_XAUDIO2 */
 }
 void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& filename, bool looped) {
-	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
+	if (sounds.size() <= ID) sounds.resize(static_cast<size_t>(ID) + 1, nullptr); // 配列を拡張
 #ifdef USE_XAUDIO2
 	sounds[ID] = new OggData(&xAudio, filename, looped);
 #else /* USE_XAUDIO2 */
@@ -126,7 +126,7 @@ void sound::SoundManipulator::readVorbisData(unsigned ID, const std::string& fil
 #endif /* USE_XAUDIO2 */
 }
 void sound::SoundManipulator::readMidiData(unsigned ID, const std::string& filename, bool looped) {
-	if (sounds.size() <= ID) sounds.resize(ID + 1, nullptr); // 配列を拡張
+	if (sounds.size() <= ID) sounds.resize(static_cast<size_t>(ID) + 1, nullptr); // 配列を拡張
 	sounds[ID] = new MidiData(ID, filename, looped);
 }
 

@@ -55,7 +55,7 @@ ScoreDigitRenderer::~ScoreDigitRenderer() {
 
 /* 新規の文字列オブジェクトを作成する */
 void ITextRenderer::NewText(unsigned int ID, const std::wstring& str, int x, int y, float scale, float width, ArgbColor color) {
-	if (StringData.size() <= ID) StringData.resize(ID + 1, nullptr); // 配列の拡張
+	if (StringData.size() <= ID) StringData.resize(static_cast<std::size_t>(ID) + 1, nullptr); // 配列の拡張
 	bool TextChanged = (!StringData[ID]) || (StringData[ID]->str != str);
 	if (StringData[ID] && TextChanged) delete StringData[ID]; // 既に存在した場合
 	if (TextChanged) StringData[ID] = new StringAttr;
@@ -117,7 +117,7 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 }
 void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
-	if (SpriteData.size() <= ID) SpriteData.resize(ID + 1, std::vector<SpriteAttr*>()); // 配列の拡張
+	if (SpriteData.size() <= ID) SpriteData.resize(static_cast<std::size_t>(ID) + 1, std::vector<SpriteAttr*>()); // 配列の拡張
 	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
 	if (!StringData[ID]) /* ぬるぽ */
 		return; /* ガッ */

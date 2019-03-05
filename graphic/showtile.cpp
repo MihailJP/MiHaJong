@@ -21,7 +21,7 @@ ShowTile::~ShowTile() {
 /* 新規の牌オブジェクトを作成する */
 void ShowTile::NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol) {
 	constexpr TileDescriptor empty = {false, NoTile, Normal, 0, 0, Portrait, Obverse, 0xffffffff};
-	if (mySprites.size() <= ID) mySprites.resize(ID + 1, empty); // 配列の拡張
+	if (mySprites.size() <= ID) mySprites.resize(static_cast<std::size_t>(ID) + 1, empty); // 配列の拡張
 	mySprites[ID].exist = true;
 	mySprites[ID].tile = tile; mySprites[ID].red = red;
 	mySprites[ID].X = x; mySprites[ID].Y = y;

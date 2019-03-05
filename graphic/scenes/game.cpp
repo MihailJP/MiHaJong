@@ -141,8 +141,8 @@ void TableProtoScene::MouseInput(const XEvent* od, int X, int Y)
 #else /*_WIN32*/
 	case MotionNotify: // マウスカーソルを動かした場合
 #endif /*_WIN32*/
-		if ((isCheckBox) && (!checkBoxes[region - CheckboxRegionOffset]->isFocused())) {
-			checkBoxes[region - CheckboxRegionOffset]->focus(true);
+		if ((isCheckBox) && (!checkBoxes[static_cast<std::size_t>(region) - CheckboxRegionOffset]->isFocused())) {
+			checkBoxes[static_cast<std::size_t>(region) - CheckboxRegionOffset]->focus(true);
 			sound::Play(sound::IDs::sndCursor);
 		}
 		for (int i = 0; i < NumOfCheckBoxes; ++i)
@@ -157,8 +157,8 @@ void TableProtoScene::MouseInput(const XEvent* od, int X, int Y)
 		if ((isCheckBox) && (od->xbutton.button == Button1))
 #endif /*_WIN32*/
 		{
-			checkBoxes[region - CheckboxRegionOffset]->check(
-				!(checkBoxes[region - CheckboxRegionOffset]->isChecked()));
+			checkBoxes[static_cast<std::size_t>(region) - CheckboxRegionOffset]->check(
+				!(checkBoxes[static_cast<std::size_t>(region) - CheckboxRegionOffset]->isChecked()));
 			sound::Play(sound::IDs::sndClick);
 		}
 		break;
