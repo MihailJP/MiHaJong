@@ -101,7 +101,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\$(Configuration)\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\Release\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
@@ -120,7 +120,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\$(Configuration)\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\Release\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
@@ -144,7 +144,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\$(Configuration)\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\Release\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
@@ -168,7 +168,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\$(Configuration)\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\$(Configuration)\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)GuruGuruSMF\GuruGuruSMF4.lib;$(ProjectDir)libogg\win32\VS2015\$(Platform)\Release\libogg_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbis_static.lib;$(ProjectDir)libvorbis\win32\VS2010\$(Platform)\Release\libvorbisfile_static.lib;dsound.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ResourceCompile>
