@@ -3,6 +3,7 @@
 #include "geometry.h"
 #include "../common/strcode.h"
 #include "sprite.h"
+#include "matrix.h"
 
 namespace mihajong_graphic {
 
@@ -87,33 +88,7 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	sprite->widthScale = StringData[ID]->scale * StringData[ID]->width;
 	sprite->heightScale = StringData[ID]->scale;
 	sprite->color = StringData[ID]->color;
-	/* 行列を計算する */
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	TransformMatrix m; D3DXMatrixIdentity(&m);
-	D3DXMatrixIdentity(&sprite->matrix);
-	D3DXMatrixTranslation(&m, (float)-(sprite->X), (float)-(sprite->Y), 0);
-	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
-	D3DXMatrixScaling(&m, sprite->widthScale, sprite->heightScale, 0.0f);
-	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
-	D3DXMatrixTranslation(&m, static_cast<float>(sprite->X), static_cast<float>(sprite->Y), 0);
-	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
-	D3DXMatrixScaling(&m, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXMatrixMultiply(&sprite->matrix, &sprite->matrix, &m);
-#else
-	/* DirectXとOpenGLだと座標原点が違う */
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
-	glTranslatef(static_cast<float>(sprite->X) * Geometry::WindowScale(), -static_cast<float>(sprite->Y) * Geometry::WindowScale(), 0.0f);
-	glScalef(sprite->widthScale, sprite->heightScale, 1.0f);
-	glTranslatef(-static_cast<float>(sprite->X) * Geometry::WindowScale(), static_cast<float>(sprite->Y) * Geometry::WindowScale(), 0.0f);
-	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
-	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
-	glPopMatrix();
-	sprite->matrix = matrix;
-#endif
-	/* ここまで */
+	sprite->matrix = getMatrix(static_cast<float>(sprite->X), static_cast<float>(sprite->Y), sprite->widthScale, sprite->heightScale);
 }
 void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);

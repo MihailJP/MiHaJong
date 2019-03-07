@@ -4,6 +4,7 @@
 #include "../../utils.h"
 #include "../../event.h"
 #include "../table.h"
+#include "../../matrix.h"
 
 #ifdef None
 #undef None
@@ -52,24 +53,7 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 		(curr >= animationLength) ? 255 :
 		static_cast<int>(pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2)))
 		<< 24 | 0x00ffffff;
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	TransformMatrix matrix, matrix1;
-	D3DXMatrixIdentity(&matrix); D3DXMatrixIdentity(&matrix1);
-	D3DXMatrixTranslation(&matrix1, static_cast<float>(-x), static_cast<float>(-y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, static_cast<float>(x), static_cast<float>(y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixScaling(&matrix1, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-#else
-	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
-	glTranslatef(static_cast<float>(x) * Geometry::WindowScale(), -static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
-	glScalef(scale, scale, 1.0f);
-	glTranslatef(-static_cast<float>(x) * Geometry::WindowScale(), static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
-	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
-	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
-	glPopMatrix();
-#endif
+	TransformMatrix matrix(getMatrix(static_cast<float>(x), static_cast<float>(y), scale, scale));
 	RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),

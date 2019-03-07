@@ -9,6 +9,7 @@
 #undef EXPORT
 #include "../../../astro/astro.h"
 #include <ctime>
+#include "../../matrix.h"
 
 constexpr float pi = 3.1415927f;
 
@@ -32,69 +33,15 @@ GameTableScreen::Clock::~Clock() {
 }
 
 void GameTableScreen::Clock::setClockMatrix(TransformMatrix* matrix, float angle) {
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	D3DXMatrixIdentity(matrix); TransformMatrix tmpMatrix; D3DXMatrixIdentity(&tmpMatrix);
-	D3DXMatrixScaling(&tmpMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, -clockPosX * Geometry::WindowScale(), -clockPosY * Geometry::WindowScale(), 0);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, -(static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(),
-		-(static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(), 0);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixRotationZ(&tmpMatrix, angle);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, (static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(),
-		(static_cast<float>(clockDiameter) / 2.0f) * Geometry::WindowScale(), 0);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixScaling(&tmpMatrix, static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter),
-		static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter), 0.0f);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-	D3DXMatrixTranslation(&tmpMatrix, clockPosX * Geometry::WindowScale(), clockPosY * Geometry::WindowScale(), 0);
-	D3DXMatrixMultiply(matrix, matrix, &tmpMatrix);
-#else
-	constexpr float
-		phi = static_cast<float>(scaledClockDiameter),
-		h = Geometry::WindowHeight,
-		s = Geometry::WindowScale(),
-		r = (static_cast<float>(clockDiameter) / 2.0f),
-		x = clockPosX, y = clockPosY,
-		theta = angle;
-
-	(*matrix)[ 0] =  (phi * s * cos(theta)) / (2.0f * r);
-	(*matrix)[ 1] = -(phi * s * sin(theta)) / (2.0f * r);
-	(*matrix)[ 2] = 0.0f;
-	(*matrix)[ 3] = 0.0f;
-
-	(*matrix)[ 4] = (phi * s * sin(theta)) / (2.0f * r);
-	(*matrix)[ 5] = (phi * s * cos(theta)) / (2.0f * r);
-	(*matrix)[ 6] = 0.0f;
-	(*matrix)[ 7] = 0.0f;
-
-	(*matrix)[ 8] = 0.0f;
-	(*matrix)[ 9] = 0.0f;
-	(*matrix)[10] = 0.0f;
-	(*matrix)[11] = 0.0f;
-
-	(*matrix)[12] =
-		  (phi * y * s * sin(theta)) / (2.0f * r)
-		- (phi * x * s * cos(theta)) / (2.0f * r)
-		+ x * s
-		- (phi * h * s * sin(theta)) / (2.0f * r)
-		+ (phi * r * s * sin(theta)) / (2.0f * r)
-		- (phi * r * s * cos(theta)) / (2.0f * r)
-		+ (phi * r * s             ) / (2.0f * r);
-	(*matrix)[13] =
-		  (phi * y * s * cos(theta)) / (2.0f * r)
-		- y * s
-		+ (phi * x * s * sin(theta)) / (2.0f * r)
-		+ (phi * r * s * sin(theta)) / (2.0f * r)
-		- (phi * h * s * cos(theta)) / (2.0f * r)
-		+ (phi * r * s * cos(theta)) / (2.0f * r)
-		- (phi * r * s             ) / (2.0f * r)
-		+ h;
-	(*matrix)[14] = 0.0f;
-	(*matrix)[15] = 1.0f;
-#endif
+	*matrix = getMatrix(
+		static_cast<float>(clockPosX),
+		static_cast<float>(clockPosY),
+		static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter),
+		static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter),
+		angle,
+		static_cast<float>(clockDiameter) / 2.0f,
+		static_cast<float>(clockDiameter) / 2.0f
+	);
 }
 
 void GameTableScreen::Clock::renderMoon() {
@@ -111,11 +58,9 @@ void GameTableScreen::Clock::renderShadow() {
 	struct Vertex {float x, y, z; uint32_t color;};
 
 	const float Top = (static_cast<float>(clockPosY) + 2.0f) * Geometry::WindowScale(),
-		Bottom = (static_cast<float>(clockPosY) + static_cast<float>(clockDiameter) *
-			(static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter)) - 2.0f) * Geometry::WindowScale(),
+		Bottom = (static_cast<float>(clockPosY) + static_cast<float>(scaledClockDiameter) - 2.0f) * Geometry::WindowScale(),
 		Left = (static_cast<float>(clockPosX) + 2.0f) * Geometry::WindowScale(),
-		Right = (static_cast<float>(clockPosX) + static_cast<float>(clockDiameter) *
-			(static_cast<float>(scaledClockDiameter) / static_cast<float>(clockDiameter)) - 2.0f) * Geometry::WindowScale(),
+		Right = (static_cast<float>(clockPosX) + static_cast<float>(scaledClockDiameter) - 2.0f) * Geometry::WindowScale(),
 		CenterX = (Left + Right) / 2.0f,
 		CenterY = (Top + Bottom) / 2.0f,
 		Radius = CenterX - Left;

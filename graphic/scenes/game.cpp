@@ -7,6 +7,7 @@
 #include "../gametbl.h"
 #include "../utils.h"
 #include "../rule.h"
+#include "../matrix.h"
 #include <cassert>
 #include <cstdlib>
 #include "../../sound/sound.h"
@@ -182,24 +183,7 @@ void TableProtoScene::ScoreBoard::objInit() {
 	constexpr int x = xpos, y = ypos;
 #endif /*_WIN32*/
 	// 行列の構築
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	TransformMatrix tmpmtx;
-	D3DXMatrixIdentity(&myMatrix); D3DXMatrixIdentity(&tmpmtx);
-	D3DXMatrixScaling(&tmpmtx, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
-	D3DXMatrixTranslation(&tmpmtx, static_cast<float>(-x) * Geometry::WindowScale(), static_cast<float>(-y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
-	D3DXMatrixScaling(&tmpmtx, wScale, 1.0f, 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
-	D3DXMatrixTranslation(&tmpmtx, static_cast<float>(x) * Geometry::WindowScale(), static_cast<float>(y) * Geometry::WindowScale(), 0.0f); D3DXMatrixMultiply(&myMatrix, &myMatrix, &tmpmtx);
-#else
-	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
-	glTranslatef(static_cast<float>(x) * Geometry::WindowScale(), -static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
-	glScalef(wScale, 1.0f, 1.0f);
-	glTranslatef(-static_cast<float>(x) * Geometry::WindowScale(), static_cast<float>(y) * Geometry::WindowScale(), 0.0f);
-	glScalef(Geometry::WindowScale(), Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
-	glGetFloatv(GL_MODELVIEW_MATRIX, &myMatrix[0]);
-	glPopMatrix();
-#endif
+	myMatrix = getMatrix(static_cast<float>(x), static_cast<float>(y), wScale, 1.0f);
 }
 
 TableProtoScene::ScoreBoard::~ScoreBoard() {

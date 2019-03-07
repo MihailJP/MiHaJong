@@ -164,6 +164,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="matrix.cpp" />
     <ClCompile Include="scenes\confmenu.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -251,6 +252,7 @@
     <ClInclude Include="..\common\yakurslt.h" />
     <ClInclude Include="directx.h" />
     <ClInclude Include="graphic.h" />
+    <ClInclude Include="matrix.h" />
     <ClInclude Include="scenes\confmenu.h" />
     <ClInclude Include="scenes\table\clock.h" />
     <ClInclude Include="scenes\table\tiletip.h" />
