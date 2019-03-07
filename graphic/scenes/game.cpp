@@ -204,7 +204,7 @@ void TableProtoScene::ScoreBoard::Render() {
 		initialized = true;
 	}
 #endif /*_WIN32*/
-	RECT rect = {0, 0, PanelWidth, PanelHeight};
+	const RECT rect = {0, 0, PanelWidth, PanelHeight};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos), static_cast<int>(ypos),
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
 	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))) {
@@ -219,7 +219,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
 	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
 	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
-	RECT rect = {
+	const RECT rect = {
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
 	};
@@ -230,7 +230,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 }
 
 void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, ArgbColor color) {
-	RECT rect = {
+	const RECT rect = {
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num    )), NumCharY,
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
 	};
@@ -338,7 +338,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 }
 
 void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor color) {
-	RECT rect = {
+	const RECT rect = {
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
 	};

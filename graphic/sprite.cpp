@@ -61,11 +61,11 @@ void SpriteRenderer::End() {
 
 /* スプライト描画 */
 void SpriteRenderer::ShowSprite(
-	TexturePtr texture, int X, int Y, int Width, int Height,
-	ArgbColor color, RECT* rect, int CenterX, int CenterY, TransformMatrix* matrix)
+	const TexturePtr texture, int X, int Y, int Width, int Height,
+	ArgbColor color, const RECT* rect, int CenterX, int CenterY, const TransformMatrix* matrix)
 {
 	if ((!sprite) || (!texture)) return; // ぬるぽは(・∀・)ｶｴﾚ!!
-	RECT defaultRect = {0, 0, Width, Height};
+	const RECT defaultRect = {0, 0, Width, Height};
 	const TransformMatrix defaultMatrix(getMatrix());
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	D3DXVECTOR3 Center(static_cast<float>(CenterX), static_cast<float>(CenterY), 0.0f);

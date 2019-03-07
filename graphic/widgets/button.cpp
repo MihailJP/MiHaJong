@@ -61,7 +61,7 @@ void ButtonPic::Render() {
 		int X = std::get<1>(k), Y = std::get<2>(k);
 		unsigned width = std::get<3>(k), height = std::get<4>(k);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-		TransformMatrix mat(getMatrix(
+		const TransformMatrix mat(getMatrix(
 			static_cast<float>(X),
 			static_cast<float>(Y),
 			static_cast<float>(width) / 156.0f,
@@ -74,9 +74,9 @@ void ButtonPic::Render() {
 		));
 #else
 		// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい
-		TransformMatrix mat(getMatrix());
+		const TransformMatrix mat(getMatrix());
 #endif
-		RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
+		const RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(k) | 0xff000000, &rect, 0, 0, &mat);
 	}
 	myTextRenderer->Render();

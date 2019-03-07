@@ -11,8 +11,8 @@ private:
 	GameTableScreen* caller;
 	TextRenderer* myTextRenderer;
 	ShowTile* myTileRenderer;
-	static const int TipX = (TableSize - ShowTile::VertTileWidth * 13) / 2;
-	static const int TipY = TableSize - DeckPosV + 60;
+	static constexpr int TipX = (TableSize - ShowTile::VertTileWidth * 13) / 2;
+	static constexpr int TipY = TableSize - DeckPosV + 60;
 public:
 	explicit TileTipReconst(GameTableScreen* parent);
 	TileTipReconst(const TileTipReconst&) = delete; // Delete unexpected copy constructor

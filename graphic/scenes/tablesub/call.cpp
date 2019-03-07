@@ -53,8 +53,8 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 		(curr >= animationLength) ? 255 :
 		static_cast<int>(pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2)))
 		<< 24 | 0x00ffffff;
-	TransformMatrix matrix(getMatrix(static_cast<float>(x), static_cast<float>(y), scale, scale));
-	RECT rect = {
+	const TransformMatrix matrix(getMatrix(static_cast<float>(x), static_cast<float>(y), scale, scale));
+	const RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
 	};
@@ -94,7 +94,7 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 		(curr >= animationLength) ? 255 :
 		static_cast<int>(pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2)))
 		<< 24 | 0x00ffffff;
-	RECT rect = {
+	const RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
 	};
@@ -128,7 +128,7 @@ TableSubsceneCallCutProto::~TableSubsceneCallCutProto() {
 /* 表示処理 */
 void TableSubsceneCallCutProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
 	if (callType == calltext::None) return;
-	RECT rect = {
+	const RECT rect = {
 		0  , 96 * (callType    ),
 		384, 96 * (callType + 1),
 	};

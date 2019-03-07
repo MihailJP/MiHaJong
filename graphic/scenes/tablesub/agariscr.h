@@ -16,14 +16,14 @@ namespace mihajong_graphic {
 
 class TableSubsceneAgariScreenProto : public TableSubscene {
 protected:
-	static const unsigned yakuWndWidth  = 720u;
-	static const unsigned yakuWndHeight = 864u;
-	static const int BaseX = (static_cast<signed>(Geometry::BaseSize) - static_cast<signed>(yakuWndWidth )) / 2;
-	static const int BaseY = (static_cast<signed>(Geometry::BaseSize) - static_cast<signed>(yakuWndHeight)) / 2;
+	static constexpr unsigned yakuWndWidth  = 720u;
+	static constexpr unsigned yakuWndHeight = 864u;
+	static constexpr int BaseX = (static_cast<signed>(Geometry::BaseSize) - static_cast<signed>(yakuWndWidth )) / 2;
+	static constexpr int BaseY = (static_cast<signed>(Geometry::BaseSize) - static_cast<signed>(yakuWndHeight)) / 2;
 	double seconds() {return static_cast<double>(myTimer.elapsed()) / 1000000.0;}
-	static const int handPosY = BaseY + 56;
-	static const double yakuInterval;
-	static const double yakuAnimStartSecond;
+	static constexpr int handPosY = BaseY + 56;
+	static constexpr double yakuInterval = 0.75;
+	static constexpr double yakuAnimStartSecond = 2.0;
 	enum AgariStyle {agariMine, agariFurikomi, agariOthers,};
 	static AgariStyle getAgariStyle();
 	static ArgbColor baseColor();
@@ -99,15 +99,15 @@ private:
 	void Reconstruct(const GameTable* gameStat);
 	bool reconstFlag;
 private:
-	unsigned int MeldPosH() {return BaseX + yakuWndWidth - 24;}
-	unsigned int MeldPosV() {
+	unsigned const int MeldPosH() override {return BaseX + yakuWndWidth - 24;}
+	unsigned const int MeldPosV() override {
 		const double Zeit = myCaller->seconds();
 		const int yOffset = (Zeit >= 1.0) ? 0 : static_cast<int>(pow(1.0 - Zeit, 2) * static_cast<double>(Geometry::BaseSize));
 		return handPosY - yOffset;
 	}
-	unsigned int MPosVVert() {return MeldPosV();}
-	unsigned int MPosVHorU() {return MeldPosV() - ShowTile::VertTileWidth + 6;}
-	unsigned int MPosVHorL() {return MeldPosV() + 6;}
+	unsigned const int MPosVVert() override {return MeldPosV();}
+	unsigned const int MPosVHorU() override {return MeldPosV() - ShowTile::VertTileWidth + 6;}
+	unsigned const int MPosVHorL() override {return MeldPosV() + 6;}
 	std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 		playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 		unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
@@ -126,10 +126,10 @@ class TableSubsceneAgariScreenProto::DoraTiles {
 protected:
 	TableSubsceneAgariScreenProto* myCaller;
 	ShowTile* tileObj;
-	virtual int xPos() = 0;
-	virtual int yPos() = 0;
-	virtual int tileIdOffset() = 0;
-	virtual double startTime() = 0;
+	virtual const int xPos() = 0;
+	virtual const int yPos() = 0;
+	virtual const int tileIdOffset() = 0;
+	virtual const double startTime() = 0;
 	virtual void Reconstruct();
 public:
 	virtual void Render();
@@ -141,10 +141,10 @@ public:
 
 class TableSubsceneAgariScreenProto::DoraTilesOmote : public TableSubsceneAgariScreenProto::DoraTiles {
 protected:
-	int xPos() {return BaseX + 32;}
-	int yPos() {return BaseY + 120;}
-	int tileIdOffset() {return 2;}
-	double startTime() {return 1.0;}
+	const int xPos() override {return BaseX + 32;}
+	const int yPos() override {return BaseY + 120;}
+	const int tileIdOffset() override {return 2;}
+	const double startTime() override {return 1.0;}
 public:
 	explicit DoraTilesOmote(TableSubsceneAgariScreenProto* caller);
 	DoraTilesOmote(const DoraTilesOmote&) = delete; // Delete unexpected copy constructor
@@ -154,10 +154,10 @@ public:
 
 class TableSubsceneAgariScreenUradora::DoraTilesUra : public TableSubsceneAgariScreenProto::DoraTiles {
 protected:
-	int xPos() {return BaseX + 32;}
-	int yPos() {return BaseY + 120 + ShowTile::HoriTileWidth;}
-	int tileIdOffset() {return 1;}
-	double startTime() {return 1.0625;}
+	const int xPos() override {return BaseX + 32;}
+	const int yPos() override {return BaseY + 120 + ShowTile::HoriTileWidth;}
+	const int tileIdOffset() override {return 1;}
+	const double startTime() override {return 1.0625;}
 public:
 	explicit DoraTilesUra(TableSubsceneAgariScreenProto* caller);
 	DoraTilesUra(const DoraTilesUra&) = delete; // Delete unexpected copy constructor

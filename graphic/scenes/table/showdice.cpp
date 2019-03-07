@@ -16,11 +16,11 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 	const PlayerID dicePlayer = (gameStat->GameRound + dicePlayerOffset) %
 		(gameStat->chkGameType(SanmaT) ? 3 : 4) +
 		(gameStat->chkGameType(Sanma4) ? ((gameStat->Dice[0].Number + gameStat->Dice[1].Number - 1) / 3) : 0);
-	RECT rect1 = {
+	const RECT rect1 = {
 		static_cast<int32_t>((DiceWidth + DicePadding) * (gameStat->Dice[diceID + 0].Number - 1)), static_cast<int32_t>((DiceHeight + DicePadding) * (gameStat->Dice[diceID + 0].Direction    )),
 		static_cast<int32_t>((DiceWidth + DicePadding) * (gameStat->Dice[diceID + 0].Number    )), static_cast<int32_t>((DiceHeight + DicePadding) * (gameStat->Dice[diceID + 0].Direction + 1)),
 	};
-	RECT rect2 = {
+	const RECT rect2 = {
 		static_cast<int32_t>((DiceWidth + DicePadding) * (gameStat->Dice[diceID + 1].Number - 1)), static_cast<int32_t>((DiceHeight + DicePadding) * (gameStat->Dice[diceID + 1].Direction    )),
 		static_cast<int32_t>((DiceWidth + DicePadding) * (gameStat->Dice[diceID + 1].Number    )), static_cast<int32_t>((DiceHeight + DicePadding) * (gameStat->Dice[diceID + 1].Direction + 1)),
 	};

@@ -10,7 +10,7 @@ namespace mihajong_graphic {
 
 class TitleScreen : public SystemScreen {
 private:
-	static const unsigned nsTitleLogo = 3;
+	static constexpr unsigned nsTitleLogo = 3;
 	class TitleSprite;
 	std::array<TitleSprite*, nsTitleLogo> sTitleLogo;
 	void zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF);

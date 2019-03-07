@@ -13,7 +13,7 @@ namespace mihajong_graphic {
 
 class GameTableScreen::ButtonReconst {
 public:
-	static const unsigned ButtonRegionNum = 20u;
+	static constexpr unsigned ButtonRegionNum = 20u;
 private:
 	GameTableScreen* caller;
 	ButtonPic* buttons;

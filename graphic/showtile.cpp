@@ -37,17 +37,17 @@ void ShowTile::DelTile(unsigned int ID) {
 }
 
 /* レンダリング */
-void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
+void ShowTile::RenderTile(const TileDescriptor* tile, const RECT* rect, int CenterX, int CenterY) {
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(TileTexture, tile->X, tile->Y,
 		CenterX*2, CenterY*2, tile->color, rect, CenterX, CenterY);
 }
-void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderVert(const TileDescriptor* tile, const RECT* rect) {
 	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);
 }
-void ShowTile::RenderHori(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderHori(const TileDescriptor* tile, const RECT* rect) {
 	RenderTile(tile, rect, HoriTileWidth/2, HoriTileHeight/2);
 }
-void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderSide(const TileDescriptor* tile, const RECT* rect) {
 	RenderTile(tile, rect, SideTileWidth/2, SideTileHeight/2);
 }
 void ShowTile::Render() {

@@ -9,11 +9,11 @@ class GameTableScreen::NakihaiReconst : public ShowNakihai {
 private:
 	GameTableScreen* caller;
 private:
-	unsigned int MeldPosH() {return TableSize - 31;}
-	unsigned int MeldPosV() {return DeckPosV - 166;}
-	unsigned int MPosVVert() {return TableSize - MeldPosV();}
-	unsigned int MPosVHorU() {return TableSize - MeldPosV() - ShowTile::VertTileWidth + 6;}
-	unsigned int MPosVHorL() {return TableSize - MeldPosV() + 6;}
+	const unsigned int MeldPosH() override {return TableSize - 31;}
+	const unsigned int MeldPosV() override {return DeckPosV - 166;}
+	const unsigned int MPosVVert() override {return TableSize - MeldPosV();}
+	const unsigned int MPosVHorU() override {return TableSize - MeldPosV() - ShowTile::VertTileWidth + 6;}
+	const unsigned int MPosVHorL() override {return TableSize - MeldPosV() + 6;}
 	std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 		playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 		unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,

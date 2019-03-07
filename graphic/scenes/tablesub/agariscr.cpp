@@ -22,9 +22,6 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
-constexpr double TableSubsceneAgariScreenProto::yakuInterval = 0.75;
-constexpr double TableSubsceneAgariScreenProto::yakuAnimStartSecond = 2.0;
-
 TableSubsceneAgariScreenProto::TableSubsceneAgariScreenProto(DevicePtr device) : TableSubscene(device) {
 	myDevice = device;
 	LoadTexture(device, &windowTexture, MAKEINTRESOURCE(IDB_PNG_AGARI_WINDOW));
