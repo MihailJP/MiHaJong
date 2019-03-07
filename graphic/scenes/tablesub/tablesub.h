@@ -13,7 +13,7 @@ namespace mihajong_graphic {
 
 class TableSubscene {
 protected:
-	static const unsigned int TableSize = Geometry::BaseSize;
+	static constexpr unsigned int TableSize = Geometry::BaseSize;
 	DevicePtr myDevice;
 	Timer myTimer;
 public:

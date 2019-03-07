@@ -11,8 +11,8 @@ class GameTableScreen::TehaiReconst : public ShowTehai {
 private:
 	GameTableScreen* caller;
 private:
-	static const unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
-	static const unsigned int HandPosV = DeckPosV - 144;
+	static constexpr unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
+	static constexpr unsigned int HandPosV = DeckPosV - 144;
 	int tileCursor; // 手牌カーソル
 	std::bitset<NumOfTilesInHand> tileEnabled;
 public:

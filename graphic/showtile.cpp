@@ -21,7 +21,7 @@ ShowTile::~ShowTile() {
 /* 新規の牌オブジェクトを作成する */
 void ShowTile::NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol) {
 	constexpr TileDescriptor empty = {false, NoTile, Normal, 0, 0, Portrait, Obverse, 0xffffffff};
-	if (mySprites.size() <= ID) mySprites.resize(ID + 1, empty); // 配列の拡張
+	if (mySprites.size() <= ID) mySprites.resize(static_cast<std::size_t>(ID) + 1, empty); // 配列の拡張
 	mySprites[ID].exist = true;
 	mySprites[ID].tile = tile; mySprites[ID].red = red;
 	mySprites[ID].X = x; mySprites[ID].Y = y;
@@ -37,17 +37,17 @@ void ShowTile::DelTile(unsigned int ID) {
 }
 
 /* レンダリング */
-void ShowTile::RenderTile(TileDescriptor* tile, RECT* rect, int CenterX, int CenterY) {
+void ShowTile::RenderTile(const TileDescriptor* tile, const RECT* rect, int CenterX, int CenterY) {
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(TileTexture, tile->X, tile->Y,
 		CenterX*2, CenterY*2, tile->color, rect, CenterX, CenterY);
 }
-void ShowTile::RenderVert(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderVert(const TileDescriptor* tile, const RECT* rect) {
 	RenderTile(tile, rect, VertTileWidth/2, VertTileHeight/2);
 }
-void ShowTile::RenderHori(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderHori(const TileDescriptor* tile, const RECT* rect) {
 	RenderTile(tile, rect, HoriTileWidth/2, HoriTileHeight/2);
 }
-void ShowTile::RenderSide(TileDescriptor* tile, RECT* rect) {
+void ShowTile::RenderSide(const TileDescriptor* tile, const RECT* rect) {
 	RenderTile(tile, rect, SideTileWidth/2, SideTileHeight/2);
 }
 void ShowTile::Render() {

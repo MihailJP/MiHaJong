@@ -14,6 +14,7 @@ namespace rules {
 typedef void (*RetrieveTxt)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint16_t /*RuleID*/);
 typedef void (*RetrieveTxtIndex)(LPTSTR const /*txt*/, unsigned /*bufsize*/, uint16_t /*RuleID*/, uint8_t /*index*/);
 typedef int (*RetrieveInt)(uint16_t /*RuleID*/);
+typedef std::size_t (*RetrieveSize)(uint16_t /*RuleID*/);
 #ifdef _WIN32
 typedef BOOL (*CheckDep)(uint16_t /*RuleID*/, const int* const /* ruleStat */);
 #else /*_WIN32*/
@@ -37,7 +38,7 @@ extern RetrieveTxt getRuleName;
 extern RetrieveTxt getRuleDescription;
 extern RetrieveTxtIndex getRuleTxt;
 extern RetrieveInt getRule;
-extern RetrieveInt getRuleSize;
+extern RetrieveSize getRuleSize;
 extern CheckDep reqFailed;
 extern RetrieveCaption getPageCaption;
 extern RuleWrite storeRule;
@@ -50,7 +51,7 @@ extern std::string conffile;
 
 EXPORT void setfunc(
 	RetrieveTxt fpGetRuleName, RetrieveTxt fpGetRuleDesc, RetrieveTxtIndex fpGetRuleTxt,
-	RetrieveInt fpGetRule, RetrieveInt fpGetRuleSize, CheckDep fpReqFailed,
+	RetrieveInt fpGetRule, RetrieveSize fpGetRuleSize, CheckDep fpReqFailed,
 	RetrieveCaption fpGetPageCaption, RuleWrite fpStoreRule, RuleRead fpExportRule,
 	ConfSave fpSaveConfigFile, CheckRule fpChkRule, const char* pDigit);
 

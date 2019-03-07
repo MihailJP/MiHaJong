@@ -23,7 +23,7 @@ CheckBox::~CheckBox() {
 }
 
 void CheckBox::Render() {
-	RECT rect = {
+	const RECT rect = {
 		0  + 36 * (checkFlag ? 1 : 0), 0  + 36 * (focused ? 1 : 0),
 		36 + 36 * (checkFlag ? 1 : 0), 36 + 36 * (focused ? 1 : 0),
 	};

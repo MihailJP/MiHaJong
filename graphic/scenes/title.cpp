@@ -14,6 +14,7 @@
 #include "../keycode.h"
 #endif /*_WIN32*/
 #include "../../common/version.h"
+#include "../matrix.h"
 
 #ifdef max
 #undef max
@@ -305,29 +306,7 @@ TitleScreen::TitleSprite::TitleSprite(DevicePtr device, int X, int Y, int Width,
 TitleScreen::TitleSprite::~TitleSprite() {
 }
 void TitleScreen::TitleSprite::show(int X, int Y, float scale, uint8_t opacity) {
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-	TransformMatrix matrix, matrix1;
-	D3DXMatrixIdentity(&matrix);
-	D3DXMatrixTranslation(&matrix1, static_cast<float>(-X), static_cast<float>(-Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixScaling(&matrix1, scale, scale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixScaling(&matrix1,
-		WidthRate() * Geometry::WindowScale(),
-		Geometry::WindowScale(),
-		0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-#else
-	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0.0f, static_cast<float>(Geometry::WindowHeight), 0.0f);
-	glTranslatef(static_cast<float>(X) * Geometry::WindowScale(), -static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
-	glScalef(scale, scale, 1.0f);
-	glTranslatef(-static_cast<float>(X) * Geometry::WindowScale(), static_cast<float>(Y) * Geometry::WindowScale(), 0.0f);
-	glScalef(
-		WidthRate() * Geometry::WindowScale(),
-		Geometry::WindowScale(), 1.0f);
-	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
-	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
-	glPopMatrix();
-#endif
+	TransformMatrix matrix(getMatrix(static_cast<float>(X), static_cast<float>(Y), scale, scale, 0.0f, 0.0f, 0.0f, WidthRate()));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(
 		texture, X, Y, width, height,
 		(opacity << 24) | 0xffffff, &rect, width/2, height/3, &matrix);

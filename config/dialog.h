@@ -13,9 +13,9 @@ namespace DialogWrapper {
 class Dialog {
 private:
 	static Dialog* activeInstance;
-	static int CALLBACK DialogProc(HWND, UINT, WPARAM, LPARAM);
+	static std::intptr_t CALLBACK DialogProc(HWND, UINT, WPARAM, LPARAM);
 	const HINSTANCE hInstance;
-	const int dialogID;
+	const std::intptr_t dialogID;
 protected:
 	std::map<int, ControlWrapper::DialogControl*> controls;
 	virtual void initWrapper(HWND) = 0 {};

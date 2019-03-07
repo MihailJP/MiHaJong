@@ -11,7 +11,7 @@ using utils::playerRelative;
 
 /* リーチ棒表示する */
 void GameTableScreen::RichibouReconst::ShowRiichibou(const GameTable* gameStat) {
-	RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
+	constexpr RECT rectH = {72, 30, 216, 42,}, rectV = {30, 2, 42, 146,};
 	for (PlayerID i = 0; i < Players; ++i) {
 		if (!gameStat->Player[i].RichiFlag.RichiFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {

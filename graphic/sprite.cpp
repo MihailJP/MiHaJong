@@ -1,6 +1,7 @@
 ﻿#include "sprite.h"
 #include "geometry.h"
 #include "loadtex.h"
+#include "matrix.h"
 
 /* スプライト表示処理 */
 
@@ -60,27 +61,19 @@ void SpriteRenderer::End() {
 
 /* スプライト描画 */
 void SpriteRenderer::ShowSprite(
-	TexturePtr texture, int X, int Y, int Width, int Height,
-	ArgbColor color, RECT* rect, int CenterX, int CenterY, TransformMatrix* matrix)
+	const TexturePtr texture, int X, int Y, int Width, int Height,
+	ArgbColor color, const RECT* rect, int CenterX, int CenterY, const TransformMatrix* matrix)
 {
 	if ((!sprite) || (!texture)) return; // ぬるぽは(・∀・)ｶｴﾚ!!
-	RECT defaultRect = {0, 0, Width, Height};
+	const RECT defaultRect = {0, 0, Width, Height};
+	const TransformMatrix defaultMatrix(getMatrix());
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	TransformMatrix defaultMatrix; D3DXMatrixIdentity(&defaultMatrix);
-	D3DXMatrixScaling(&defaultMatrix, Geometry::WindowScale(), Geometry::WindowScale(), 0.0f);
 	D3DXVECTOR3 Center(static_cast<float>(CenterX), static_cast<float>(CenterY), 0.0f);
 	D3DXVECTOR3 Pos(static_cast<float>(X), static_cast<float>(Y), 0.0f);
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
 	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
 	sprite->Flush();
 #else
-	constexpr TransformMatrix defaultMatrix = {
-		Geometry::WindowScale(), 0,                                                         0, 0,
-		0,                       Geometry::WindowScale(),                                   0, 0,
-		0,                       0,                                                         1, 0,
-		0,                       Geometry::WindowHeight * (1.0f - Geometry::WindowScale()), 0, 1,
-	};
-
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

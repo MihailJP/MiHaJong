@@ -30,6 +30,8 @@ void translateException(unsigned int code, _EXCEPTION_POINTERS* ep) {
 }
 
 void StackTraceToArray() {
+#ifdef _DEBUG
+#ifdef _M_IX86
 	CONTEXT context; memset(&context, 0, sizeof(context));
 	context.ContextFlags = CONTEXT_FULL;
 	__asm	call(x);
@@ -39,6 +41,8 @@ void StackTraceToArray() {
 	__asm	mov context.Esp, esp;
 
 	traceLog(&context, errorInfo.traceBack, sizeof(errorInfo.traceBack));
+#endif /* _M_IX86 */
+#endif /* _DEBUG */
 }
 
 void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
@@ -99,7 +103,7 @@ LONG CALLBACK MJCore_Exception_Filter(_EXCEPTION_POINTERS *ex) {
 #ifdef _MSC_VER
 	PIMAGEHLP_SYMBOL pSymbol;
 #endif
-	DWORD disp;
+	DWORD_PTR disp;
 	ErrorInfo *errinf = nullptr;
 
 	lmsg << _T("ハンドルされていない例外 ") <<
