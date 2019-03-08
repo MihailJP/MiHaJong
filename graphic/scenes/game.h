@@ -40,11 +40,6 @@ public:
 };
 
 class TableProtoScene::ScoreBoard {
-#ifndef _WIN32
-private:
-	bool initialized;
-	void objInit();
-#endif /*_WIN32*/
 private:
 	Timer myTimer;
 private:
@@ -52,7 +47,6 @@ private:
 	seatRelative relativePlayerID;
 	int xpos, ypos; float wScale;
 	TexturePtr texture;
-	TransformMatrix myMatrix;
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
 	PlayerID playerID();
 private:

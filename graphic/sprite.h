@@ -18,7 +18,7 @@ private:
 	SpritePtr sprite;
 	static std::map<intptr_t, SpriteRenderer*> renderer;
 public:
-	void ShowSprite(const TexturePtr texture, int X, int Y, int Width, int Height,
+	void ShowSprite(TexturePtr texture, int X, int Y, int Width, int Height,
 		ArgbColor color = 0xffffffff, const RECT* rect = nullptr, int CenterX = 0, int CenterY = 0,
 		const TransformMatrix* matrix = nullptr);
 	void Start();

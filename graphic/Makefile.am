@@ -73,12 +73,13 @@ dist_pkgdata_DATA = \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png
 EXTRA_DIST = \
-	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
+	graphic.vcxproj graphic.vcxproj.filters \
+	graphic_2x.vcxproj graphic_2x.vcxproj.filters
 if WITH_WINAPI
-libmihajong_graphic_la_SOURCES += graphic.rc
+libmihajong_graphic_la_SOURCES += graphic.rc graphic_2x.rc
 EXTRA_DIST += filenum.cpp filenum.h keycode.h
 else
-EXTRA_DIST += graphic.rc
+EXTRA_DIST += graphic.rc graphic_2x.rc
 libmihajong_graphic_la_SOURCES += filenum.cpp filenum.h keycode.h
 endif
 

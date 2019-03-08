@@ -10,11 +10,11 @@ TransformMatrix getMatrix(float baseX, float baseY, float scaleX, float scaleY, 
 	D3DXMatrixIdentity(&matrix);
 	D3DXMatrixTranslation(&matrix1, -baseX, -baseY, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixScaling(&matrix1, scaleX, scaleY, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, -rotateOffsetX * scaleX, -rotateOffsetY * scaleY, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, -rotateOffsetX * scaleX * Geometry::DataScale, -rotateOffsetY * scaleY * Geometry::DataScale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 	D3DXMatrixRotationZ(&matrix1, rotateAngle); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, rotateOffsetX * scaleX, rotateOffsetY * scaleY, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixTranslation(&matrix1, baseX, baseY, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
-	D3DXMatrixScaling(&matrix1, scaleAfterX * Geometry::WindowScale(), scaleAfterY * Geometry::WindowScale(), 0.0f);
+	D3DXMatrixTranslation(&matrix1, rotateOffsetX * scaleX * Geometry::DataScale, rotateOffsetY * scaleY * Geometry::DataScale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixTranslation(&matrix1, baseX * Geometry::DataScale, baseY * Geometry::DataScale, 0.0f); D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
+	D3DXMatrixScaling(&matrix1, scaleAfterX * Geometry::WindowScale() / Geometry::DataScale, scaleAfterY * Geometry::WindowScale() / Geometry::DataScale, 0.0f);
 	D3DXMatrixMultiply(&matrix, &matrix, &matrix1);
 #else
 	/* DirectXとOpenGLだと座標原点が違う */

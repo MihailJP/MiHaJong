@@ -176,14 +176,6 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
-#ifndef _WIN32
-	initialized = false;
-}
-void TableProtoScene::ScoreBoard::objInit() {
-	constexpr int x = xpos, y = ypos;
-#endif /*_WIN32*/
-	// 行列の構築
-	myMatrix = getMatrix(static_cast<float>(x), static_cast<float>(y), wScale, 1.0f);
 }
 
 TableProtoScene::ScoreBoard::~ScoreBoard() {
@@ -198,14 +190,10 @@ TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode
 }
 
 void TableProtoScene::ScoreBoard::Render() {
-#ifndef _WIN32
-	if (!initialized) {
-		objInit();
-		initialized = true;
-	}
-#endif /*_WIN32*/
 	const RECT rect = {0, 0, PanelWidth, PanelHeight};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos), static_cast<int>(ypos),
+	const float x = static_cast<float>(xpos), y = static_cast<float>(ypos);
+	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
 	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))) {
 		renderWind();
@@ -223,18 +211,22 @@ void TableProtoScene::ScoreBoard::renderWind() {
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
 	};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos) + WindPosX, static_cast<int>(ypos) + WindPosY,
+	const float x = static_cast<float>(xpos) + WindPosX, y = static_cast<float>(ypos) + WindPosY;
+	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		WindCharWidth, WindCharHeight,
 		(wind == sEast) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
 		&rect, 0, 0, &myMatrix);
 }
 
-void TableProtoScene::ScoreBoard::renderNumeral(int x, int y, unsigned num, ArgbColor color) {
+void TableProtoScene::ScoreBoard::renderNumeral(int xx, int yy, unsigned num, ArgbColor color) {
 	const RECT rect = {
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num    )), NumCharY,
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
 	};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos) + x, static_cast<int>(ypos) + y,
+	const float x = static_cast<float>(xpos) + xx, y = static_cast<float>(ypos) + yy;
+	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		NumCharWidth, NumCharHeight, color, &rect, 0, 0, &myMatrix);
 }
 
@@ -342,7 +334,9 @@ void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor co
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
 	};
-	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, static_cast<int>(xpos) + ScoreUnitPosX, static_cast<int>(ypos) + ScoreUnitPosY,
+	const float x = static_cast<float>(xpos) + ScoreUnitPosX, y = static_cast<float>(ypos) + ScoreUnitPosY;
+	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
+	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, color, &rect, 0, 0, &myMatrix);
 }
 
