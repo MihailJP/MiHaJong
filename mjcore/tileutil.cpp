@@ -405,6 +405,7 @@ namespace setdora_tools {
 	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ネクスト牌
 		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) + 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
+		else if ((gameStat->chkGameType(SanmaSeto))&&(ans == BambooTwo)) ans = BambooNine;
 		else if (ans == static_cast<TileCode>(10)) ans = CharacterOne;
 		else if (ans == static_cast<TileCode>(20)) ans = CircleOne;
 		else if (ans == static_cast<TileCode>(30)) ans = BambooOne;
@@ -416,6 +417,7 @@ namespace setdora_tools {
 	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // 前の牌
 		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) - 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
+		else if ((gameStat->chkGameType(SanmaSeto))&&(ans == BambooEight)) ans = BambooOne;
 		else if (ans == static_cast<TileCode>(0)) ans = CharacterNine;
 		else if (ans == static_cast<TileCode>(10)) ans = CircleNine;
 		else if (ans == static_cast<TileCode>(20)) ans = BambooNine;
