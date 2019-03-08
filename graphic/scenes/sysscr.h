@@ -13,7 +13,7 @@ class SystemScreen : public Scene {
 protected:
 	void clearWithGameTypeColor();
 	Timer myTimer;
-	static const unsigned timePerFrame = 16667u;
+	static constexpr unsigned timePerFrame = 16667u;
 	TextRenderer* myTextRenderer;
 	unsigned strwidth(const std::wstring& str);
 	unsigned strwidth(const std::string& str);

@@ -3,6 +3,7 @@
 #include "../resource.h"
 #include <cassert>
 #include "../sprite.h"
+#include "../matrix.h"
 #include "../../common/strcode.h"
 
 namespace mihajong_graphic {
@@ -37,7 +38,7 @@ void ButtonPic::setText(unsigned ButtonID) {
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, ArgbColor color, const CodeConv::tstring& caption, bool adjustWidth) {
 	if (mySprites.size() <= ButtonID)
-		mySprites.resize(ButtonID + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T(""), false));
+		mySprites.resize(static_cast<std::size_t>(ButtonID) + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T(""), false));
 	assert(stat != absent);
 	mySprites[ButtonID] = std::make_tuple(stat, X, Y, Width, Height, color, CodeConv::tstring(caption), adjustWidth);
 	setText(ButtonID);
@@ -60,17 +61,22 @@ void ButtonPic::Render() {
 		int X = std::get<1>(k), Y = std::get<2>(k);
 		unsigned width = std::get<3>(k), height = std::get<4>(k);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-		TransformMatrix mat, mat2; D3DXMatrixIdentity(&mat); D3DXMatrixIdentity(&mat2);
-		D3DXMatrixTranslation(&mat2, static_cast<float>(-X), static_cast<float>(-Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
-		D3DXMatrixScaling(&mat2, static_cast<float>(width) / 156.0f, static_cast<float>(height) / 48.0f, 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
-		D3DXMatrixTranslation(&mat2, static_cast<float>(X), static_cast<float>(Y), 0.0f); D3DXMatrixMultiply(&mat, &mat, &mat2);
+		const TransformMatrix mat(getMatrix(
+			static_cast<float>(X),
+			static_cast<float>(Y),
+			static_cast<float>(width) / 156.0f,
+			static_cast<float>(height) / 48.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			1.0f / Geometry::WindowScale(),
+			1.0f / Geometry::WindowScale()
+		));
 #else
-		glPushMatrix(); glLoadIdentity();
 		// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい
-		TransformMatrix mat; glGetFloatv(GL_MODELVIEW_MATRIX, &mat[0]);
-		glPopMatrix();
+		const TransformMatrix mat(getMatrix());
 #endif
-		RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
+		const RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(k) | 0xff000000, &rect, 0, 0, &mat);
 	}
 	myTextRenderer->Render();

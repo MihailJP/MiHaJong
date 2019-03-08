@@ -4,7 +4,7 @@ namespace mihajong_graphic {
 
 class Geometry {
 public:
-	static const unsigned BaseSize = 1080;
+	static constexpr unsigned BaseSize = 1080u;
 	static unsigned WindowWidth;
 	static unsigned WindowHeight;
 	static float WindowScale() {return static_cast<float>(WindowHeight) / static_cast<float>(BaseSize);}

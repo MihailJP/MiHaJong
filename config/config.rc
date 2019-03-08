@@ -1,4 +1,4 @@
-Ôªø// Microsoft Visual C++ generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 #include "../common/version.h"
@@ -14,7 +14,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Êó•Êú¨Ë™û (Êó•Êú¨) resources
+// ì˙ñ{åÍ (ì˙ñ{) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
@@ -52,28 +52,28 @@ END
 
 IDD_DIALOG1 DIALOGEX 0, 0, 247, 248
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "MiHaJong Áí∞Â¢ÉË®≠ÂÆö"
+CAPTION "MiHaJong ä¬ã´ê›íË"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,136,227,50,14
-    PUSHBUTTON      "„Ç≠„É£„É≥„Çª„É´",IDCANCEL,190,227,50,14
-    GROUPBOX        "„Éó„É¨„Ç§„É§„ÉºÂêç",IDC_STATIC,6,6,114,30,WS_GROUP
+    PUSHBUTTON      "ÉLÉÉÉìÉZÉã",IDCANCEL,190,227,50,14
+    GROUPBOX        "ÉvÉåÉCÉÑÅ[ñº",IDC_STATIC,6,6,114,30,WS_GROUP
     EDITTEXT        IDC_EDIT2,12,18,102,14,ES_AUTOHSCROLL
-    GROUPBOX        "„Çµ„Éº„Éê„Éº„ÅÆ„Ç¢„Éâ„É¨„Çπ",IDC_STATIC,126,6,114,30,WS_GROUP
+    GROUPBOX        "ÉTÅ[ÉoÅ[ÇÃÉAÉhÉåÉX",IDC_STATIC,126,6,114,30,WS_GROUP
     EDITTEXT        IDC_EDIT3,132,18,102,15,ES_AUTOHSCROLL
-    GROUPBOX        "ÁîªÈù¢Ë®≠ÂÆö",IDC_STATIC,6,42,234,48,WS_GROUP
-    CONTROL         "„Éï„É´„Çπ„ÇØ„É™„Éº„É≥",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,54,57,10
-    CONTROL         "„Ç¶„Ç£„É≥„Éâ„Ç¶",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,72,54,42,10
+    GROUPBOX        "âÊñ ê›íË",IDC_STATIC,6,42,234,48,WS_GROUP
+    CONTROL         "ÉtÉãÉXÉNÉäÅ[Éì",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,54,57,10
+    CONTROL         "ÉEÉBÉìÉhÉE",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,72,54,42,10
     COMBOBOX        IDC_COMBO1,120,52,114,96,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Êì¨‰ºº„Éï„É´„Çπ„ÇØ„É™„Éº„É≥",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,74,72,10
+    CONTROL         "ã[éóÉtÉãÉXÉNÉäÅ[Éì",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,74,72,10
     COMBOBOX        IDC_COMBO2,84,72,150,96,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "BGMÈü≥Èáè",IDC_STATIC,6,96,234,42,WS_GROUP
+    GROUPBOX        "BGMâπó ",IDC_STATIC,6,96,234,42,WS_GROUP
     CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | TBS_BOTH | WS_TABSTOP,12,108,222,24
-    GROUPBOX        "ÂäπÊûúÈü≥Èü≥Èáè",IDC_STATIC,6,144,234,42,WS_GROUP
+    GROUPBOX        "å¯â âπâπó ",IDC_STATIC,6,144,234,42,WS_GROUP
     CONTROL         "",IDC_SLIDER2,"msctls_trackbar32",TBS_AUTOTICKS | TBS_BOTH | WS_TABSTOP,12,156,222,24
-    GROUPBOX        "Áâå„ÅÆÁ®ÆÈ°û",IDC_STATIC,6,192,234,30,WS_GROUP
-    CONTROL         "ÈÄöÂ∏∏",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,204,32,10
-    CONTROL         "„Éñ„É©„ÉÉ„ÇØÁâå",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,108,204,45,10
+    GROUPBOX        "îvÇÃéÌóﬁ",IDC_STATIC,6,192,234,30,WS_GROUP
+    CONTROL         "í èÌ",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,12,204,32,10
+    CONTROL         "ÉuÉâÉbÉNîv",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,108,204,45,10
 END
 
 
@@ -144,7 +144,7 @@ BEGIN
     END
 END
 
-#endif    // Êó•Êú¨Ë™û (Êó•Êú¨) resources
+#endif    // ì˙ñ{åÍ (ì˙ñ{) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -19,7 +19,7 @@ namespace {
 
 /* BGM読み込み */
 void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
-	if (BGM_Mode.size() <= ID) BGM_Mode.resize(ID + 1, None);
+	if (BGM_Mode.size() <= static_cast<std::size_t>(ID)) BGM_Mode.resize(static_cast<std::size_t>(ID) + 1, None);
 	CodeConv::tostringstream o;
 	std::string oggfile = std::string("bgm\\") + std::string(filename) + std::string(".ogg");
 	std::string midifile = std::string("bgm\\") + std::string(filename) + std::string(".mid");

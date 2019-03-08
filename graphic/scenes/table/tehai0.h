@@ -13,8 +13,8 @@ using mihajong_structs::seatRelative;
 class ShowTehai {
 protected:
 	ShowTile* TileTexture;
-	static const unsigned int HandLength = 13;
-	static const int tileCursorOff = -3; // 手牌カーソル無効時
+	static constexpr unsigned int HandLength = 13;
+	static constexpr int tileCursorOff = -3; // 手牌カーソル無効時
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 		std::function<std::tuple<int, int> (seatRelative)> coordFunc,
 		seatRelative direction = (seatRelative)-1,

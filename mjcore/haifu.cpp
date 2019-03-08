@@ -94,19 +94,19 @@ void haifu::tools::recordDoraStream(CodeConv::tostringstream* const x, TileCode 
 /* 牌を記録する */
 void haifu::tools::recordTile_Inline(Tile tlCode, bool rotate) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
-		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Inline(Tile tlCode, doraCol kakanCol) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
-		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(kakanCol) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(kakanCol) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(kakanCol) << _T(" /><tile tile=\"") <<
-		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Table(Tile tlCode, CodeConv::tstring tagName, bool keepOpen) {
 	XhaifuBufferBody << _T('<') << tagName << _T(" tile=\"") <<
-		Xtilerefcode[static_cast<int>(tlCode.tile) + static_cast<int>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red);
 	if (!keepOpen) XhaifuBufferBody << _T(" />") << std::endl;
 }
