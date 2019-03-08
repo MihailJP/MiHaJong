@@ -31,7 +31,7 @@ public:
 	static bool chkRuleApplied(std::string RuleTag);
 	static int getRule(std::string RuleTag);
 	static int getRule(uint16_t RuleID);
-	static int getRuleSize(uint16_t RuleID);
+	static std::size_t getRuleSize(uint16_t RuleID);
 	static int loadConfigFile(const char* const filename);
 	static int saveConfigFile(const char* const filename);
 	static std::string getRuleMaskExpr(const std::string& RuleTag);

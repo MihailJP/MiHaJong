@@ -12,11 +12,11 @@ namespace mihajong_graphic {
 
 class GameTableScreen : public TableProtoScene {
 protected:
-	static const unsigned int TableSize = Geometry::BaseSize;
-	static const unsigned int TileThickness = ShowTile::HoriTileHeight - ShowTile::VertTileWidth;
-	static const unsigned int DeckChainLength = 17;
-	static const unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
-	static const unsigned int DeckPosV = (TableSize / 2) - 300;
+	static constexpr unsigned int TableSize = Geometry::BaseSize;
+	static constexpr unsigned int TileThickness = ShowTile::HoriTileHeight - ShowTile::VertTileWidth;
+	static constexpr unsigned int DeckChainLength = 17;
+	static constexpr unsigned int DeckPosH = (TableSize - ShowTile::VertTileWidth * (DeckChainLength - 1)) / 2;
+	static constexpr unsigned int DeckPosV = (TableSize / 2) - 300;
 	TexturePtr tBorder; // 卓の枠
 	TexturePtr tBaize; // 羅紗地
 	TextRenderer* myTextRenderer; // 文字表示

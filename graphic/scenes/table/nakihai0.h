@@ -13,14 +13,14 @@ private:
 protected:
 	ShowTile* TileTexture;
 protected:
-	virtual unsigned int MeldPosH() = 0;
-	virtual unsigned int MeldPosV() = 0;
-	virtual unsigned int MPosVVert() = 0;
-	virtual unsigned int MPosVHorU() = 0;
-	virtual unsigned int MPosVHorL() = 0;
-	virtual unsigned int MPosHVertR(unsigned p) {return MeldPosH() - ShowTile::VertTileWidth * p;}
-	virtual unsigned int MPosHVertL(unsigned p) {return MeldPosH() - ShowTile::VertTileWidth * (p - 1) - ShowTile::HoriTileHeight - 5;}
-	virtual unsigned int MPosHHor(unsigned p) {return MeldPosH() - ShowTile::VertTileWidth * (p - 1) - ShowTile::HoriTileHeight + 2;}
+	virtual const unsigned int MeldPosH() = 0;
+	virtual const unsigned int MeldPosV() = 0;
+	virtual const unsigned int MPosVVert() = 0;
+	virtual const unsigned int MPosVHorU() = 0;
+	virtual const unsigned int MPosVHorL() = 0;
+	virtual const unsigned int MPosHVertR(unsigned p) {return MeldPosH() - ShowTile::VertTileWidth * p;}
+	virtual const unsigned int MPosHVertL(unsigned p) {return MeldPosH() - ShowTile::VertTileWidth * (p - 1) - ShowTile::HoriTileHeight - 5;}
+	virtual const unsigned int MPosHHor(unsigned p) {return MeldPosH() - ShowTile::VertTileWidth * (p - 1) - ShowTile::HoriTileHeight + 2;}
 	virtual std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 		playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 		unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,

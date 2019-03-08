@@ -8,7 +8,7 @@ libmihajong_astro_la_LIBADD = ver.o
 endif
 libmihajong_astro_la_CFLAGS = -DASTRO_EXPORTS
 EXTRA_DIST = \
-	astro.vcxproj astro.vcxproj.filters astro.vcxproj.user
+	astro.vcxproj astro.vcxproj.filters
 if WITH_WINAPI
 libmihajong_astro_la_SOURCES += ver.rc
 else

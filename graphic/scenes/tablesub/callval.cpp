@@ -48,7 +48,7 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 			o << std::abs(c_val.Mantissa);
 			if      (c_val.Exponent == 4u) o << _T("00");
 			else if (c_val.Exponent == 3u) o << _T("0");
-			callLen = o.str().size();
+			callLen = static_cast<unsigned int>(o.str().size());
 		} else { // 青天ルール用
 			switch (c_val.Exponent % 4) {
 			case 0:
@@ -64,7 +64,7 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 				o << static_cast<int>(std::abs(c_val.Mantissa)) << _T('0');
 				break;
 			}
-			callLen = o.str().size() + 1u;
+			callLen = static_cast<unsigned int>(o.str().size()) + 1u;
 			o << digitName[c_val.Exponent / 4];
 		}
 	} else {

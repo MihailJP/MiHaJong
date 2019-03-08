@@ -1,9 +1,9 @@
 lib_LTLIBRARIES = libmihajong-graphic.la
 libmihajong_graphic_la_SOURCES = \
 	calltext.cpp chrwidth.cpp event.cpp finscore.cpp font.cpp gametbl.cpp \
-	geometry.cpp init.cpp input.cpp loadtex.cpp rule.cpp scrmanip.cpp \
-	showtile.cpp sprite.cpp text.cpp timer.cpp utils.cpp window.cpp \
-	yakustat.cpp \
+	geometry.cpp init.cpp input.cpp loadtex.cpp matrix.cpp rule.cpp
+	scrmanip.cpp  showtile.cpp sprite.cpp text.cpp timer.cpp utils.cpp \
+	window.cpp yakustat.cpp \
 	scenes/confmenu.cpp scenes/fps.cpp scenes/game.cpp scenes/proto.cpp \
 	scenes/result.cpp scenes/ruleconf.cpp scenes/splash.cpp \
 	scenes/sysscr.cpp scenes/table.cpp scenes/title.cpp scenes/waiting.cpp \
@@ -18,9 +18,9 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/tehai0.cpp scenes/table/tiletip.cpp scenes/table/yamahai.cpp \
 	widgets/button.cpp widgets/checkbox.cpp \
 	calltext.h chrwidth.h directx.h event.h exports.h extchar.h finscore.h \
-	font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h pi.h \
-	resource.h rule.h scrmanip.h showtile.h sprite.h text.h timer.h utils.h \
-	window.h yakustat.h \
+	font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h matrix.h \
+	pi.h resource.h rule.h scrmanip.h showtile.h sprite.h text.h timer.h \
+	utils.h  window.h yakustat.h \
 	scenes/confmenu.h scenes/fps.h scenes/game.h scenes/proto.h \
 	scenes/result.h scenes/ruleconf.h scenes/scenes.h \
 	scenes/splash.h scenes/scene_id.h scenes/sysscr.h scenes/table.h \
@@ -68,12 +68,12 @@ dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
 	data/clock.png \
-	data/dice.png data/editbox.png data/font.chr data/font.png data/frame.png \
+	data/dice.png data/font.chr data/font.png data/frame.png \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png
 EXTRA_DIST = \
-	graphic.vcxproj graphic.vcxproj.filters graphic.vcxproj.user
+	graphic.vcxproj graphic.vcxproj.filters
 if WITH_WINAPI
 libmihajong_graphic_la_SOURCES += graphic.rc
 EXTRA_DIST += filenum.cpp filenum.h keycode.h

@@ -30,12 +30,12 @@ mihastsm_CXXFLAGS =
 mihastsm_LDADD = ${libraries} ${richilib}
 
 EXTRA_DIST = \
-	mihajong.vcxproj mihajong.vcxproj.filters mihajong.vcxproj.user \
-	mihasanm.vcxproj mihasanm.vcxproj.filters mihasanm.vcxproj.user \
-	mihaysnm.vcxproj mihaysnm.vcxproj.filters mihaysnm.vcxproj.user \
-	mihassnm.vcxproj mihassnm.vcxproj.filters mihassnm.vcxproj.user \
-	mihastsm.vcxproj mihastsm.vcxproj.filters mihastsm.vcxproj.user \
-	mihagbmj.vcxproj mihagbmj.vcxproj.filters mihagbmj.vcxproj.user \
+	mihajong.vcxproj mihajong.vcxproj.filters \
+	mihasanm.vcxproj mihasanm.vcxproj.filters \
+	mihaysnm.vcxproj mihaysnm.vcxproj.filters \
+	mihassnm.vcxproj mihassnm.vcxproj.filters \
+	mihastsm.vcxproj mihastsm.vcxproj.filters \
+	mihagbmj.vcxproj mihagbmj.vcxproj.filters \
 	icons/mihajong.ico icons/mihasanm.ico icons/mihassnm.ico \
 	icons/mihaysnm.ico icons/mihagbmj.ico
 

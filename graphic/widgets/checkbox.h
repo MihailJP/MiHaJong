@@ -21,8 +21,8 @@ public:
 	CheckBox(const CheckBox&) = delete; // Delete unexpected copy constructor
 	CheckBox& operator= (const CheckBox&) = delete; // Delete unexpected assign operator
 	~CheckBox();
-	const size_t captionWidth() {return myTextRenderer->strWidthByCols(myCaption);}
-	const size_t captionWidthPx() {return myTextRenderer->strWidthByPix(myCaption);}
+	const unsigned int captionWidth() {return myTextRenderer->strWidthByCols(myCaption);}
+	const unsigned int captionWidthPx() {return myTextRenderer->strWidthByPix(myCaption);}
 	bool isChecked() {return checkFlag;}
 	bool isFocused() {return focused;}
 	void check(bool flag) {checkFlag = flag;}

@@ -67,5 +67,5 @@ void aiscript::FileSelector::filelist() {
 
 /* ファイルをランダムに選択 */
 std::string aiscript::FileSelector::randomfile() {
-	return files[RndNum::rnd(files.size())];
+	return files[RndNum::rnd(static_cast<unsigned int>(files.size()))];
 }

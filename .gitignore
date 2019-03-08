@@ -36,10 +36,6 @@ mjcore/lua/*.lib
 mjcore/lua/include
 sound/GuruGuruSMF/*
 !sound/GuruGuruSMF/README
-sound/libogg/*
-sound/libvorbis/*
-!sound/libogg/Readme.txt
-!sound/libvorbis/Readme.txt
 release
 *.zip
 *.7z

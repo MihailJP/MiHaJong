@@ -8,7 +8,7 @@ libmihajong_socket_la_LIBADD = ver.o
 endif
 libmihajong_socket_la_CXXFLAGS = -DSOCKET_EXPORTS
 EXTRA_DIST = \
-	socket.vcxproj socket.vcxproj.filters socket.vcxproj.user
+	socket.vcxproj socket.vcxproj.filters
 if WITH_WINAPI
 libmihajong_socket_la_SOURCES += ver.rc
 else

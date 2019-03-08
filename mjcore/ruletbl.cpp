@@ -175,7 +175,7 @@ int RuleData::getRule(std::string RuleTag) {
 int RuleData::getRule(uint16_t RuleID) { // ルール設定を取得する(旧仕様)
 	return ruleTableData.getRule(RuleID);
 }
-int RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
+std::size_t RuleData::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruleTableData.getRuleSize(RuleID);
 }
 

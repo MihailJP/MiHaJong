@@ -15,7 +15,7 @@ constexpr Scene::Region Scene::NullRegion = {0, 0, -1, -1};
 
 void Scene::setRegion(unsigned regionID, int Left, int Top, int Right, int Bottom) {
 	if (regions.size() <= regionID)
-		regions.resize(regionID + 1, NullRegion);
+		regions.resize(static_cast<std::size_t>(regionID) + 1, NullRegion);
 	regions[regionID].Left = Left;
 	regions[regionID].Top = Top;
 	regions[regionID].Right = Right;

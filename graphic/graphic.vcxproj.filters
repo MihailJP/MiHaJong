@@ -207,6 +207,9 @@
     <ClCompile Include="scenes\table\clock.cpp">
       <Filter>ソース ファイル\scenes\table</Filter>
     </ClCompile>
+    <ClCompile Include="matrix.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scrmanip.h">
@@ -466,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="..\common\scrmode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

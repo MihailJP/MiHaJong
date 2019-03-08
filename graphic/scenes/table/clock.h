@@ -10,11 +10,11 @@ class GameTableScreen::Clock {
 private:
 	GameTableScreen* parent;
 	TexturePtr myTexture;
-	void setClockMatrix(TransformMatrix* matrix, float angle = 0.0f);
+	TransformMatrix setClockMatrix(float angle = 0.0f);
 private:
 	static int clockPosX;
 	static int clockPosY;
-	static const unsigned clockDiameter = 512u;
+	static constexpr unsigned clockDiameter = 512u;
 	static unsigned scaledClockDiameter;
 private:
 	void renderMoon();

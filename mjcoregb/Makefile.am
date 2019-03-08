@@ -70,7 +70,7 @@ dist_pkgdata_DATA = \
 nodist_pkgdata_DATA = \
 	../mjcore/data/confitem.csv.lzma ../mjcore/data/confitem.ini.lzma ../mjcore/data/rankval.csv.lzma
 EXTRA_DIST = \
-	mjcoregb.vcxproj mjcoregb.vcxproj.filters mjcoregb.vcxproj.user \
+	mjcoregb.vcxproj mjcoregb.vcxproj.filters \
 	../mjcore/lua/README \
 	../mjcore/data/confitem.csv ../mjcore/data/confitem.ini ../mjcore/data/rankval.csv
 if WITH_WINAPI

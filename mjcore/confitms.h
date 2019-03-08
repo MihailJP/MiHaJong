@@ -71,7 +71,7 @@ public:
 	bool chkRuleApplied(std::string RuleTag);
 	inline int getRule(std::string RuleTag) {return Rules[RuleTag];}
 	int getRule(uint16_t RuleID);
-	int getRuleSize(uint16_t RuleID);
+	std::size_t getRuleSize(uint16_t RuleID);
 public:
 	void getRuleName(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
 	void getRuleDescription(LPTSTR const txt, unsigned bufsize, uint16_t RuleID);
@@ -235,7 +235,7 @@ CONFDAT_TEMPLATE bool CONFDAT_CLASS::chkRuleApplied(std::string RuleTag) { // �
 CONFDAT_TEMPLATE int CONFDAT_CLASS::getRule(uint16_t RuleID) { // ルール設定を取得する(旧仕様)
 	return Rules[nametbl[RuleID]];
 }
-CONFDAT_TEMPLATE int CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
+CONFDAT_TEMPLATE std::size_t CONFDAT_CLASS::getRuleSize(uint16_t RuleID) { // ルール項目のアイテム数
 	return ruletags[nametbl[RuleID]].size();
 }
 
@@ -334,7 +334,7 @@ CONFDAT_TEMPLATE int CONFDAT_CLASS::loadConfigFile(const char* const filename) {
 			INIParser::parseini(config_ini, fromUTF8(filedat).c_str()); // INIをパースする
 			for (int i = 0; i < Lines; i++) { // 初期化
 				memset(ruleConf[i], 0, LineBatch + 1);
-				if (((i + 1) * Lines) > NumOfItems)
+				if (((static_cast<std::size_t>(i) + 1) * Lines) > NumOfItems)
 					memset(ruleConf[i], _T('-'), NumOfItems % LineBatch);
 				else
 					memset(ruleConf[i], _T('-'), LineBatch);

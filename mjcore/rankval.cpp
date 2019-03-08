@@ -24,7 +24,7 @@ RankVal::RankVal() {
 		RankValSet values;
 		for (int j = 0; j < Players + 1; ++j)
 			for (int k = 0; k < Players - 1; ++k)
-				values[j][k] = _ttoi(parsedCsv[i][j * (Players - 1) + k + 1].c_str());
+				values[j][k] = _ttoi(parsedCsv[i][static_cast<std::size_t>(j) * (Players - 1) + k + 1].c_str());
 		const std::string key(CodeConv::toANSI(parsedCsv[i][0]));
 		rankValueMap.insert(std::make_pair(key, values));
 	}

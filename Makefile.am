@@ -3,16 +3,14 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = astro socket sound graphic mjcore mjcoregb mihajong
 EXTRA_DIST = \
 	auxtools/auxtools.vcxproj auxtools/auxtools.vcxproj.filters \
-	auxtools/auxtools.vcxproj.user auxtools/compress.py auxtools/compress.rb \
+	auxtools/compress.py auxtools/compress.rb \
 	auxtools/Makefile.nmake auxtools/md2html.py auxtools/rulesyms.rb \
 	common/*.h \
 	data \
-	dist/dist.vcxproj dist/dist.vcxproj.filters dist/dist.vcxproj.user \
-	dist/Makefile.nmake \
+	dist/dist.vcxproj dist/dist.vcxproj.filters dist/Makefile.nmake \
 	doc/Makefile \
 	logger/logger.cpp logger/logger.h logger/logger.vcxproj \
-	logger/logger.vcxproj.filters logger/logger.vcxproj.user \
-	logger/resource.h logger/ver.rc \
+	logger/logger.vcxproj.filters logger/resource.h logger/ver.rc \
 	mentzdat \
 	mihajong.sln
 dist_doc_DATA = \
