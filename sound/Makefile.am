@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libmihajong-sound.la
 libmihajong_sound_la_SOURCES = \
 	logger.cpp midi.cpp snddata.cpp sound.cpp soundobj.cpp vorbis.cpp wave.cpp \
-	audio.h logger.h midi.h resource.h snddata.h sound.h soundobj.h vorbis.h wave.h
+	audioobj.h logger.h midi.h resource.h snddata.h sound.h soundobj.h vorbis.h wave.h
 if WITH_WINAPI
 if MIDI_SUPPORT
 nodist_libmihajong_sound_la_SOURCES = \
