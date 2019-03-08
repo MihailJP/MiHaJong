@@ -138,6 +138,7 @@ void haifu::haifubufinit() {
 	CodeConv::tostringstream headerTxt; headerTxt.str(_T(""));
 	headerTxt << _T("MiHaJong ");
 	switch (GameStat.gameType) {
+		case SanmaSeto: headerTxt << _T("瀬戸内三麻"); break;
 		case SanmaS:    headerTxt << _T("数牌三麻"); break;
 		case Sanma4:    headerTxt << _T("四人三麻"); break;
 		case Sanma:     headerTxt << _T("三人打ち"); break;
@@ -179,6 +180,7 @@ void haifu::haifubufinit() {
 		GameStat.chkGameType(Sanma) ? _T("sanma") :
 		GameStat.chkGameType(Sanma4) ? _T("sanma-4players") :
 		GameStat.chkGameType(SanmaS) ? _T("sanma-numerals") :
+		GameStat.chkGameType(SanmaSeto) ? _T("sanma-setouchi") :
 		GameStat.chkGameType(GuobiaoMJ) ? _T("guobiao") : _T(""))
 		<< _T("\">") << std::endl;
 	RuleData::forEachRule([&](std::string key, std::string val) -> void {
@@ -883,6 +885,7 @@ void haifu::haifusave(const GameTable* const gameStat) {
 		case Sanma: filename1 << "mihasanm"; break;
 		case Sanma4: filename1 << "mihaysnm"; break;
 		case SanmaS: filename1 << "mihassnm"; break;
+		case SanmaSeto: filename1 << "mihastsm"; break;
 		case GuobiaoMJ: filename1 << "mihagbmj"; break;
 	}
 	filename1 << "_" << MIHAJONG_MAJOR_VER << "_" <<

@@ -37,6 +37,9 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	case SanmaS:
 		configFile = confpath::confPath() + "mihassnm.ini";
 		break;
+	case SanmaSeto:
+		configFile = confpath::confPath() + "mihastsm.ini";
+		break;
 	}
 
 #ifdef _WIN32 /* Windows版でのみ実装 */
