@@ -48,7 +48,7 @@
 37,23,8,"chk('ankan_conceal', 'closed')",,,,,ankan_chankan,暗槓の搶槓,暗槓の牌で国士無双を和了れるかを設定します,yes,no,,,,,,,,,,,,,,,,,,
 38,31,0,,,,,,kakan_furiten,加槓牌の振聴,加槓した牌を振聴の対象とみなすかを設定します,no,yes,,,,,,,,,,,,,,,,,,
 39,26,1,,,,,,tsumo_payment,自摸和了の点数,ツモ和了りの点数の負担方法を設定します,fifty_fifty,>>>,north_segment_omitted,add_1000,adjusted_payment,north_segment_halved,,,,,,,,,,,,,,
-39,20,1,,,,,,tsumo_payment,自摸和了の点数,ツモ和了りの点数の負担方法を設定します,same_as_yonma,fifty_fifty,north_segment_omitted,add_1000,adjusted_payment,north_segment_halved,,,,,,,,,,,,,,
+39,4,1,,,,,,tsumo_payment,自摸和了の点数,ツモ和了りの点数の負担方法を設定します,same_as_yonma,fifty_fifty,north_segment_omitted,add_1000,adjusted_payment,north_segment_halved,,,,,,,,,,,,,,
 40,31,0,,基本のルール設定②,,,,minkan_penalty,大明槓罰符,大明槓をすると1000点供託しなければならないかを設定します,no,yes,,,,,,,,,,,,,,,,,,
 41,31,0,,,,,,kataagari,片和り,縛りを満たさない待ちがあっても他の待ちで和了れるか(後付けの可否)を設定します,yes,no,,,,,,,,,,,,,,,,,,
 60,31,0,,,,,,starting_point_mantissa_tens,配給原点(仮数部甲),ユーザー設定の配給原点を設定します(十の位),2,3,4,5,6,7,8,9,0,1,,,,,,,,,,
