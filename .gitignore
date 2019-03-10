@@ -48,6 +48,7 @@ ipch/
 *.sdf
 *.opensdf
 *.suo
+*.vcxproj.user
 INSTALL
 Makefile.in
 aclocal.m4
