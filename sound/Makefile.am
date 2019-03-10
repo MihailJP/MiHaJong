@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libmihajong-sound.la
 libmihajong_sound_la_SOURCES = \
 	logger.cpp midi.cpp snddata.cpp sound.cpp soundobj.cpp vorbis.cpp wave.cpp \
-	audio.h logger.h midi.h resource.h snddata.h sound.h soundobj.h vorbis.h wave.h
+	audioobj.h logger.h midi.h resource.h snddata.h sound.h soundobj.h vorbis.h wave.h
 if WITH_WINAPI
 if MIDI_SUPPORT
 nodist_libmihajong_sound_la_SOURCES = \
@@ -21,7 +21,7 @@ if WITH_DIRECTX
 libmihajong_sound_la_CXXFLAGS += -DWITH_DIRECTX
 endif
 EXTRA_DIST = \
-	sound.vcxproj sound.vcxproj.filters sound.vcxproj.user \
+	sound.vcxproj sound.vcxproj.filters \
 	GuruGuruSMF/README libogg/Readme.txt libvorbis/Readme.txt
 if WITH_WINAPI
 libmihajong_sound_la_SOURCES += ver.rc
