@@ -53,30 +53,22 @@ void sound::SoundManipulator::InitXAudio(Window hWnd)
 #endif /* USE_XAUDIO2 */
 }
 
-sound::SoundManipulator::SoundManipulator() {
-	mVoice = nullptr;
-	xAudio = nullptr;
-	InitXAudio();
-#if defined(MIDI_SUPPORT) && defined(_WIN32)
-	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
-		throw CodeConv::tstring(_T("GGSINITIALIZE失敗！！"));
-	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, nullptr))
-		throw CodeConv::tstring(_T("GGS->OpenDevice失敗！！"));
-#endif
-}
 #ifdef _WIN32
-sound::SoundManipulator::SoundManipulator(HWND hWnd)
+sound::SoundManipulator::SoundManipulator(int device, HWND hWnd)
 #else /* _WIN32 */
-sound::SoundManipulator::SoundManipulator(Window hWnd)
+sound::SoundManipulator::SoundManipulator(int device, Window hWnd)
 #endif /* _WIN32 */
 {
 	mVoice = nullptr;
 	xAudio = nullptr;
-	InitXAudio(hWnd);
+	if (hWnd)
+		InitXAudio(hWnd);
+	else
+		InitXAudio();
 #if defined(MIDI_SUPPORT) && defined(_WIN32)
 	if (GGSINITIALIZE() != GuruGuruSmf::GgsError::NoError)
 		throw CodeConv::tstring(_T("GGSINITIALIZE失敗！！"));
-	if (GGS->OpenDevice(GuruGuruSmf::Device::DirectMusic, hWnd))
+	if (GGS->OpenDevice(device, hWnd))
 		throw CodeConv::tstring(_T("GGS->OpenDevice失敗！！"));
 #endif
 }

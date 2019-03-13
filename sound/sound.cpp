@@ -3,11 +3,33 @@
 #include <string>
 #include <sstream>
 #include "../common/strcode.h"
+#include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
 
 sound::SoundManipulator* sound::soundManipulator = nullptr;
 
-SOUNDDLL_EXPORT int sound::Initialize() try {
-	soundManipulator = new SoundManipulator();
+namespace {
+
+#if defined(_WIN32) && defined(MIDI_SUPPORT)
+int deviceID(const CodeConv::tstring& deviceName) {
+	const UINT numOfDevs(midiOutGetNumDevs());
+	MIDIOUTCAPS midiOutCaps{};
+
+	for (int i = 0; i < numOfDevs; ++i) {
+		if (midiOutGetDevCaps(i, &midiOutCaps, sizeof midiOutCaps) == MMSYSERR_NOERROR) {
+			if (deviceName == CodeConv::lower(midiOutCaps.szPname)) return i;
+		}
+	}
+
+	return GuruGuruSmf::Device::DirectMusic;
+}
+#endif /* defined(_WIN32) && defined(MIDI_SUPPORT) */
+
+}
+
+SOUNDDLL_EXPORT int sound::Initialize(LPCTSTR midiDev) try {
+	const CodeConv::tstring devName(midiDev ? midiDev : _T(""));
+	const auto dev(deviceID(devName));
+	soundManipulator = new SoundManipulator(dev);
 	return 0;
 } catch (CodeConv::tstring& e) {
 	error(e.c_str());
@@ -15,12 +37,14 @@ SOUNDDLL_EXPORT int sound::Initialize() try {
 }
 
 #ifdef _WIN32
-SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd)
+SOUNDDLL_EXPORT int sound::Initialize(HWND hWnd, LPCTSTR midiDev)
 #else /* _WIN32 */
-SOUNDDLL_EXPORT int sound::Initialize(Window hWnd)
+SOUNDDLL_EXPORT int sound::Initialize(Window hWnd, LPCTSTR midiDev)
 #endif /* _WIN32 */
 try {
-	soundManipulator = new SoundManipulator(hWnd);
+	const CodeConv::tstring devName(midiDev ? midiDev : _T(""));
+	const auto dev(deviceID(devName));
+	soundManipulator = new SoundManipulator(dev, hWnd);
 	return 0;
 } catch (CodeConv::tstring& e) {
 	error(e.c_str());
