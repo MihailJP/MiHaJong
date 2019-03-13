@@ -11,13 +11,6 @@
 namespace ConfigFile {
 
 typedef std::basic_regex<TCHAR> tregex;
-CodeConv::tstring lower(const CodeConv::tstring& str) {
-	CodeConv::tstring result;
-	for (auto i = str.begin(); i != str.end(); ++i) {
-		result += std::tolower(*i, std::locale::classic());
-	}
-	return result;
-}
 
 /* コンフィグのパス */
 std::string ConfigFile::confPath() {
@@ -83,6 +76,7 @@ void ConfigFile::save() {
 	file << _T("; 有効なIPv6またはIPv4アドレス、もしくはホスト名(DNS名前解決されます)。\n");
 	file << _T("; IPv4アドレスを指定時はIPv4-mapped IPv6に変換されます。\n");
 	file << _T("server=") << configMap[_T("preferences")][_T("server")] << _T("\n\n");
+#ifdef _WIN32
 	file << _T("; フルスクリーン/ウィンドウの別\n");
 	file << _T("; Windows版のみ。Linux版では無視されます。\n");
 	file << _T("; フルスクリーンにするには、\"fullscreen\"を、\n");
@@ -90,17 +84,25 @@ void ConfigFile::save() {
 	file << _T("; なお、\"borderless\"を指定すると、ウィンドウを全画面に表示します。\n");
 	file << _T("; デフォルトではウィンドウモードです。\n");
 	file << _T("screen=") << configMap[_T("preferences")][_T("screen")] << _T("\n\n");
+#endif /* _WIN32 */
 	file << _T("; ウィンドウサイズ/解像度\n");
 	file << _T("; ウィンドウモードではウィンドウサイズ、フルスクリーンでは解像度を設定します。\n");
 	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga\n");
 	file << _T("; screenが\"borderless\"のときは無視されます。\n");
 	file << _T("scrsize=") << configMap[_T("preferences")][_T("scrsize")] << _T("\n\n");
+#ifdef _WIN32
 	file << _T("; モニタ番号\n");
 	file << _T("; Windows版のみ。Linux版では無視されます。\n");
 	file << _T("; 使用するモニタの番号を指定します。\n");
 	file << _T("; 番号は1から始まります。\n");
 	file << _T("; screenが\"fullscreen\"のときは無視されます。\n");
 	file << _T("monitor=") << configMap[_T("preferences")][_T("monitor")] << _T("\n\n");
+	file << _T("; MIDIデバイス名\n");
+	file << _T("; Windows版のみ。Linux版では無視されます。\n");
+	file << _T("; 使用するMIDIデバイスの名前を指定します。\n");
+	file << _T("; 存在しないデバイス名が指定された場合はDirectSoundが使用されます。\n");
+	file << _T("midi=") << configMap[_T("preferences")][_T("midi")] << _T("\n\n");
+#endif /* _WIN32 */
 	file << _T("; BGM音量\n");
 	file << _T("; 0～100の数値を指定してください。\n");
 	file << _T("bgmvolume=") << configMap[_T("preferences")][_T("bgmvolume")] << _T("\n\n");
@@ -259,6 +261,14 @@ unsigned int ConfigFile::monitorNumber() {
 }
 void ConfigFile::monitorNumber(unsigned int val) {
 	configMap[_T("preferences")][_T("monitor")] = to_tstring(val);
+}
+
+/* MIDIデバイス名 */
+CodeConv::tstring ConfigFile::midiDevice() {
+	return configMap[_T("preferences")][_T("midi")];
+}
+void ConfigFile::midiDevice(const CodeConv::tstring& name) {
+	configMap[_T("preferences")][_T("midi")] = name;
 }
 
 /* BGM音量 */

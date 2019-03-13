@@ -137,11 +137,16 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	controls[IDC_COMBO2]->enable(confFile.scrMode() != ScreenMode::scrModeFullscreen);
 
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO3])->set(0);
+	for (size_t i = 0; i < midiDeviceList.size(); ++i) {
+		if (confFile.midiDevice() == CodeConv::lower(midiDeviceList.at(i)))
+			dynamic_cast<ComboBox*>(controls[IDC_COMBO3])->set(i);
+	}
 }
 
 void ConfigDialog::okButtonPressed() {
 	using namespace ControlWrapper;
 
+	const auto midiDeviceList(midiDevices());
 
 	if (dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->get())
 		confFile.scrMode(ScreenMode::scrModeFullscreen);
@@ -151,6 +156,11 @@ void ConfigDialog::okButtonPressed() {
 		confFile.scrMode(ScreenMode::scrModeWindowed);
 	confFile.blackTile(dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->get());
 	confFile.playerName(dynamic_cast<TextBox*>(controls[IDC_EDIT2])->get());
+	try {
+		confFile.midiDevice(midiDeviceList.at(dynamic_cast<ComboBox*>(controls[IDC_COMBO3])->get()));
+	} catch (std::out_of_range&) {
+		confFile.midiDevice(_T(""));
+	}
 	confFile.bgmVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER1])->get() * 5);
 	confFile.soundVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER2])->get() * 5);
 	confFile.screenResolution(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->get()));

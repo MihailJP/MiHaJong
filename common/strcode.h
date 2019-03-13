@@ -38,6 +38,7 @@ typedef const char* LPCTSTR;
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <locale>
 
 #ifdef UNICODE
 #define PON L"碰"
@@ -233,6 +234,14 @@ auto split(const std::basic_string<CharT>& str, CharT delimiter) {
 }
 template<class CharT> auto split(const CharT* str, CharT delimiter) {
 	return split(std::basic_string<CharT>(str), delimiter);
+}
+
+inline tstring lower(const CodeConv::tstring& str) {
+	tstring result;
+	for (auto i = str.begin(); i != str.end(); ++i) {
+		result += std::tolower(*i, std::locale::classic());
+	}
+	return result;
 }
 
 }
