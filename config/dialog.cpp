@@ -1,6 +1,10 @@
-﻿#include "dialog.h"
+﻿#define NOMINMAX
+#include "dialog.h"
 #include <WinUser.h>
 #include <cassert>
+#include <Windows.h>
+
+#pragma comment(lib, "Winmm.lib")
 
 namespace DialogWrapper {
 
@@ -69,6 +73,20 @@ std::vector<tstring> monitors() {
 	return monitorList;
 }
 
+std::vector<tstring> midiDevices() {
+	std::vector<tstring> deviceList{_T("DirectSound")};
+	const UINT numOfDevs(midiOutGetNumDevs());
+	MIDIOUTCAPS midiOutCaps{};
+
+	for (unsigned int i = 0; i < numOfDevs; ++i) {
+		if (midiOutGetDevCaps(i, &midiOutCaps, sizeof midiOutCaps) == MMSYSERR_NOERROR) {
+			deviceList.push_back(midiOutCaps.szPname);
+		}
+	}
+
+	return deviceList;
+}
+
 void ConfigDialog::initWrapper(HWND hWnd) {
 	using namespace ControlWrapper;
 
@@ -84,6 +102,8 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 
 	const auto monitorList(monitors());
 
+	const auto midiDeviceList(midiDevices());
+
 	controls.emplace(IDC_EDIT2, new TextBox(hWnd, IDC_EDIT2, 32));
 	controls.emplace(IDC_EDIT3, new TextBox(hWnd, IDC_EDIT3, 64));
 	controls.emplace(IDC_RADIO1, new RadioButton(hWnd, IDC_RADIO1));
@@ -95,6 +115,7 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	controls.emplace(IDC_SLIDER2, new Slider(hWnd, IDC_SLIDER2, 0, 20, 5));
 	controls.emplace(IDC_COMBO1, new ComboBox(hWnd, IDC_COMBO1, resolutionList));
 	controls.emplace(IDC_COMBO2, new ComboBox(hWnd, IDC_COMBO2, monitorList));
+	controls.emplace(IDC_COMBO3, new ComboBox(hWnd, IDC_COMBO3, midiDeviceList));
 
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.scrMode() == ScreenMode::scrModeFullscreen);
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set(confFile.scrMode() == ScreenMode::scrModeWindowed);
@@ -114,6 +135,8 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 
 	controls[IDC_COMBO1]->enable(confFile.scrMode() != ScreenMode::scrModeBorderless);
 	controls[IDC_COMBO2]->enable(confFile.scrMode() != ScreenMode::scrModeFullscreen);
+
+	dynamic_cast<ComboBox*>(controls[IDC_COMBO3])->set(0);
 }
 
 void ConfigDialog::okButtonPressed() {
