@@ -51,6 +51,15 @@ Copyright (c) 2008-2013, 2019 MihailJP
 　参照：[http://gutenberg.sourceforge.jp/ja/license.html](http://gutenberg.sourceforge.jp/ja/license.html)
 
 
+焼き鳥マークの画像について
+------------------------
+　焼き鳥マークの画像は、Openclipart の [Yakitori Sticks](https://openclipart.org/detail/210764/yakitori-sticks)
+をもとに加工したものです。
+　Openclipart で公開されているクリップアートは、すべてパブリックドメインにあります。
+
+参照：[https://openclipart.org/share](https://openclipart.org/share)
+
+
 時計の文字盤画像について
 ------------------------
 　時計の文字盤に使用した写真は、2011年3月19日にドイツで撮影された満月の写真であり、 
