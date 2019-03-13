@@ -46,6 +46,7 @@ public:
 	unsigned int bgmVolume(); void bgmVolume(unsigned int);
 	unsigned int soundVolume(); void soundVolume(unsigned int);
 	unsigned int monitorNumber(); void monitorNumber(unsigned int);
+	CodeConv::tstring midiDevice(); void midiDevice(const CodeConv::tstring&);
 	ScreenConfig screenResolution(); void screenResolution(ScreenConfig);
 	unsigned int screenResolutionX(); unsigned int screenResolutionY();
 	CodeConv::tstring serverAddress(); void serverAddress(const CodeConv::tstring&);
