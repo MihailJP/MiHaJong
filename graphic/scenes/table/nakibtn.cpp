@@ -342,7 +342,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		sound::Play(sound::IDs::sndCuohu);
 	} else if (this->getButtonSet() == btnSetTsumo) {
 		auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {
-			tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile = NoTile;
+			tmpStat->statOfActive().Hand[i].tile = NoTile;
 			Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
 			return (shanten > 0);
 		};
@@ -362,19 +362,19 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnKan: // カン
 			setMode(DiscardTileNum::Ankan, btnKan,
 				[](int i, GameTable* tmpStat) -> bool {
-					if ((tmpStat->statOfMine().RichiFlag.RichiFlag) && (i != TsumohaiIndex))
-						return false; // リーチ時は自摸牌以外選択できないようにする
+					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
+						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
 					bool flag = false;
 					const PlayerID ActivePlayer = tmpStat->CurrentPlayer.Active;
 					const Int8ByTile TileCount = utils::countTilesInHand(tmpStat, ActivePlayer);
-					const PlayerTable* const playerStat = &(tmpStat->Player[ActivePlayer]);
-					if (TileCount[playerStat->Hand[i].tile] < 4) flag = true;
-					if (TileCount[playerStat->Hand[i].tile] == 1) {
-						for (int j = 1; j <= playerStat->MeldPointer; ++j)
-							if ((playerStat->Meld[j].tile == playerStat->Hand[i].tile) &&
-								((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
-								(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
-								(playerStat->Meld[j].mstat == meldTripletExposedRight)))
+					const PlayerTable& playerStat = tmpStat->statOfActive();
+					if (TileCount[playerStat.Hand[i].tile] < 4) flag = true;
+					if (TileCount[playerStat.Hand[i].tile] == 1) {
+						for (int j = 1; j <= playerStat.MeldPointer; ++j)
+							if ((playerStat.Meld[j].tile == playerStat.Hand[i].tile) &&
+								((playerStat.Meld[j].mstat == meldTripletExposedLeft) ||
+								(playerStat.Meld[j].mstat == meldTripletExposedCenter) ||
+								(playerStat.Meld[j].mstat == meldTripletExposedRight)))
 								flag = false;
 					}
 					return flag;
@@ -383,13 +383,13 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnFlower: // 花牌
 			setMode(DiscardTileNum::Flower, btnFlower,
 				[](int i, GameTable* tmpStat) -> bool {
-					if ((tmpStat->statOfMine().RichiFlag.RichiFlag) && (i != TsumohaiIndex))
-						return false; // リーチ時は自摸牌以外選択できないようにする
+					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
+						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
 					if (tmpStat->gameType & SanmaX)
-						return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile !=
+						return tmpStat->statOfActive().Hand[i].tile !=
 							NorthWind;
 					else
-						return tmpStat->Player[tmpStat->CurrentPlayer.Active].Hand[i].tile <
+						return tmpStat->statOfActive().Hand[i].tile <
 							TileSuitFlowers;
 				});
 			break;
