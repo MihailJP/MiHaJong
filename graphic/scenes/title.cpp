@@ -132,6 +132,7 @@ void TitleScreen::versionInfo() {
 		case Sanma:     color = 0x008080ff; gameTypeText = _T("三人打ち"); break;
 		case Sanma4:    color = 0x0080ffff; gameTypeText = _T("四人三麻"); break;
 		case SanmaS:    color = 0x00ff80ff; gameTypeText = _T("数牌三麻"); break;
+		case SanmaSeto: color = 0x00ffffff; gameTypeText = _T("瀬戸内三麻"); break;
 		case GuobiaoMJ: color = 0x00ffff80; gameTypeText = _T("国標麻将"); break;
 		default: assert(false); // This may not occur.
 	}

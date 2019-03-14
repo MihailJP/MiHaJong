@@ -33,8 +33,13 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 	}
 	for (unsigned int k = 1u; k <= 9u; ++k)
 		settile(static_cast<TileCode>(TileSuitCircles + k), p); // 筒子
-	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
+	if (gameStat->chkGameType(SanmaSeto)) {
+		settile(BambooOne, p); // 索子
+		settile(BambooNine, p); // 索子
+	} else {
+		for (unsigned int k = 1u; k <= 9u; ++k)
+			settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
+	}
 	if (!gameStat->chkGameType(SanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
 			settile(static_cast<TileCode>(TileSuitHonors + k), p); // 字牌
