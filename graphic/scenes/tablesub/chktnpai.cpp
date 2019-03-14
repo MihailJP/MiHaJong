@@ -45,7 +45,8 @@ void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
 		ShowCallMsg(player, calltext::Tenpai, x, y - 40);
 	else if (GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag)
 		ShowCallMsg(player, calltext::Chonbo, x, y); // ノーテンリーチしてた場合は錯和と表示
-	else ShowCallMsg(player, calltext::Noten, x, y); // 不聴
+	else if (GameStatus::gameStat()->Player[player].Hand[0].tile != NoTile) // 配牌をもらっていない場合は除外
+		ShowCallMsg(player, calltext::Noten, x, y); // 不聴
 }
 
 void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {
