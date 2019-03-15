@@ -146,6 +146,8 @@ inline void aiscript::table::functable::gametype(lua_State* const L) {
 	else if (GameStat.chkGameType(Sanma)) lua_pushstring(L, "sanma");
 	else if (GameStat.chkGameType(Sanma4)) lua_pushstring(L, "sanma_with_four_players");
 	else if (GameStat.chkGameType(SanmaS)) lua_pushstring(L, "sanma_without_honors");
+	else if (GameStat.chkGameType(SanmaSeto)) lua_pushstring(L, "sanma_setouchi");
+	else if (GameStat.chkGameType(GuobiaoMJ)) lua_pushstring(L, "guobiao");
 	else lua_pushnil(L);
 	lua_setfield(L, -2, "gametype");
 }

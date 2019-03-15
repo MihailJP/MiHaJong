@@ -801,6 +801,7 @@ Lua標準ライブラリの `math.random` (これはC言語のrand()です)よ�
 - `"sanma"`: 三人打ち。
 - `"sanma_with_four_players"`: 四人三麻。
 - `"sanma_without_honors"`: 数牌三麻。
+- `"sanma_setouchi"`: 瀬戸内三麻。
 - `"guobiao"`: 中国麻雀。
 
 
