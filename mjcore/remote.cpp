@@ -39,6 +39,7 @@ void RemoteDahai::startthread(RemoteDahai* inst) {
 	inst->thread();
 }
 void RemoteDahai::thread () {
+begin:
 	int ReceivedMsg;
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		volatile int ClientReceived = 0;
@@ -109,7 +110,16 @@ void RemoteDahai::thread () {
 	}
 	{
 		using namespace mihajong_socket::protocol;
-		if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
+		if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
+			moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			goto begin;
+		} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
+			moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			goto begin;
+		} else if (ReceivedMsg == Lipai_Reset) {
+			lipai(gameStat, gameStat->CurrentPlayer.Active);
+			goto begin;
+		} else if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Ankan_Offset) && (ReceivedMsg < (Dahai_Type_Ankan_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
@@ -155,6 +165,7 @@ void RemoteNaki::startthread(RemoteNaki* inst) {
 void RemoteNaki::thread_client() {
 	int ReceivedMsg; volatile int ClientReceived = 0;
 	for (int tmp = 0; tmp < ACTUAL_PLAYERS; tmp++) {
+begin:
 		while (true) {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
@@ -163,6 +174,16 @@ void RemoteNaki::thread_client() {
 		}
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
+			if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
+				moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				goto begin;
+			} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
+				moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				goto begin;
+			} else if (ReceivedMsg == Lipai_Reset) {
+				lipai(gameStat, tmp);
+				goto begin;
+			}
 			switch (ReceivedMsg) {
 			case Naki_Ron:
 				gameStat->Player[tmp].DeclarationFlag.Ron = true;

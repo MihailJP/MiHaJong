@@ -50,6 +50,16 @@ bool isYaojiu(TileCode code) {
 	return ans;
 }
 
+/* 手牌データをデバッグログに出力 */
+static void logHand(const CodeConv::tstring& label , GameTable* const gameStat, PlayerID targetPlayer) {
+	CodeConv::tostringstream o;
+	o.str(_T("")); o << label << _T(" [");
+	for (int i = 0; i < NumOfTilesInHand; i++)
+		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
+		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
+	o << _T("]"); trace(o.str());
+}
+
 /* 理牌する */
 void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	// 理牌する
@@ -58,11 +68,7 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	o.str(_T("")); o << _T("理牌を行います。プレイヤー [") << static_cast<int>(targetPlayer) << _T("]"); debug(o.str());
 
 	/* 手牌データをデバッグログに出力：ビフォー */
-	o.str(_T("")); o << _T("理牌前の手牌 [");
-	for (int i = 0; i < NumOfTilesInHand; i++)
-		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
-		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
-	o << _T("]"); trace(o.str());
+	logHand(_T("理牌前の手牌"), gameStat, targetPlayer);
 
 	/* ソートの準備として牌のない枠を処理 */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
@@ -78,21 +84,18 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 		for (int j = i + 1; j < NumOfTilesInHand; j++) {
 			if (gameStat->Player[targetPlayer].Hand[i].tile >
 				gameStat->Player[targetPlayer].Hand[j].tile) {
-					/* Tile構造体はPODだから、memcpyしちゃってもいいよね？ */
-					memcpy(&tmpTile, &(gameStat->Player[targetPlayer].Hand[i]), sizeof(Tile));
-					memcpy( &(gameStat->Player[targetPlayer].Hand[i]),
-						&(gameStat->Player[targetPlayer].Hand[j]), sizeof(Tile));
-					memcpy(&(gameStat->Player[targetPlayer].Hand[j]), &tmpTile, sizeof(Tile));
+					tmpTile = gameStat->Player[targetPlayer].Hand[i],
+						gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[j],
+						gameStat->Player[targetPlayer].Hand[j] = tmpTile;
 			}
 			else if ((gameStat->Player[targetPlayer].Hand[i].tile ==
 				gameStat->Player[targetPlayer].Hand[j].tile) &&
 				(gameStat->Player[targetPlayer].Hand[i].red <
 				gameStat->Player[targetPlayer].Hand[j].red)) {
 					/* 同じ種類の牌でも赤ドラかそうでないかで並べ替える */
-					memcpy(&tmpTile, &(gameStat->Player[targetPlayer].Hand[i]), sizeof(Tile));
-					memcpy( &(gameStat->Player[targetPlayer].Hand[i]),
-						&(gameStat->Player[targetPlayer].Hand[j]), sizeof(Tile));
-					memcpy(&(gameStat->Player[targetPlayer].Hand[j]), &tmpTile, sizeof(Tile));
+					tmpTile = gameStat->Player[targetPlayer].Hand[i],
+						gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[j],
+						gameStat->Player[targetPlayer].Hand[j] = tmpTile;
 			}
 		}
 	}
@@ -106,13 +109,48 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	}
 
 	/* 手牌データをデバッグログに出力：アフター */
-	o.str(_T("")); o << _T("理牌後の手牌 [");
-	for (int i = 0; i < NumOfTilesInHand; i++)
-		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
-		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
-	o << _T("]"); trace(o.str());
+	logHand(_T("理牌後の手牌"), gameStat, targetPlayer);
 
 	/* 理牌完了！ */
+	return;
+}
+
+/* 手動理牌処理 */
+void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, int tileIndex) {
+	static int index = 0;
+
+	CodeConv::tostringstream o;
+	o.str(_T("")); o << _T("牌の移動 プレイヤー [") << static_cast<int>(targetPlayer)
+		<< _T("] 実行[") << execute << _T("] 位置 [") << tileIndex << _T("]"); debug(o.str());
+
+	if ((tileIndex < 0) || (tileIndex > TsumohaiIndex)) {
+		warn(_T("位置指定が正しくありません。無視します。"));
+		return;
+	}
+
+	if (execute) { // 実行モード
+		/* 手牌データをデバッグログに出力：ビフォー */
+		logHand(_T("移動前の手牌"), gameStat, targetPlayer);
+
+		/* ここから移動作業 */
+		Tile tmpTile = gameStat->Player[targetPlayer].Hand[tileIndex]; // 退避用
+		if (tileIndex < index) { // 前に移動
+			for (int i = tileIndex; i > index; --i)
+				gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[i - 1];
+		} else if (tileIndex > index) { // 後ろに移動
+			for (int i = tileIndex; i < index; ++i)
+				gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[i + 1];
+		}
+		gameStat->Player[targetPlayer].Hand[index] = tmpTile;
+		index = tileIndex;
+
+		/* 手牌データをデバッグログに出力：アフター */
+		logHand(_T("移動後の手牌"), gameStat, targetPlayer);
+	} else { // 移動元指定
+		index = tileIndex;
+	}
+
+	/* 移動完了！ */
 	return;
 }
 
