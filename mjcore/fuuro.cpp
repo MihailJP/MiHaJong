@@ -658,6 +658,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Passive);
 				/* 処理 */
 				aiscript::compfuuro(sandbox);
+				MoveTile::apply(gameStat, i, EnvTable::Instantiate()->GameMode == EnvTable::Server);
 				for (PlayerID j = 0; j < Players; j++) {
 					if (!gameStat->Player[j].DeclarationFlag.Ron) gameStat->Player[j].DeclarationFlag.Ron = sandbox->Player[j].DeclarationFlag.Ron;
 					if (!gameStat->Player[j].DeclarationFlag.Kan) gameStat->Player[j].DeclarationFlag.Kan = sandbox->Player[j].DeclarationFlag.Kan;

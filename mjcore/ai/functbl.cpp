@@ -252,6 +252,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushlightuserdata(L, nullptr); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	lua_pushinteger(L, playerID + 1); lua_setfield(L, -2, "playerid"); // Player ID
 	/* ここにメソッドを書く */
+	lua_pushcfunction(L, luafunc::movetile); lua_setfield(L, -2, "movetile");
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, luafunc::getbakaze); lua_setfield(L, -2, "getbakaze");

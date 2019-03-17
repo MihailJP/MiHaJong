@@ -111,10 +111,10 @@ begin:
 	{
 		using namespace mihajong_socket::protocol;
 		if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
-			moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			MoveTile::moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
 			goto begin;
 		} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
-			moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			MoveTile::moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
 			goto begin;
 		} else if (ReceivedMsg == Lipai_Reset) {
 			lipai(gameStat, gameStat->CurrentPlayer.Active);
@@ -175,10 +175,10 @@ begin:
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
 			if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
-				moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				MoveTile::moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
 				goto begin;
 			} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
-				moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				MoveTile::moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
 				goto begin;
 			} else if (ReceivedMsg == Lipai_Reset) {
 				lipai(gameStat, tmp);
@@ -239,6 +239,14 @@ void RemoteNaki::thread_server() {
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
+		try {
+			std::pair<int, int> indices;
+			while (true) {
+				indices = MoveTile::dequeue(i);
+				mihajong_socket::server::send(Lipai_From + indices.first);
+				mihajong_socket::server::send(Lipai_To + indices.second);
+			}
+		} catch (std::runtime_error&) {}
 		if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
 		else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
 		else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);

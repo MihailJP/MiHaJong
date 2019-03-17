@@ -67,6 +67,7 @@ class aiscript::table::functable::gametbl::luafunc {
 private:
 	class riskchk;
 public:
+	static int movetile(lua_State* const L);
 	static int evaluate(lua_State* const L);
 	static int getactiveplayer(lua_State* const L);
 	static int getbakaze(lua_State* const L);

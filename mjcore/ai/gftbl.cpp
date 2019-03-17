@@ -78,6 +78,21 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 	}
 }
 
+/* 牌の移動 */
+int aiscript::table::functable::gametbl::luafunc::movetile(lua_State* const L) {
+	int n = chkargnum(L, 2, 2);
+	GameTable* gameStat = getGameStatAddr(L);
+	PlayerID player = getPlayerID(L, 0);
+	int index1 = static_cast<int>(lua_tointeger(L, -2)) - 1, index2 = static_cast<int>(lua_tointeger(L, -1)) - 1;
+	lua_pop(L, 2);
+	if ((index1 >= 0) && (index1 < TsumohaiIndex) && (index2 >= 0) && (index2 < TsumohaiIndex)) {
+		MoveTile::moveTile(gameStat, player, false, index1);
+		MoveTile::moveTile(gameStat, player, true, index2);
+		MoveTile::enqueue(player, index1, index2);
+	}
+	return 0;
+}
+
 /* 手を評価する */
 int aiscript::table::functable::gametbl::luafunc::evaluate(lua_State* const L) {
 	int n = chkargnum(L, 2, 3);

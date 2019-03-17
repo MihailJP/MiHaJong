@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
+#include <queue>
 #include "logging.h"
 #include "ruletbl.h"
 #include "shanten.h"
@@ -115,6 +116,47 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	return;
 }
 
+namespace MoveTile {
+
+/* 手動理牌同期用キュー */
+static std::array<std::queue<std::pair<int, int> >, Players> moveTileQueue;
+
+void enqueue(PlayerID targetPlayer, int from, int to) {
+	if ((from < 0) || (from >= NumOfTilesInHand))
+		throw std::out_of_range("'from' out of range");
+	if ((to < 0) || (to >= NumOfTilesInHand))
+		throw std::out_of_range("'to' out of range");
+	moveTileQueue.at(targetPlayer).push(std::make_pair(from, to));
+}
+
+std::pair<int, int> dequeue(PlayerID targetPlayer) {
+	if (moveTileQueue.at(targetPlayer).empty())
+		throw std::runtime_error("LIPAI queue is empty");
+	auto val(moveTileQueue.at(targetPlayer).front());
+	moveTileQueue.at(targetPlayer).pop();
+	return val;
+}
+
+void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve) {
+	std::queue<std::pair<int, int> > tmpQueue;
+	try {
+		std::pair<int, int> indices;
+		while (true) {
+			indices = dequeue(targetPlayer);
+			tmpQueue.push(indices);
+			moveTile(gameStat, targetPlayer, false, indices.first);
+			moveTile(gameStat, targetPlayer, true, indices.second);
+		}
+	} catch (std::runtime_error&) {}
+	if (preserve) {
+		while (!tmpQueue.empty()) {
+			auto indices(tmpQueue.front());
+			tmpQueue.pop();
+			enqueue(targetPlayer, indices.first, indices.second);
+		}
+	}
+}
+
 /* 手動理牌処理 */
 void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, int tileIndex) {
 	static int index = 0;
@@ -153,6 +195,8 @@ void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, in
 	/* 移動完了！ */
 	return;
 }
+
+} /* namespace */
 
 /* 場に見えてる個数 */
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {

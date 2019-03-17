@@ -30,7 +30,12 @@ TileCode Honor_Major_Tiles(int code);
 bool isYaojiu(TileCode code);
 
 void lipai(GameTable* const gameStat, PlayerID targetPlayer);
+namespace MoveTile {
 void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, int tileIndex);
+void enqueue(PlayerID targetPlayer, int from, int to);
+std::pair<int, int> dequeue(PlayerID targetPlayer);
+void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve);
+}
 #endif
 
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat);
