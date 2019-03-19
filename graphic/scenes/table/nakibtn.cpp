@@ -409,8 +409,15 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			ui::UIEvent->set(naki::nakiKan);
 			break;
 		case btnPon:
-			ui::UIEvent->set(naki::nakiPon);
+			setMode(DiscardTileNum::MeldSel, btnPon,
+				[](int i, GameTable* tmpStat) -> bool {
+					return false;
+			});
+			caller->tehaiReconst->setTileCursor(0), setCursor();
+			caller->tehaiReconst->Render();
 			break;
+			//ui::UIEvent->set(naki::nakiPon);
+			//break;
 		case btnChii1:
 			ui::UIEvent->set(naki::nakiChiLower);
 			break;

@@ -421,7 +421,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	{
 	/* ボタン選択/牌選択 モード切り替え */
 	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
-		if (keyDown && (buttonReconst->isCursorEnabled()) && (!isNakiSel)) {
+		if (keyDown && (buttonReconst->isCursorEnabled()) && ((!isNakiSel) || (tileSelectMode == DiscardTileNum::MeldSel))) {
 			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			buttonReconst->setCursor();
 			cursorMoved();
@@ -515,7 +515,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 	const int region = whichRegion(scaledX, scaledY);
 	const bool isCursorEnabled = tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled();
 	const bool isValidTile = (region >= 0) && (region < NumOfTilesInHand) &&
-		isCursorEnabled && (!isNakiSel) &&
+		isCursorEnabled && ((!isNakiSel) || (tileSelectMode == DiscardTileNum::MeldSel)) &&
 		(GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Hand[region].tile != NoTile);
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
 		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
