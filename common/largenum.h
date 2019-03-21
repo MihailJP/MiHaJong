@@ -24,11 +24,9 @@ constexpr unsigned int DigitGroups = 8;
 struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	int32_t digitGroup[DigitGroups];
 
-	LargeNum() {
-		memset(digitGroup, 0, sizeof digitGroup);
-	}
+	constexpr LargeNum() : digitGroup{} {}
 
-	void fix() { // 正規形に直す
+	constexpr void fix() { // 正規形に直す
 		for (int i = 0; i < (DigitGroups - 1); i++) {
 			if ((this->digitGroup[i] > 99999999)||(this->digitGroup[i] < -99999999)) {
 				this->digitGroup[i + 1] += this->digitGroup[i] / 100000000;
@@ -53,7 +51,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 			}
 		}
 	}
-	signed int compare(const LargeNum& cmp) const { // 比較用
+	constexpr int compare(const LargeNum& cmp) const { // 比較用
 		signed int ans = 0;
 		for (int i = DigitGroups - 1; i >= 0; i--) {
 			if (this->digitGroup[i] > cmp.digitGroup[i]) {ans = 1; break;}
@@ -103,7 +101,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 		return o.str();
 	}
-	explicit operator double() const {
+	constexpr explicit operator double() const {
 		// 浮動小数点型に直す
 		double ans = 0.0;
 		for (int i = 7; i >= 0; i--) {
@@ -112,7 +110,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		return ans;
 	}
 
-	explicit operator int32_t() const {
+	constexpr explicit operator int32_t() const {
 		if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0)
 			&& (digitGroup[3] == 0) && (digitGroup[2] == 0)
 			&& ((abs(digitGroup[1]) < 21) || ((abs(digitGroup[1]) == 21)
@@ -124,7 +122,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 	}
 	static_assert(std::numeric_limits<int32_t>::max() == 2'147'483'647, "Maximum of int32_t is not 2,147,483,647");
-	explicit operator uint32_t() const {
+	constexpr explicit operator uint32_t() const {
 		if (*this < 0) {
 			// NEGATIVE
 			return 0u;
@@ -140,7 +138,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	}
 	static_assert(std::numeric_limits<uint32_t>::max() == 4'294'967'295, "Maximum of uint32_t is not 4,294,967,295");
 
-	explicit operator int64_t() const {
+	constexpr explicit operator int64_t() const {
 		if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0) && (digitGroup[3] == 0)
 			&& ((abs(digitGroup[2]) < 922) || ((abs(digitGroup[2]) == 922)
 				&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
@@ -153,7 +151,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 	}
 	static_assert(std::numeric_limits<int64_t>::max() == 9'223'372'036'854'775'807LL, "Maximum of int64_t is not 9,223,372,036,854,775,807");
-	explicit operator uint64_t() const {
+	constexpr explicit operator uint64_t() const {
 		if (*this < 0) {
 			// NEGATIVE
 			return 0uLL;
@@ -170,25 +168,25 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 	}
 	static_assert(std::numeric_limits<uint64_t>::max() == 18'446'744'073'709'551'615uLL, "Maximum of uint64_t is not 18,446,744,073,709,551,615");
 
-	LargeNum(int32_t val) : LargeNum() {
+	constexpr LargeNum(int32_t val) : LargeNum() {
 		digitGroup[0] = (val % 100'000'000);
 		digitGroup[1] = (val / 100'000'000);
 	}
-	LargeNum(uint32_t val) : LargeNum() {
+	constexpr LargeNum(uint32_t val) : LargeNum() {
 		digitGroup[0] = (val % 100'000'000);
 		digitGroup[1] = (val / 100'000'000);
 	}
-	LargeNum(int64_t val) : LargeNum() {
+	constexpr LargeNum(int64_t val) : LargeNum() {
 		digitGroup[0] = static_cast<int32_t>(val % 100'000'000uLL);
 		digitGroup[1] = static_cast<int32_t>(val % 1'000'000'000'000'000uLL / 100'000'000uLL);
 		digitGroup[2] = static_cast<int32_t>(val / 1'000'000'000'000'000uLL);
 	}
-	LargeNum(uint64_t val) : LargeNum() {
+	constexpr LargeNum(uint64_t val) : LargeNum() {
 		digitGroup[0] = static_cast<int32_t>(val % 100'000'000uLL);
 		digitGroup[1] = static_cast<int32_t>(val % 1'000'000'000'000'000uLL / 100'000'000uLL);
 		digitGroup[2] = static_cast<int32_t>(val / 1'000'000'000'000'000uLL);
 	}
-	void ceilHundred() { // 100点単位に切り上げ
+	constexpr void ceilHundred() { // 100点単位に切り上げ
 		if (this->digitGroup[0] % 100 != 0) {
 			this->digitGroup[0] += 100 - this->digitGroup[0] % 100;
 			this->fix();
@@ -197,14 +195,14 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 
 	/* ここから演算子をオーバーロード */
 
-	const LargeNum operator+(const LargeNum& addend) const {
+	constexpr LargeNum operator+(const LargeNum& addend) const {
 		LargeNum ans;
 		for (int i = 0; i < DigitGroups; i++)
 			ans.digitGroup[i] = digitGroup[i] + addend.digitGroup[i];
 		ans.fix();
 		return ans;
 	}
-	const LargeNum operator+(const int32_t addend) const {
+	constexpr LargeNum operator+(const int32_t addend) const {
 		LargeNum ans;
 		ans.digitGroup[0] = digitGroup[0] + addend;
 		for (int i = 1; i < DigitGroups; i++)
@@ -224,14 +222,14 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		return *this;
 	}
 
-	const LargeNum operator-(const LargeNum& subtrahend) const {
+	constexpr LargeNum operator-(const LargeNum& subtrahend) const {
 		LargeNum ans;
 		for (int i = 0; i < DigitGroups; i++)
 			ans.digitGroup[i] = digitGroup[i] - subtrahend.digitGroup[i];
 		ans.fix();
 		return ans;
 	}
-	const LargeNum operator-(const int32_t subtrahend) const {
+	constexpr LargeNum operator-(const int32_t subtrahend) const {
 		LargeNum ans;
 		ans.digitGroup[0] = digitGroup[0] - subtrahend;
 		for (int i = 1; i < DigitGroups; i++)
@@ -251,7 +249,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		return *this;
 	}
 
-	const LargeNum operator*(const int32_t multiplier) const { // めんどくさいので32bit整数倍だけ……
+	constexpr LargeNum operator*(const int32_t multiplier) const { // めんどくさいので32bit整数倍だけ……
 		LargeNum ans = LargeNum();
 		for (int i = 0; i < DigitGroups; i++) {
 			int64_t tmpdigit = static_cast<int64_t>(digitGroup[i]) * static_cast<int64_t>(multiplier);
@@ -294,9 +292,9 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		fix();
 		return *this;
 	}
-	const LargeNum operator/(const int32_t divisor) const {
+	constexpr LargeNum operator/(const int32_t divisor) const {
 		LargeNum ans = LargeNum();
-		int64_t tmpdigit[DigitGroups];
+		int64_t tmpdigit[DigitGroups] {};
 		for (int i = 0; i < DigitGroups; i++) tmpdigit[i] = digitGroup[i];
 		for (int i = DigitGroups - 1; i >= 0; i--) {
 			if (i > 0) tmpdigit[i - 1] += (tmpdigit[i] % static_cast<int64_t>(divisor)) * 100000000L;
@@ -319,15 +317,15 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		return *this;
 	}
 
-	const LargeNum operator+() const { return *this; }
-	const LargeNum operator-() const { return (*this) * (-1); }
+	constexpr LargeNum operator+() const { return *this; }
+	constexpr LargeNum operator-() const { return (*this) * (-1); }
 
-	const bool operator==(const LargeNum& cmp) const { return (this->compare(cmp) == 0); }
-	const bool operator!=(const LargeNum& cmp) const { return (this->compare(cmp) != 0); }
-	const bool operator<(const LargeNum& cmp) const { return (this->compare(cmp) < 0); }
-	const bool operator>(const LargeNum& cmp) const { return (this->compare(cmp) > 0); }
-	const bool operator<=(const LargeNum& cmp) const { return (this->compare(cmp) <= 0); }
-	const bool operator>=(const LargeNum& cmp) const { return (this->compare(cmp) >= 0); }
+	constexpr bool operator==(const LargeNum& cmp) const { return (this->compare(cmp) == 0); }
+	constexpr bool operator!=(const LargeNum& cmp) const { return (this->compare(cmp) != 0); }
+	constexpr bool operator<(const LargeNum& cmp) const { return (this->compare(cmp) < 0); }
+	constexpr bool operator>(const LargeNum& cmp) const { return (this->compare(cmp) > 0); }
+	constexpr bool operator<=(const LargeNum& cmp) const { return (this->compare(cmp) <= 0); }
+	constexpr bool operator>=(const LargeNum& cmp) const { return (this->compare(cmp) >= 0); }
 };
 static_assert(std::is_trivially_copyable<LargeNum>::value, "LargeNum is not trivially copyable");
 static_assert(std::is_standard_layout<LargeNum>::value, "LargeNum is not standard layout");
