@@ -14,8 +14,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
 		case sOpposite: /* 対面 */
 			TileTexture->NewTile(32 - tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				UpsideDown, Obverse,
@@ -23,8 +22,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 			break;
 		case sLeft: /* 上家 */
 			TileTexture->NewTile(33 + tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				Clockwise, Obverse,
@@ -32,8 +30,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 			break;
 		case sRight: /* 下家 */
 			TileTexture->NewTile(98 - tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				Withershins, Obverse,
@@ -41,8 +38,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 			break;
 		case sSelf: /* 自分 */
 			TileTexture->NewTile(99 + tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				Portrait, Obverse,
@@ -59,8 +55,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
 		case sOpposite: /* 対面 */
 			TileTexture->NewTile(32 - tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				Clockwise, Obverse,
@@ -68,8 +63,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 			break;
 		case sLeft: /* 上家 */
 			TileTexture->NewTile(33 + tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				Portrait, Obverse,
@@ -77,8 +71,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 			break;
 		case sRight: /* 下家 */
 			TileTexture->NewTile(98 - tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				UpsideDown, Obverse,
@@ -86,8 +79,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 			break;
 		case sSelf: /* 自分 */
 			TileTexture->NewTile(99 + tileID,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile,
-				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.red,
+				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				Withershins, Obverse,

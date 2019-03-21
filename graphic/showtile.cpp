@@ -19,11 +19,11 @@ ShowTile::~ShowTile() {
 }
 
 /* 新規の牌オブジェクトを作成する */
-void ShowTile::NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol) {
-	constexpr TileDescriptor empty = {false, NoTile, Normal, 0, 0, Portrait, Obverse, 0xffffffff};
+void ShowTile::NewTile(unsigned int ID, Tile tile, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol) {
+	constexpr TileDescriptor empty = {false, Tile(), 0, 0, Portrait, Obverse, 0xffffffff};
 	if (mySprites.size() <= ID) mySprites.resize(static_cast<std::size_t>(ID) + 1, empty); // 配列の拡張
 	mySprites[ID].exist = true;
-	mySprites[ID].tile = tile; mySprites[ID].red = red;
+	mySprites[ID].tile = tile;
 	mySprites[ID].X = x; mySprites[ID].Y = y;
 	mySprites[ID].direction = direction; mySprites[ID].side = side;
 	mySprites[ID].color = filterCol;
@@ -52,14 +52,15 @@ void ShowTile::RenderSide(const TileDescriptor* tile, const RECT* rect) {
 }
 void ShowTile::Render() {
 	for (auto& k : mySprites) {
+		const int32_t kVal = k.tile.tile + k.tile.red * TileNonflowerMax;
 		if (k.exist) {
 			if ((k.direction == Portrait) || (k.direction == UpsideDown)) {
 				/* Portrait alignment */
 				RECT rect = {
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10) * (VertTileWidth + TexturePadding)),
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10) * (VertTileHeight + TexturePadding)),
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding),
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
+					static_cast<int32_t>((kVal % 10) * (VertTileWidth + TexturePadding)),
+					static_cast<int32_t>((kVal / 10) * (VertTileHeight + TexturePadding)),
+					static_cast<int32_t>((kVal % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding),
+					static_cast<int32_t>((kVal / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
 				};
 				RECT rectrev = {
 					(static_cast<int>(BackSide) % 10) * (VertTileWidth + TexturePadding),
@@ -94,10 +95,10 @@ void ShowTile::Render() {
 			else {
 				/* Landscape alignment */
 				RECT rect = {
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10) * (HoriTileWidth + TexturePadding)),
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows),
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding),
-					static_cast<int32_t>(((k.tile + k.red * TileNonflowerMax) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
+					static_cast<int32_t>((kVal % 10) * (HoriTileWidth + TexturePadding)),
+					static_cast<int32_t>((kVal / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows),
+					static_cast<int32_t>((kVal % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding),
+					static_cast<int32_t>((kVal / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
 				};
 				RECT rectrev = {
 					(static_cast<int>(BackSide) % 10) * (HoriTileWidth + TexturePadding),

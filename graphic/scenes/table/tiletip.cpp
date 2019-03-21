@@ -49,7 +49,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 			int i = 0;
 			for (int j = 1; j < TileNonflowerMax; ++j) {
 				if (machiInfo.Machihai[j].MachihaiFlag) {
-					myTileRenderer->NewTile(i, static_cast<TileCode>(j), Normal,
+					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), Normal),
 						TipX + myTextRenderer->strWidthByPix(o.str()) + 20 + i * (ShowTile::VertTileWidth + 2),
 						TipY + (ShowTile::VertTileHeight / 2) - 6,
 						Portrait, Obverse,
@@ -66,7 +66,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
 			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;
 			auto render = [this, &tipText] (unsigned tileID, TileCode tileCode) -> void {
-				myTileRenderer->NewTile(tileID, tileCode, Normal,
+				myTileRenderer->NewTile(tileID, Tile(tileCode),
 					TipX + myTextRenderer->strWidthByPix(tipText) + 20 + tileID * (ShowTile::VertTileWidth + 2),
 					TipY + (ShowTile::VertTileHeight / 2) - 6,
 					Portrait, Obverse, 0xffffffff);

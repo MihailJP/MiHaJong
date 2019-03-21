@@ -20,10 +20,10 @@ enum doraCol : uint8_t { Normal, AkaDora, AoDora };
 struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
 	doraCol red;
-	explicit operator bool() const {return tile != NoTile;}
-	bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
-	bool operator != (const Tile& otherTile) const {return !(*this == otherTile);}
-	bool operator < (const Tile& otherTile) const {
+	constexpr explicit operator bool() const {return tile != NoTile;}
+	constexpr bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
+	constexpr bool operator != (const Tile& otherTile) const {return !(*this == otherTile);}
+	constexpr bool operator < (const Tile& otherTile) const {
 		if (tile < otherTile.tile) return true;
 		else if (tile > otherTile.tile) return false;
 		else if (red == otherTile.red) return false;
@@ -31,10 +31,10 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 		else if (otherTile.red == Normal) return true;
 		else return red < otherTile.red;
 	}
-	bool operator > (const Tile& otherTile) const {return otherTile < *this;}
-	bool operator <= (const Tile& otherTile) const {return !(otherTile < *this);}
-	bool operator >= (const Tile& otherTile) const {return !(*this < otherTile);}
-	TileSuit getSuit() const {
+	constexpr bool operator > (const Tile& otherTile) const {return otherTile < *this;}
+	constexpr bool operator <= (const Tile& otherTile) const {return !(otherTile < *this);}
+	constexpr bool operator >= (const Tile& otherTile) const {return !(*this < otherTile);}
+	constexpr TileSuit getSuit() const {
 		switch (tile) {
 		case CharacterOne: case CharacterTwo: case CharacterThree: case CharacterFour: case CharacterFive:
 		case CharacterSix: case CharacterSeven: case CharacterEight: case CharacterNine:
@@ -55,10 +55,10 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 			return TileSuitInvalid;
 		}
 	}
-	bool isNumber() const {return static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors);}
-	bool isHonor() const {return getSuit() == TileSuitHonors;}
-	bool isFlower() const {return getSuit() == TileSuitFlowers;}
-	explicit Tile(TileCode tile = NoTile, doraCol red = Normal) : tile(tile), red(red) {}
+	constexpr bool isNumber() const {return static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors);}
+	constexpr bool isHonor() const {return getSuit() == TileSuitHonors;}
+	constexpr bool isFlower() const {return getSuit() == TileSuitFlowers;}
+	constexpr explicit Tile(TileCode tile = NoTile, doraCol red = Normal) : tile(tile), red(red) {}
 };
 static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");
 static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout");
