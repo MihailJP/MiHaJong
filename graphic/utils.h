@@ -30,6 +30,7 @@ typedef LPCTSTR (*getName_type)(PlayerID);
 typedef bool (*isWatchMode_type)();
 typedef bool (*isAboveBase_type)(const GameTable*, PlayerID);
 typedef bool (*isStandAlone_type)();
+typedef void (*moveTile_type)(PlayerID, int, int);
 
 #ifdef GRAPHIC_EXPORTS
 extern playerRelative_type playerRelative;
@@ -51,6 +52,7 @@ extern getName_type getName;
 extern isWatchMode_type isWatchMode;
 extern isAboveBase_type isAboveBase;
 extern isStandAlone_type isStandAlone;
+extern moveTile_type moveTile;
 #endif
 
 EXPORT void setfunc(
@@ -72,7 +74,8 @@ EXPORT void setfunc(
 	getName_type ptr_getName,
 	isWatchMode_type ptr_isWatchMode,
 	isAboveBase_type ptr_isAboveBase,
-	isStandAlone_type ptr_isStandAlone);
+	isStandAlone_type ptr_isStandAlone,
+	moveTile_type ptr_moveTile);
 
 }
 }
