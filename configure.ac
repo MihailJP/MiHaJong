@@ -20,7 +20,7 @@ AC_DEFINE_UNQUOTED([PKGDATADIR], ["$pkgdatadir"], [Package data directory.])
 # Checks for programs.
 AC_LANG([C++])
 AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX_11([noext])
+AX_CXX_COMPILE_STDCXX_14([noext])
 AC_PROG_CC
 AX_PROG_LUA([5.1])
 
