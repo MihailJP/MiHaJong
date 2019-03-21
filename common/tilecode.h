@@ -15,13 +15,17 @@ constexpr unsigned int TileCodeMaximum    = 200;
 constexpr unsigned int TileSuitStep       =  10;
 constexpr unsigned int TileNumeralColors  =   3;
 
-constexpr unsigned int TileSuitCharacters = TileSuitStep * 0;
-constexpr unsigned int TileSuitCircles    = TileSuitStep * 1;
-constexpr unsigned int TileSuitBamboos    = TileSuitStep * 2;
-constexpr unsigned int TileSuitHonors     = TileSuitStep * TileNumeralColors;
-constexpr unsigned int TileNonflowerMax   = TileSuitStep   + TileSuitHonors;
-constexpr unsigned int TileSuitFlowers    = TileSuitStep * 12;
-constexpr unsigned int TileFlowerMax      = TileSuitStep   + TileSuitFlowers;
+enum TileSuit : uint8_t {
+	TileSuitInvalid    = 0xffu,
+	TileSuitCharacters = TileSuitStep * 0,
+	TileSuitCircles    = TileSuitStep * 1,
+	TileSuitBamboos    = TileSuitStep * 2,
+	TileSuitHonors     = TileSuitStep * TileNumeralColors,
+	TileSuitFlowers    = TileSuitStep * 12
+};
+
+constexpr unsigned int TileNonflowerMax = TileSuitStep + TileSuitHonors;
+constexpr unsigned int TileFlowerMax    = TileSuitStep + TileSuitFlowers;
 
 enum TileCode : uint8_t { // 牌のコード
 	NoTile = 0,

@@ -659,7 +659,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	XhaifuBufferBody << _T("\t\t\t\t</sequence>") << std::endl;
 }
 inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID player, MeldCode meld) {
-	Tile meldTile = {meld.tile, meld.red[0]};
+	const Tile meldTile(meld.tile, meld.red[0]);
 	XhaifuBufferBody << _T("\t\t\t\t\t");
 	if ((meld.mstat == meldQuadAddedLeft) ||
 		(meld.mstat == meldQuadAddedCenter) ||
@@ -707,7 +707,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	}
 	for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
 		if (i == interrupt) hfPon1(player, meld);
-		Tile meldTile = {meld.tile, meld.red[i]};
+		const Tile meldTile(meld.tile, meld.red[i]);
 		XhaifuBufferBody << _T("\t\t\t\t\t");
 		recordTile_Inline(meldTile, false);
 		XhaifuBufferBody << std::endl;

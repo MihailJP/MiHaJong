@@ -7,6 +7,7 @@
 #include <climits>
 #include <cstdlib>
 #include <type_traits>
+#include <functional>
 #include "tilecode.h"
 #include "gametype.h"
 #include "largenum.h"
@@ -19,6 +20,45 @@ enum doraCol : uint8_t { Normal, AkaDora, AoDora };
 struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
 	doraCol red;
+	explicit operator bool() const {return tile != NoTile;}
+	bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
+	bool operator != (const Tile& otherTile) const {return !(*this == otherTile);}
+	bool operator < (const Tile& otherTile) const {
+		if (tile < otherTile.tile) return true;
+		else if (tile > otherTile.tile) return false;
+		else if (red == otherTile.red) return false;
+		else if (red == Normal) return false;
+		else if (otherTile.red == Normal) return true;
+		else return red < otherTile.red;
+	}
+	bool operator > (const Tile& otherTile) const {return otherTile < *this;}
+	bool operator <= (const Tile& otherTile) const {return !(otherTile < *this);}
+	bool operator >= (const Tile& otherTile) const {return !(*this < otherTile);}
+	TileSuit getSuit() const {
+		switch (tile) {
+		case CharacterOne: case CharacterTwo: case CharacterThree: case CharacterFour: case CharacterFive:
+		case CharacterSix: case CharacterSeven: case CharacterEight: case CharacterNine:
+			return TileSuitCharacters;
+		case CircleOne: case CircleTwo: case CircleThree: case CircleFour: case CircleFive:
+		case CircleSix: case CircleSeven: case CircleEight: case CircleNine:
+			return TileSuitCircles;
+		case BambooOne: case BambooTwo: case BambooThree: case BambooFour: case BambooFive:
+		case BambooSix: case BambooSeven: case BambooEight: case BambooNine:
+			return TileSuitBamboos;
+		case EastWind: case SouthWind: case WestWind: case NorthWind:
+		case WhiteDragon: case GreenDragon: case RedDragon:
+			return TileSuitHonors;
+		case Spring: case Summer: case Autumn: case Winter:
+		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
+			return TileSuitFlowers;
+		default:
+			return TileSuitInvalid;
+		}
+	}
+	bool isNumber() const {return static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors);}
+	bool isHonor() const {return getSuit() == TileSuitHonors;}
+	bool isFlower() const {return getSuit() == TileSuitFlowers;}
+	explicit Tile(TileCode tile = NoTile, doraCol red = Normal) : tile(tile), red(red) {}
 };
 static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");
 static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout");
@@ -96,6 +136,7 @@ struct DiscardTile {
 	Tile tcode;
 	DiscardStat dstat;
 	bool isDiscardThrough; // ツモ切りフラグ
+	explicit operator bool() const {return tcode.tile != NoTile;}
 };
 typedef DiscardTile DiscardBuf[SizeOfDiscardBuffer];
 static_assert(std::is_trivially_copyable<DiscardTile>::value, "DiscardTile is not trivially copyable");
@@ -126,6 +167,7 @@ struct MeldCode {
 	TileCode tile;
 	doraCol red[4];
 	MeldStat mstat;
+	explicit operator bool() const {return tile != NoTile;}
 };
 typedef MeldCode MeldBuf[SizeOfMeldBuffer];
 static_assert(std::is_trivially_copyable<MeldCode>::value, "MeldCode is not trivially copyable");
@@ -338,3 +380,11 @@ constexpr unsigned int agariKuikae = 999;
 // -------------------------------------------------------------------------
 
 } /* namespace */
+
+template<> struct std::hash<mihajong_structs::Tile> {
+	typedef mihajong_structs::Tile argument_type;
+	typedef std::size_t result_type;
+	result_type operator() (argument_type const& s) const noexcept {
+		return std::hash<std::uint16_t>{} (static_cast<std::uint16_t>(s.tile) << 8 | static_cast<std::uint16_t>(s.red));
+	}
+};
