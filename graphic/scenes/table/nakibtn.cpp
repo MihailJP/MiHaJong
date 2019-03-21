@@ -196,7 +196,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 
 	const bool ShisanBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisanBuDa(gameStat, ActivePlayer);
 	const bool ShisiBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisiBuDa(gameStat, ActivePlayer);
-	if (((shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // 和了になっているか
+	if (((shanten <= -1) && (playerStat->Tsumohai())) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 		buttonEnabled[btnTsumo] = true; // 和了ボタン
 
@@ -221,7 +221,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		}
 		return false;
 	} ();
-	if (KanFlag && (playerStat->Tsumohai().tile != NoTile) &&
+	if (KanFlag && (playerStat->Tsumohai()) &&
 		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[btnKan] = true;
 
@@ -230,10 +230,10 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		if (gameStat->gameType & SanmaX)
 			return (playerStat->Tsumohai().tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
 		else
-			return playerStat->Tsumohai().tile > TileSuitFlowers;
+			return playerStat->Tsumohai().isFlower();
 	} ();
 	if (((gameStat->gameType & GuobiaoMJ) || (!rules::chkRule("flower_tiles", "no"))) &&
-		(playerStat->Tsumohai().tile != NoTile) &&
+		(playerStat->Tsumohai()) &&
 		(TileCount[flowerTile] >= 1) &&
 		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
 		buttonEnabled[btnFlower] = true;
@@ -256,7 +256,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
 	playerStat->Tsumohai().tile = NoTile;
 
-	if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
+	if (gameStat->CurrentDiscard.isFlower()) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
 	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
 		(gameStat->gameType & RichiMJ) && // 中国ルール以外で
@@ -279,7 +279,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
 		if ((gameStat->gameType & (Yonma | GuobiaoMJ)) && // 四麻である
-			(gameStat->CurrentDiscard.tile < TileSuitHonors) && // 数牌で
+			(gameStat->CurrentDiscard.isNumber()) && // 数牌で
 			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= 1) &&
@@ -388,11 +388,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
 					if (tmpStat->gameType & SanmaX)
-						return tmpStat->statOfActive().Hand[i].tile !=
-							NorthWind;
+						return tmpStat->statOfActive().Hand[i].tile != NorthWind;
 					else
-						return tmpStat->statOfActive().Hand[i].tile <
-							TileSuitFlowers;
+						return !tmpStat->statOfActive().Hand[i].isFlower();
 				});
 			break;
 		default:

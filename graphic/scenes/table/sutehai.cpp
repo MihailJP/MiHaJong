@@ -10,7 +10,7 @@ using utils::playerRelative;
 /* 捨牌の表示 */
 void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTable* gameStat, PlayerID targetPlayer,
 	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
-		assert(gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
+		assert(gameStat->Player[targetPlayer].Discard[tileID + 1].tcode);
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
 		case sOpposite: /* 対面 */
 			TileTexture->NewTile(32 - tileID,
@@ -55,7 +55,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 }
 void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable* gameStat, PlayerID targetPlayer,
 	unsigned tileID, unsigned& tilePosCol, unsigned& tilePosRow, bool& shiftPos) {
-		assert(gameStat->Player[targetPlayer].Discard[tileID + 1].tcode.tile != NoTile);
+		assert(gameStat->Player[targetPlayer].Discard[tileID + 1].tcode);
 		switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
 		case sOpposite: /* 対面 */
 			TileTexture->NewTile(32 - tileID,
@@ -110,7 +110,7 @@ void GameTableScreen::SutehaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		}
 	}
 	for (unsigned i = 0; i < gameStat->Player[targetPlayer].DiscardPointer; ++i) {
-		if (gameStat->Player[targetPlayer].Discard[i + 1].tcode.tile != NoTile) { // WORKAROUND: 何故かNoTileになる問題（花牌を親が抜いていて子が1巡目にポン）
+		if (gameStat->Player[targetPlayer].Discard[i + 1].tcode) { // WORKAROUND: 何故かNoTileになる問題（花牌を親が抜いていて子が1巡目にポン）
 			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
 				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
 				riichiFlag = true;

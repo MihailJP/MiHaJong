@@ -28,9 +28,9 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		tipText = _T("");
 	} else if (tileCursor >= 0) {
 		/* 打牌仮定 */
-		GameTable tmpGameStat; memcpy(&tmpGameStat, GameStatus::gameStat(), sizeof (GameTable));
-		tmpGameStat.statOfMine().Hand[tileCursor].tile = tmpGameStat.statOfMine().Tsumohai().tile;
-		tmpGameStat.statOfMine().Tsumohai().tile = NoTile;
+		GameTable tmpGameStat(*GameStatus::gameStat());
+		tmpGameStat.statOfMine().Hand[tileCursor] = tmpGameStat.statOfMine().Tsumohai();
+		tmpGameStat.statOfMine().Tsumohai() = Tile();
 		/*  */
 		CodeConv::tostringstream o;
 		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::shantenAll);
