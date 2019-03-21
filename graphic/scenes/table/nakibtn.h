@@ -8,6 +8,7 @@
 #endif /*_WIN32*/
 #include "../../../common/mutex.h"
 #include "../../timer.h"
+#include "../../../common/discard.h"
 
 namespace mihajong_graphic {
 
@@ -48,6 +49,7 @@ public:
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
+	void setMode(DiscardTileNum::discardType, ButtonID, std::function<bool(int, GameTable*)> = [](int, GameTable*){return false;});
 private: // ボタンの押し込み
 	int sunkenButton;
 	static constexpr int NoSunkenButton = -3;

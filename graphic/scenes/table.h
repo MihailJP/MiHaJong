@@ -89,6 +89,7 @@ private:
 	void FinishTileChoice();
 	void CallTsumoAgari();
 	void CallKyuushuKyuuhai();
+	int countTiles(std::function<bool(TileCode, TileCode)>);
 };
 
 }

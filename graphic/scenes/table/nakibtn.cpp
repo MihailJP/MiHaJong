@@ -8,7 +8,6 @@
 #include "../../gametbl.h"
 #include "../../rule.h"
 #include "../../event.h"
-#include "../../../common/discard.h"
 #include "../../../sound/sound.h"
 #include "../../../common/bgmid.h"
 
@@ -318,24 +317,26 @@ GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
 }
 
+/* モード設定 */
+void GameTableScreen::ButtonReconst::setMode(DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	caller->tileSelectMode = mode;
+	this->setSunkenButton(button);
+	for (int i = 0; i < btnMAXIMUM; ++i)
+		if (i != button)
+			this->disable(static_cast<ButtonID>(i));
+	this->reconstruct();
+	caller->tehaiReconst->enable();
+	for (int i = 0; i < NumOfTilesInHand; ++i) {
+		GameTable tmpStat(*GameStatus::gameStat());
+		if ((i == caller->tehaiReconst->getFirstChosenTile()) || f(i, &tmpStat))
+			caller->tehaiReconst->disable(i);
+	}
+	caller->tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
+}
+
 /* ボタンが押された時の処理 */
 void GameTableScreen::ButtonReconst::ButtonPressed() {
-	auto setMode = [&](DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) -> void {
-		MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
-		caller->tileSelectMode = mode;
-		this->setSunkenButton(button);
-		for (int i = 0; i < btnMAXIMUM; ++i)
-			if (i != button)
-				this->disable(static_cast<ButtonID>(i));
-		this->reconstruct();
-		caller->tehaiReconst->enable();
-		for (int i = 0; i < NumOfTilesInHand; ++i) {
-			GameTable tmpStat; memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
-			if (f(i, &tmpStat)) caller->tehaiReconst->disable(i);
-		}
-		caller->tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
-	};
-
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
 	sound::Play(sound::IDs::sndButton);
 	if (!this->isEnabled(static_cast<ButtonID>(this->getCursor()))) {
@@ -409,15 +410,17 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			ui::UIEvent->set(naki::nakiKan);
 			break;
 		case btnPon:
-			setMode(DiscardTileNum::MeldSel, btnPon,
-				[](int i, GameTable* tmpStat) -> bool {
-					return false;
-			});
-			caller->tehaiReconst->setTileCursor(0), setCursor();
-			caller->tehaiReconst->Render();
+			if (caller->countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
+				setMode(DiscardTileNum::MeldSel, btnPon,
+					[](int i, GameTable* tmpStat) -> bool {
+						return tmpStat->statOfMine().Hand[i].tile != tmpStat->CurrentDiscard.tile;
+					});
+				caller->tehaiReconst->setTileCursor(0), setCursor();
+				caller->tehaiReconst->Render();
+			} else {
+				ui::UIEvent->set(naki::nakiPon);
+			}
 			break;
-			//ui::UIEvent->set(naki::nakiPon);
-			//break;
 		case btnChii1:
 			ui::UIEvent->set(naki::nakiChiLower);
 			break;
