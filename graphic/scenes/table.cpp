@@ -185,10 +185,10 @@ void GameTableScreen::RenderSideBar() {
 void GameTableScreen::checkTimeout() {
 	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled())) { /* タイムアウトの処理 */
 		const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
+		tehaiReconst->setFirstChosenTile(); // 鳴き選択を取り消し
 		if (isNakiSel) { // 鳴き選択中の時
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
 		} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
-			tehaiReconst->setFirstChosenTile(); // 鳴き選択を取り消し
 			if (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Tsumohai().tile != NoTile)
 				ui::UIEvent->set(NumOfTilesInHand - 1); // ツモ切り
 			else ui::UIEvent->set(0); // 鳴いた直後の場合
@@ -497,6 +497,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	/* キャンセルキー */
 	case DIK_ESCAPE: case DIK_X:
 		if (keyDown && isNakiSel && (buttonReconst->isCursorEnabled())) {
+			tehaiReconst->setFirstChosenTile(); // 鳴き選択を取り消し
 			buttonReconst->setCursor(ButtonReconst::btnPass);
 			buttonReconst->ButtonPressed();
 		}
@@ -591,6 +592,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 			isNakiSel
 		) { // 鳴き選択中の時
 			sound::Play(sound::IDs::sndClick);
+			tehaiReconst->setFirstChosenTile(); // 鳴き選択を取り消し
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
 		}
 #ifndef _WIN32
@@ -632,14 +634,61 @@ void GameTableScreen::FinishTileChoice() {
 						tehaiReconst->Render();
 						return;
 					}
+				} else { // チー選択
+					const auto validTile = [this](TileCode p, TileCode q) {
+						if (Tile(p).getSuit() != Tile(q).getSuit())
+							return false;
+						switch (static_cast<int>(GameStatus::gameStat()->statOfMine().Hand[tehaiReconst->getTileCursor()].tile) - static_cast<int>(q)) {
+						case -2:
+							return p == q - 1;
+						case -1:
+							return (p == q + 1) || (p == q - 2);
+						case 1:
+							return (p == q - 1) || (p == q + 2);
+						case 2:
+							return p == q + 1;
+						default:
+							return false;
+						}
+					};
+					if (countTiles(validTile) > 1) {
+						tehaiReconst->setFirstChosenTile(tehaiReconst->getTileCursor());
+						buttonReconst->setMode(DiscardTileNum::MeldSel, ButtonReconst::btnChii,
+							[validTile](int i, GameTable* tmpStat) -> bool {
+								return !validTile(tmpStat->statOfMine().Hand[i].tile, tmpStat->CurrentDiscard.tile);
+							});
+						tehaiReconst->Render();
+						return;
+					}
 				}
 			}
 			for (int i = 0; i < TsumohaiIndex; ++i)
 				if ((i == tehaiReconst->getFirstChosenTile()) || (i == tehaiReconst->getTileCursor()))
 					/* TODO: 牌移動処理*/ ;
-			tehaiReconst->setFirstChosenTile();
 			if (chosenTile == GameStatus::gameStat()->CurrentDiscard) {
+				tehaiReconst->setFirstChosenTile();
 				ui::UIEvent->set(naki::nakiPon); // ポンの場合
+			} else { // チーの場合
+				const auto selected = [this](TileCode tCode) {
+					if (GameStatus::gameStat()->statOfMine().Hand[tehaiReconst->getTileCursor()].tile == tCode) {
+						return true;
+					} else if (tehaiReconst->getFirstChosenTile() >= 0) {
+						if (GameStatus::gameStat()->statOfMine().Hand[tehaiReconst->getFirstChosenTile()].tile == tCode) {
+							return true;
+						}
+					}
+					return false;
+				};
+				if (selected(static_cast<TileCode>(GameStatus::gameStat()->CurrentDiscard.tile - 2))) {
+					tehaiReconst->setFirstChosenTile();
+					ui::UIEvent->set(naki::nakiChiUpper);
+				} else if (selected(static_cast<TileCode>(GameStatus::gameStat()->CurrentDiscard.tile + 2))) {
+					tehaiReconst->setFirstChosenTile();
+					ui::UIEvent->set(naki::nakiChiLower);
+				} else {
+					tehaiReconst->setFirstChosenTile();
+					ui::UIEvent->set(naki::nakiChiMiddle);
+				}
 			}
 		} else {
 			ui::UIEvent->set(static_cast<unsigned>(tehaiReconst->getTileCursor()) +

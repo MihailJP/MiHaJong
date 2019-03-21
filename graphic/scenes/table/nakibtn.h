@@ -23,7 +23,7 @@ private:
 #endif /*_WIN32*/
 public: // ボタン番号
 	enum ButtonID {
-		btnChii1, btnChii2, btnChii3, btnPon, btnKan, btnPass, btnRon,
+		btnChii = 2, btnPon, btnKan, btnPass, btnRon,
 		btnMAXIMUM,
 		btnOpenRiichi = 0, btnRiichi, btnKyuushu, btnFlower, btnTsumo = btnRon,
 	};

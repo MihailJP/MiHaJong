@@ -75,17 +75,6 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 				return (caller->buttonReconst->isEnabled(buttonID) &&
 					(caller->buttonReconst->getCursor() == buttonID));
 			};
-			if (chkCursor(ButtonReconst::btnChii1)) {
-				tipText += _T("副露"); render(0, discardTile); render(1, TileCode(discardTile + 1)); render(2, TileCode(discardTile + 2));
-			} else if (chkCursor(ButtonReconst::btnChii2)) {
-				tipText += _T("副露"); render(0, TileCode(discardTile - 1)); render(1, discardTile); render(2, TileCode(discardTile + 1));
-			} else if (chkCursor(ButtonReconst::btnChii3)) {
-				tipText += _T("副露"); render(0, TileCode(discardTile - 2)); render(1, TileCode(discardTile - 1)); render(2, discardTile);
-			} else if (chkCursor(ButtonReconst::btnPon)) {
-				tipText += _T("副露"); render(0, discardTile); render(1, discardTile); render(2, discardTile);
-			} else if (chkCursor(ButtonReconst::btnKan)) {
-				tipText += _T("副露"); render(0, discardTile); render(1, discardTile); render(2, discardTile); render(3, discardTile);
-			}
 		}
 	}
 	myTextRenderer->NewText(0, tipText, TipX, TipY);
