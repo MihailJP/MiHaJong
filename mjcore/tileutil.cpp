@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cstring>
 #include <queue>
+#include <algorithm>
 #include "logging.h"
 #include "ruletbl.h"
 #include "shanten.h"
@@ -78,17 +79,8 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 		}
 	}
 
-	/* ここからソート作業 */
-	Tile tmpTile;
-	for (int i = 0; i < NumOfTilesInHand; i++) {
-		for (int j = i + 1; j < NumOfTilesInHand; j++) {
-			if (gameStat->Player[targetPlayer].Hand[i] > gameStat->Player[targetPlayer].Hand[j]) {
-				tmpTile = gameStat->Player[targetPlayer].Hand[i],
-					gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[j],
-					gameStat->Player[targetPlayer].Hand[j] = tmpTile;
-			}
-		}
-	}
+	/* ソート作業 */
+	std::sort(gameStat->Player[targetPlayer].Hand, gameStat->Player[targetPlayer].Hand + NumOfTilesInHand);
 
 	/* 空欄だったところは元に戻してあげましょう */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
