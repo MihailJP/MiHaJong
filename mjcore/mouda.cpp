@@ -194,7 +194,7 @@ namespace { /* 内部処理分割用 */
 	}
 	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 花牌を抜いた場合の処理 */
 		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
-			(gameStat->statOfActive().Hand[DiscardTileIndex.id].tile > TileSuitFlowers)) {
+			(gameStat->statOfActive().Hand[DiscardTileIndex.id].isFlower())) {
 				DiscardTileIndex.type = DiscardTileNum::Flower;
 				info(_T("花牌の処理に移ります。打牌コードを補正しました。"));
 		}
@@ -301,8 +301,7 @@ namespace { /* 内部処理分割用 */
 	void procDahaiSubPost(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 事後処理 */
 		/* 打牌を記録する */
 		DiscardTile* const newDiscard = &(gameStat->statOfActive().Discard[++gameStat->statOfActive().DiscardPointer]);
-		newDiscard->tcode.tile = gameStat->CurrentDiscard.tile = gameStat->statOfActive().Hand[DiscardTileIndex.id].tile;
-		newDiscard->tcode.red  = gameStat->CurrentDiscard.red  = gameStat->statOfActive().Hand[DiscardTileIndex.id].red;
+		newDiscard->tcode = gameStat->CurrentDiscard = gameStat->statOfActive().Hand[DiscardTileIndex.id];
 #ifndef GUOBIAO
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* 立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
@@ -312,16 +311,14 @@ namespace { /* 内部処理分割用 */
 #endif /* GUOBIAO */
 			newDiscard->dstat = discardNormal;
 		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
-		gameStat->statOfActive().Hand[DiscardTileIndex.id].tile = NoTile;
-		gameStat->statOfActive().Hand[DiscardTileIndex.id].red  = Normal;
+		gameStat->statOfActive().Hand[DiscardTileIndex.id] = Tile();
 		/* 一発のフラグを降ろす */
 		gameStat->statOfActive().RichiFlag.IppatsuFlag = false;
 		/* 自動的に理牌を行なう */
 		lipai(gameStat, gameStat->CurrentPlayer.Active);
 		// このとき牌を捨てているはず 表示バグ防止のため
 		for (PlayerID i = 0; i < Players; i++) {
-			gameStat->Player[i].Tsumohai().tile = NoTile;
-			gameStat->Player[i].Tsumohai().red  = Normal;
+			gameStat->Player[i].Tsumohai() = Tile();
 		}
 #ifndef GUOBIAO
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
@@ -357,8 +354,7 @@ namespace { /* 内部処理分割用 */
 			sound::Play(sound::IDs::sndDahai1);
 		/* このとき牌を捨てているはずなので、バグ防止のための処理 */
 		for (PlayerID i = 0; i < Players; i++) {
-			gameStat->Player[i].Tsumohai().tile = NoTile;
-			gameStat->Player[i].Tsumohai().red  = Normal;
+			gameStat->Player[i].Tsumohai() = Tile();
 		}
 		/* 再描画 */
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -434,10 +430,7 @@ void tsumoproc(GameTable* const gameStat) {
 	/* 東家の順番が回ってきたら次の巡目となる */
 	if (gameStat->playerwind(gameStat->CurrentPlayer.Active) == sEast)
 		++gameStat->TurnRound;
-	gameStat->statOfActive().Tsumohai().tile =
-		gameStat->Deck[gameStat->TilePointer].tile;
-	gameStat->statOfActive().Tsumohai().red =
-		gameStat->Deck[gameStat->TilePointer].red;
+	gameStat->statOfActive().Tsumohai() = gameStat->Deck[gameStat->TilePointer];
 	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
 	++gameStat->TilePointer;
 	sound::Play(sound::IDs::sndTsumo);

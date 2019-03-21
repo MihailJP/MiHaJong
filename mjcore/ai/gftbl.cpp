@@ -63,8 +63,7 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			lua_pushnumber(L, i + 1); lua_gettable(L, index);
 			if (lua_isnil(L, -1)) { // そこに牌はなかった
-				tmpGameStat->Player[player].Hand[i].tile = NoTile;
-				tmpGameStat->Player[player].Hand[i].red = Normal;
+				tmpGameStat->Player[player].Hand[i] = Tile();
 			} else if (lua_istable(L, -1)) { // 牌があった
 				lua_getfield(L, -1, "tile");
 				tmpGameStat->Player[player].Hand[i].tile = static_cast<TileCode>(lua_tointeger(L, -1));
@@ -76,6 +75,21 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 			lua_pop(L, 1);
 		}
 	}
+}
+
+/* 牌の移動 */
+int aiscript::table::functable::gametbl::luafunc::movetile(lua_State* const L) {
+	int n = chkargnum(L, 2, 2);
+	GameTable* gameStat = getGameStatAddr(L);
+	PlayerID player = getPlayerID(L, 0);
+	int index1 = static_cast<int>(lua_tointeger(L, -2)) - 1, index2 = static_cast<int>(lua_tointeger(L, -1)) - 1;
+	lua_pop(L, 2);
+	if ((index1 >= 0) && (index1 < TsumohaiIndex) && (index2 >= 0) && (index2 < TsumohaiIndex)) {
+		MoveTile::moveTile(gameStat, player, false, index1);
+		MoveTile::moveTile(gameStat, player, true, index2);
+		MoveTile::enqueue(player, index1, index2);
+	}
+	return 0;
 }
 
 /* 手を評価する */
@@ -223,7 +237,7 @@ int aiscript::table::functable::gametbl::luafunc::gethand(lua_State* const L) {
 	PlayerID player = getPlayerID(L, 2);
 	lua_newtable(L); // 戻り値を格納するテーブル
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[player].Hand[i].tile != NoTile) {
+		if (gameStat->Player[player].Hand[i]) {
 			/* 牌があったらサプテーブルに変換、なかったらnilのまま放置 */
 			lua_pushnumber(L, i + 1);
 			lua_newtable(L);
@@ -389,7 +403,7 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 戻り値を格納するテーブル
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[player].Hand[i].tile != NoTile) {
+		if (gameStat->Player[player].Hand[i]) {
 			lua_pushnumber(L, i + 1);
 			lua_newtable(L);
 			TableAdd(L, "issameasprevious", riskchk::issameasprevious(gameStat, player, i));

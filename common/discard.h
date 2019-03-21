@@ -8,7 +8,7 @@ namespace mihajong_structs {
 struct DiscardTileNum { /* 打牌コード用 */
 	enum discardType : uint8_t {
 		Normal, Ankan, Kakan, Riichi, Flower, OpenRiichi,
-		Agari, Kyuushu, Disconnect
+		Agari, Kyuushu, Disconnect, MeldSel
 	};
 	static const int TypeStep = 20;
 	discardType type;

@@ -28,9 +28,9 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		tipText = _T("");
 	} else if (tileCursor >= 0) {
 		/* 打牌仮定 */
-		GameTable tmpGameStat; memcpy(&tmpGameStat, GameStatus::gameStat(), sizeof (GameTable));
-		tmpGameStat.statOfMine().Hand[tileCursor].tile = tmpGameStat.statOfMine().Tsumohai().tile;
-		tmpGameStat.statOfMine().Tsumohai().tile = NoTile;
+		GameTable tmpGameStat(*GameStatus::gameStat());
+		tmpGameStat.statOfMine().Hand[tileCursor] = tmpGameStat.statOfMine().Tsumohai();
+		tmpGameStat.statOfMine().Tsumohai() = Tile();
 		/*  */
 		CodeConv::tostringstream o;
 		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::shantenAll);
@@ -49,7 +49,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 			int i = 0;
 			for (int j = 1; j < TileNonflowerMax; ++j) {
 				if (machiInfo.Machihai[j].MachihaiFlag) {
-					myTileRenderer->NewTile(i, static_cast<TileCode>(j), Normal,
+					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), Normal),
 						TipX + myTextRenderer->strWidthByPix(o.str()) + 20 + i * (ShowTile::VertTileWidth + 2),
 						TipY + (ShowTile::VertTileHeight / 2) - 6,
 						Portrait, Obverse,
@@ -66,7 +66,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
 			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;
 			auto render = [this, &tipText] (unsigned tileID, TileCode tileCode) -> void {
-				myTileRenderer->NewTile(tileID, tileCode, Normal,
+				myTileRenderer->NewTile(tileID, Tile(tileCode),
 					TipX + myTextRenderer->strWidthByPix(tipText) + 20 + tileID * (ShowTile::VertTileWidth + 2),
 					TipY + (ShowTile::VertTileHeight / 2) - 6,
 					Portrait, Obverse, 0xffffffff);
@@ -75,17 +75,6 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 				return (caller->buttonReconst->isEnabled(buttonID) &&
 					(caller->buttonReconst->getCursor() == buttonID));
 			};
-			if (chkCursor(ButtonReconst::btnChii1)) {
-				tipText += _T("副露"); render(0, discardTile); render(1, TileCode(discardTile + 1)); render(2, TileCode(discardTile + 2));
-			} else if (chkCursor(ButtonReconst::btnChii2)) {
-				tipText += _T("副露"); render(0, TileCode(discardTile - 1)); render(1, discardTile); render(2, TileCode(discardTile + 1));
-			} else if (chkCursor(ButtonReconst::btnChii3)) {
-				tipText += _T("副露"); render(0, TileCode(discardTile - 2)); render(1, TileCode(discardTile - 1)); render(2, discardTile);
-			} else if (chkCursor(ButtonReconst::btnPon)) {
-				tipText += _T("副露"); render(0, discardTile); render(1, discardTile); render(2, discardTile);
-			} else if (chkCursor(ButtonReconst::btnKan)) {
-				tipText += _T("副露"); render(0, discardTile); render(1, discardTile); render(2, discardTile); render(3, discardTile);
-			}
 		}
 	}
 	myTextRenderer->NewText(0, tipText, TipX, TipY);

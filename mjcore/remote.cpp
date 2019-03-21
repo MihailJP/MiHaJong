@@ -39,6 +39,7 @@ void RemoteDahai::startthread(RemoteDahai* inst) {
 	inst->thread();
 }
 void RemoteDahai::thread () {
+begin:
 	int ReceivedMsg;
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		volatile int ClientReceived = 0;
@@ -109,7 +110,16 @@ void RemoteDahai::thread () {
 	}
 	{
 		using namespace mihajong_socket::protocol;
-		if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
+		if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
+			MoveTile::moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			goto begin;
+		} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
+			MoveTile::moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			goto begin;
+		} else if (ReceivedMsg == Lipai_Reset) {
+			lipai(gameStat, gameStat->CurrentPlayer.Active);
+			goto begin;
+		} else if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Ankan_Offset) && (ReceivedMsg < (Dahai_Type_Ankan_Offset + NumOfTilesInHand))) {
 			remoteDahai.type = DiscardTileNum::Ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
@@ -155,6 +165,7 @@ void RemoteNaki::startthread(RemoteNaki* inst) {
 void RemoteNaki::thread_client() {
 	int ReceivedMsg; volatile int ClientReceived = 0;
 	for (int tmp = 0; tmp < ACTUAL_PLAYERS; tmp++) {
+begin:
 		while (true) {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::client::receive(&ClientReceived, &ReceivedMsg);
@@ -163,6 +174,16 @@ void RemoteNaki::thread_client() {
 		}
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
+			if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
+				MoveTile::moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				goto begin;
+			} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
+				MoveTile::moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				goto begin;
+			} else if (ReceivedMsg == Lipai_Reset) {
+				lipai(gameStat, tmp);
+				goto begin;
+			}
 			switch (ReceivedMsg) {
 			case Naki_Ron:
 				gameStat->Player[tmp].DeclarationFlag.Ron = true;
@@ -218,6 +239,14 @@ void RemoteNaki::thread_server() {
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
+		try {
+			std::pair<int, int> indices;
+			while (true) {
+				indices = MoveTile::dequeue(i);
+				mihajong_socket::server::send(Lipai_From + indices.first);
+				mihajong_socket::server::send(Lipai_To + indices.second);
+			}
+		} catch (std::runtime_error&) {}
 		if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
 		else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
 		else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);

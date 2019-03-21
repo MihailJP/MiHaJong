@@ -277,7 +277,7 @@ void haifu::haifurechaipai(const GameTable* const gameStat) {
 		XhaifuBufferBody << _T("\t\t\t<initial-hand player=\"player") << p << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 		for (int i = 0; i < NumOfTilesInHand; i++) {
-			if (gameStat->Player[p].Hand[i].tile != NoTile) {
+			if (gameStat->Player[p].Hand[i]) {
 				XhaifuBufferBody << _T("\t\t\t\t");
 				tools::recordTile_Inline(gameStat->Player[p].Hand[i], false);
 				XhaifuBufferBody << std::endl;
@@ -329,7 +329,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 #else /* GUOBIAO */
 		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
-	} else if (gameStat->statOfActive().Tsumohai().tile == NoTile) {
+	} else if (!gameStat->statOfActive().Tsumohai()) {
 		// 鳴いた直後 (何もしない)
 	} else if ((DiscardTileIndex.id) == (NumOfTilesInHand - 1)) {
 		// ツモ切り
@@ -565,7 +565,7 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 	bool agariFlag = false;
 	XhaifuBufferBody << _T("\t\t\t\t<hand>") << std::endl;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[player].Hand[i].tile != NoTile) {
+		if (gameStat->Player[player].Hand[i].tile) {
 			if (i == NumOfTilesInHand - 1) {
 				if ((RoundEndType == Ryuukyoku)||(RoundEndType == Agari)||(RoundEndType == Chonbo)) {
 					if (gameStat->TsumoAgariFlag) {
@@ -633,19 +633,19 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	Tile meldTile[3];
 	switch (meld.mstat) {
 	case meldSequenceExposedLower:
-		meldTile[0].tile = meld.tile; meldTile[0].red = meld.red[0];
-		meldTile[1].tile = TileCode(meld.tile + 1); meldTile[1].red = meld.red[1];
-		meldTile[2].tile = TileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+		meldTile[0] = Tile(meld.tile, meld.red[0]);
+		meldTile[1] = Tile(TileCode(meld.tile + 1), meld.red[1]);
+		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
 	case meldSequenceExposedMiddle:
-		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
-		meldTile[0].tile = TileCode(meld.tile + 1); meldTile[0].red = meld.red[1];
-		meldTile[2].tile = TileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+		meldTile[1] = Tile(meld.tile, meld.red[0]);
+		meldTile[0] = Tile(TileCode(meld.tile + 1), meld.red[1]);
+		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
 	case meldSequenceExposedUpper:
-		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
-		meldTile[2].tile = TileCode(meld.tile + 1); meldTile[2].red = meld.red[1];
-		meldTile[0].tile = TileCode(meld.tile + 2); meldTile[0].red = meld.red[2];
+		meldTile[1] = Tile(meld.tile, meld.red[0]);
+		meldTile[2] = Tile(TileCode(meld.tile + 1), meld.red[1]);
+		meldTile[0] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
 	default:
 		// This must not occur...
@@ -659,7 +659,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	XhaifuBufferBody << _T("\t\t\t\t</sequence>") << std::endl;
 }
 inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID player, MeldCode meld) {
-	Tile meldTile = {meld.tile, meld.red[0]};
+	const Tile meldTile(meld.tile, meld.red[0]);
 	XhaifuBufferBody << _T("\t\t\t\t\t");
 	if ((meld.mstat == meldQuadAddedLeft) ||
 		(meld.mstat == meldQuadAddedCenter) ||
@@ -707,7 +707,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	}
 	for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
 		if (i == interrupt) hfPon1(player, meld);
-		Tile meldTile = {meld.tile, meld.red[i]};
+		const Tile meldTile(meld.tile, meld.red[i]);
 		XhaifuBufferBody << _T("\t\t\t\t\t");
 		recordTile_Inline(meldTile, false);
 		XhaifuBufferBody << std::endl;

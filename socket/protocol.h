@@ -35,6 +35,11 @@ namespace protocol {
 	constexpr uint8_t StartRound_Dice_Excess = 0xa8; // サイコロの出目 0xa9〜0xae
 	constexpr uint8_t StartRound_Tile_Excess = 0x10; // 牌番号のゲタ
 
+	// 理牌コード送受信用
+	constexpr uint8_t Lipai_To = 0x40; // 理牌先の位置指定
+	constexpr uint8_t Lipai_From = 0x50; // 理牌元の牌
+	constexpr uint8_t Lipai_Reset = 0x5f; // 理牌リセット
+
 	// 捨牌コード送受信用
 	constexpr uint8_t Dahai_Type_Normal_Offset = 0x60; // 普通の捨牌 (0x60 .. 0x6d)
 	constexpr uint8_t Dahai_Type_Ankan_Offset = 0x70; // 暗槓

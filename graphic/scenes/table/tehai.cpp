@@ -24,15 +24,26 @@ void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, Playe
 		}, playerRelative(targetPlayer, gameStat->PlayerID),
 		[this](int i) -> ArgbColor {
 			Color tileColor; tileColor.rgbaAsOneValue = 0xffffffff;
-			if (tileCursor == i) {
-				const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
-				tileColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
-				tileColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
-			}
-			if (!tileEnabled[i]) { // 暗転処理
-				tileColor.rgbaAsStruct.r /= 3;
-				tileColor.rgbaAsStruct.g /= 3;
-				tileColor.rgbaAsStruct.b /= 3;
+			if (firstChosenTile == i) {
+				if (tileCursor == i) {
+					const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
+					tileColor.rgbaAsStruct.r = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
+					tileColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
+				} else {
+					tileColor.rgbaAsStruct.r /= 2;
+					tileColor.rgbaAsStruct.b /= 2;
+				}
+			} else {
+				if (tileCursor == i) {
+					const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
+					tileColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
+					tileColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(tileColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 5.0 + 0.75));
+				}
+				if (!tileEnabled[i]) { // 暗転処理
+					tileColor.rgbaAsStruct.r /= 3;
+					tileColor.rgbaAsStruct.g /= 3;
+					tileColor.rgbaAsStruct.b /= 3;
+				}
 			}
 			return tileColor.rgbaAsOneValue;
 		}, [this](const int* x, const int* y, int i) -> void {
@@ -54,6 +65,7 @@ void GameTableScreen::TehaiReconst::Render() {
 GameTableScreen::TehaiReconst::TehaiReconst(GameTableScreen* parent) : ShowTehai(parent->caller->getDevice()) {
 	caller = parent;
 	tileCursor = tileCursorOff;
+	firstChosenTile = tileCursorOff;
 	tileEnabled.set();
 }
 

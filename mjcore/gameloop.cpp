@@ -35,8 +35,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 		gameStat->KangFlag.chainFlag = 0;
 		gameStat->KangFlag.topFlag = false;
 	}
-	gameStat->CurrentDiscard.tile = NoTile;
-	gameStat->CurrentDiscard.red = Normal;
+	gameStat->CurrentDiscard = Tile();
 	/* 再描画 */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 摸打の処理 */

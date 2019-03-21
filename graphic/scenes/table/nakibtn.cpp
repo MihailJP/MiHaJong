@@ -1,4 +1,5 @@
 ﻿#include <cmath>
+#include <cassert>
 #include "../../pi.h"
 
 #include "nakibtn.h"
@@ -8,7 +9,6 @@
 #include "../../gametbl.h"
 #include "../../rule.h"
 #include "../../event.h"
-#include "../../../common/discard.h"
 #include "../../../sound/sound.h"
 #include "../../../common/bgmid.h"
 
@@ -28,9 +28,9 @@ template <typename T> T scaleToWindow(T val) {
 constexpr GameTableScreen::ButtonReconst::BtnData
 	GameTableScreen::ButtonReconst::buttonDat[2][GameTableScreen::ButtonReconst::btnMAXIMUM] = {
 		{
-			{_T("左チー"),   5 + 117 * 0, Geometry::BaseSize - 40, 0xffccff66},
-			{_T("嵌チー"),   5 + 117 * 1, Geometry::BaseSize - 40, 0xff99ff99},
-			{_T("右チー"),   5 + 117 * 2, Geometry::BaseSize - 40, 0xff66ff99},
+			{_T(""),         5 + 117 * 0, Geometry::BaseSize - 40, 0xff666666},
+			{_T(""),         5 + 117 * 1, Geometry::BaseSize - 40, 0xff666666},
+			{_T("チー"),     5 + 117 * 2, Geometry::BaseSize - 40, 0xffccff66},
 			{_T("ポン"),     5 + 117 * 3, Geometry::BaseSize - 40, 0xff99ccff},
 			{_T("カン"),     5 + 117 * 4, Geometry::BaseSize - 40, 0xff9966ff},
 			{_T("パス"),     5 + 117 * 5, Geometry::BaseSize - 40, 0xffcccccc},
@@ -196,7 +196,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 
 	const bool ShisanBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisanBuDa(gameStat, ActivePlayer);
 	const bool ShisiBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisiBuDa(gameStat, ActivePlayer);
-	if (((shanten <= -1) && (playerStat->Tsumohai().tile != NoTile)) || // 和了になっているか
+	if (((shanten <= -1) && (playerStat->Tsumohai())) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
 		buttonEnabled[btnTsumo] = true; // 和了ボタン
 
@@ -221,7 +221,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		}
 		return false;
 	} ();
-	if (KanFlag && (playerStat->Tsumohai().tile != NoTile) &&
+	if (KanFlag && (playerStat->Tsumohai()) &&
 		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[btnKan] = true;
 
@@ -230,10 +230,10 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		if (gameStat->gameType & SanmaX)
 			return (playerStat->Tsumohai().tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
 		else
-			return playerStat->Tsumohai().tile > TileSuitFlowers;
+			return playerStat->Tsumohai().isFlower();
 	} ();
 	if (((gameStat->gameType & GuobiaoMJ) || (!rules::chkRule("flower_tiles", "no"))) &&
-		(playerStat->Tsumohai().tile != NoTile) &&
+		(playerStat->Tsumohai()) &&
 		(TileCount[flowerTile] >= 1) &&
 		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
 		buttonEnabled[btnFlower] = true;
@@ -256,7 +256,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
 	playerStat->Tsumohai().tile = NoTile;
 
-	if (gameStat->CurrentDiscard.tile > TileSuitFlowers) goto end; /* 花牌の場合は残りの判定をスキップ */
+	if (gameStat->CurrentDiscard.isFlower()) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
 	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
 		(gameStat->gameType & RichiMJ) && // 中国ルール以外で
@@ -279,20 +279,20 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
 		if ((gameStat->gameType & (Yonma | GuobiaoMJ)) && // 四麻である
-			(gameStat->CurrentDiscard.tile < TileSuitHonors) && // 数牌で
+			(gameStat->CurrentDiscard.isNumber()) && // 数牌で
 			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= 1) &&
 					(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃
-						buttonEnabled[btnChii1] = true;
+						buttonEnabled[btnChii] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= 2) &&
 					(TileCount[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 1] >= 1)) { // 嵌張吃
-						buttonEnabled[btnChii2] = true;
+						buttonEnabled[btnChii] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= 3) &&
 					(TileCount[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount[gameStat->CurrentDiscard.tile - 1] >= 1)) { // 上吃
-						buttonEnabled[btnChii3] = true;
+						buttonEnabled[btnChii] = true;
 				}
 		}
 	}
@@ -318,24 +318,26 @@ GameTableScreen::ButtonReconst::~ButtonReconst() {
 	delete buttons;
 }
 
+/* モード設定 */
+void GameTableScreen::ButtonReconst::setMode(DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) {
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	caller->tileSelectMode = mode;
+	this->setSunkenButton(button);
+	for (int i = 0; i < btnMAXIMUM; ++i)
+		if (i != button)
+			this->disable(static_cast<ButtonID>(i));
+	this->reconstruct();
+	caller->tehaiReconst->enable();
+	for (int i = 0; i < NumOfTilesInHand; ++i) {
+		GameTable tmpStat(*GameStatus::gameStat());
+		if ((i == caller->tehaiReconst->getFirstChosenTile()) || f(i, &tmpStat))
+			caller->tehaiReconst->disable(i);
+	}
+	caller->tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
+}
+
 /* ボタンが押された時の処理 */
 void GameTableScreen::ButtonReconst::ButtonPressed() {
-	auto setMode = [&](DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) -> void {
-		MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
-		caller->tileSelectMode = mode;
-		this->setSunkenButton(button);
-		for (int i = 0; i < btnMAXIMUM; ++i)
-			if (i != button)
-				this->disable(static_cast<ButtonID>(i));
-		this->reconstruct();
-		caller->tehaiReconst->enable();
-		for (int i = 0; i < NumOfTilesInHand; ++i) {
-			GameTable tmpStat; memcpy(&tmpStat, GameStatus::gameStat(), sizeof (GameTable));
-			if (f(i, &tmpStat)) caller->tehaiReconst->disable(i);
-		}
-		caller->tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->CurrentPlayer.Active);
-	};
-
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
 	sound::Play(sound::IDs::sndButton);
 	if (!this->isEnabled(static_cast<ButtonID>(this->getCursor()))) {
@@ -386,11 +388,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
 					if (tmpStat->gameType & SanmaX)
-						return tmpStat->statOfActive().Hand[i].tile !=
-							NorthWind;
+						return tmpStat->statOfActive().Hand[i].tile != NorthWind;
 					else
-						return tmpStat->statOfActive().Hand[i].tile <
-							TileSuitFlowers;
+						return !tmpStat->statOfActive().Hand[i].isFlower();
 				});
 			break;
 		default:
@@ -409,16 +409,48 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			ui::UIEvent->set(naki::nakiKan);
 			break;
 		case btnPon:
-			ui::UIEvent->set(naki::nakiPon);
+			if (caller->countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
+				setMode(DiscardTileNum::MeldSel, btnPon,
+					[](int i, GameTable* tmpStat) -> bool {
+						return tmpStat->statOfMine().Hand[i].tile != tmpStat->CurrentDiscard.tile;
+					});
+				caller->tehaiReconst->setTileCursor(0), setCursor();
+				caller->tehaiReconst->Render();
+			} else {
+				ui::UIEvent->set(naki::nakiPon);
+			}
 			break;
-		case btnChii1:
-			ui::UIEvent->set(naki::nakiChiLower);
-			break;
-		case btnChii2:
-			ui::UIEvent->set(naki::nakiChiMiddle);
-			break;
-		case btnChii3:
-			ui::UIEvent->set(naki::nakiChiUpper);
+		case btnChii:
+			assert(GameStatus::gameStat()->CurrentDiscard.isNumber());
+			{
+				const auto tilesInHand = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
+				const auto chiiable = [&tilesInHand](TileCode p, TileCode q) {
+					if (Tile(p).getSuit() != Tile(q).getSuit())
+						return false;
+					else if ((p == q + 2) && (tilesInHand[q + 1] > 0)) return true;
+					else if  (p == q + 1)                              return true;
+					else if  (p == q - 1)                              return true;
+					else if ((p == q - 2) && (tilesInHand[p + 1] > 0)) return true;
+					else                                               return false;
+				};
+				if (caller->countTiles(chiiable) > 2) {
+					setMode(DiscardTileNum::MeldSel, btnChii,
+						[chiiable](int i, GameTable* tmpStat) -> bool {
+						return !chiiable(tmpStat->statOfMine().Hand[i].tile, tmpStat->CurrentDiscard.tile);
+					});
+					caller->tehaiReconst->setTileCursor(0), setCursor();
+					caller->tehaiReconst->Render();
+				} else {
+					const auto discard = GameStatus::gameStat()->CurrentDiscard.tile;
+					if ((discard % mihajong_structs::TileSuitStep > 2) && (tilesInHand[discard - 2] > 0)) {
+						ui::UIEvent->set(naki::nakiChiUpper);
+					} else if ((discard % mihajong_structs::TileSuitStep < 8) && (tilesInHand[discard + 2] > 0)) {
+						ui::UIEvent->set(naki::nakiChiLower);
+					} else {
+						ui::UIEvent->set(naki::nakiChiMiddle);
+					}
+				}
+			}
 			break;
 		default:
 			sound::Play(sound::IDs::sndCuohu);
