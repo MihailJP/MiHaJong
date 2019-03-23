@@ -210,6 +210,13 @@ MH_TEST_SLEEP
 	AM_CONDITIONAL(OLDER_BOOST_WAIT, false)
 ])
 
+AM_PATH_PYTHON([2.6], [], [AC_MSG_ERROR([Python is unavailable])])
+MH_CHECK_PYTHON_MODULE([lzma], [], [
+	MH_CHECK_PYTHON_MODULE([pylzma], [], [
+		AC_MSG_ERROR([Neither 'lzma' nor 'pylzma' available])
+	])
+])
+
 AC_CONFIG_FILES([Makefile
                  astro/Makefile
                  graphic/Makefile
