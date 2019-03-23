@@ -15,6 +15,7 @@
 #else /* _WIN32 */
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h>
 #endif /* _WIN32 */
 #include "except.h"
 #include "logger.h"
