@@ -1109,10 +1109,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* 吃三嵌 */
-	auto kanchanCount =
+	const auto kanchanCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++)
+			for (int i = 1; i < SizeOfMeldBuffer; i++)
 				if (analysis->MianziDat[i].mstat == meldSequenceExposedMiddle) ++count;
 			return count;
 		};
@@ -1132,10 +1132,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 吃三辺 */
-	auto penchanCount =
+	const auto penchanCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++) {
+			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
 					if ((analysis->MianziDat[i].mstat == meldSequenceExposedLower) &&
 						(analysis->MianziDat[i].tile == TileSuitStep + 7)) ++count;
@@ -1161,10 +1161,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 吃小順 */
-	auto xiaoShunCount =
+	const auto xiaoShunCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++) {
+			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				if (analysis->MianziDat[i].mstat == meldSequenceExposedLower) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
@@ -1190,10 +1190,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 吃大順 */
-	auto daShunCount =
+	const auto daShunCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++) {
+			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				if (analysis->MianziDat[i].mstat == meldSequenceExposedUpper) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
