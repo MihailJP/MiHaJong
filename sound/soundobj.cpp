@@ -59,8 +59,10 @@ sound::SoundManipulator::SoundManipulator(int device, HWND hWnd)
 sound::SoundManipulator::SoundManipulator(int device, Window hWnd)
 #endif /* _WIN32 */
 {
+#ifdef USE_XAUDIO2
 	mVoice = nullptr;
 	xAudio = nullptr;
+#endif /* USE_XAUDIO2 */
 	if (hWnd)
 		InitXAudio(hWnd);
 	else

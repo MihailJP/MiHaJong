@@ -3,14 +3,16 @@
 #include <string>
 #include <sstream>
 #include "../common/strcode.h"
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
 #include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
+#endif
 
 sound::SoundManipulator* sound::soundManipulator = nullptr;
 
 namespace {
 
-#if defined(_WIN32) && defined(MIDI_SUPPORT)
 int deviceID(const CodeConv::tstring& deviceName) {
+#if defined(_WIN32) && defined(MIDI_SUPPORT)
 	const UINT numOfDevs(midiOutGetNumDevs());
 	MIDIOUTCAPS midiOutCaps{};
 
@@ -21,8 +23,10 @@ int deviceID(const CodeConv::tstring& deviceName) {
 	}
 
 	return GuruGuruSmf::Device::DirectMusic;
-}
+else /* defined(_WIN32) && defined(MIDI_SUPPORT) */
+	return 0;
 #endif /* defined(_WIN32) && defined(MIDI_SUPPORT) */
+}
 
 }
 
