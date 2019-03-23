@@ -109,3 +109,4 @@ compile
 .vs/
 *.aps
 !config/config.h
+*.Plo
