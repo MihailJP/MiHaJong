@@ -110,3 +110,4 @@ compile
 *.aps
 !config/config.h
 *.Plo
+.dirstamp
