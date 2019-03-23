@@ -14,6 +14,15 @@
 #include "ruletbl.h"
 #include "yaku/yaku.h"
 
+#ifndef _WIN32
+#ifndef HAVE_LOCALTIME_S
+#define localtime_s localtime_r
+#endif /* HAVE_LOCALTIME_S */
+#ifndef HAVE_GMTIME_S
+#define gmtime_s gmtime_r
+#endif /* HAVE_LOCALTIME_S */
+#endif /*_WIN32*/
+
 /* レガシー牌譜形式（プレーンテキスト、HTML）は廃止しました。XMLに統一します。 */
 
 /* 雀牌の名前データ */
@@ -225,11 +234,12 @@ void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タ�
 #else /*_WIN32*/
 	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
 	tm currTime;
-	localtime_s(&currTime, &tempus.tv_sec);
-	constexpr signed long tz = []() -> signed long {
+	localtime_s(&tempus.tv_sec, &currTime);
+	const signed long tz = []() -> signed long {
 		time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
-		tm* tmDat = gmtime(&t1); // 協定世界時を算出
-		time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
+		tm tmDat;
+		gmtime_s(&t1, &tmDat); // 協定世界時を算出
+		time_t t2 = mktime(&tmDat); // わざと地方時と解釈することで時差を求める
 		return t1 - t2; // 秒単位で時差を返す。日本時間だったら32400となる
 	}();
 	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
@@ -901,7 +911,7 @@ void haifu::haifusave(const GameTable* const gameStat) {
 #else /*_WIN32*/
 	time_t tempus = time(nullptr);
 	tm ltime;
-	localtime_s(&ltime, &tempus);
+	localtime_s(&tempus, &ltime);
 	filename2 << std::setw(4) << std::setfill('0') << (ltime.tm_year + 1900);
 	filename2 << std::setw(2) << std::setfill('0') << (ltime.tm_mon + 1);
 	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_mday << "_";

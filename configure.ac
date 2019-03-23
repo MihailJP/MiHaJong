@@ -158,7 +158,8 @@ AC_FUNC_MKTIME
 AS_IF([test "x$using_winapi" = xno],
 	[AC_PATH_X]
 )
-AC_CHECK_FUNCS([clock_gettime floor getaddrinfo memmove memset mkdir pow setlocale socket sqrt strstr])
+AC_CHECK_FUNCS([clock_gettime floor getaddrinfo gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
+
 
 AC_ARG_ENABLE([midi],
 	[AS_HELP_STRING([--enable-midi],

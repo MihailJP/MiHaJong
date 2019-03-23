@@ -207,7 +207,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				// まず、正しいコードになっているかを確認する(デバッグ時)
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep <= 7);
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep > 0);
-				assert(gameStat->Player[i].Meld[j].tile < TileSuitHonors);
+				assert(Tile(gameStat->Player[i].Meld[j].tile).isNumber());
 				// カウントアップ
 				for (int k = gameStat->Player[i].Meld[j].tile;
 					k <= gameStat->Player[i].Meld[j].tile + 2; k++)
@@ -328,12 +328,12 @@ MJCORE TileStatus gettilestatus(
 	if (*theTile == NoTile) return tlStat; // なかったら戻る
 
 	tlStat.isExistent = true; // ここにたどり着いたら、それは存在する牌です
-	auto tlCount = countTilesInHand(gameStat, targetPlayer); // 牌を数えろ、話はそれからだ
+	const auto tlCount = countTilesInHand(gameStat, targetPlayer); // 牌を数えろ、話はそれからだ
 
 	if (tlCount[*theTile] == 4) tlStat.canFormQuad = true; // 暗槓が可能な牌
 	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // 暗刻を形成している場合
 	
-	if (*theTile < TileSuitHonors) { // 順子を形成している場合
+	if (Tile(*theTile).isNumber()) { // 順子を形成している場合
 		if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) + 2] >= 1))
 			tlStat.formsSequence = true;
 		else if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
@@ -344,7 +344,7 @@ MJCORE TileStatus gettilestatus(
 
 	if ((tlCount[*theTile] >= 2)&&(!tlStat.formsTriplet)) tlStat.formsPair = true; // 対子を形成している場合
 
-	if (*theTile < TileSuitHonors) { // 辺張を形成している場合
+	if (Tile(*theTile).isNumber()) { // 辺張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TileSuitStep == 1))
 				tlStat.seqSingleSideWait = true;
@@ -357,7 +357,7 @@ MJCORE TileStatus gettilestatus(
 		}
 	}
 	
-	if (*theTile < TileSuitHonors) { // 両面塔子を形成している場合
+	if (Tile(*theTile).isNumber()) { // 両面塔子を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TileSuitStep != 1)&&
 				(*theTile % TileSuitStep != 8)) tlStat.seqDoubleSideWait = true;
@@ -366,7 +366,7 @@ MJCORE TileStatus gettilestatus(
 		}
 	}
 	
-	if (*theTile < TileSuitHonors) { // 嵌張を形成している場合
+	if (Tile(*theTile).isNumber()) { // 嵌張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 2] >= 1)&&(*theTile % TileSuitStep != 9))
 				tlStat.seqMidWait = true;
@@ -490,7 +490,7 @@ namespace setdora_tools {
 
 	void addDora(GameTable* const gameStat, TileCode tc, int Mode) {
 		for (int i = (RuleData::chkRuleApplied("nagatacho") ? tc % 10 : tc);
-			i <= static_cast<int>((RuleData::chkRuleApplied("nagatacho") && (tc < TileSuitHonors)) ? TileSuitHonors : tc);
+			i <= ((RuleData::chkRuleApplied("nagatacho") && Tile(tc).isNumber()) ? static_cast<int>(TileSuitHonors) : static_cast<int>(tc));
 			i += 10) {
 				CodeConv::tostringstream o;
 				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する

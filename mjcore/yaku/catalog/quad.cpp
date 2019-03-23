@@ -2,6 +2,15 @@
 #include "../../../astro/astro.h"
 #include "../../../common/strcode.h"
 
+#ifndef _WIN32
+#ifndef HAVE_LOCALTIME_S
+#define localtime_s localtime_r
+#endif /* HAVE_LOCALTIME_S */
+#ifndef HAVE_GMTIME_S
+#define gmtime_s gmtime_r
+#endif /* HAVE_LOCALTIME_S */
+#endif /*_WIN32*/
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 #ifndef GUOBIAO
 	/* 超四喜 */
@@ -205,14 +214,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 #else /*_WIN32*/
 				const signed long Zeitzone = []() -> signed long {
 					time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
-					tm* tmDat = gmtime(&t1); // 協定世界時を算出
-					time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
+					tm tmDat;
+					gmtime_s(&t1, &tmDat); // 協定世界時を算出
+					time_t t2 = mktime(&tmDat); // わざと地方時と解釈することで時差を求める
 					return t1 - t2; // 秒単位で時差を返す。日本時間だったら32400となる
 				}();
 				timespec Zeitzahl; tm Zeit, ZeitMitternacht;
 				clock_gettime(CLOCK_REALTIME, &Zeitzahl);
-				localtime_s(&Zeit, &Zeitzahl.tv_sec);
-				localtime_s(&ZeitMitternacht, &Zeitzahl.tv_sec);
+				localtime_s(&Zeitzahl.tv_sec, &Zeit);
+				localtime_s(&Zeitzahl.tv_sec, &ZeitMitternacht);
 				timespec HeuteMitternacht; memset(&HeuteMitternacht, 0, sizeof (timespec));
 				ZeitMitternacht.tm_year = Zeit.tm_year;
 				ZeitMitternacht.tm_mon = Zeit.tm_mon;

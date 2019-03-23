@@ -21,6 +21,7 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
 	doraCol red;
 	constexpr explicit operator bool() const {return tile != NoTile;}
+	constexpr bool operator ! () const {return tile == NoTile;}
 	constexpr bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
 	constexpr bool operator != (const Tile& otherTile) const {return !(*this == otherTile);}
 	constexpr bool operator < (const Tile& otherTile) const {
@@ -55,7 +56,9 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 			return TileSuitInvalid;
 		}
 	}
-	constexpr bool isNumber() const {return static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors);}
+	constexpr bool isNumber() const {
+		return (tile != NoTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors));		
+	}
 	constexpr bool isHonor() const {return getSuit() == TileSuitHonors;}
 	constexpr bool isFlower() const {return getSuit() == TileSuitFlowers;}
 	constexpr explicit Tile(TileCode tile = NoTile, doraCol red = Normal) : tile(tile), red(red) {}

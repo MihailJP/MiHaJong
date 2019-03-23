@@ -343,7 +343,7 @@ namespace { /* 内部処理分割用 */
 		/* 打牌するときの音を鳴らす */
 		/* ドラを捨てる時は強打の音にする */
 #ifndef GUOBIAO
-		if (gameStat->CurrentDiscard.tile > TileSuitFlowers)
+		if (gameStat->CurrentDiscard.isFlower())
 			sound::Play(sound::IDs::sndDahai2);
 		else if ((gameStat->CurrentDiscard.red == AkaDora) || (gameStat->DoraFlag.Omote[gameStat->CurrentDiscard.tile] > 0))
 			sound::Play(sound::IDs::sndDahai2);

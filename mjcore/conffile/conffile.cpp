@@ -7,6 +7,9 @@
 #include <regex>
 #include <cassert>
 #include <locale>
+#ifndef _WIN32
+#include <unistd.h>
+#endif /* _WIN32 */
 
 namespace ConfigFile {
 
@@ -16,7 +19,11 @@ typedef std::basic_regex<TCHAR> tregex;
 std::string ConfigFile::confPath() {
 	std::string configpath = "";
 	char* cur = new char[1024];
+#ifdef _WIN32
 	GetCurrentDirectoryA(1024, cur);
+#else /* _WIN32 */
+	getcwd(cur, 1024);
+#endif /* _WIN32 */
 	char* progfiles = new char[1024];
 	char* appdata = new char[1024];
 #if defined(_MSC_VER)
@@ -190,6 +197,7 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 }
 
 unsigned int ConfigFile::screenResolutionX() {
+#ifdef _WIN32
 	if (scrMode() == ScreenMode::scrModeBorderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
@@ -207,6 +215,7 @@ unsigned int ConfigFile::screenResolutionX() {
 			return width;
 		}
 	} else {
+#endif /* WIN32 */
 		switch (screenResolution()) {
 		case screenSVGA:   return  800u;
 		case screenXGA:    return 1024u;
@@ -217,9 +226,12 @@ unsigned int ConfigFile::screenResolutionX() {
 		case screenWUXGA:  return 1920u;
 		default:           return    0u;
 		}
+#ifdef _WIN32
 	}
+#endif /* WIN32 */
 }
 unsigned int ConfigFile::screenResolutionY() {
+#ifdef _WIN32
 	if (scrMode() == ScreenMode::scrModeBorderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
@@ -237,6 +249,7 @@ unsigned int ConfigFile::screenResolutionY() {
 			return height;
 		}
 	} else {
+#endif /* WIN32 */
 		switch (screenResolution()) {
 		case screenSVGA:   return  600u;
 		case screenXGA:    return  768u;
@@ -247,7 +260,9 @@ unsigned int ConfigFile::screenResolutionY() {
 		case screenWUXGA:  return 1200u;
 		default:           return    0u;
 		}
+#ifdef _WIN32
 	}
+#endif /* WIN32 */
 }
 
 /* モニタ番号 */

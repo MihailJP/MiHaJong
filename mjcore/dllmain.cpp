@@ -208,6 +208,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 #include "except.h"
 
 ErrorInfo errorInfo;
-constexpr uintptr_t errorInfoPtr[1] = {static_cast<uintptr_t>(&errorInfo)};
+constexpr uintptr_t errorInfoPtr[1] = {reinterpret_cast<uintptr_t>(&errorInfo)};
 
 #endif /*_WIN32*/

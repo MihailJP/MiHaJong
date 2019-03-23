@@ -2,6 +2,15 @@
 
 #include "../../func.h"
 
+#ifndef _WIN32
+#ifndef HAVE_LOCALTIME_S
+#define localtime_s localtime_r
+#endif /* HAVE_LOCALTIME_S */
+#ifndef HAVE_GMTIME_S
+#define gmtime_s gmtime_r
+#endif /* HAVE_LOCALTIME_S */
+#endif /*_WIN32*/
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #ifndef GUOBIAO
 	auto countTilesOf =
@@ -58,7 +67,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
 				tm nowTime;
-				localtime_s(&nowTime, &nowTimeVal);
+				localtime_s(&nowTimeVal, &nowTime);
 				return ((nowTime.tm_mon + 1) == 4) && (nowTime.tm_mday == 1);
 #endif /*_WIN32*/
 			};
@@ -518,7 +527,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #else /*_WIN32*/
 					time_t nowTimeVal = time(nullptr);
 					tm nowTime;
-					localtime_s(&nowTime, &nowTimeVal);
+					localtime_s(&nowTimeVal, &nowTime);
 					if (((nowTime.tm_mon + 1) == 2) && (nowTime.tm_mday == 29))
 #endif /*_WIN32*/
 						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
@@ -531,8 +540,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
 				tm nowTime;
-				localtime_s(&nowTime, &nowTimeVal);
-				constexpr int year = nowTime.tm_year + 1900;
+				localtime_s(&nowTimeVal, &nowTime);
+				const int year = nowTime.tm_year + 1900;
 				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 #endif /*_WIN32*/
 				if (!isLeapYear) return false;

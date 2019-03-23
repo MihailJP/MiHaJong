@@ -1,6 +1,15 @@
 ﻿#include "../catalog.h"
 #include "../../../common/strcode.h"
 
+#ifndef _WIN32
+#ifndef HAVE_LOCALTIME_S
+#define localtime_s localtime_r
+#endif /* HAVE_LOCALTIME_S */
+#ifndef HAVE_GMTIME_S
+#define gmtime_s gmtime_r
+#endif /* HAVE_LOCALTIME_S */
+#endif /*_WIN32*/
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #ifndef GUOBIAO
 	/* 奇数対々和 */
@@ -160,7 +169,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 
 	// ---------------------------------------------------------------------
 
-	auto haouben =
+	const auto haouben =
 		[](const MENTSU_ANALYSIS* const analysis, TileCode tc, int step) -> bool {
 			if ((analysis->KangziCount[tc] >= 1) &&
 				(analysis->KeziCount[tc + step] >= 1) &&
@@ -457,7 +466,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		));
 	/* 青春に悔いなし */
 	if (RuleData::chkRuleApplied("seishun_kuinashi")) {
-		auto seishunnikuinashi =
+		const auto seishunnikuinashi =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->KeziCount[RedDragon] >= 1) &&
 					(analysis->KeziCount[GreenDragon] >= 1));
@@ -531,7 +540,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			}
 		));
 	/* ３分間待ってやる */
-	auto anysuit3 =
+	const auto anysuit3 =
 		[](const MENTSU_ANALYSIS* const analysis, int val1, int val2, int val3, bool noDui) -> bool {
 			const Int8ByTile* count = noDui ? &analysis->KeziCount : &analysis->DuiziCount;
 			bool yakuFlag = false;
@@ -578,7 +587,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		));
 	}
 	/* 初音ミク */
-	auto anysuit2 =
+	const auto anysuit2 =
 		[](const MENTSU_ANALYSIS* const analysis, int val1, int val2, bool noDui) -> bool {
 			const Int8ByTile* count = noDui ? &analysis->KeziCount : &analysis->DuiziCount;
 			bool yakuFlag = false;
@@ -621,7 +630,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 
 	/* ビックボーナス */
 	if (RuleData::chkRuleApplied("777")) {
-		auto yaku777 =
+		const auto yaku777 =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[CharacterSeven] >= 1) &&
 					(analysis->KeziCount[CircleSeven] >= 1) &&
@@ -641,7 +650,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	}
 	/* クリスマス */
 	if (RuleData::chkRuleApplied("christmas")) {
-		auto chris =
+		const auto chris =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 0; i < 6; i++)
 					if ((analysis->KeziCount[(parsedat_trichrome3[i][0] - _T('0')) + 1] >= 1) &&
@@ -651,7 +660,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 						return true;
 				return false;
 			};
-		auto chrisday = 
+		const auto chrisday = 
 			[]() -> bool {
 #ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
@@ -659,7 +668,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
 				tm nowTime;
-				localtime_s(&nowTime, &nowTimeVal);
+				localtime_s(&nowTimeVal, &nowTime);
 				return ((nowTime.tm_mon + 1) == 12) && (nowTime.tm_mday == 25);
 #endif /*_WIN32*/
 			};
@@ -691,7 +700,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	}
 	/* 一富士二鷹三茄子 */
 	if (RuleData::chkRuleApplied("newyear_dream")) {
-		auto isnewyeardays = 
+		const auto isnewyeardays = 
 			[]() -> bool {
 #ifdef _WIN32
 				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
@@ -699,11 +708,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #else /*_WIN32*/
 				time_t nowTimeVal = time(nullptr);
 				tm nowTime;
-				localtime_s(&nowTime, &nowTimeVal);
+				localtime_s(&nowTimeVal, &nowTime);
 				return ((nowTime.tm_mon + 1) == 1) && (nowTime.tm_mday <= 2);
 #endif /*_WIN32*/
 			};
-		auto newyrdrm =
+		const auto newyrdrm =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->PlayerStat->MeldPointer >= 3)
 					return ((analysis->PlayerStat->Meld[1].mstat > meldTripletConcealed) &&
