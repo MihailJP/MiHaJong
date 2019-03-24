@@ -455,7 +455,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			bool flag[TileSuitHonors / TileSuitStep] = {false};
 			if (analysis->shanten[shantenRegular] == -1) {
 				for (int k = 0; k < SizeOfMeldBuffer; k++)
-					if (analysis->MianziDat[k].tile < TileSuitHonors)
+					if (Tile(analysis->MianziDat[k].tile).isNumber())
 						flag[analysis->MianziDat[k].tile / TileSuitStep] = true;
 			} else if (analysis->shanten[shantenPairs] == -1) {
 				for (int k = 1; k < TileSuitHonors; k++)
@@ -520,7 +520,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 					SizeOfMeldBuffer : NumOfTilesInHand); i++) {
 						if (analysis->shanten[shantenRegular] == -1) tc = analysis->MianziDat[i].tile;
 						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;
-						if (tc < TileSuitHonors) ++mnzCount[tc / TileSuitStep];
+						if (Tile(tc).isNumber()) ++mnzCount[tc / TileSuitStep];
 						else switch (tc) {
 						case EastWind: case SouthWind: case WestWind: case NorthWind:
 							++mnzCount[TileSuitHonors / TileSuitStep]; break;
@@ -563,7 +563,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("未成年"), get_yaku_han("minorage"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 0; i < SizeOfMeldBuffer; i++)
-					if (analysis->MianziDat[i].tile >= TileSuitHonors)
+					if (Tile(analysis->MianziDat[i].tile).isHonor())
 						return false;
 				return ((analysis->shanten[shantenRegular] == -1) &&
 					(yaku::countingFacility::countMentzNumerals(analysis->MianziDat) < 20));
@@ -575,7 +575,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("成人式"), get_yaku_han("comingofage"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 0; i < SizeOfMeldBuffer; i++)
-					if (analysis->MianziDat[i].tile >= TileSuitHonors)
+					if (Tile(analysis->MianziDat[i].tile).isHonor())
 						return false;
 				return ((analysis->shanten[shantenRegular] == -1) &&
 					(yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 20));

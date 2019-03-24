@@ -39,13 +39,14 @@ typedef const char* LPCTSTR;
 #include <sstream>
 #include <fstream>
 #include <locale>
+#include <vector>
 
 #ifdef UNICODE
 #define PON L"碰"
-constexpr wchar_t* PengPengHu = L"碰碰和";
+constexpr wchar_t PengPengHu[] = L"碰碰和";
 #else /* UNICODE */
 #define PON "ポン"
-constexpr char* PengPengHu = "ポンポン和";
+constexpr char PengPengHu[] = "ポンポン和";
 #endif /* UNICODE */
 
 namespace CodeConv {
@@ -91,14 +92,14 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	MultiByteToWideChar(CodePage, 0, str.c_str(), -1, buf, bufsize);
 #else /* _WIN32 */
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
-	constexpr std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
+	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
 	volatile /* Do not optimize memset() out asshole!!! */
 		char* srcBuf = new char[str.length() + 1]; /* source buffer */
 	memset(const_cast<char*>(srcBuf), 0, str.length() + 1); strncpy(const_cast<char*>(srcBuf), str.c_str(), str.length());
-	constexpr char* srcPtr = const_cast<char*>(srcBuf);
-	constexpr size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
+	const char* srcPtr = const_cast<char*>(srcBuf);
+	const size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
 	if (bufsize == (size_t)-1) {
 		setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
 		delete[] srcBuf;
@@ -124,7 +125,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	WideCharToMultiByte(CodePage, 0, str.c_str(), -1, buf, bufsize, nullptr, nullptr);
 #else /* _WIN32 */
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
-	constexpr std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
+	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
 	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
 	wchar_t* srcBuf = new wchar_t[str.length() + 1]; /* source buffer */
@@ -137,7 +138,7 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 		memset(tmpstr, 0, MB_LEN_MAX);
 		int rslt = wctomb(tmpstr, str[pos]);
 		if (str[pos] <= 0x007f) { // Keep 7bit ASCII
-			tmpstr[0] = static_cast<char>(int)(str[pos]); tmpstr[1] = 0;
+			tmpstr[0] = static_cast<char>((int)(str[pos])); tmpstr[1] = 0;
 			buf += std::string(tmpstr);
 		} else if (rslt != -1) {
 			buf += std::string(tmpstr);

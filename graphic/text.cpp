@@ -9,7 +9,7 @@ namespace mihajong_graphic {
 
 ITextRenderer::ITextRenderer(DevicePtr device) {
 	myDevice = device;
-	font = nullptr; fontmap = nullptr;
+	font = 0; fontmap = nullptr;
 }
 TextRenderer::TextRenderer(DevicePtr device) : ITextRenderer(device) {
 	fontmap = FontMap::instantiate();

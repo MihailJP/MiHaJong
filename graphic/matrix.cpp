@@ -23,12 +23,12 @@ TransformMatrix getMatrix(float baseX, float baseY, float scaleX, float scaleY, 
 	glTranslatef(baseX * Geometry::WindowScale(), -baseY * Geometry::WindowScale(), 0.0f);
 	glScalef(scaleX, scaleY, 1.0f);
 	glTranslatef(rotateOffsetX * scaleX * Geometry::WindowScale(), -rotateOffsetY * scaleY * Geometry::WindowScale(), 0.0f);
-	glRotate(rotateAngle, 0.0f, 0.0f, 1.0f);
+	glRotatef(rotateAngle, 0.0f, 0.0f, 1.0f);
 	glTranslatef(-rotateOffsetX * scaleX * Geometry::WindowScale(), rotateOffsetY * scaleY * Geometry::WindowScale(), 0.0f);
 	glTranslatef(-baseX * Geometry::WindowScale(), baseY * Geometry::WindowScale(), 0.0f);
 	glScalef(scaleAfterX * Geometry::WindowScale(), scaleAfterY * Geometry::WindowScale(), 1.0f);
 	glTranslatef(0.0f, -static_cast<float>(Geometry::WindowHeight), 0.0f);
-	TransformMatrix matrix; glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
+	glGetFloatv(GL_MODELVIEW_MATRIX, &matrix[0]);
 	glPopMatrix();
 #endif
 	return matrix;

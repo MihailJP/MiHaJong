@@ -59,14 +59,13 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 int main(int argc, char** argv) {
 	Window hwnd;
-	unsigned width, height; bool fullscreen;
+	unsigned width, height, monitor; ScreenMode::ScreenMode scrMode;
 
 	/* ウィンドウ設定情報を先行読み込み */
-	preferenceInit();
-	getWindowSize(&width, &height, &fullscreen);
+	getWindowSize(&width, &height, &scrMode, &monitor);
 
 	/* ウィンドウを初期化する */
-	if (!mihajong_graphic::InitWindow(nullptr, 0, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, fullscreen))
+	if (!mihajong_graphic::InitWindow(nullptr, 0, MAKEINTRESOURCE(IDI_ICON1), &hwnd, width, height, scrMode, monitor))
 		exit(1); // 失敗したら終了
 
 	/* スタート */

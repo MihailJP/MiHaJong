@@ -819,11 +819,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					};
 					if (chktiles(analysis, kezi, 3, shunzi, 1, true) &&
 						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)) &&
-						(analysis->MianziDat[0].tile > TileSuitHonors))
+						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 					if (chktiles(analysis, kezi, 3, shunzi + 1, 1, true) &&
 						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)) &&
-						(analysis->MianziDat[0].tile > TileSuitHonors))
+						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 				}
 				return flag;

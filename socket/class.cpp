@@ -85,7 +85,11 @@ void mihajong_socket::Sock::listen (uint16_t port) { // サーバー開始
 	if (lsock < 0) {
 #endif /* _WIN32 */
 		freeaddrinfo(addrInfo), addrInfo = nullptr;
+#ifdef _WIN32
 		throw socket_creation_error(WSAGetLastError()); // ソケットの作成に失敗したら例外
+#else /* _WIN32 */
+		throw socket_creation_error(errno); // ソケットの作成に失敗したら例外
+#endif /* _WIN32 */
 	}
 	isServer = true; // サーバーである
 
@@ -134,7 +138,11 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 	if (sock < 0) {
 #endif /* _WIN32 */
 		freeaddrinfo(addrInfo), addrInfo = nullptr;
+#ifdef _WIN32
 		throw socket_creation_error(WSAGetLastError()); // ソケットの作成に失敗したら例外
+#else /* _WIN32 */
+		throw socket_creation_error(errno); // ソケットの作成に失敗したら例外
+#endif /* _WIN32 */
 	}
 
 	this->connect();

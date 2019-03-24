@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT(mihajong, 2.2.2, mihailjp@gmail.com)
+AC_INIT(mihajong, 2.3.0, mihailjp@gmail.com)
 AC_LIBTOOL_WIN32_DLL
 AC_DISABLE_STATIC
 lt_cv_deplibs_check_method='pass_all'
@@ -158,7 +158,8 @@ AC_FUNC_MKTIME
 AS_IF([test "x$using_winapi" = xno],
 	[AC_PATH_X]
 )
-AC_CHECK_FUNCS([clock_gettime floor gethostbyname memmove memset mkdir pow setlocale socket sqrt strstr])
+AC_CHECK_FUNCS([clock_gettime floor getaddrinfo gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
+
 
 AC_ARG_ENABLE([midi],
 	[AS_HELP_STRING([--enable-midi],
@@ -181,23 +182,57 @@ AS_IF([test "x$with_oggvorbis" != xno],
 )
 
 AX_BOOST_BASE
-AX_BOOST_REGEX
-AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
-AX_BOOST_CHRONO
-AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
-AX_BOOST_DATE_TIME
-AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
-AX_BOOST_THREAD
-AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
-AX_BOOST_SYSTEM
-AM_CONDITIONAL(WITH_BOOST_SYSTEM, test x$want_boost != xno)
-AS_IF([test "x$want_boost" != xno],
-	[MH_TEST_SLEEP
-	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
-	 MH_TEST_WAIT
-	 AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
-	 AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))]
-)
+AS_IF([test "x$want_boost" != xno], [
+	AX_BOOST_REGEX
+	AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
+	AX_BOOST_CHRONO
+	AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
+	AX_BOOST_DATE_TIME
+	AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
+	AX_BOOST_THREAD
+	AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
+	AX_BOOST_SYSTEM
+	AM_CONDITIONAL(WITH_BOOST_SYSTEM, test x$want_boost != xno)
+], [
+	AM_CONDITIONAL(WITH_BOOST_REGEX, false)
+	AM_CONDITIONAL(WITH_BOOST_CHRONO, false)
+	AM_CONDITIONAL(WITH_BOOST_DATE_TIME, false)
+	AM_CONDITIONAL(WITH_BOOST_THREAD, false)
+	AM_CONDITIONAL(WITH_BOOST_SYSTEM, false)
+])
+AS_IF([test "x$want_boost" != xno], [
+MH_TEST_SLEEP
+	AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
+	MH_TEST_WAIT
+	AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
+	AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))
+], [
+	AM_CONDITIONAL(OLDER_BOOST_SLEEP, false)
+	AM_CONDITIONAL(OLDER_BOOST_WAIT, false)
+])
+
+AC_PATH_PROG([RUBY], [ruby])
+AX_PROG_RUBY_VERSION([1.9], [], [AC_MSG_ERROR([Ruby is unavailable or too old])])
+AM_PATH_PYTHON([2.6], [], [AC_MSG_ERROR([Python is unavailable or too old])])
+MH_CHECK_RUBY_MODULE([pathname], [], [
+	AC_MSG_ERROR([Ruby module 'pathname' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([csv], [], [
+	AC_MSG_ERROR([Ruby module 'csv' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([digest/sha2], [], [
+	AC_MSG_ERROR([Ruby module 'digest/sha2' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([lzma], [], [
+	MH_CHECK_PYTHON_MODULE([lzma], [], [
+		MH_CHECK_PYTHON_MODULE([pylzma], [], [
+			AC_MSG_ERROR([LZMA module not available])
+		])
+	])
+])
+MH_CHECK_PYTHON_MODULE([markdown], [], [
+	AC_MSG_ERROR([Python module 'markdown' is unavailable])
+])
 
 AC_CONFIG_FILES([Makefile
                  astro/Makefile

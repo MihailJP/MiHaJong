@@ -488,6 +488,9 @@
     <ClInclude Include="..\common\scrmode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\datetime.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mjcoregb.rc">

@@ -18,6 +18,8 @@
 #include "soundobj.h"
 #endif /* SOUND_EXPORTS */
 
+#include "../common/strcode.h"
+
 namespace sound {
 
 #ifdef SOUND_EXPORTS

@@ -14,7 +14,7 @@ EXTRA_DIST = \
 	mentzdat \
 	mihajong.sln
 dist_doc_DATA = \
-	README doc/manual.css \
+	readme.md doc/manual.css \
 	doc/addyaku.md doc/history.md doc/license.md doc/playing.md \
 	doc/readme.md doc/rulesyms.md doc/script.md \
 	doc/addyaku.html doc/history.html doc/license.html doc/playing.html \

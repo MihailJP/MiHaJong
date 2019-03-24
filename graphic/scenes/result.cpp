@@ -58,7 +58,7 @@ void ResultScreen::KeyboardInput(const XEvent* od)
 	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->dwData));
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	constexpr bool flag = ((myTimer.elapsed() > 3000000u) && (od->type == KeyPress));
+	const bool flag = ((myTimer.elapsed() > 3000000u) && (od->type == KeyPress));
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{

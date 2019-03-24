@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libmihajong-graphic.la
 libmihajong_graphic_la_SOURCES = \
 	calltext.cpp chrwidth.cpp event.cpp finscore.cpp font.cpp gametbl.cpp \
-	geometry.cpp init.cpp input.cpp loadtex.cpp matrix.cpp rule.cpp
+	geometry.cpp init.cpp input.cpp loadtex.cpp matrix.cpp rule.cpp \
 	scrmanip.cpp  showtile.cpp sprite.cpp text.cpp timer.cpp utils.cpp \
 	window.cpp yakustat.cpp \
 	scenes/confmenu.cpp scenes/fps.cpp scenes/game.cpp scenes/proto.cpp \

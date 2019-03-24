@@ -1,7 +1,11 @@
 #pragma once
 
+#ifdef _WIN32
 #include <Windows.h>
 #include <tchar.h>
+#else /* _WIN32 */
+#include <sys/stat.h>
+#endif /* _WIN32 */
 #include "../reader/ini2map.h"
 #include "../../common/strcode.h"
 #include "../../common/scrmode.h"
@@ -11,9 +15,16 @@ namespace ConfigFile {
 using std::uint8_t;
 using std::uint32_t;
 
+#ifdef _WIN32
 inline bool exist(LPCSTR filename) {
 	return (GetFileAttributesA(filename) != -1);
 }
+#else /* _WIN32 */
+inline bool exist(const char* filename) {
+	struct stat s;
+	return (stat(filename, &s) != -1);
+}
+#endif /* _WIN32 */
 
 enum ScreenConfig : int {
 	screenInvalid = -1,
