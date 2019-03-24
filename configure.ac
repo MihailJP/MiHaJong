@@ -211,10 +211,23 @@ MH_TEST_SLEEP
 	AM_CONDITIONAL(OLDER_BOOST_WAIT, false)
 ])
 
-AM_PATH_PYTHON([2.6], [], [AC_MSG_ERROR([Python is unavailable])])
-MH_CHECK_PYTHON_MODULE([lzma], [], [
-	MH_CHECK_PYTHON_MODULE([pylzma], [], [
-		AC_MSG_ERROR([Neither 'lzma' nor 'pylzma' available])
+AC_PATH_PROG([RUBY], [ruby])
+AX_PROG_RUBY_VERSION([1.9], [], [AC_MSG_ERROR([Ruby is unavailable or too old])])
+AM_PATH_PYTHON([2.6], [], [AC_MSG_ERROR([Python is unavailable or too old])])
+MH_CHECK_RUBY_MODULE([pathname], [], [
+	AC_MSG_ERROR([Ruby module 'pathname' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([csv], [], [
+	AC_MSG_ERROR([Ruby module 'csv' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([digest/sha2], [], [
+	AC_MSG_ERROR([Ruby module 'digest/sha2' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([lzma], [], [
+	MH_CHECK_PYTHON_MODULE([lzma], [], [
+		MH_CHECK_PYTHON_MODULE([pylzma], [], [
+			AC_MSG_ERROR([LZMA module not available])
+		])
 	])
 ])
 MH_CHECK_PYTHON_MODULE([markdown], [], [
