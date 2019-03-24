@@ -5,6 +5,7 @@
 #include <climits>
 #include <iomanip>
 #include "strcode.h"
+#include <type_traits>
 
 // 青天ルール対策
 // 一応21不可思議まで表現可能……
@@ -16,13 +17,16 @@
 #ifdef max
 #undef max
 #endif
+#ifdef min
+#undef min
+#endif
 
 namespace mihajong_structs {
 
 constexpr unsigned int DigitGroups = 8;
 
 struct LargeNum { // ±21不可思議まで表現可能な数のクラス
-	int32_t digitGroup[DigitGroups];
+	std::int32_t digitGroup[DigitGroups];
 
 	constexpr LargeNum() : digitGroup{} {}
 
@@ -110,35 +114,10 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		return ans;
 	}
 
-	constexpr int32_t to_int32() const {
-		if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0)
-			&& (digitGroup[3] == 0) && (digitGroup[2] == 0)
-			&& ((abs(digitGroup[1]) < 21) || ((abs(digitGroup[1]) == 21)
-				&& (abs(digitGroup[0]) <= 47'483'647))))
-		{
-			return digitGroup[1] * 100'000'000 + digitGroup[0];
-		} else { // OVERFLOW
-			return (*this >= 0 ? 1 : -1) * std::numeric_limits<int32_t>::max();
-		}
-	}
-	static_assert(std::numeric_limits<int32_t>::max() == 2'147'483'647, "Maximum of int32_t is not 2,147,483,647");
-	constexpr uint32_t to_uint32() const {
-		if (*this < 0) {
-			// NEGATIVE
-			return 0u;
-		} else if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0)
-			&& (digitGroup[3] == 0) && (digitGroup[2] == 0)
-			&& ((digitGroup[1] < 42) || ((digitGroup[1] == 42)
-				&& (digitGroup[0] <= 94'967'295))))
-		{
-			return static_cast<uint32_t>(digitGroup[1]) * 100'000'000u + static_cast<uint32_t>(digitGroup[0]);
-		} else { // OVERFLOW
-			return std::numeric_limits<uint32_t>::max();
-		}
-	}
-	static_assert(std::numeric_limits<uint32_t>::max() == 4'294'967'295, "Maximum of uint32_t is not 4,294,967,295");
+	template <size_t size> constexpr int64_t to_int() const = delete;
+	template <size_t size> constexpr uint64_t to_uint() const = delete;
 
-	constexpr int64_t to_int64() const {
+	template <> constexpr int64_t to_int<8>() const {
 		if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0) && (digitGroup[3] == 0)
 			&& ((abs(digitGroup[2]) < 922) || ((abs(digitGroup[2]) == 922)
 				&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
@@ -151,7 +130,7 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 	}
 	static_assert(std::numeric_limits<int64_t>::max() == 9'223'372'036'854'775'807LL, "Maximum of int64_t is not 9,223,372,036,854,775,807");
-	constexpr uint64_t to_uint64() const {
+	template <> constexpr uint64_t to_uint<8>() const {
 		if (*this < 0) {
 			// NEGATIVE
 			return 0uLL;
@@ -167,34 +146,40 @@ struct LargeNum { // ±21不可思議まで表現可能な数のクラス
 		}
 	}
 	static_assert(std::numeric_limits<uint64_t>::max() == 18'446'744'073'709'551'615uLL, "Maximum of uint64_t is not 18,446,744,073,709,551,615");
+	template <> constexpr int64_t to_int<4>() const {
+		if (this->to_int<8>() > std::numeric_limits<std::int32_t>::max())
+			return std::numeric_limits<std::int32_t>::max();
+		else if (this->to_int<8>() < std::numeric_limits<std::int32_t>::min())
+			return std::numeric_limits<std::int32_t>::min();
+		else
+			return this->to_int<8>();
+	}
+	static_assert(std::numeric_limits<int32_t>::max() == 2'147'483'647, "Maximum of int32_t is not 2,147,483,647");
+	template <> constexpr uint64_t to_uint<4>() const {
+		if (this->to_uint<8>() > std::numeric_limits<std::uint32_t>::max())
+			return std::numeric_limits<std::uint32_t>::max();
+		else
+			return this->to_uint<8>();
+	}
+	static_assert(std::numeric_limits<uint32_t>::max() == 4'294'967'295, "Maximum of uint32_t is not 4,294,967,295");
 
 	constexpr explicit operator int() const {
-		static_assert(sizeof(int) >= 4, "bad size of int");
-		if (sizeof(int) < 8) return to_int32();
-		else                 return to_int64();
+		return static_cast<int>(to_int<sizeof(int)>());
 	}
 	constexpr explicit operator unsigned int() const {
-		static_assert(sizeof(unsigned int) >= 4, "bad size of unsigned int");
-		if (sizeof(unsigned int) < 8) return to_uint32();
-		else                          return to_uint64();
+		return static_cast<unsigned int>(to_uint<sizeof(unsigned int)>());
 	}
 	constexpr explicit operator long() const {
-		static_assert(sizeof(long) >= 4, "bad size of long");
-		if (sizeof(long) < 8) return to_int32();
-		else                  return to_int64();
+		return static_cast<long>(to_int<sizeof(long)>());
 	}
 	constexpr explicit operator unsigned long() const {
-		static_assert(sizeof(unsigned long) >= 4, "bad size of unsigned long");
-		if (sizeof(unsigned long) < 8) return to_uint32();
-		else                           return to_uint64();
+		return static_cast<unsigned long>(to_uint<sizeof(unsigned long)>());
 	}
 	constexpr explicit operator long long() const {
-		static_assert(sizeof(long long) >= 8, "bad size of long long");
-		return to_int64();
+		return static_cast<long long>(to_int<sizeof(long long)>());
 	}
 	constexpr explicit operator unsigned long long() const {
-		static_assert(sizeof(unsigned long long) >= 8, "bad size of unsigned long long");
-		return to_uint64();
+		return static_cast<unsigned long long>(to_uint<sizeof(unsigned long long)>());
 	}
 
 	constexpr LargeNum(int32_t val) : LargeNum() {
