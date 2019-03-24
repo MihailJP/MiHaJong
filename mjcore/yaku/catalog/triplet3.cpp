@@ -5,25 +5,25 @@
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #ifndef GUOBIAO
-	auto countTilesOf =
+	const auto countTilesOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
 			return analysis->TileCount[TileSuitCharacters + numeral] +
 				analysis->TileCount[TileSuitCircles + numeral] +
 				analysis->TileCount[TileSuitBamboos + numeral];
 		};
-	auto countKangziOf =
+	const auto countKangziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
 			return analysis->KangziCount[TileSuitCharacters + numeral] +
 				analysis->KangziCount[TileSuitCircles + numeral] +
 				analysis->KangziCount[TileSuitBamboos + numeral];
 		};
-	auto countKeziOf =
+	const auto countKeziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
 			return analysis->KeziCount[TileSuitCharacters + numeral] +
 				analysis->KeziCount[TileSuitCircles + numeral] +
 				analysis->KeziCount[TileSuitBamboos + numeral];
 		};
-	auto countDuiziOf =
+	const auto countDuiziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
 			return analysis->DuiziCount[TileSuitCharacters + numeral] +
 				analysis->DuiziCount[TileSuitCircles + numeral] +
@@ -51,7 +51,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 		));
 	/* 四月馬鹿 */
 	if (RuleData::chkRuleApplied("april_fool")) {
-		auto isApril1st =
+		const auto isApril1st =
 			[]() -> bool {
 				const auto nowTime(DateTime::localTime());
 				return (nowTime.month == DateTime::April) && (nowTime.day == 1);

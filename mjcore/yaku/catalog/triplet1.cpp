@@ -65,7 +65,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 #ifndef GUOBIAO
 	/* 五連刻 */
-	auto wulianke =
+	const auto wulianke =
 		[](const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step) -> bool {
 			bool yakuFlag = false;
@@ -81,7 +81,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			return yakuFlag;
 		};
 #endif /* GUOBIAO */
-	auto lianke =
+	const auto lianke =
 		[](const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step, bool suurnkoh) -> bool {
 			bool yakuFlag = false;
@@ -106,7 +106,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		));
 #endif /* GUOBIAO */
 	/* 四連刻 */
-	auto suurenkoh =
+	const auto suurenkoh =
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome4[0]), 3, 8, 1, true);
 		};
@@ -153,7 +153,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		));
 #endif /* GUOBIAO */
 	/* 三連刻 */
-	auto sanrenkoh =
+	const auto sanrenkoh =
 		[lianke](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return lianke(analysis, reinterpret_cast<const char*>(&parsedat_monochrome3[0]), 3, 4, 1, false);
 		};
@@ -269,14 +269,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	// ---------------------------------------------------------------------
 
 	/* 三元和・四喜和判定用 */
-	auto WindCnt =
+	const auto WindCnt =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			return analysis->DuiziCount[EastWind] + analysis->KeziCount[EastWind] +
 				 analysis->DuiziCount[SouthWind] + analysis->KeziCount[SouthWind] +
 				  analysis->DuiziCount[WestWind] + analysis->KeziCount[WestWind] +
 				  analysis->DuiziCount[NorthWind] + analysis->KeziCount[NorthWind];
 		};
-	auto DragonCnt =
+	const auto DragonCnt =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			return analysis->DuiziCount[WhiteDragon] + analysis->KeziCount[WhiteDragon] +
 				 analysis->DuiziCount[GreenDragon] + analysis->KeziCount[GreenDragon] +
@@ -415,16 +415,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 	/* 役牌 */
 #ifdef GUOBIAO
-	auto chkYakuhai = [](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;};
+	const auto chkYakuhai = [](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;};
 #else /* GUOBIAO */
-	auto chkYakuhai = RuleData::chkRuleApplied("exposed_yakuhai") ?
+	const auto chkYakuhai = RuleData::chkRuleApplied("exposed_yakuhai") ?
 #ifdef _MSC_VER
 		(std::function<const Int8ByTile& (const MENTSU_ANALYSIS* const)>)
 #endif
 		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->KeziCount;} :
 		[](const MENTSU_ANALYSIS* const analysis) -> const Int8ByTile& {return analysis->AnKeziCount;};
 #endif /* GUOBIAO */
-	auto bakaze =
+	const auto bakaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
 		};
@@ -436,7 +436,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		bakaze
 	));
-	auto jikaze =
+	const auto jikaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1);
 		};
@@ -520,7 +520,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 #ifdef GUOBIAO
 	/* 幺九刻 */
-	auto YaoJiuKe =
+	const auto YaoJiuKe =
 		[chkYakuhai, bakaze, jikaze](const MENTSU_ANALYSIS* const analysis) -> int {
 			return chkYakuhai(analysis)[CharacterOne] + chkYakuhai(analysis)[CharacterNine] +
 				chkYakuhai(analysis)[CircleOne] + chkYakuhai(analysis)[CircleNine] +

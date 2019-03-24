@@ -20,7 +20,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	// ---------------------------------------------------------------------
 
 	/* 和了ったら死ぬ */
-	auto chkHaishiki =
+	const auto chkHaishiki =
 		[](const MENTSU_ANALYSIS* const analysis, const char* const haishiki) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
@@ -194,7 +194,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			}
 		));
 	/* 中車輪 */
-	auto chuusharin =
+	const auto chuusharin =
 		[chkHaishiki](const MENTSU_ANALYSIS* const analysis, int suit) -> bool {
 			return ((chkHaishiki(analysis, "202222220") || chkHaishiki(analysis, "222022220") ||
 				chkHaishiki(analysis, "222202220") || chkHaishiki(analysis, "222222020") ||
@@ -235,7 +235,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	// ---------------------------------------------------------------------
 
 	/* 百万石 */
-	auto chiffre =
+	const auto chiffre =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			return (analysis->shanten[shantenRegular] == -1) ?
 				yaku::countingFacility::countMentzNumerals(analysis->MianziDat) :
@@ -450,7 +450,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	// ---------------------------------------------------------------------
 
 	/* 絶一門 */
-	auto chueiimen =
+	const auto chueiimen =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool flag[TileSuitHonors / TileSuitStep] = {false};
 			if (analysis->shanten[shantenRegular] == -1) {
@@ -509,7 +509,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		));
 #endif /* GUOBIAO */
 	/* 五門斎 */
-	auto uumenchii =
+	const auto uumenchii =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			int mnzCount[TileSuitHonors / TileSuitStep + 2] = {0};
 			bool yakuFlag = true;
