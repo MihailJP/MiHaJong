@@ -217,6 +217,9 @@ MH_CHECK_PYTHON_MODULE([lzma], [], [
 		AC_MSG_ERROR([Neither 'lzma' nor 'pylzma' available])
 	])
 ])
+MH_CHECK_PYTHON_MODULE([markdown], [], [
+	AC_MSG_ERROR([Python module 'markdown' is unavailable])
+])
 
 AC_CONFIG_FILES([Makefile
                  astro/Makefile
