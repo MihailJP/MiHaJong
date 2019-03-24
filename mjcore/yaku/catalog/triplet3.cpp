@@ -1,15 +1,7 @@
 ﻿#include "../catalog.h"
 
 #include "../../func.h"
-
-#ifndef _WIN32
-#ifndef HAVE_LOCALTIME_S
-#define localtime_s localtime_r
-#endif /* HAVE_LOCALTIME_S */
-#ifndef HAVE_GMTIME_S
-#define gmtime_s gmtime_r
-#endif /* HAVE_LOCALTIME_S */
-#endif /*_WIN32*/
+#include "../../../common/datetime.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #ifndef GUOBIAO
@@ -61,15 +53,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 	if (RuleData::chkRuleApplied("april_fool")) {
 		auto isApril1st =
 			[]() -> bool {
-#ifdef _WIN32
-				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
-				return (nowTime.wMonth == 4) && (nowTime.wDay == 1);
-#else /*_WIN32*/
-				time_t nowTimeVal = time(nullptr);
-				tm nowTime;
-				localtime_s(&nowTimeVal, &nowTime);
-				return ((nowTime.tm_mon + 1) == 4) && (nowTime.tm_mday == 1);
-#endif /*_WIN32*/
+				const auto nowTime(DateTime::localTime());
+				return (nowTime.month == DateTime::April) && (nowTime.day == 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("四月馬鹿"), get_yaku_han("april_fool"),
@@ -521,29 +506,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("閏年役満"),
 			yaku::yakuCalculator::Yaku::HANFUNC(
 				[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
-#ifdef _WIN32
-					SYSTEMTIME nowTime; GetLocalTime(&nowTime);
-					if ((nowTime.wMonth == 2) && (nowTime.wDay == 29))
-#else /*_WIN32*/
-					time_t nowTimeVal = time(nullptr);
-					tm nowTime;
-					localtime_s(&nowTimeVal, &nowTime);
-					if (((nowTime.tm_mon + 1) == 2) && (nowTime.tm_mday == 29))
-#endif /*_WIN32*/
+					const auto nowTime(DateTime::localTime());
+					if ((nowTime.month == DateTime::February) && (nowTime.day == 29))
 						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
 					else return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
 				}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-#ifdef _WIN32
-				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
-				bool isLeapYear = (nowTime.wYear % 400 == 0) || ((nowTime.wYear % 4 == 0) && (nowTime.wYear % 100 != 0));
-#else /*_WIN32*/
-				time_t nowTimeVal = time(nullptr);
-				tm nowTime;
-				localtime_s(&nowTimeVal, &nowTime);
-				const int year = nowTime.tm_year + 1900;
-				bool isLeapYear = (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
-#endif /*_WIN32*/
+				const auto nowTime(DateTime::localTime());
+				const bool isLeapYear = (nowTime.year % 400 == 0) || ((nowTime.year % 4 == 0) && (nowTime.year % 100 != 0));
 				if (!isLeapYear) return false;
 				for (const auto& k : parsedat_trichrome3)
 					if ((analysis->KeziCount[(k[0] - _T('0')) * TileSuitStep + 2] >= 1) &&

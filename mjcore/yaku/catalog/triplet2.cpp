@@ -1,14 +1,6 @@
 ﻿#include "../catalog.h"
 #include "../../../common/strcode.h"
-
-#ifndef _WIN32
-#ifndef HAVE_LOCALTIME_S
-#define localtime_s localtime_r
-#endif /* HAVE_LOCALTIME_S */
-#ifndef HAVE_GMTIME_S
-#define gmtime_s gmtime_r
-#endif /* HAVE_LOCALTIME_S */
-#endif /*_WIN32*/
+#include "../../../common/datetime.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #ifndef GUOBIAO
@@ -662,15 +654,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			};
 		const auto chrisday = 
 			[]() -> bool {
-#ifdef _WIN32
-				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
-				return (nowTime.wMonth == 12) && (nowTime.wDay == 25);
-#else /*_WIN32*/
-				time_t nowTimeVal = time(nullptr);
-				tm nowTime;
-				localtime_s(&nowTimeVal, &nowTime);
-				return ((nowTime.tm_mon + 1) == 12) && (nowTime.tm_mday == 25);
-#endif /*_WIN32*/
+				const auto nowTime(DateTime::localTime());
+				return (nowTime.month == DateTime::December) && (nowTime.day == 25);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("クリスマス"), yaku::yakuCalculator::Yaku::HANFUNC(
@@ -702,15 +687,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	if (RuleData::chkRuleApplied("newyear_dream")) {
 		const auto isnewyeardays = 
 			[]() -> bool {
-#ifdef _WIN32
-				SYSTEMTIME nowTime; GetLocalTime(&nowTime);
-				return (nowTime.wMonth == 1) && (nowTime.wDay <= 2);
-#else /*_WIN32*/
-				time_t nowTimeVal = time(nullptr);
-				tm nowTime;
-				localtime_s(&nowTimeVal, &nowTime);
-				return ((nowTime.tm_mon + 1) == 1) && (nowTime.tm_mday <= 2);
-#endif /*_WIN32*/
+				const auto nowTime(DateTime::localTime());
+				return (nowTime.month == DateTime::January) && (nowTime.day <= 2);
 			};
 		const auto newyrdrm =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {

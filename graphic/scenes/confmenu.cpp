@@ -2,6 +2,7 @@
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
 #include "../../common/version.h"
+#include "../../common/datetime.h"
 #include "../event.h"
 #include <iomanip>
 #ifndef _WIN32
@@ -289,28 +290,15 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 }
 
 CodeConv::tstring ConfigMenuProto::verInfoText() {
-#ifdef _WIN32
-	CodeConv::tostringstream o; SYSTEMTIME Zeit; GetLocalTime(&Zeit);
+	const auto Zeit(DateTime::localTime());
 	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
-		std::setw(4) << Zeit.wYear << _T("年") <<
-		std::setw(2) << Zeit.wMonth << _T("月") <<
-		std::setw(2) << Zeit.wDay << _T("日 ") <<
-		((Zeit.wHour / 12 == 0) ? _T("午前") : _T("午後")) <<
-		std::setw(2) << (Zeit.wHour % 12) << _T("時") <<
-		std::setw(2) << std::setfill(_T('0')) << Zeit.wMinute << _T("分");
+		std::setw(4) << static_cast<int>(Zeit.year) << _T("年") <<
+		std::setw(2) << static_cast<int>(Zeit.month) << _T("月") <<
+		std::setw(2) << static_cast<int>(Zeit.day) << _T("日 ") <<
+		((Zeit.hour / 12 == 0) ? _T("午前") : _T("午後")) <<
+		std::setw(2) << static_cast<int>(Zeit.hour % 12) << _T("時") <<
+		std::setw(2) << std::setfill(_T('0')) << static_cast<int>(Zeit.minute) << _T("分");
 	return o.str();
-#else /*_WIN32*/
-	CodeConv::tostringstream o;
-	time_t Zeitzahl = time(nullptr); tm Zeit; = localtime_s(&Zeit, &Zeitzahl);
-	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
-		std::setw(4) << (Zeit.tm_year + 1900) << _T("年") <<
-		std::setw(2) << (Zeit.tm_mon + 1) << _T("月") <<
-		std::setw(2) << Zeit.tm_mday << _T("日 ") <<
-		((Zeit.tm_hour / 12 == 0) ? _T("午前") : _T("午後")) <<
-		std::setw(2) << (Zeit.tm_hour % 12) << _T("時") <<
-		std::setw(2) << std::setfill(_T('0')) << Zeit.tm_min << _T("分");
-	return o.str();
-#endif /*_WIN32*/
 }
 
 }
