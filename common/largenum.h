@@ -307,9 +307,9 @@ static_assert(std::numeric_limits<uint32_t>::max() == 4'294'967'295, "Maximum of
 
 #define DEFINE_ADDSUB(x) \
 	template <> constexpr LargeNum LargeNum::operator+(const x& addend) const { return *this + LargeNum(addend); } \
-	template <> LargeNum& LargeNum::operator+=(const x& addend) { return *this += LargeNum(addend); } \
+	template <> inline LargeNum& LargeNum::operator+=(const x& addend) { return *this += LargeNum(addend); } \
 	template <> constexpr LargeNum LargeNum::operator-(const x& subtrahend) const { return *this - LargeNum(subtrahend); } \
-	template <> LargeNum& LargeNum::operator-=(const x& subtrahend) { return *this -= LargeNum(subtrahend); }
+	template <> inline LargeNum& LargeNum::operator-=(const x& subtrahend) { return *this -= LargeNum(subtrahend); }
 
 template <> constexpr LargeNum LargeNum::operator+(const LargeNum& addend) const {
 	LargeNum ans;
@@ -318,7 +318,7 @@ template <> constexpr LargeNum LargeNum::operator+(const LargeNum& addend) const
 	ans.fix();
 	return ans;
 }
-template <> LargeNum& LargeNum::operator+=(const LargeNum& addend) {
+template <> inline LargeNum& LargeNum::operator+=(const LargeNum& addend) {
 	for (int i = 0; i < DigitGroups; i++)
 		digitGroup[i] += addend.digitGroup[i];
 	fix();
@@ -332,7 +332,7 @@ template <> constexpr LargeNum LargeNum::operator-(const LargeNum& subtrahend) c
 	ans.fix();
 	return ans;
 }
-template <> LargeNum& LargeNum::operator-=(const LargeNum& subtrahend) {
+template <> inline LargeNum& LargeNum::operator-=(const LargeNum& subtrahend) {
 	for (int i = 0; i < DigitGroups; i++)
 		digitGroup[i] -= subtrahend.digitGroup[i];
 	fix();
