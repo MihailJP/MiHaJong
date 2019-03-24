@@ -85,7 +85,7 @@ void SpriteRenderer::ShowSprite(
 	glLoadMatrixf(matrix ? &((*matrix)[0]) : &defaultMatrix[0]);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	RECT* txRect = rect ? rect : &defaultRect;
+	const RECT* txRect = rect ? rect : &defaultRect;
 
 	glBegin(GL_QUADS);
 	glColor4d(
@@ -93,10 +93,10 @@ void SpriteRenderer::ShowSprite(
 		static_cast<double>((color & 0x0000ff00) >>  8) / 255.0,
 		static_cast<double>((color & 0x000000ff)      ) / 255.0,
 		static_cast<double>((color & 0xff000000) >> 24) / 255.0);
-	constexpr double lpos = static_cast<double>(txRect->left  ) / static_cast<double>(getTextureWidth (nullptr, texture));
-	constexpr double rpos = static_cast<double>(txRect->right ) / static_cast<double>(getTextureWidth (nullptr, texture));
-	constexpr double tpos = static_cast<double>(txRect->top   ) / static_cast<double>(getTextureHeight(nullptr, texture));
-	constexpr double bpos = static_cast<double>(txRect->bottom) / static_cast<double>(getTextureHeight(nullptr, texture));
+	const double lpos = static_cast<double>(txRect->left  ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	const double rpos = static_cast<double>(txRect->right ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	const double tpos = static_cast<double>(txRect->top   ) / static_cast<double>(getTextureHeight(nullptr, texture));
+	const double bpos = static_cast<double>(txRect->bottom) / static_cast<double>(getTextureHeight(nullptr, texture));
 	glTexCoord2d(lpos, bpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, bpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));

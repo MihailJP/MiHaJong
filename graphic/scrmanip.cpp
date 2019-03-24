@@ -91,7 +91,6 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 		IDB_PNG_FONT_HUGE,
 		IDB_PNG_DICE,
 		IDB_PNG_FONT_SMALL,
-		IDB_PNG_TEXTBOX,
 		IDB_PNG_TENBOU,
 		IDB_PNG_CHICHAMARK,
 		IDB_PNG_SCORE_INDICATOR,

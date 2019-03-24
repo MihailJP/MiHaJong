@@ -107,9 +107,9 @@ void GameTableScreen::Reconstruct(const GameTable* gameStat) {
 
 /* 供託点棒などの情報を表示 */
 void GameTableScreen::ShowStatus(const GameTable* gameStat) {
-	constexpr wchar_t* const WindName = L"東南西北白發中";
-	constexpr wchar_t* const Numeral = L"一二三四五六七八九十";
-	constexpr wchar_t* const FWDigit = L"０１２３４５６７８９";
+	constexpr wchar_t WindName[] = L"東南西北白發中";
+	constexpr wchar_t Numeral[] = L"一二三四五六七八九十";
+	constexpr wchar_t FWDigit[] = L"０１２３４５６７８９";
 	CodeConv::tostringstream o;
 	o << CodeConv::EnsureTStr(std::wstring(WindName + gameStat->GameRound / 4, WindName + gameStat->GameRound / 4 + 1));
 	if (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game")) { // 東場のみのルール

@@ -180,7 +180,7 @@ TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativeP
 	initialized = false;
 }
 void TableProtoScene::ScoreBoard::objInit() {
-	constexpr int x = xpos, y = ypos;
+	const int x = xpos, y = ypos;
 #endif /*_WIN32*/
 	// 行列の構築
 	myMatrix = getMatrix(static_cast<float>(x), static_cast<float>(y), wScale, 1.0f);

@@ -123,7 +123,7 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 	const bool keyDown = od->dwData;
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	constexpr bool keyDown = od->type == KeyPress;
+	const bool keyDown = od->type == KeyPress;
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
@@ -290,6 +290,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 }
 
 CodeConv::tstring ConfigMenuProto::verInfoText() {
+	CodeConv::tostringstream o;
 	const auto Zeit(DateTime::localTime());
 	o << _T("MiHaJong version ") _T(MIHAJONG_VER) _T(" / 現在日時 ") <<
 		std::setw(4) << static_cast<int>(Zeit.year) << _T("年") <<
