@@ -75,9 +75,9 @@ public:
 		};
 		CodeConv::tostringstream o;
 		// 符号
-		if (*this == (LargeNum)0) return _T("0");
-		else if (*this < (LargeNum)0) o << minusSign;
-		else if (*this > (LargeNum)0) o << plusSign;
+		if (this->compare((LargeNum)0) == 0) return _T("0");
+		else if (this->compare((LargeNum)0) < 0) o << minusSign;
+		else if (this->compare((LargeNum)0) > 0) o << plusSign;
 		// 出力
 		if (this->digitGroup[7] / 100000000)
 			o << abs(this->digitGroup[7] / 100000000) << _T("不可思議");
@@ -93,9 +93,9 @@ public:
 		// 文字列表現に直す
 		CodeConv::tostringstream o;
 		// 符号
-		if (*this == (LargeNum)0) return _T("0");
-		else if (*this < (LargeNum)0) o << minusSign;
-		else if (*this > (LargeNum)0) o << plusSign;
+		if (this->compare((LargeNum)0) == 0) return _T("0");
+		else if (this->compare((LargeNum)0) < 0) o << minusSign;
+		else if (this->compare((LargeNum)0) > 0) o << plusSign;
 		// 出力
 		bool valFlag = false;
 		for (int i = DigitGroups - 1; i >= 0; i--) {
@@ -120,66 +120,13 @@ private:
 	template <size_t size> constexpr int64_t to_int() const = delete;
 	template <size_t size> constexpr uint64_t to_uint() const = delete;
 
-	template <> constexpr int64_t to_int<8>() const {
-		if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0) && (digitGroup[3] == 0)
-			&& ((abs(digitGroup[2]) < 922) || ((abs(digitGroup[2]) == 922)
-				&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
-					&& (abs(digitGroup[0]) <= 54'775'807))))
-		{
-			return static_cast<int64_t>(digitGroup[2]) * 1'000'000'000'000'000LL
-				+ static_cast<int64_t>(digitGroup[1]) * 100'000'000 + digitGroup[0];
-		} else { // OVERFLOW
-			return (*this >= (LargeNum)0 ? 1 : -1) * std::numeric_limits<int64_t>::max();
-		}
-	}
-	static_assert(std::numeric_limits<int64_t>::max() == 9'223'372'036'854'775'807LL, "Maximum of int64_t is not 9,223,372,036,854,775,807");
-	template <> constexpr uint64_t to_uint<8>() const {
-		if (*this < (LargeNum)0) {
-			// NEGATIVE
-			return 0uLL;
-		} else if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0) && (digitGroup[3] == 0)
-			&& ((abs(digitGroup[2]) < 922) || ((abs(digitGroup[2]) == 922)
-				&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
-					&& (abs(digitGroup[0]) <= 54'775'807))))
-		{
-			return static_cast<uint64_t>(digitGroup[2]) * 1'000'000'000'000'000uLL
-				+ static_cast<uint64_t>(digitGroup[1]) * 100'000'000uLL + static_cast<uint64_t>(digitGroup[0]);
-		} else { // OVERFLOW
-			return std::numeric_limits<uint64_t>::max();
-		}
-	}
-	static_assert(std::numeric_limits<uint64_t>::max() == 18'446'744'073'709'551'615uLL, "Maximum of uint64_t is not 18,446,744,073,709,551,615");
-	template <> constexpr int64_t to_int<4>() const {
-		if (this->to_int<8>() > std::numeric_limits<std::int32_t>::max())
-			return std::numeric_limits<std::int32_t>::max();
-		else if (this->to_int<8>() < std::numeric_limits<std::int32_t>::min())
-			return std::numeric_limits<std::int32_t>::min();
-		else
-			return this->to_int<8>();
-	}
-	static_assert(std::numeric_limits<int32_t>::max() == 2'147'483'647, "Maximum of int32_t is not 2,147,483,647");
-	template <> constexpr uint64_t to_uint<4>() const {
-		if (this->to_uint<8>() > std::numeric_limits<std::uint32_t>::max())
-			return std::numeric_limits<std::uint32_t>::max();
-		else
-			return this->to_uint<8>();
-	}
-	static_assert(std::numeric_limits<uint32_t>::max() == 4'294'967'295, "Maximum of uint32_t is not 4,294,967,295");
-
 public:
-#define DEFINE_CAST(x) \
-	constexpr explicit operator x() const { \
-		return static_cast<x>(to_int<sizeof(x)>()); \
-	}
-
-	DEFINE_CAST(int)
-	DEFINE_CAST(unsigned int)
-	DEFINE_CAST(long)
-	DEFINE_CAST(unsigned long)
-	DEFINE_CAST(long long)
-	DEFINE_CAST(unsigned long long)
-
-#undef DEFINE_CAST
+	constexpr explicit operator int() const;
+	constexpr explicit operator unsigned int() const;
+	constexpr explicit operator long() const;
+	constexpr explicit operator unsigned long() const;
+	constexpr explicit operator long long() const;
+	constexpr explicit operator unsigned long long() const;
 
 	constexpr LargeNum(const LargeNum& val) = default;
 	constexpr LargeNum(long long val) : LargeNum() {
@@ -210,34 +157,6 @@ public:
 	template <typename T> LargeNum& operator+=(const T&) = delete;
 	template <typename T> constexpr LargeNum operator-(const T&) const = delete;
 	template <typename T> LargeNum& operator-=(const T&) = delete;
-
-	template <> constexpr LargeNum operator+(const LargeNum& addend) const {
-		LargeNum ans;
-		for (int i = 0; i < DigitGroups; i++)
-			ans.digitGroup[i] = digitGroup[i] + addend.digitGroup[i];
-		ans.fix();
-		return ans;
-	}
-	template <> LargeNum& operator+=(const LargeNum& addend) {
-		for (int i = 0; i < DigitGroups; i++)
-			digitGroup[i] += addend.digitGroup[i];
-		fix();
-		return *this;
-	}
-
-	template <> constexpr LargeNum operator-(const LargeNum& subtrahend) const {
-		LargeNum ans;
-		for (int i = 0; i < DigitGroups; i++)
-			ans.digitGroup[i] = digitGroup[i] - subtrahend.digitGroup[i];
-		ans.fix();
-		return ans;
-	}
-	template <> LargeNum& operator-=(const LargeNum& subtrahend) {
-		for (int i = 0; i < DigitGroups; i++)
-			digitGroup[i] -= subtrahend.digitGroup[i];
-		fix();
-		return *this;
-	}
 
 	constexpr LargeNum operator*(const int32_t multiplier) const { // めんどくさいので32bit整数倍だけ……
 		LargeNum ans = LargeNum();
@@ -307,21 +226,6 @@ public:
 		return *this;
 	}
 
-#define DEFINE_ADDSUB(x) \
-	template <> constexpr LargeNum operator+(const x& addend) const { return *this + LargeNum(addend); } \
-	template <> LargeNum& operator+=(const x& addend) { return *this += LargeNum(addend); } \
-	template <> constexpr LargeNum operator-(const x& subtrahend) const { return *this - LargeNum(subtrahend); } \
-	template <> LargeNum& operator-=(const x& subtrahend) { return *this -= LargeNum(subtrahend); }
-
-	DEFINE_ADDSUB(int)
-	DEFINE_ADDSUB(unsigned int)
-	DEFINE_ADDSUB(long)
-	DEFINE_ADDSUB(unsigned long)
-	DEFINE_ADDSUB(long long)
-	DEFINE_ADDSUB(unsigned long long)
-
-#undef DEFINE_ADDSUB
-
 	constexpr LargeNum operator+() const { return *this; }
 	constexpr LargeNum operator-() const { return (*this) * (-1); }
 
@@ -332,38 +236,141 @@ public:
 	template <typename T> constexpr bool operator<=(const T&) const = delete;
 	template <typename T> constexpr bool operator>=(const T&) const = delete;
 
-	template <> constexpr bool operator==(const LargeNum& cmp) const { return (this->compare(cmp) == 0); }
-	template <> constexpr bool operator!=(const LargeNum& cmp) const { return (this->compare(cmp) != 0); }
-	template <> constexpr bool operator<(const LargeNum& cmp) const { return (this->compare(cmp) < 0); }
-	template <> constexpr bool operator>(const LargeNum& cmp) const { return (this->compare(cmp) > 0); }
-	template <> constexpr bool operator<=(const LargeNum& cmp) const { return (this->compare(cmp) <= 0); }
-	template <> constexpr bool operator>=(const LargeNum& cmp) const { return (this->compare(cmp) >= 0); }
-
-#define DEFINE_COMPARISON(x) \
-	template <> constexpr bool operator==(const x& cmp) const { return *this == LargeNum(cmp); } \
-	template <> constexpr bool operator!=(const x& cmp) const { return *this != LargeNum(cmp); } \
-	template <> constexpr bool operator<(const x& cmp) const { return *this < LargeNum(cmp); } \
-	template <> constexpr bool operator>(const x& cmp) const { return *this > LargeNum(cmp); } \
-	template <> constexpr bool operator<=(const x& cmp) const { return *this <= LargeNum(cmp); } \
-	template <> constexpr bool operator>=(const x& cmp) const { return *this >= LargeNum(cmp); }
-
-	DEFINE_COMPARISON(int)
-	DEFINE_COMPARISON(unsigned int)
-	DEFINE_COMPARISON(long)
-	DEFINE_COMPARISON(unsigned long)
-	DEFINE_COMPARISON(long long)
-	DEFINE_COMPARISON(unsigned long long)
-
-#undef DEFINE_COMPARISON
-
-	constexpr operator bool() const { return *this != LargeNum(0); }
-	constexpr bool operator!() const { return *this == LargeNum(0); }
+	constexpr operator bool() const { return this->compare(LargeNum(0)) != 0; }
+	constexpr bool operator!() const { return this->compare(LargeNum(0)) == 0; }
 
 	constexpr LargeNum& operator=(const LargeNum&) = default;
 	template <typename T> constexpr LargeNum& operator=(const T& val) { return *this = LargeNum(val); }
 };
 static_assert(std::is_trivially_copyable<LargeNum>::value, "LargeNum is not trivially copyable");
 static_assert(std::is_standard_layout<LargeNum>::value, "LargeNum is not standard layout");
+
+template <> constexpr int64_t LargeNum::to_int<8>() const {
+	if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0) && (digitGroup[3] == 0)
+		&& ((abs(digitGroup[2]) < 922) || ((abs(digitGroup[2]) == 922)
+			&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
+				&& (abs(digitGroup[0]) <= 54'775'807))))
+	{
+		return static_cast<int64_t>(digitGroup[2]) * 1'000'000'000'000'000LL
+			+ static_cast<int64_t>(digitGroup[1]) * 100'000'000 + digitGroup[0];
+	} else { // OVERFLOW
+		return (this->compare((LargeNum)0) >= 0 ? 1 : -1) * std::numeric_limits<int64_t>::max();
+	}
+}
+static_assert(std::numeric_limits<int64_t>::max() == 9'223'372'036'854'775'807LL, "Maximum of int64_t is not 9,223,372,036,854,775,807");
+template <> constexpr uint64_t LargeNum::to_uint<8>() const {
+	if (this->compare((LargeNum)0) < 0) {
+		// NEGATIVE
+		return 0uLL;
+	} else if ((digitGroup[7] == 0) && (digitGroup[6] == 0) && (digitGroup[5] == 0) && (digitGroup[4] == 0) && (digitGroup[3] == 0)
+		&& ((abs(digitGroup[2]) < 922) || ((abs(digitGroup[2]) == 922)
+			&& (abs(digitGroup[1]) <= 33'720'368)) || ((abs(digitGroup[1]) == 33'720'368)
+				&& (abs(digitGroup[0]) <= 54'775'807))))
+	{
+		return static_cast<uint64_t>(digitGroup[2]) * 1'000'000'000'000'000uLL
+			+ static_cast<uint64_t>(digitGroup[1]) * 100'000'000uLL + static_cast<uint64_t>(digitGroup[0]);
+	} else { // OVERFLOW
+		return std::numeric_limits<uint64_t>::max();
+	}
+}
+static_assert(std::numeric_limits<uint64_t>::max() == 18'446'744'073'709'551'615uLL, "Maximum of uint64_t is not 18,446,744,073,709,551,615");
+template <> constexpr int64_t LargeNum::to_int<4>() const {
+	if (this->to_int<8>() > std::numeric_limits<std::int32_t>::max())
+		return std::numeric_limits<std::int32_t>::max();
+	else if (this->to_int<8>() < std::numeric_limits<std::int32_t>::min())
+		return std::numeric_limits<std::int32_t>::min();
+	else
+		return this->to_int<8>();
+}
+static_assert(std::numeric_limits<int32_t>::max() == 2'147'483'647, "Maximum of int32_t is not 2,147,483,647");
+template <> constexpr uint64_t LargeNum::to_uint<4>() const {
+	if (this->to_uint<8>() > std::numeric_limits<std::uint32_t>::max())
+		return std::numeric_limits<std::uint32_t>::max();
+	else
+		return this->to_uint<8>();
+}
+static_assert(std::numeric_limits<uint32_t>::max() == 4'294'967'295, "Maximum of uint32_t is not 4,294,967,295");
+
+#define DEFINE_CAST(x) \
+	constexpr LargeNum::operator x() const { \
+		return static_cast<x>(to_int<sizeof(x)>()); \
+	}
+
+	DEFINE_CAST(int)
+	DEFINE_CAST(unsigned int)
+	DEFINE_CAST(long)
+	DEFINE_CAST(unsigned long)
+	DEFINE_CAST(long long)
+	DEFINE_CAST(unsigned long long)
+
+#undef DEFINE_CAST
+
+#define DEFINE_ADDSUB(x) \
+	template <> constexpr LargeNum LargeNum::operator+(const x& addend) const { return *this + LargeNum(addend); } \
+	template <> LargeNum& LargeNum::operator+=(const x& addend) { return *this += LargeNum(addend); } \
+	template <> constexpr LargeNum LargeNum::operator-(const x& subtrahend) const { return *this - LargeNum(subtrahend); } \
+	template <> LargeNum& LargeNum::operator-=(const x& subtrahend) { return *this -= LargeNum(subtrahend); }
+
+template <> constexpr LargeNum LargeNum::operator+(const LargeNum& addend) const {
+	LargeNum ans;
+	for (int i = 0; i < DigitGroups; i++)
+		ans.digitGroup[i] = digitGroup[i] + addend.digitGroup[i];
+	ans.fix();
+	return ans;
+}
+template <> LargeNum& LargeNum::operator+=(const LargeNum& addend) {
+	for (int i = 0; i < DigitGroups; i++)
+		digitGroup[i] += addend.digitGroup[i];
+	fix();
+	return *this;
+}
+
+template <> constexpr LargeNum LargeNum::operator-(const LargeNum& subtrahend) const {
+	LargeNum ans;
+	for (int i = 0; i < DigitGroups; i++)
+		ans.digitGroup[i] = digitGroup[i] - subtrahend.digitGroup[i];
+	ans.fix();
+	return ans;
+}
+template <> LargeNum& LargeNum::operator-=(const LargeNum& subtrahend) {
+	for (int i = 0; i < DigitGroups; i++)
+		digitGroup[i] -= subtrahend.digitGroup[i];
+	fix();
+	return *this;
+}
+
+DEFINE_ADDSUB(int)
+DEFINE_ADDSUB(unsigned int)
+DEFINE_ADDSUB(long)
+DEFINE_ADDSUB(unsigned long)
+DEFINE_ADDSUB(long long)
+DEFINE_ADDSUB(unsigned long long)
+
+#undef DEFINE_ADDSUB
+
+#define DEFINE_COMPARISON(x) \
+	template <> constexpr bool LargeNum::operator==(const x& cmp) const { return *this == LargeNum(cmp); } \
+	template <> constexpr bool LargeNum::operator!=(const x& cmp) const { return *this != LargeNum(cmp); } \
+	template <> constexpr bool LargeNum::operator<(const x& cmp) const { return *this < LargeNum(cmp); } \
+	template <> constexpr bool LargeNum::operator>(const x& cmp) const { return *this > LargeNum(cmp); } \
+	template <> constexpr bool LargeNum::operator<=(const x& cmp) const { return *this <= LargeNum(cmp); } \
+	template <> constexpr bool LargeNum::operator>=(const x& cmp) const { return *this >= LargeNum(cmp); }
+
+template <> constexpr bool LargeNum::operator==(const LargeNum& cmp) const { return (this->compare(cmp) == 0); }
+template <> constexpr bool LargeNum::operator!=(const LargeNum& cmp) const { return (this->compare(cmp) != 0); }
+template <> constexpr bool LargeNum::operator<(const LargeNum& cmp) const { return (this->compare(cmp) < 0); }
+template <> constexpr bool LargeNum::operator>(const LargeNum& cmp) const { return (this->compare(cmp) > 0); }
+template <> constexpr bool LargeNum::operator<=(const LargeNum& cmp) const { return (this->compare(cmp) <= 0); }
+template <> constexpr bool LargeNum::operator>=(const LargeNum& cmp) const { return (this->compare(cmp) >= 0); }
+
+DEFINE_COMPARISON(int)
+DEFINE_COMPARISON(unsigned int)
+DEFINE_COMPARISON(long)
+DEFINE_COMPARISON(unsigned long)
+DEFINE_COMPARISON(long long)
+DEFINE_COMPARISON(unsigned long long)
+
+#undef DEFINE_COMPARISON
 
 constexpr LargeNum operator"" _LN(unsigned long long val) { return LargeNum(val); }
 
