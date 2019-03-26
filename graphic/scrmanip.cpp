@@ -224,6 +224,7 @@ void ScreenManipulator::transit(sceneID scene) {
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess); // DirectXだと問題ないがLinux(OpenGL)だとうまくいかないようなのでロックする
 #ifdef _WIN32
 	HGLRC context = wglCreateContext(pDevice);
 	wglShareLists(rContext, context);
@@ -308,7 +309,6 @@ void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (myScene) myScene->IMEvent(message, wParam, lParam);
 }
 #else /*_WIN32*/
-/* TODO: Linuxでは日本語入力が未実装 */
 
 void ScreenManipulator::kbdInputProc(const XEvent* event) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
