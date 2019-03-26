@@ -30,7 +30,7 @@ AM_CONDITIONAL(WITH_WINAPI, test x$using_winapi != xno)
 
 # Check for OSX
 AC_MSG_CHECKING([for OSX])
-AS_IF([test "x$host_vendor = xapple"], [
+AS_IF([test "x$host_vendor" = xapple], [
 	AC_MSG_RESULT([yes])
 	AC_MSG_NOTICE([It seems we are using Mac OS X.])
 	AC_MSG_NOTICE([Please make sure openal-soft is installed with Homebrew.])
@@ -175,7 +175,7 @@ AS_IF([test "x$with_directx" = xno], [
 	AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))
 	AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
 ])
-AC_CHECK_FUNCS([clock_gettime floor getaddrinfo gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
+AC_CHECK_FUNCS([clock_gettime floor getaddrinfo getenv_s gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
 
 
 AC_ARG_ENABLE([midi],

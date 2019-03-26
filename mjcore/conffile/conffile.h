@@ -42,9 +42,9 @@ class ConfigFile {
 private:
 	INIParser::IniMapMap configMap;
 
-	std::string confPath();
 	void load();
 public:
+	static std::string confPath();
 	const std::string preferenceFile;
 	ConfigFile();
 	ConfigFile(const ConfigFile&) = delete;
