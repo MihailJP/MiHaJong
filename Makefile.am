@@ -12,11 +12,11 @@ EXTRA_DIST = \
 	logger/logger.cpp logger/logger.h logger/logger.vcxproj \
 	logger/logger.vcxproj.filters logger/resource.h logger/ver.rc \
 	mentzdat \
-	mihajong.sln
+	mihajong.sln \
+	doc/addyaku.md doc/history.md doc/license.md doc/playing.md \
+	doc/readme.md doc/rulesyms.md doc/script.md
 dist_doc_DATA = \
 	readme.md doc/manual.css \
-	doc/addyaku.md doc/history.md doc/license.md doc/playing.md \
-	doc/readme.md doc/rulesyms.md doc/script.md \
 	doc/addyaku.html doc/history.html doc/license.html doc/playing.html \
 	doc/readme.html doc/rulesyms.html doc/script.html
 
