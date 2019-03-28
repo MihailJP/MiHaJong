@@ -54,6 +54,28 @@ namespace CodeConv {
 constexpr unsigned CP_UTF8 = 65001u;
 constexpr unsigned CP_ACP = 932u;
 
+template <typename T> inline void setStreamLocale(T& file) {
+	const auto setLoc = [](T& file, const char* locale) {
+		try {
+			(void)file.imbue(std::locale(locale));
+		} catch (std::runtime_error&) {
+			return false;
+		}
+		return true;
+	};
+#ifdef UNICODE
+	if (setLoc(file, ".65001")) return;
+	if (setLoc(file, "ja_JP.utf8")) return;
+	if (setLoc(file, "ja_JP.UTF-8")) return;
+#else /* UNICODE */
+	if (setLoc(file, ".932")) return;
+	if (setLoc(file, "ja_JP.cp932")) return;
+	if (setLoc(file, "ja_JP.shiftjisx0213")) return;
+	if (setLoc(file, "ja_JP.sjis-8")) return;
+#endif /* UNICODE */
+	std::cerr << "Failed to set locale for stream" << std::endl;
+}
+
 #ifndef _WIN32
 inline void setCP(unsigned int CodePage) {
 	char teststr[MB_CUR_MAX];
