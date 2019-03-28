@@ -5,6 +5,50 @@
 
 namespace mihajong_graphic {
 
+#ifndef WITH_DIRECTX
+#ifdef _WIN32
+HGLRC ScreenManipulator::getContext() {
+	HGLRC context = wglCreateContext(pDevice);
+	wglShareLists(rContext, context);
+	return context;
+}
+void ScreenManipulator::discardContext(HGLRC context) {
+	wglMakeCurrent(nullptr, nullptr);
+	wglDeleteContext(context);
+}
+#else /* _WIN32 */
+GLXContext ScreenManipulator::getContext(bool shared) {
+	//int numOfElements;
+
+	int attribs[] = {
+		GLX_RGBA, GLX_DOUBLEBUFFER,
+		GLX_RED_SIZE, 8,
+		GLX_GREEN_SIZE, 8,
+		GLX_BLUE_SIZE, 8,
+		0 /* sentinel */
+	};
+	XVisualInfo* vi = glXChooseVisual(disp, DefaultScreen(disp), attribs);
+	GLXContext context = glXCreateContext(disp, vi, shared ? pDevice : nullptr, True);
+	XFree(vi);
+#if 0
+	/* glXCreateContextAttribsARB() not supported */
+	GLXFBConfig* fbc = glXChooseFBConfig(disp, DefaultScreen(disp), nullptr, &numOfElements);
+	int attribs[] = {
+		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+		0
+	};
+	GLXContext context = glXCreateContextAttribsARB(disp, *fbc, shared ? pDevice : nullptr, True, attribs);
+#endif
+	return context;
+}
+void ScreenManipulator::discardContext(GLXContext context) {
+	glXMakeCurrent(disp, hWnd, nullptr);
+	glXDestroyContext(disp, context);
+}
+#endif /* _WIN32 */
+#endif /* WITH_DIRECTX */
+
 void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェクト初期化
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	/* Direct3D オブジェクト生成 */
@@ -54,29 +98,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 	rContext = wglCreateContext(pDevice);
 	wglMakeCurrent(pDevice, rContext);
 #else
-	int numOfElements;
-	
-	int attribs[] = {
-		GLX_RGBA, GLX_DOUBLEBUFFER,
-		GLX_RED_SIZE, 1,
-		GLX_GREEN_SIZE, 1,
-		GLX_BLUE_SIZE, 1,
-		0 /* sentinel */
-	};
-	XVisualInfo* vi = glXChooseVisual(disp, DefaultScreen(disp), attribs);
-	pDevice = glXCreateContext(disp, vi, nullptr, true);
-	XFree(vi);
-#if 0
-	/* glXCreateContextAttribsARB() not supported */
-	GLXFBConfig* fbc = glXChooseFBConfig(disp, DefaultScreen(disp), nullptr, &numOfElements);
-	int attribs[] = {
-		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
-		0
-	};
-	pDevice = glXCreateContextAttribsARB(disp, *fbc, 0, true, attribs);
-#endif
-
+	pDevice = getContext(false);
 	glXMakeCurrent(disp, hWnd, pDevice);
 #endif
 
@@ -174,12 +196,11 @@ void ScreenManipulator::transit(sceneID scene) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #ifdef _WIN32
-	HGLRC context = wglCreateContext(pDevice);
-	wglShareLists(rContext, context);
+	HGLRC context = getContext();
 	wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
-	// Linuxでは別のコンテキストにする必要なし？
-	glXMakeCurrent(disp, hWnd, pDevice);
+	GLXContext context = getContext(true);
+	glXMakeCurrent(disp, hWnd, context);
 #endif /*_WIN32*/
 #endif
 	redrawFlag = false;
@@ -210,36 +231,31 @@ void ScreenManipulator::transit(sceneID scene) {
 		myScene = new ResultScreen(this); redrawFlag = true;
 		break;
 	default:
-#if defined(_WIN32) && !defined(WITH_DIRECTX)
-		wglMakeCurrent(nullptr, nullptr);
-		wglDeleteContext(context);
-#endif
+#ifndef WITH_DIRECTX
+		discardContext(context);
+#endif /* WITH_DIRECTX */
 		throw _T("正しくないシーン番号が指定されました");
 	}
-#if defined(_WIN32) && !defined(WITH_DIRECTX)
-	wglMakeCurrent(nullptr, nullptr);
-	wglDeleteContext(context);
-#endif
+#ifndef WITH_DIRECTX
+	discardContext(context);
+#endif /* WITH_DIRECTX */
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
-#if !defined(_WIN32) || !defined(WITH_DIRECTX)
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess); // DirectXだと問題ないがLinux(OpenGL)だとうまくいかないようなのでロックする
+#ifndef WITH_DIRECTX
 #ifdef _WIN32
-	HGLRC context = wglCreateContext(pDevice);
-	wglShareLists(rContext, context);
+	HGLRC context = getContext();
 	wglMakeCurrent(pDevice, context);
 #else /*_WIN32*/
-	
-	glXMakeCurrent(disp, hWnd, pDevice);
+	GLXContext context = getContext(true);
+	glXMakeCurrent(disp, hWnd, context);
 #endif /*_WIN32*/
-#endif
+#endif /* WITH_DIRECTX */
 	if (myScene)
 		myScene->SetSubscene(subsceneID);
-#if defined(_WIN32) && !defined(WITH_DIRECTX)
-	wglMakeCurrent(nullptr, nullptr);
-	wglDeleteContext(context);
-#endif
+#ifndef WITH_DIRECTX
+	discardContext(context);
+#endif /* WITH_DIRECTX */
 }
 
 ScreenManipulator::~ScreenManipulator() {
