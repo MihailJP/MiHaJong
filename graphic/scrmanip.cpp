@@ -19,6 +19,9 @@ void ScreenManipulator::discardContext(HGLRC context) {
 #else /* _WIN32 */
 GLXContext ScreenManipulator::getContext(bool shared) {
 	//int numOfElements;
+#ifdef __linux__
+	if (shared) return pDevice;
+#endif /* __linux__ */
 
 	int attribs[] = {
 		GLX_RGBA, GLX_DOUBLEBUFFER,
@@ -43,8 +46,10 @@ GLXContext ScreenManipulator::getContext(bool shared) {
 	return context;
 }
 void ScreenManipulator::discardContext(GLXContext context) {
+#ifndef __linux__
 	glXMakeCurrent(disp, hWnd, nullptr);
 	glXDestroyContext(disp, context);
+#endif /* __linux__ */
 }
 #endif /* _WIN32 */
 #endif /* WITH_DIRECTX */
@@ -242,6 +247,9 @@ void ScreenManipulator::transit(sceneID scene) {
 }
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
+#ifdef __linux__
+	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+#endif /* __linux__ */
 #ifndef WITH_DIRECTX
 #ifdef _WIN32
 	HGLRC context = getContext();
