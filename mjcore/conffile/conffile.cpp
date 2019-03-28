@@ -50,7 +50,7 @@ std::string ConfigFile::confPath() {
 		strncpy(homedir, getenv("HOME"), bufSize - 1);
 	homedir[bufSize - 1] = '\0';
 #endif
-	configpath = std::string(homedir) + std::string("/.mihajong");
+	configpath = std::string(homedir) + std::string("/.mihajong/");
 	delete[] homedir;
 #endif /* _WIN32 */
 	return configpath;
