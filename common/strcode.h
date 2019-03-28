@@ -51,10 +51,13 @@ constexpr char PengPengHu[] = "ポンポン和";
 
 namespace CodeConv {
 
+constexpr unsigned CP_UTF8 = 65001u;
+constexpr unsigned CP_ACP = 932u;
+
 #ifndef _WIN32
 inline void setCP(unsigned int CodePage) {
 	char teststr[MB_CUR_MAX];
-	if (CodePage == 932u) { /* Japanese SJIS code page */
+	if (CodePage == CP_ACP) { /* Japanese SJIS code page */
 		if (setlocale(LC_CTYPE, "ja_JP.cp932")) { /* Linux */
 			if (wctomb(teststr, L'あ') != -1) return;
 		}
@@ -65,8 +68,9 @@ inline void setCP(unsigned int CodePage) {
 			if (wctomb(teststr, L'あ') != -1) return;
 		}
 	}
-	else if (CodePage == 65001u) { /* UTF-8 code page */
+	else if (CodePage == CP_UTF8) { /* UTF-8 code page */
 		if (setlocale(LC_CTYPE, "ja_JP.utf8")) return; /* Linux */
+		if (setlocale(LC_CTYPE, "ja_JP.UTF-8")) return; /* Mac OS */
 	}
 	else { /* Unsupported code page */
 		std::cerr << "Unsupported code page " << CodePage << " ignored" << std::endl;
@@ -74,9 +78,6 @@ inline void setCP(unsigned int CodePage) {
 	}
 	std::cerr << "Failed to set code page to " << CodePage << std::endl;
 }
-
-constexpr unsigned CP_UTF8 = 65001u;
-constexpr unsigned CP_ACP = 932u;
 
 inline MUTEXLIB::recursive_mutex& conversionMutex() {
 	static MUTEXLIB::recursive_mutex myMutex;
@@ -94,10 +95,9 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
-	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
-	volatile /* Do not optimize memset() out asshole!!! */
-		char* srcBuf = new char[str.length() + 1]; /* source buffer */
-	memset(const_cast<char*>(srcBuf), 0, str.length() + 1); strncpy(const_cast<char*>(srcBuf), str.c_str(), str.length());
+	mbstate_t mbStat {};
+	char* srcBuf = new char[str.length() + 1] {}; /* source buffer */
+	strncpy(srcBuf, str.c_str(), str.length());
 	const char* srcPtr = const_cast<char*>(srcBuf);
 	const size_t bufsize = mbsrtowcs(nullptr, &srcPtr, 0, &mbStat);
 	if (bufsize == (size_t)-1) {
@@ -106,8 +106,7 @@ inline std::wstring NarrowToWide(unsigned int CodePage, std::string str) {
 		std::cerr << "Failed to convert into wide string" << std::endl;
 		throw _T("ワイド文字への変換に失敗しました");
 	}
-	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */];
-	memset(buf, 0, (bufsize + 1) * sizeof (wchar_t));
+	wchar_t* buf = new wchar_t[bufsize + 1 /* Do not forget the trailing null */] {};
 	srcPtr = const_cast<char*>(srcBuf);
 	mbsrtowcs(buf, &srcPtr, bufsize, &mbStat);
 	setlocale(LC_CTYPE, origLocale.c_str()); /* restore locale */
@@ -127,15 +126,14 @@ inline std::string WideToNarrow(unsigned int CodePage, std::wstring str) {
 	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(conversionMutex());
 	const std::string origLocale(setlocale(LC_CTYPE, nullptr)); /* backup locale */
 	setCP(CodePage);
-	mbstate_t mbStat; memset(&mbStat, 0, sizeof mbStat);
-	wchar_t* srcBuf = new wchar_t[str.length() + 1]; /* source buffer */
-	memset(srcBuf, 0, (str.length() + 1) * sizeof (wchar_t)); wcsncpy(srcBuf, str.c_str(), str.length());
+	mbstate_t mbStat {};
+	wchar_t* srcBuf = new wchar_t[str.length() + 1] {}; /* source buffer */
+	wcsncpy(srcBuf, str.c_str(), str.length());
 
 	std::string buf;
 	for (int pos = 0; pos < str.size(); ++pos) {
 		wctomb(nullptr, str[pos]);
-		char tmpstr[MB_LEN_MAX];
-		memset(tmpstr, 0, MB_LEN_MAX);
+		char tmpstr[MB_LEN_MAX] {};
 		int rslt = wctomb(tmpstr, str[pos]);
 		if (str[pos] <= 0x007f) { // Keep 7bit ASCII
 			tmpstr[0] = static_cast<char>((int)(str[pos])); tmpstr[1] = 0;
