@@ -907,7 +907,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	}
 	/* バグ防止のアレ */
 	for (PlayerID i = 0; i < Players; i++) {
-		gameStat->Player[i].Hand[NumOfTilesInHand] = Tile();
+		gameStat->Player[i].Hand[TsumohaiIndex] = Tile();
 	}
 	return false;
 }
