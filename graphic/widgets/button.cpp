@@ -60,22 +60,25 @@ void ButtonPic::Render() {
 		if (std::get<0>(k) == absent) continue;
 		int X = std::get<1>(k), Y = std::get<2>(k);
 		unsigned width = std::get<3>(k), height = std::get<4>(k);
-#if defined(_WIN32) && defined(WITH_DIRECTX)
 		const TransformMatrix mat(getMatrix(
+#ifdef WITH_DIRECTX
 			static_cast<float>(X),
 			static_cast<float>(Y),
 			static_cast<float>(width) / 156.0f,
 			static_cast<float>(height) / 48.0f,
+#else
+			// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい
+			0.0f,
+			0.0f,
+			1.0f,
+			1.0f,
+#endif
 			0.0f,
 			0.0f,
 			0.0f,
 			1.0f / Geometry::WindowScale(),
 			1.0f / Geometry::WindowScale()
 		));
-#else
-		// DirectXとは基準が異なる？　OpenGLの場合ここは単位行列のままでよい
-		const TransformMatrix mat(getMatrix());
-#endif
 		const RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(k) | 0xff000000, &rect, 0, 0, &mat);
 	}
