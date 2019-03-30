@@ -94,8 +94,10 @@ inline Time localTime() { // 地方時を取得する
 inline double getJulian(const Time& timeDat) {
 #ifdef _WIN32
 	const SYSTEMTIME timeVal = {
-		timeDat.year, timeDat.month, timeDat.dayOfWeek, timeDat.day,
-		timeDat.hour, timeDat.minute, timeDat.second, timeDat.millisecond,
+		static_cast<WORD>(timeDat.year), static_cast<WORD>(timeDat.month),
+		static_cast<WORD>(timeDat.dayOfWeek), static_cast<WORD>(timeDat.day),
+		static_cast<WORD>(timeDat.hour), static_cast<WORD>(timeDat.minute),
+		static_cast<WORD>(timeDat.second), static_cast<WORD>(timeDat.millisecond),
 	};
 #else /*_WIN32*/
 	const int month = static_cast<int>(timeDat.month) - 1;

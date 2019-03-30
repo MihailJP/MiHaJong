@@ -12,14 +12,15 @@ using utils::playerRelative;
 
 /* 手牌を表示する */
 void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {
+	const unsigned int h = HandPosH, v = HandPosV;
 	ShowTehai::Reconstruct(gameStat, targetPlayer,
-		[](seatRelative seat) -> std::tuple<int, int> {
+		[h, v](seatRelative seat) -> std::tuple<int, int> {
 			switch (seat) {
-				case sOpposite: return std::make_tuple(            HandPosH,             HandPosV);
-				case sLeft:     return std::make_tuple(            HandPosV,             HandPosH);
-				case sRight:    return std::make_tuple(TableSize - HandPosV,             HandPosH);
-				case sSelf:     return std::make_tuple(            HandPosH, TableSize - HandPosV);
-				default:        return std::make_tuple(0                   , 0                   );
+				case sOpposite: return std::make_tuple(            h,             v);
+				case sLeft:     return std::make_tuple(            v,             h);
+				case sRight:    return std::make_tuple(TableSize - v,             h);
+				case sSelf:     return std::make_tuple(            h, TableSize - v);
+				default:        return std::make_tuple(0            , 0            );
 			}
 		}, playerRelative(targetPlayer, gameStat->PlayerID),
 		[this](int i) -> ArgbColor {

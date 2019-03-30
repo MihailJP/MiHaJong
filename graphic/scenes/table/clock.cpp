@@ -110,7 +110,7 @@ void GameTableScreen::Clock::renderShadow() {
 			static_cast<double>((circleVert[i].color & 0x0000ff00) >>  8) / 255.0,
 			static_cast<double>((circleVert[i].color & 0x000000ff)      ) / 255.0,
 			static_cast<double>((circleVert[i].color & 0xff000000) >> 24) / 255.0);
-		glVertex2f(circleVert[i].x, circleVert[i].y);
+		glVertex2f(circleVert[i].x, Geometry::WindowHeight - circleVert[i].y);
 	}
 	glEnd();
 	glPopMatrix();

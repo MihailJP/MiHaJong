@@ -90,7 +90,7 @@ void traceLog(CONTEXT* ex, int* const addrList, int addrListSize) {
 			debug(lmsg.str().c_str()); lmsg.str(_T(""));
 		}
 	}
-	
+
 	SymCleanup(hProcess);
 	GlobalFree(pSymbol);
 #endif
@@ -208,6 +208,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 #include "except.h"
 
 ErrorInfo errorInfo;
-constexpr uintptr_t errorInfoPtr[1] = {reinterpret_cast<uintptr_t>(&errorInfo)};
+const uintptr_t errorInfoPtr[1] = {reinterpret_cast<uintptr_t>(&errorInfo)};
 
 #endif /*_WIN32*/

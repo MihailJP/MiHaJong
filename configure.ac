@@ -28,6 +28,17 @@ AX_PROG_LUA([5.1])
 AC_CHECK_HEADER([windows.h], [using_winapi=yes], [using_winapi=no])
 AM_CONDITIONAL(WITH_WINAPI, test x$using_winapi != xno)
 
+# Check for OSX
+AC_MSG_CHECKING([for OSX])
+AS_IF([test "x$host_vendor" = xapple], [
+	AC_MSG_RESULT([yes])
+	AC_MSG_NOTICE([It seems we are using Mac OS X.])
+	AC_MSG_NOTICE([Please make sure openal-soft is installed with Homebrew.])
+	AC_MSG_NOTICE([The framework shipped with Macintosh will not be used.])
+	CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openal-soft/include"
+	LDFLAGS="$LDFLAGS -L/usr/local/opt/openal-soft/lib"
+], [AC_MSG_RESULT([no])])
+
 # Resource editor
 AS_IF([test "x$using_winapi" != xno],
 	[MH_CHECK_WINDRES]
@@ -74,7 +85,6 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_LIB([opengl32], [main], [], AC_MSG_ERROR([opengl32 is unavailable]))],
 		[AX_PTHREAD([], AC_MSG_ERROR([pthread is unavailable]))
 		 AC_CHECK_LIB([openal], [main], [], AC_MSG_ERROR([openal is unavailable]))
-		 AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))
 		 AC_CHECK_LIB([png], [main], [], AC_MSG_ERROR([libpng is unavailable]))]
 	 )]
 )
@@ -121,16 +131,11 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_HEADER([netinet/in.h], [], AC_MSG_ERROR([netinet/in.h is unavailable]))
 		 AC_CHECK_HEADER([netdb.h], [], AC_MSG_ERROR([netdb.h is unavailable]))
 		 AC_CHECK_HEADER([fcntl.h], [], AC_MSG_ERROR([fcntl.h is unavailable]))
-		 AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
-		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
-		 AC_CHECK_HEADER([X11/keysym.h], [], AC_MSG_ERROR([X11/keysym.h is unavailable]))
-		 AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
 		 AC_CHECK_HEADER([png.h], [], AC_MSG_ERROR([png.h is unavailable]))
 		 AC_CHECK_HEADER([sys/stat.h], [], AC_MSG_ERROR([sys/stat.h is unavailable]))
 		 AC_CHECK_HEADER([dirent.h], [], AC_MSG_ERROR([dirent.h is unavailable]))
 		 AC_CHECK_HEADER([sched.h], [], AC_MSG_ERROR([sched.h is unavailable]))]
-	 )
-	 AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))]
+	 )]
 )
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -155,10 +160,22 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_MKTIME
-AS_IF([test "x$using_winapi" = xno],
-	[AC_PATH_X]
-)
-AC_CHECK_FUNCS([clock_gettime floor getaddrinfo gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
+AS_IF([test "x$using_winapi" = xno], [
+	AC_PATH_X
+	AS_IF([test "x$no_x" = xyes], [AC_MSG_ERROR([X is missing])])
+	AS_IF([test "x$x_includes" != x],	[CPPFLAGS="$CPPFLAGS -I$x_includes"])
+	AS_IF([test "x$x_libraries" != x],	[LDFLAGS="$LDFLAGS -L$x_libraries"])
+	AC_CHECK_LIB([X11], [main], [], AC_MSG_ERROR([X11 is unavailable]))
+	AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))
+	AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
+	AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
+	AC_CHECK_HEADER([X11/keysym.h], [], AC_MSG_ERROR([X11/keysym.h is unavailable]))
+])
+AS_IF([test "x$with_directx" = xno], [
+	AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))
+	AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
+])
+AC_CHECK_FUNCS([clock_gettime floor getaddrinfo getenv_s gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
 
 
 AC_ARG_ENABLE([midi],
@@ -169,17 +186,9 @@ AC_ARG_ENABLE([midi],
 )
 AM_CONDITIONAL(MIDI_SUPPORT, test x$enable_midi != xno)
 
-AC_ARG_WITH([oggvorbis],
-	[AS_HELP_STRING([--without-oggvorbis],
-		[disable Ogg Vorbis support as background music])],
-	[],
-	[with_oggvorbis=yes]
-)
-AM_CONDITIONAL(VORBIS_SUPPORT, test x$with_oggvorbis != xno)
-AS_IF([test "x$with_oggvorbis" != xno],
-	[MH_OGG_VORBIS_LIBS
-	 MH_OGG_VORBIS_HEADERS]
-)
+MH_OGG_VORBIS([], [
+	AC_MSG_WARN([libogg/libvorbis library not available: disabled])
+])
 
 AX_BOOST_BASE
 AS_IF([test "x$want_boost" != xno], [

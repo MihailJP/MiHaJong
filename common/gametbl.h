@@ -140,6 +140,9 @@ struct DiscardTile {
 	DiscardStat dstat;
 	bool isDiscardThrough; // ツモ切りフラグ
 	explicit operator bool() const {return tcode.tile != NoTile;}
+	bool operator !() const {return tcode.tile == NoTile;}
+	DiscardTile(Tile tile = Tile(), DiscardStat dStat = discardNormal, bool discardThrough = false)
+		: tcode(tile), dstat(dStat), isDiscardThrough(discardNormal) {}
 };
 typedef DiscardTile DiscardBuf[SizeOfDiscardBuffer];
 static_assert(std::is_trivially_copyable<DiscardTile>::value, "DiscardTile is not trivially copyable");

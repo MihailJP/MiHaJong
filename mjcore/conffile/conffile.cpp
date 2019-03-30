@@ -17,32 +17,42 @@ typedef std::basic_regex<TCHAR> tregex;
 
 /* コンフィグのパス */
 std::string ConfigFile::confPath() {
+	constexpr size_t bufSize = 1024u;
 	std::string configpath = "";
-	char* cur = new char[1024];
 #ifdef _WIN32
-	GetCurrentDirectoryA(1024, cur);
-#else /* _WIN32 */
-	getcwd(cur, 1024);
-#endif /* _WIN32 */
-	char* progfiles = new char[1024];
-	char* appdata = new char[1024];
-#if defined(_MSC_VER)
-	size_t* sz = new size_t;
-	getenv_s(sz, progfiles, 1024, "ProgramFiles");
-	getenv_s(sz, appdata, 1024, "APPDATA");
+	char* cur = new char[bufSize] {};
+	GetCurrentDirectoryA(bufSize, cur);
+	char* progfiles = new char[bufSize] {};
+	char* appdata = new char[bufSize] {};
+#if defined(_MSC_VER) || defined(HAVE_GETENV_S)
+	size_t len();
+	getenv_s(&len, progfiles, bufSize, "ProgramFiles");
+	getenv_s(&len, appdata, bufSize, "APPDATA");
 #else
-	strncpy(progfiles, getenv("ProgramFiles"), 1023);
-	strncpy(appdata, getenv("APPDATA"), 1023);
-	progfiles[1023] = appdata[1023] = '\0';
+	if (getenv("ProgramFiles"))
+		strncpy(progfiles, getenv("ProgramFiles"), bufSize - 1);
+	if (getenv("APPDATA"))
+		strncpy(appdata, getenv("APPDATA"), bufSize - 1);
+	progfiles[bufSize - 1] = appdata[bufSize - 1] = '\0';
 #endif
 
 	if (strstr(cur, progfiles) == cur)
 		configpath = std::string(appdata) + std::string("\\MiHaJong\\");
 
 	delete[] cur; delete[] appdata; delete[] progfiles;
-#if defined(_MSC_VER)
-	delete sz;
+#else /* _WIN32 */
+	char* homedir = new char[bufSize] {};
+#ifdef HAVE_GETENV_S
+	size_t len();
+	getenv_s(&len, homedir, bufSize, "HOME");
+#else
+	if (getenv("HOME"))
+		strncpy(homedir, getenv("HOME"), bufSize - 1);
+	homedir[bufSize - 1] = '\0';
 #endif
+	configpath = std::string(homedir) + std::string("/.mihajong/");
+	delete[] homedir;
+#endif /* _WIN32 */
 	return configpath;
 }
 
@@ -52,11 +62,7 @@ void ConfigFile::load() {
 		bool prefFileExists = exist(preferenceFile.c_str()); // 設定ファイルがあるかどうか調べる
 		if (prefFileExists) { // 設定ファイル読み込み
 			CodeConv::tifstream file(preferenceFile.c_str());
-#ifdef UNICODE
-			(void)file.imbue(std::locale(".65001"));
-#else /* UNICODE */
-			(void)file.imbue(std::locale(".932"));
-#endif /* UNICODE */
+			CodeConv::setStreamLocale(file);
 			CodeConv::tstring line, text;
 			while (std::getline(file, line)) text += line + _T("\n");
 			INIParser::parseini(configMap, text.c_str(), false);
@@ -70,11 +76,7 @@ ConfigFile::ConfigFile() : preferenceFile(confPath() + "config.ini") {
 
 void ConfigFile::save() {
 	CodeConv::tofstream file(preferenceFile);
-#ifdef UNICODE
-	(void)file.imbue(std::locale(".65001"));
-#else /* UNICODE */
-	(void)file.imbue(std::locale(".932"));
-#endif /* UNICODE */
+	CodeConv::setStreamLocale(file);
 	file << _T("MiHaJong Configuration File\n\n");
 	file << _T("[preferences]\n\n");
 	file << _T("; プレイヤー名\n");

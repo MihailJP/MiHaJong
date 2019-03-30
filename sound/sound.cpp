@@ -23,7 +23,7 @@ int deviceID(const CodeConv::tstring& deviceName) {
 	}
 
 	return GuruGuruSmf::Device::DirectMusic;
-else /* defined(_WIN32) && defined(MIDI_SUPPORT) */
+#else /* defined(_WIN32) && defined(MIDI_SUPPORT) */
 	return 0;
 #endif /* defined(_WIN32) && defined(MIDI_SUPPORT) */
 }

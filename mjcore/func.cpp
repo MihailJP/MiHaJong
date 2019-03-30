@@ -21,6 +21,7 @@
 #include "except.h"
 #include "ruletbl.h"
 #include "regex.h"
+#include "conffile/conffile.h"
 
 /* 順位を計算する */
 PlayerRankList calcRank(const GameTable* const gameStat) {
@@ -162,63 +163,52 @@ namespace confpath {
 	/* コンフィグのパスを自動設定 */
 	/* Vista以降でRoamingに準備できていなければ作る */
 	std::string confPath() {
-		std::string configpath = "";
+		const std::string configpath(ConfigFile::ConfigFile::confPath());
 #ifdef _WIN32
 		if (isVista()) {
-			char* cur = new char[1024];
-			GetCurrentDirectoryA(1024, cur);
-			char* progfiles = new char[1024];
-			char* appdata = new char[1024];
-#if defined(_MSC_VER)
-			size_t* sz = new size_t;
-			getenv_s(sz, progfiles, 1024, "ProgramFiles");
-			getenv_s(sz, appdata, 1024, "APPDATA");
+			constexpr bufSize = 1024u;
+			char* appdata = new char[bufSize] {};
+#if defined(_MSC_VER) || defined(HAVE_GETENV_S)
+			size_t sz = 0;
+			getenv_s(&sz, appdata, bufSize, "APPDATA");
 #else
-			strncpy(progfiles, getenv("ProgramFiles"), 1023);
-			strncpy(appdata,   getenv("APPDATA"),      1023);
-			progfiles[1023] = appdata[1023] = '\0';
+			if (getenv("APPDATA"))
+				strncpy(appdata, getenv("APPDATA"), bufSize - 1);
+			appdata[bufSize - 1] = '\0';
 #endif
 
-			if (strstr(cur, progfiles) == cur) {
+			if (strstr(configpath.c_str(), appdata) != configpath.c_str()) {
 				// MakeSureDirectoryPathExistsがワイド文字対応してないので仕方なくANSI文字版
-				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\haifu\\")).c_str());
+				MakeSureDirectoryPathExists(configpath + std::string("\\haifu\\")).c_str());
 				CopyFileA(".\\haifu\\haifu.css",
-					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.css")).c_str(),
+					(configpath + std::string("\\haifu\\haifu.css")).c_str(),
 					TRUE);
 				CopyFileA(".\\haifu\\haifu.dtd",
-					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.dtd")).c_str(),
+					(configpath + std::string("\\haifu\\haifu.dtd")).c_str(),
 					TRUE);
 				CopyFileA(".\\haifu\\haifu.xsd",
-					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.xsd")).c_str(),
+					(configpath + std::string("\\haifu\\haifu.xsd")).c_str(),
 					TRUE);
 				CopyFileA(".\\haifu\\haifu.xsl",
-					(std::string(appdata) + std::string("\\MiHaJong\\haifu\\haifu.xsl")).c_str(),
+					(configpath + std::string("\\haifu\\haifu.xsl")).c_str(),
 					TRUE);
-				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\ai\\")).c_str());
+				MakeSureDirectoryPathExists((configpath + std::string("\\ai\\")).c_str());
 				CopyFileA(".\\ai\\default.lua",
-					(std::string(appdata) + std::string("\\MiHaJong\\ai\\default.lua")).c_str(),
+					(configpath + std::string("\\ai\\default.lua")).c_str(),
 					TRUE);
-				MakeSureDirectoryPathExists((std::string(appdata) + std::string("\\MiHaJong\\gbai\\")).c_str());
+				MakeSureDirectoryPathExists((configpath + std::string("\\gbai\\")).c_str());
 				CopyFileA(".\\gbai\\default.lua",
-					(std::string(appdata) + std::string("\\MiHaJong\\gbai\\default.lua")).c_str(),
+					(configpath + std::string("\\gbai\\default.lua")).c_str(),
 					TRUE);
-				configpath = std::string(appdata) + std::string("\\MiHaJong\\");
 			}
-			
-			delete[] cur; delete[] appdata; delete[] progfiles;
-#if defined(_MSC_VER)
-			delete sz;
-#endif
+			delete[] appdata;
 		}
 #else /*_WIN32*/
 		/* Linux では、~/.mihajong に設定などを保存する */
-		std::string homedir(getenv("HOME"));
-		configpath = homedir + std::string("/.mihajong");
 		mkdir(configpath.c_str(), 0755);
-		configpath += std::string("/");
-		mkdir((configpath + std::string("haifu")).c_str(), 0755);
-		mkdir((configpath + std::string("ai")).c_str(), 0755);
-		mkdir((configpath + std::string("gbai")).c_str(), 0755);
+		mkdir((configpath + std::string("/haifu")).c_str(), 0755);
+		mkdir((configpath + std::string("/ai")).c_str(), 0755);
+		mkdir((configpath + std::string("/gbai")).c_str(), 0755);
 
 		symlink(PKGDATADIR "/haifu/haifu.css",
 			(configpath + std::string("/haifu/haifu.css")).c_str());

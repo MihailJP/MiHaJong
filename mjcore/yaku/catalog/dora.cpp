@@ -93,7 +93,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 	}
 	/* 赤ドラを揃える系の役 */
 	if (RuleData::chkRuleApplied("akadora_all")) {
-		auto countRed = [](const MENTSU_ANALYSIS* const analysis) -> unsigned {
+		const auto countRed = [](const MENTSU_ANALYSIS* const analysis) -> unsigned {
 			unsigned red = 0;
 			for (int i = 0; i < NumOfTilesInHand; i++) {
 				if (analysis->PlayerStat->Hand[i].tile == NoTile) continue;
@@ -101,7 +101,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 				else if (analysis->PlayerStat->Hand[i].red == AkaDora) ++red;
 			}
 			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {
-				auto k = &analysis->PlayerStat->Meld[i];
+				const auto k = &analysis->PlayerStat->Meld[i];
 				for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
 					if (analysis->PlayerStat->Meld[i].red[j] == AkaDora) ++red;
 				}
