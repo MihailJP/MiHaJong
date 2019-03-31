@@ -166,7 +166,7 @@ namespace confpath {
 		const std::string configpath(ConfigFile::ConfigFile::confPath());
 #ifdef _WIN32
 		if (isVista()) {
-			constexpr bufSize = 1024u;
+			constexpr size_t bufSize = 1024u;
 			char* appdata = new char[bufSize] {};
 #if defined(_MSC_VER) || defined(HAVE_GETENV_S)
 			size_t sz = 0;
@@ -179,7 +179,7 @@ namespace confpath {
 
 			if (strstr(configpath.c_str(), appdata) != configpath.c_str()) {
 				// MakeSureDirectoryPathExistsがワイド文字対応してないので仕方なくANSI文字版
-				MakeSureDirectoryPathExists(configpath + std::string("\\haifu\\")).c_str());
+				MakeSureDirectoryPathExists((configpath + std::string("\\haifu\\")).c_str());
 				CopyFileA(".\\haifu\\haifu.css",
 					(configpath + std::string("\\haifu\\haifu.css")).c_str(),
 					TRUE);

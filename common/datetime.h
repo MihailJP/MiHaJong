@@ -1,9 +1,13 @@
 ﻿#pragma once
 
 #include <cstdint>
-#include "../astro/astro.h"
 
-#ifndef _WIN32
+#ifdef _WIN32
+extern "C" {
+	__declspec(dllimport) double systime_to_julian(const SYSTEMTIME*);
+}
+#else /*_WIN32*/
+#include "../astro/astro.h"
 #include <ctime>
 #ifndef HAVE_LOCALTIME_S
 #define localtime_s localtime_r

@@ -8,7 +8,6 @@
 #include <cwchar>
 #include <clocale>
 #include <climits>
-#include <iostream>
 #include <iomanip>
 #include "mutex.h"
 #ifdef UNICODE
@@ -40,6 +39,7 @@ typedef const char* LPCTSTR;
 #include <fstream>
 #include <locale>
 #include <vector>
+#include <iostream>
 
 #ifdef UNICODE
 #define PON L"碰"
@@ -51,8 +51,10 @@ constexpr char PengPengHu[] = "ポンポン和";
 
 namespace CodeConv {
 
+#ifndef _WIN32
 constexpr unsigned CP_UTF8 = 65001u;
 constexpr unsigned CP_ACP = 932u;
+#endif /* _WIN32 */
 
 template <typename T> inline void setStreamLocale(T& file) {
 	const auto setLoc = [](T& file, const char* locale) {

@@ -25,7 +25,7 @@ std::string ConfigFile::confPath() {
 	char* progfiles = new char[bufSize] {};
 	char* appdata = new char[bufSize] {};
 #if defined(_MSC_VER) || defined(HAVE_GETENV_S)
-	size_t len();
+	size_t len = 0;
 	getenv_s(&len, progfiles, bufSize, "ProgramFiles");
 	getenv_s(&len, appdata, bufSize, "APPDATA");
 #else
