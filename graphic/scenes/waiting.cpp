@@ -15,10 +15,12 @@ namespace mihajong_graphic {
 // -------------------------------------------------------------------------
 
 ConnectionWaitingProto::ConnectionWaitingProto(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	background = new Background(this);
 	myTextRenderer = new TextRenderer(manipulator->getDevice());
 }
 ConnectionWaitingProto::~ConnectionWaitingProto() {
 	delete myTextRenderer;
+	delete background;
 }
 void ConnectionWaitingProto::showCentered(unsigned id, CodeConv::tstring txt, int y, float sizeRate, bool blink) {
 	if (txt.empty())
@@ -46,6 +48,7 @@ ServerWait::~ServerWait() {
 }
 void ServerWait::Render() {
 	clearWithGameTypeColor();
+	background->show();
 	waiting_title();
 	waiting_desc();
 	showCentered(2, _T("XキーまたはESCキーを押すと現在の面子にCOMプレイヤーを入れて開始します"), 900, 1.0f, false);
@@ -108,6 +111,7 @@ ClientWait::~ClientWait() {
 }
 void ClientWait::Render() {
 	clearWithGameTypeColor();
+	background->show();
 	waiting_title();
 	waiting_desc();
 	showCentered(2, _T("しばらくお待ちください"), 900, 1.0f, false);
@@ -142,6 +146,7 @@ void ConnectionWaitFailed::Render() {
 	const std::string addr(preferences::serverIP());
 	const CodeConv::tstring errmsg(CodeConv::EnsureTStr(addr) + _T("に接続できませんでした"));
 	clearWithGameTypeColor();
+	background->show();
 	showCentered(0, _T("接続失敗"), 300, 3.0f, false);
 	showCentered(1, errmsg, 660, 1.5f, false);
 	myTextRenderer->Render();

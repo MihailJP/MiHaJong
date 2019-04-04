@@ -14,6 +14,7 @@ private:
 	class TitleSprite;
 	std::array<TitleSprite*, nsTitleLogo> sTitleLogo;
 	void zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF);
+	TitleBackground* backGround;
 	void menuLabelSlide(unsigned ID, const CodeConv::tstring& menustr, int X, int Y, unsigned startF, unsigned endF);
 	void menuLabels();
 	void versionInfo();

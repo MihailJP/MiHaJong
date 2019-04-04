@@ -14,6 +14,7 @@ protected:
 	void waiting_title();
 	virtual CodeConv::tstring waiting_desc_str() = 0;
 	virtual void waiting_desc();
+	Background* background;
 public:
 	ConnectionWaitingProto(ScreenManipulator* const manipulator);
 	ConnectionWaitingProto(const ConnectionWaitingProto&) = delete; // Delete unexpected copy constructor

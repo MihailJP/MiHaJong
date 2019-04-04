@@ -52,12 +52,29 @@ Copyright (c) 2008-2013, 2019 MihailJP
 
 
 焼き鳥マークの画像について
-------------------------
+--------------------------
 　焼き鳥マークの画像は、Openclipart の [Yakitori Sticks](https://openclipart.org/detail/210764/yakitori-sticks)
 をもとに加工したものです。
 　Openclipart で公開されているクリップアートは、すべてパブリックドメインにあります。
 
 参照：[https://openclipart.org/share](https://openclipart.org/share)
+
+
+タイトル画面の背景画像について
+------------------------------
+　タイトル画面の背景画像は、2017年11月6日に撮影された米国オレゴン州の中国庭園「蘭蘇園」(Lan Su Chinese Garden) の写真であり、
+Wikimedia Commons ユーザーの Daderot 氏により撮影され、MihailJP によりサイズ変更・透明化処理を行ったものです。
+ライセンスは次のとおりです。
+
+> This file is made available under the Creative Commons [CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/deed.en).
+>
+> The person who associated a work with this deed has dedicated the work to the public domain
+> by waiving all of his or her rights to the work worldwide under copyright law,
+> including all related and neighboring rights, to the extent allowed by law.
+> You can copy, modify, distribute and perform the work, even for commercial purposes,
+> all without asking permission.
+
+参照：[https://commons.wikimedia.org/wiki/File:Lan_Su_Chinese_Garden_-_Portland,_Oregon_-_DSC01630.jpg](https://commons.wikimedia.org/wiki/File:Lan_Su_Chinese_Garden_-_Portland,_Oregon_-_DSC01630.jpg)
 
 
 時計の文字盤画像について

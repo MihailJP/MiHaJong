@@ -24,6 +24,7 @@ using namespace mihajong_structs;
 // -------------------------------------------------------------------------
 
 ResultScreen::ResultScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	background = new Background(this);
 	rankRenderer.fill(nullptr);
 	titleRenderer = new HugeTextRenderer(manipulator->getDevice());
 }
@@ -32,10 +33,12 @@ ResultScreen::~ResultScreen() {
 	for (const auto& k : rankRenderer)
 		if (k) delete k;
 	delete titleRenderer;
+	delete background;
 }
 
 void ResultScreen::Render() {
 	clearWithGameTypeColor();
+	background->show();
 
 	titleRenderer->NewText(0, _T("終　　局"), adjX(272), 60, 1.0f, WidthRate(),
 		(myTimer.elapsed() < 1000000) ? ((static_cast<unsigned int>(255 - (1000000 - myTimer.elapsed()) / 5000) << 24) | 0x00ffffff) : 0xffffffff);

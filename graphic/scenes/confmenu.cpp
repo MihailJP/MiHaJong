@@ -13,6 +13,7 @@
 namespace mihajong_graphic {
 
 ConfigMenuProto::ConfigMenuProto(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
+	background = new Background(this);
 	myButtonPic = new ButtonPic(manipulator->getDevice());
 	menuCursor = 0; buttonCursor = -1; buttonDown = -1;
 #ifndef _WIN32
@@ -21,6 +22,7 @@ ConfigMenuProto::ConfigMenuProto(ScreenManipulator* const manipulator) : SystemS
 }
 
 ConfigMenuProto::~ConfigMenuProto() {
+	delete background;
 	delete myButtonPic;
 }
 
@@ -39,6 +41,7 @@ void ConfigMenuProto::Render() {
 		menuInitFlag = true;
 	}
 #endif /*_WIN32*/
+	background->show();
 	{
 		myTextRenderer->NewText(123, Caption(), adjX(540), 25, 2.0f, WidthRate(), 0xffffffff);
 	}
