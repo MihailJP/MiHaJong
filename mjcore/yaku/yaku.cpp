@@ -9,9 +9,6 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
-#ifdef WITH_BOOST_THREAD
-#include <boost/container/vector.hpp>
-#endif /*WITH_BOOST_THREAD*/
 #ifdef _WIN32
 #include <windows.h>
 #else /*_WIN32*/

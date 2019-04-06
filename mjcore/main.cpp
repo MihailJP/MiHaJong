@@ -25,17 +25,8 @@ GameThread::GameThread(GameTypeID gameType, Window hwnd)
 }
 
 GameThread::~GameThread() {
-#ifdef WITH_BOOST_THREAD
-	myThread.interrupt();
-	myThread.join();
-	cleanup();
-#ifdef _WIN32
-	SendMessage(hWnd, WM_CLOSE, 0, 0);
-#endif /*_WIN32*/
-#else
 	cleanup();
 	exit(0);
-#endif
 }
 
 void GameThread::ThreadMain(GameThread* lpParam) {

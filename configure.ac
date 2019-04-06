@@ -190,36 +190,6 @@ MH_OGG_VORBIS([], [
 	AC_MSG_WARN([libogg/libvorbis library not available: disabled])
 ])
 
-AX_BOOST_BASE
-AS_IF([test "x$want_boost" != xno], [
-	AX_BOOST_REGEX
-	AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
-	AX_BOOST_CHRONO
-	AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
-	AX_BOOST_DATE_TIME
-	AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
-	AX_BOOST_THREAD
-	AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
-	AX_BOOST_SYSTEM
-	AM_CONDITIONAL(WITH_BOOST_SYSTEM, test x$want_boost != xno)
-], [
-	AM_CONDITIONAL(WITH_BOOST_REGEX, false)
-	AM_CONDITIONAL(WITH_BOOST_CHRONO, false)
-	AM_CONDITIONAL(WITH_BOOST_DATE_TIME, false)
-	AM_CONDITIONAL(WITH_BOOST_THREAD, false)
-	AM_CONDITIONAL(WITH_BOOST_SYSTEM, false)
-])
-AS_IF([test "x$want_boost" != xno], [
-MH_TEST_SLEEP
-	AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
-	MH_TEST_WAIT
-	AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
-	AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))
-], [
-	AM_CONDITIONAL(OLDER_BOOST_SLEEP, false)
-	AM_CONDITIONAL(OLDER_BOOST_WAIT, false)
-])
-
 AC_PATH_PROG([RUBY], [ruby])
 AX_PROG_RUBY_VERSION([1.9], [], [AC_MSG_ERROR([Ruby is unavailable or too old])])
 AM_PATH_PYTHON([2.6], [], [AC_MSG_ERROR([Python is unavailable or too old])])

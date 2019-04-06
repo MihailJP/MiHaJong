@@ -49,21 +49,6 @@ libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la ../astro/libmihajo
 if WITH_WINAPI
 libmihajong_graphic_la_LIBADD += graphic.o 
 endif
-if WITH_BOOST_CHRONO
-libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_CHRONO $(BOOST_CHRONO_LIB)
-endif
-if WITH_BOOST_DATE_TIME
-libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_DATE_TIME $(BOOST_DATE_TIME_LIB)
-endif
-if WITH_BOOST_THREAD
-libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
-endif
-if OLDER_BOOST_SLEEP
-libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_SLEEP
-endif
-if OLDER_BOOST_WAIT
-libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_WAIT
-endif
 dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \
 	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
