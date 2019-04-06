@@ -95,7 +95,8 @@ TexturePtr SystemScreen::Background::texture = 0;
 std::map<ScreenManipulator*, Timer> SystemScreen::Background::timers;
 
 void SystemScreen::Background::LoadTexture(DevicePtr device) {
-	mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE_BACKGROUND));
+	if (!texture)
+		mihajong_graphic::LoadTexture(device, &texture, MAKEINTRESOURCE(IDB_PNG_TITLE_BACKGROUND));
 }
 void SystemScreen::Background::DisposeTexture() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
@@ -106,6 +107,7 @@ void SystemScreen::Background::DisposeTexture() {
 SystemScreen::Background::Background(SystemScreen* const parent) {
 	caller = parent;
 	myDevice = parent->caller->getDevice();
+	LoadTexture(parent->caller->getDevice());
 }
 SystemScreen::Background::~Background() {
 }
@@ -117,7 +119,15 @@ RECT SystemScreen::Background::getRect() {
 	return rect;
 }
 void SystemScreen::Background::show() {
+#ifdef WITH_DIRECTX
 	const TransformMatrix matrix(getMatrix());
+#else /* WITH_DIRECTX */
+	const TransformMatrix matrix(getMatrix(
+		0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f / Geometry::WindowScale(),
+		1.0f / Geometry::WindowScale()
+	));
+#endif /* WITH_DIRECTX */
 	const int alpha = (timer().elapsed() >= 1'000'000uLL) ? 255 : (static_cast<int>(timer().elapsed()) * 255) / 1'000'000uLL;
 	const RECT rect(getRect());
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, 0, 0,
@@ -130,6 +140,7 @@ void SystemScreen::Background::skipIntoLoop() {
 // -------------------------------------------------------------------------
 
 SystemScreen::TitleBackground::TitleBackground(SystemScreen* const parent, bool cutIn) : Background(parent) {
+	LoadTexture(parent->caller->getDevice());
 	if (cutIn)
 		timers[parent->caller].skipTo(1'000'000uLL);
 	else
