@@ -138,7 +138,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 #ifdef _WIN32
 ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	pd3d = 0;
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice(fullscreen);
@@ -150,7 +150,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 #else /*_WIN32*/
 ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, bool fullscreen) {
 	pd3d = 0;
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	redrawFlag = false;
 	pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
 	InitDevice(fullscreen);
@@ -162,7 +162,7 @@ ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, b
 #endif /*_WIN32*/
 
 void ScreenManipulator::Render() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	if (redrawFlag) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 		pDevice->Clear(0, nullptr, D3DCLEAR_TARGET,
@@ -198,7 +198,7 @@ void ScreenManipulator::Render() {
 }
 
 void ScreenManipulator::transit(sceneID scene) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #ifdef _WIN32
 	HGLRC context = getContext();
@@ -248,7 +248,7 @@ void ScreenManipulator::transit(sceneID scene) {
 
 void ScreenManipulator::subscene(unsigned int subsceneID) {
 #ifdef __linux__
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 #endif /* __linux__ */
 #ifndef WITH_DIRECTX
 #ifdef _WIN32
@@ -308,7 +308,7 @@ void ScreenManipulator::inputProc(input::InputDevice* inputDev, std::function<vo
 }
 void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 	if (iManip) {
-		MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+		std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 		input::InputManipulator* iManip_ = iManip;
 		inputProc(iManip->kbd(), [](Scene* sc, LPDIDEVICEOBJECTDATA od) -> void {
 			if (sc) sc->KeyboardInput(od);
@@ -324,23 +324,23 @@ void ScreenManipulator::inputProc(input::InputManipulator* iManip) {
 }
 
 void ScreenManipulator::inputProc(WPARAM wParam, LPARAM lParam) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	if (myScene) myScene->KeyboardInput(wParam, lParam);
 }
 
 void ScreenManipulator::IMEvent(UINT message, WPARAM wParam, LPARAM lParam) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	if (myScene) myScene->IMEvent(message, wParam, lParam);
 }
 #else /*_WIN32*/
 
 void ScreenManipulator::kbdInputProc(const XEvent* event) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	if (myScene) myScene->KeyboardInput(event);
 }
 
 void ScreenManipulator::mouseInputProc(const XEvent* event) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(CS_SceneAccess);
+	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 	Window rtw, chw; // ←取得して捨てる
 	int rtx, rty; // ←取得して捨てる
 	unsigned mask; // ←取得して捨てる

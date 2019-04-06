@@ -6,7 +6,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif /*_WIN32*/
-#include "../../../common/mutex.h"
+#include <mutex>
 #include "../../timer.h"
 #include "../../../common/discard.h"
 
@@ -68,7 +68,7 @@ public:
 	int decCursor();
 private: // 再構築・表示処理
 	void reconstruct(ButtonID buttonID);
-	MUTEXLIB::recursive_mutex reconstructionCS;
+	std::recursive_mutex reconstructionCS;
 public:
 	void btnSetForDahai();
 	void btnSetForNaki();

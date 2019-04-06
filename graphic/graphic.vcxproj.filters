@@ -434,9 +434,6 @@
     <ClInclude Include="..\common\machihai.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\mutex.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\nmrules.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>

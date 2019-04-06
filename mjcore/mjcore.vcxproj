@@ -304,7 +304,6 @@
     <ClInclude Include="..\common\gametype.h" />
     <ClInclude Include="..\common\largenum.h" />
     <ClInclude Include="..\common\machihai.h" />
-    <ClInclude Include="..\common\mutex.h" />
     <ClInclude Include="..\common\nmrules.h" />
     <ClInclude Include="..\common\seatrank.h" />
     <ClInclude Include="..\common\shanten.h" />

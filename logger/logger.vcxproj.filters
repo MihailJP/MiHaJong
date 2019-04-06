@@ -32,9 +32,6 @@
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\mutex.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\strcode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>

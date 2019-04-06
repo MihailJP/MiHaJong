@@ -3,7 +3,7 @@
 #include "exports.h"
 #include "../common/strcode.h"
 #include <cstdint>
-#include "../common/mutex.h"
+#include <mutex>
 #include "../common/condvar.h"
 #include <exception>
 
@@ -16,7 +16,7 @@ class DemonstrationTerminated : public std::exception {};
 class Event { // イベントの基底クラス
 protected:
 	CONDVAR::condition_variable myEvent;
-	MUTEXLIB::mutex myEventMutex;
+	std::mutex myEventMutex;
 	bool isSignaled, autoResetFlag;
 	unsigned waitingThreads;
 public:
