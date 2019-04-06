@@ -357,7 +357,6 @@
     <ClInclude Include="..\mjcore\reader\csv2arry.h" />
     <ClInclude Include="..\mjcore\reader\ini2map.h" />
     <ClInclude Include="..\mjcore\reader\readrsrc.h" />
-    <ClInclude Include="..\mjcore\regex.h" />
     <ClInclude Include="..\mjcore\remote.h" />
     <ClInclude Include="..\mjcore\result.h" />
     <ClInclude Include="..\mjcore\shanten.h" />

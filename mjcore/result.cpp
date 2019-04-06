@@ -1,5 +1,5 @@
 ﻿#include "result.h"
-#include "regex.h"
+#include <regex>
 #include "../common/largenum.h"
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
@@ -68,8 +68,8 @@ namespace {
 #else /* GUOBIAO */
 		if (RuleData::chkRule("chip", "no")) return 0; // チップなしルール
 		const std::string chipRule(RuleData::chkRule("chip"));
-		REGEX::smatch matchDat;
-		if (REGEX::regex_match(chipRule, matchDat, REGEX::regex("chip_rate_(\\d+)"))) { // チップレート
+		std::smatch matchDat;
+		if (std::regex_match(chipRule, matchDat, std::regex("chip_rate_(\\d+)"))) { // チップレート
 			return atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 		} else { // 異常データ？
 			CodeConv::tostringstream o;
@@ -107,8 +107,8 @@ namespace {
 					return i;                      // This is the winner!
 			return -1;                             // Nobody won: this shouldn't be occur...
 		} ();
-		REGEX::smatch matchDat;
-		if (REGEX::regex_match(yakitoriRule, matchDat, REGEX::regex("(\\d+)pts"))) { // 点棒で支払う場合
+		std::smatch matchDat;
+		if (std::regex_match(yakitoriRule, matchDat, std::regex("(\\d+)pts"))) { // 点棒で支払う場合
 			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 			for (PlayerID i = 0; i < Players; ++i) {
 				if (gameStat->Player[i].YakitoriFlag) {
@@ -116,7 +116,7 @@ namespace {
 					gameStat->Player[winner].PlayerScore += yakitoriVal;
 				}
 			}
-		} else if (REGEX::regex_match(yakitoriRule, matchDat, REGEX::regex("chip(\\d+)"))) { // チップで支払う場合
+		} else if (std::regex_match(yakitoriRule, matchDat, std::regex("chip(\\d+)"))) { // チップで支払う場合
 			int yakitoriVal = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 			for (PlayerID i = 0; i < Players; ++i) {
 				if (gameStat->Player[i].YakitoriFlag) {

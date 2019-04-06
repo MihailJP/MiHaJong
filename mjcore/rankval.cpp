@@ -6,7 +6,7 @@
 #include "reader/csv2arry.h"
 #include "../common/strcode.h"
 #include "ruletbl.h"
-#include "regex.h"
+#include <regex>
 
 /* コンストラクタ(シングルトン) */
 RankVal::RankVal() {
@@ -46,9 +46,9 @@ static LargeNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 		std::atoi(RuleData::chkRule(tagNameStream.str() + "_mantissa_ones").c_str()))
 		);
 	/* 指数部の処理 */
-	REGEX::smatch matchDat; int exponent = 0;
+	std::smatch matchDat; int exponent = 0;
 	std::string expConf(RuleData::chkRule(tagNameStream.str() + "_exponent"));
-	if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
+	if (std::regex_match(expConf, matchDat, std::regex("exp_(\\d+)")))
 		exponent = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 	for (int j = 0; j < exponent; ++j)
 		point *= 10;

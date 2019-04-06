@@ -320,9 +320,6 @@
     <ClInclude Include="..\mjcore\rational.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\mjcore\regex.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\mjcore\remote.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

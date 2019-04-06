@@ -19,7 +19,7 @@ libmihajong_la_SOURCES = \
 	agari.h confitms.h decomp.h discard.h dllmain.h endround.h \
 	endtype.h envtbl.h except.h func.h fuuro.h gameloop.h gametbl.h haifu.h \
 	init.h logging.h main.h mjexport.h mjimport.h mouda.h prepare.h \
-	random.h rankval.h rational.h regex.h remote.h result.h shanten.h \
+	random.h rankval.h rational.h remote.h result.h shanten.h \
 	resource.h ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
 	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \
 	conffile/conffile.h \
