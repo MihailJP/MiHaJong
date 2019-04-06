@@ -19,7 +19,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("断幺"), yaku::yakuCalculator::Yaku::yval_2,
 		_T("无字"),
 #else /* GUOBIAO */
-		_T("断幺九"), (RuleData::chkRule("kuitan") == "yes_but_unbound") ? /* 門前なら縛りを満たし、喰い断は縛りを満たさないルール */
+		_T("断幺九"), RuleData::chkRule("kuitan", "yes_but_unbound") ? /* 門前なら縛りを満たし、喰い断は縛りを満たさないルール */
 		yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return *analysis->MenzenFlag ?
@@ -28,7 +28,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
 			}) :
-			((RuleData::chkRule("kuitan") == "no") ? (yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen : // 喰い断なし
+			(RuleData::chkRule("kuitan", "no") ? (yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen : // 喰い断なし
 			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han), // 喰い断あり
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
