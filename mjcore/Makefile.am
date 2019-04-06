@@ -33,7 +33,7 @@ nodist_libmihajong_la_SOURCES = \
 	data/confitem_csv.h data/confitem_ini.h data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihajong_la_SOURCES)
 libmihajong_la_LDFLAGS = -no-undefined -release $(VERSION)
-libmihajong_la_CXXFLAGS = $(LUA_INCLUDE) -DMJCORE_EXPORTS
+libmihajong_la_CXXFLAGS = $(LUA_INCLUDE) -DMJCORE_EXPORTS -Wno-switch
 if WITH_BOOST_REGEX
 libmihajong_la_CXXFLAGS += -DWITH_BOOST_REGEX $(BOOST_REGEX_LIB)
 endif
@@ -63,7 +63,7 @@ libmihajong_la_LIBADD = \
 	../socket/libmihajong-socket.la \
 	../astro/libmihajong-astro.la
 if WITH_WINAPI
-libmihajong_la_LIBADD += mjcore.o 
+libmihajong_la_LIBADD += mjcore.o
 endif
 dist_pkgdata_DATA = \
 	data/mentz.dat.lzma
