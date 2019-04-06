@@ -20,7 +20,7 @@ namespace sound {
 		OggData& operator= (const OggData&) = delete; // Delete unexpected assign operator
 #else /* VORBIS_SUPPORT */
 	private:
-		void Prepare(const std::string&) {}
+		void Prepare(const std::string&) override {}
 	public:
 #ifdef USE_XAUDIO2
 		explicit OggData(IXAudio2** Engine, const std::string& filename, bool looped = false) {

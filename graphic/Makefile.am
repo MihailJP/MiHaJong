@@ -37,7 +37,7 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/tiletip.h scenes/table/yamahai.h \
 	widgets/button.h widgets/checkbox.h
 libmihajong_graphic_la_LDFLAGS = -no-undefined -release $(VERSION)
-libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS
+libmihajong_graphic_la_CXXFLAGS = -DGRAPHIC_EXPORTS -Wno-switch
 if WITH_DIRECTX
 libmihajong_graphic_la_CXXFLAGS += -DWITH_DIRECTX
 endif
@@ -47,22 +47,7 @@ libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_U
 endif
 libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la ../astro/libmihajong-astro.la
 if WITH_WINAPI
-libmihajong_graphic_la_LIBADD += graphic.o 
-endif
-if WITH_BOOST_CHRONO
-libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_CHRONO $(BOOST_CHRONO_LIB)
-endif
-if WITH_BOOST_DATE_TIME
-libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_DATE_TIME $(BOOST_DATE_TIME_LIB)
-endif
-if WITH_BOOST_THREAD
-libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
-endif
-if OLDER_BOOST_SLEEP
-libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_SLEEP
-endif
-if OLDER_BOOST_WAIT
-libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_WAIT
+libmihajong_graphic_la_LIBADD += graphic.o
 endif
 dist_pkgdata_DATA = \
 	data/agariwnd.png data/baize.png data/button.png data/call.png \

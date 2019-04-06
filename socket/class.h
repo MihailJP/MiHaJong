@@ -5,8 +5,8 @@
 #include <queue>
 #include <sstream>
 #include <iomanip>
-#include "../common/mutex.h"
-#include "../common/thread.h"
+#include <mutex>
+#include <thread>
 #ifdef _WIN32
 #ifndef _WINSOCKAPI_
 #include <winsock2.h>
@@ -39,7 +39,7 @@ private:
 	addrinfo* addrInfo;
 	SocketDescriptor sock, lsock;
 	network_thread* threadPtr;
-	MUTEXLIB::recursive_mutex threadExistenceMutex;
+	std::recursive_mutex threadExistenceMutex;
 	uint16_t portnum();
 public:
 	Sock () : isServer(false), addrInfo(nullptr), sock(0), lsock(0), threadPtr(nullptr) {} // ソケット初期化
@@ -97,13 +97,13 @@ protected:
 	static const TimerMicrosec disconnection_timeout = 3000000ULL; // 切断処理タイムアウト
 	const addrinfo* myAddr; // アドレス情報[親スレッドから書き込み]
 	std::queue<unsigned char> myMailBox; // 受け取ったバイト列
-	MUTEXLIB::recursive_mutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
+	std::recursive_mutex myRecvQueueCS; // 受信バッファ用ミューテックス(クリティカルセクションに変更)
 	std::queue<unsigned char> mySendBox; // 送る予定のバイト列
-	MUTEXLIB::recursive_mutex mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
+	std::recursive_mutex mySendQueueCS; // 送信バッファ用ミューテックス(クリティカルセクションに変更)
 	virtual int establishConnection () = 0; // 接続を確立する
 	int reader (); // 読み込み
 	int writer (); // 書き込み
-	THREADLIB::thread myThread;
+	std::thread myThread;
 	int myThreadFunc(); // スレッドの処理
 	void wait_until_sent(); // 送信キューが空になるまで待つ
 };
@@ -113,7 +113,7 @@ public:
 	client_thread(Sock* callee) : network_thread(callee) {}
 	client_thread(const client_thread&) = delete; // Delete unexpected copy constructor
 	client_thread& operator= (const client_thread&) = delete; // Delete unexpected assign operator
-	void startThread(); // スレッドを開始する
+	void startThread() override; // スレッドを開始する
 protected:
 	int establishConnection () override; // 接続を確立する
 };
@@ -123,7 +123,7 @@ public:
 	server_thread(Sock* callee) : network_thread(callee) {}
 	server_thread(const server_thread&) = delete; // Delete unexpected copy constructor
 	server_thread& operator= (const server_thread&) = delete; // Delete unexpected assign operator
-	void startThread(); // スレッドを開始する
+	void startThread() override; // スレッドを開始する
 protected:
 	int establishConnection () override; // 接続を確立する
 };

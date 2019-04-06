@@ -17,10 +17,10 @@ private:
 	std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 		playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 		unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
-		bool r1, bool r2, bool r3, bool r4);
+		bool r1, bool r2, bool r3, bool r4) override;
 public:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // 鳴いた牌の再構築
-	void Render();
+	void Render() override;
 	explicit NakihaiReconst(GameTableScreen* parent);
 	NakihaiReconst(const NakihaiReconst&) = delete; // Delete unexpected copy constructor
 	NakihaiReconst& operator= (const NakihaiReconst&) = delete; // Delete unexpected assign operator

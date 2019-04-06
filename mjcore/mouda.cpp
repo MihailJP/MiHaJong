@@ -19,7 +19,7 @@
 #include "fuuro.h"
 #include "../graphic/graphic.h"
 #include "ruletbl.h"
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 namespace {

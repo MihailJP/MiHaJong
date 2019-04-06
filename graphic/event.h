@@ -3,8 +3,8 @@
 #include "exports.h"
 #include "../common/strcode.h"
 #include <cstdint>
-#include "../common/mutex.h"
-#include "../common/condvar.h"
+#include <mutex>
+#include <condition_variable>
 #include <exception>
 
 namespace mihajong_graphic {
@@ -15,8 +15,8 @@ class DemonstrationTerminated : public std::exception {};
 #ifdef GRAPHIC_EXPORTS
 class Event { // イベントの基底クラス
 protected:
-	CONDVAR::condition_variable myEvent;
-	MUTEXLIB::mutex myEventMutex;
+	std::condition_variable myEvent;
+	std::mutex myEventMutex;
 	bool isSignaled, autoResetFlag;
 	unsigned waitingThreads;
 public:

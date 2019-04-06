@@ -19,7 +19,7 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/agari.h ../mjcore/confitms.h ../mjcore/decomp.h ../mjcore/discard.h ../mjcore/dllmain.h ../mjcore/endround.h \
 	../mjcore/endtype.h ../mjcore/envtbl.h ../mjcore/except.h ../mjcore/func.h ../mjcore/fuuro.h ../mjcore/gameloop.h ../mjcore/gametbl.h ../mjcore/haifu.h \
 	../mjcore/init.h ../mjcore/logging.h ../mjcore/main.h ../mjcore/mjexport.h ../mjcore/mjimport.h ../mjcore/mouda.h ../mjcore/prepare.h \
-	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/regex.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
+	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
 	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tilecode.h ../mjcore/tileutil.h \
 	../mjcore/ai/aiscript.h ../mjcore/ai/class.h ../mjcore/ai/functbl.h ../mjcore/ai/filesel.h \
 	../mjcore/conffile/conffile.h \
@@ -33,22 +33,7 @@ nodist_libmihagbmj_la_SOURCES = \
 	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihagbmj_la_SOURCES)
 libmihagbmj_la_LDFLAGS = -no-undefined -release $(VERSION)
-libmihagbmj_la_CXXFLAGS = $(LUA_INCLUDE) -DGUOBIAO -DMJCORE_EXPORTS
-if WITH_BOOST_REGEX
-libmihagbmj_la_CXXFLAGS += -DWITH_BOOST_REGEX $(BOOST_REGEX_LIB)
-endif
-if WITH_BOOST_CHRONO
-libmihagbmj_la_CXXFLAGS += -DWITH_BOOST_CHRONO $(BOOST_CHRONO_LIB)
-endif
-if WITH_BOOST_DATE_TIME
-libmihagbmj_la_CXXFLAGS += -DWITH_BOOST_DATE_TIME $(BOOST_DATE_TIME_LIB)
-endif
-if WITH_BOOST_THREAD
-libmihagbmj_la_CXXFLAGS += -DWITH_BOOST_THREAD $(BOOST_THREAD_LIB)
-endif
-if OLDER_BOOST_SLEEP
-libmihagbmj_la_CXXFLAGS += -DOLDER_BOOST_SLEEP
-endif
+libmihagbmj_la_CXXFLAGS = $(LUA_INCLUDE) -DGUOBIAO -DMJCORE_EXPORTS -Wno-switch
 if WITH_WINAPI
 if WITH_DIRECTX
 libmihagbmj_la_CXXFLAGS += -DWITH_DIRECTX
@@ -63,7 +48,7 @@ libmihagbmj_la_LIBADD = \
 	../socket/libmihajong-socket.la \
 	../astro/libmihajong-astro.la
 if WITH_WINAPI
-libmihagbmj_la_LIBADD += mjcoregb.o 
+libmihagbmj_la_LIBADD += mjcoregb.o
 endif
 dist_pkgdata_DATA = \
 	../mjcore/data/mentz.dat.lzma

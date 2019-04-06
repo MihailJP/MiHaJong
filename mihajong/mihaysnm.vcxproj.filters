@@ -41,9 +41,6 @@
     <ClInclude Include="..\common\sleep.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\thread.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\version.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>

@@ -159,7 +159,7 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
 	DiscardTileNum discard = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
-	THREADLIB::thread myThread(calcDiscard_threaded, std::ref(discard), gameStat);
+	std::thread myThread(calcDiscard_threaded, std::ref(discard), gameStat);
 	myThread.join();
 	return discard;
 }
@@ -209,7 +209,7 @@ void aiscript::compfuuro(GameTable* const gameStat) {
 	determine_meld(gameStat);
 }
 void aiscript::determine_meld(GameTable* const gameStat) {
-	THREADLIB::thread myThread(calcCall_threaded, gameStat);
+	std::thread myThread(calcCall_threaded, gameStat);
 	myThread.join();
 }
 

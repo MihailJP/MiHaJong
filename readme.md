@@ -31,8 +31,6 @@ Vista 以降をお使いの場合で C:\Program Files 以下にインストー�
 
 　Linux版は ./configure && make && sudo make install して下さい。
 
-※GCCのstd::regexは壊れているため、boost::regexを使用して下さい。
-
 
 アンインストールのしかた
 ------------------------
@@ -105,13 +103,8 @@ MihailJPの開発環境
 - markdown_py (https://pypi.python.org/pypi/Markdown)
 - libogg/libvorbis (http://www.xiph.org/downloads/) (Visual C++の場合はスタティックリンクします)
 - GuruGuruSMF (http://gurugurusmf.migmig.net/) (Windowsのみ)
-- boost::regex (http://www.boost.org/) (GCCはstd::regexが壊れているため必要。Visual C++の場合は不要)
 - OpenAL (http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)
 - libpng (http://www.libpng.org/pub/png/libpng.html) (Linuxのみ)
-- boost::thread (http://www.boost.org/) (GCC4.7.xまではstd::threadが使えないため必要)
-- boost::chrono (http://www.boost.org/) (boost::threadを使う場合必要)
-- boost::date_time (http://www.boost.org/) (バージョン1.49以前のboost::threadを使う場合必要)
-- boost::system (http://www.boost.org/) (boost::threadを使う場合必要)
 
 
 Linux版の制限

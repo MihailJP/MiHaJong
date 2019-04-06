@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #endif /* _WIN32 */
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 uint16_t mihajong_socket::Sock::portnum() {
@@ -105,7 +105,7 @@ void mihajong_socket::Sock::listen (uint16_t port) { // サーバー開始
 }
 
 void mihajong_socket::Sock::listen () { // サーバー開始
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	threadPtr = new server_thread(this);
 	threadPtr->setaddr(addrInfo);
 	threadPtr->setsock(&sock, &lsock);
@@ -149,7 +149,7 @@ void mihajong_socket::Sock::connect (const std::string& destination, uint16_t po
 }
 
 void mihajong_socket::Sock::connect () { // クライアント再接続
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	threadPtr = new client_thread(this);
 	threadPtr->setaddr(addrInfo);
 	threadPtr->setsock(&sock);
@@ -157,7 +157,7 @@ void mihajong_socket::Sock::connect () { // クライアント再接続
 }
 
 bool mihajong_socket::Sock::connected () { // 接続されているかを確認
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	if (!threadPtr) throw already_closed();
 	threadPtr->chkError();
 	return threadPtr->isConnected();
@@ -178,7 +178,7 @@ void mihajong_socket::Sock::wait_until_connected () { // 文字通りのこと�
 };
 unsigned char mihajong_socket::Sock::getc () { // 読み込み(非同期)
 	unsigned char byte;
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	if (!threadPtr) throw already_closed();
 	threadPtr->chkError();
 	byte = threadPtr->read();
@@ -218,7 +218,7 @@ unsigned char mihajong_socket::Sock::syncgetc () { // 読み込み(同期)
 CodeConv::tstring mihajong_socket::Sock::gets () { // NewLineまで読み込み
 	//trace("文字列をNWL(0x0a)まで取得します。");
 	CodeConv::tstring str;
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	if (!threadPtr) throw already_closed();
 	threadPtr->chkError();
 	str = threadPtr->readline();
@@ -231,7 +231,7 @@ CodeConv::tstring mihajong_socket::Sock::gets () { // NewLineまで読み込み
 }
 
 void mihajong_socket::Sock::putc (unsigned char byte) { // 書き込み
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	if (!threadPtr) throw already_closed();
 	{
 		CodeConv::tostringstream o;
@@ -244,7 +244,7 @@ void mihajong_socket::Sock::putc (unsigned char byte) { // 書き込み
 }
 
 void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列書き込み
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	if (!threadPtr) throw already_closed();
 	{
 		CodeConv::tostringstream o;
@@ -258,7 +258,7 @@ void mihajong_socket::Sock::puts (const CodeConv::tstring& str) { // 文字列�
 }
 
 void mihajong_socket::Sock::disconnect () { // 接続を切る
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(threadExistenceMutex);
+	std::unique_lock<std::recursive_mutex> lock(threadExistenceMutex);
 	if (threadPtr) threadPtr->terminate();
 #ifdef _WIN32
 	closesocket(sock);
@@ -327,7 +327,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 #endif /* _WIN32 */
 		CodeConv::tostringstream o;
 		o << _T("データ受信 ポート [") << myCaller->portnum() << _T("] ストリーム [");
-		{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
+		{ std::unique_lock<std::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
 			unsigned count = 0;
 			for (unsigned int i = 0; i < recvsz; ++i) {
 				myMailBox.push(buf[i]); // キューに追加
@@ -378,7 +378,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 	{
 		CodeConv::tostringstream o;
 		o << _T("データ送信 ポート [") << myCaller->portnum() << _T("] ストリーム [");
-		{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(mySendQueueCS);  // 送信用ミューテックスを取得
+		{ std::unique_lock<std::recursive_mutex> lock(mySendQueueCS);  // 送信用ミューテックスを取得
 			while (!mySendBox.empty()) {
 				buf[sendsz++] = mySendBox.front(); mySendBox.pop(); // キューから取り出し
 				if (sendsz > 1) o << _T(" ");
@@ -460,7 +460,7 @@ int mihajong_socket::Sock::network_thread::myThreadFunc() { // スレッドの�
 
 unsigned char mihajong_socket::Sock::network_thread::read () { // 1バイト読み込み
 	unsigned char byte; bool empty = false;
-	{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
+	{ std::unique_lock<std::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
 		if (myMailBox.empty()) empty = true; // キューが空の場合
 		else {byte = myMailBox.front(); myMailBox.pop();} // 空でなければ取り出す
 	} // 受信用ミューテックスを解放
@@ -470,7 +470,7 @@ unsigned char mihajong_socket::Sock::network_thread::read () { // 1バイト読�
 
 CodeConv::tstring mihajong_socket::Sock::network_thread::readline () { // 1行読み込み
 	std::string line = ""; bool nwl_not_found = true;
-	{ MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
+	{ std::unique_lock<std::recursive_mutex> lock(myRecvQueueCS); // 受信用ミューテックスを取得
 		auto tmpMailBox = myMailBox; // キューを作業用コピー
 		while (!tmpMailBox.empty()) {
 			unsigned char tmpchr[sizeof(int)] = {0,};
@@ -488,7 +488,7 @@ CodeConv::tstring mihajong_socket::Sock::network_thread::readline () { // 1行�
 }
 
 void mihajong_socket::Sock::network_thread::write (unsigned char byte) { // 1バイト書き込み
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(mySendQueueCS); // 送信用ミューテックスを取得
+	std::unique_lock<std::recursive_mutex> lock(mySendQueueCS); // 送信用ミューテックスを取得
 	mySendBox.push(byte); // キューに追加
 	// 送信用ミューテックスを解放
 }
@@ -512,7 +512,7 @@ void mihajong_socket::Sock::network_thread::wait_until_sent() { // 送信キュ�
 		debug(o.str().c_str());
 	}
 	while (true) { // 送信が完了するまで待つ
-		MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(mySendQueueCS); // 送信用ミューテックスを取得
+		std::unique_lock<std::recursive_mutex> lock(mySendQueueCS); // 送信用ミューテックスを取得
 		bool flag = mySendBox.empty(); // 終了したかどうかのフラグ
 		lock.unlock(); // 送信用ミューテックスを解放
 		if (flag) { // 送るべきデータをすべて送り終えたら
@@ -538,10 +538,10 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 // -------------------------------------------------------------------------
 
 void mihajong_socket::Sock::client_thread::startThread () { // スレッドを開始する
-	myThread = THREADLIB::thread(thread, this);
+	myThread = std::thread(thread, this);
 }
 void mihajong_socket::Sock::server_thread::startThread () { // スレッドを開始する
-	myThread = THREADLIB::thread(thread, this);
+	myThread = std::thread(thread, this);
 }
 
 

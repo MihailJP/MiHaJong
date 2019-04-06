@@ -96,12 +96,12 @@ Mouse::Position Mouse::pos() {
 
 // -------------------------------------------------------------------------
 
-MUTEXLIB::recursive_mutex Joystick::myMutex;
+std::recursive_mutex Joystick::myMutex;
 Joystick* Joystick::currentInstance;
 LPDIRECTINPUT8 Joystick::currentInterface;
 
 BOOL CALLBACK Joystick::enumerationCallback(const DIDEVICEINSTANCE *pdidInstance, LPVOID pContext) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myMutex);
+	std::unique_lock<std::recursive_mutex> lock(myMutex);
 	return (FAILED(currentInterface->CreateDevice(pdidInstance->guidInstance, &(currentInstance->myInputDevice), nullptr)))
 		? DIENUM_CONTINUE : DIENUM_STOP;
 }
@@ -134,7 +134,7 @@ void Joystick::init_main() {
 	reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->Acquire();
 }
 Joystick::Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(myMutex);
+	std::unique_lock<std::recursive_mutex> lock(myMutex);
 	myInputDevice = nullptr;
 	currentInstance = this;
 	currentInterface = inputInterface;

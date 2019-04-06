@@ -215,16 +215,18 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::ismatagisuji
 		TileCode t = gameStat->Player[player].Hand[index].tile;
 		if (!Tile(t).isNumber()) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
-			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 7))
+			if (((t % TileSuitStep) >= 2) && ((t % TileSuitStep) <= 7)) {
 				if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 1))
 					return true;
 				else if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t + 2))
 					return true;
-			if (((t % TileSuitStep) >= 3) && ((t % TileSuitStep) <= 8))
+			}
+			if (((t % TileSuitStep) >= 3) && ((t % TileSuitStep) <= 8)) {
 				if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t - 2))
 					return true;
 				else if (gameStat->Player[tplayer].Discard[i].tcode.tile == (t + 1))
 					return true;
+			}
 		}
 		return false;
 }

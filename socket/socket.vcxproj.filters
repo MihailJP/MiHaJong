@@ -62,13 +62,7 @@
     <ClInclude Include="logger.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\chrono.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\clock.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\mutex.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\nmrules.h">
@@ -78,9 +72,6 @@
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\strcode.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\thread.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\version.h">

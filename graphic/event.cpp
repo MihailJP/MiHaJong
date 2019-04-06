@@ -1,8 +1,8 @@
 ﻿#include "event.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
-#include "../common/thread.h"
-#include "../common/chrono.h"
+#include <thread>
+#include <chrono>
 #include "../common/sleep.h"
 
 namespace mihajong_graphic {
@@ -24,12 +24,12 @@ Event::~Event() {
 }
 
 void Event::set() {
-	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
+	{ std::unique_lock<std::mutex> lock(myEventMutex);
 		isSignaled = true;
 		myEvent.notify_all();
 	}
 	threadYield();
-	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
+	{ std::unique_lock<std::mutex> lock(myEventMutex);
 		if (autoResetFlag && waitingThreads)
 			isSignaled = false;
 		waitingThreads = 0;
@@ -37,14 +37,14 @@ void Event::set() {
 }
 
 void Event::reset() {
-	MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
+	std::unique_lock<std::mutex> lock(myEventMutex);
 	isSignaled = false;
 }
 
 uint32_t Event::wait(int32_t timeout) {
 	bool result;
 	if (timeout == Infinite) {
-		{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
+		{ std::unique_lock<std::mutex> lock(myEventMutex);
 			while (!isSignaled)
 				myEvent.wait(lock);
 		}
@@ -53,19 +53,15 @@ uint32_t Event::wait(int32_t timeout) {
 	} else {
 		bool res = [this, timeout] {
 			bool r = false;
-			MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
+			std::unique_lock<std::mutex> lock(myEventMutex);
 			while ((!isSignaled) && (r == false))
-#ifdef OLDER_BOOST_WAIT
-				r = myEvent.timed_wait(lock, CHRONO::posix_time::milliseconds(timeout)) == false;
-#else
-				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == CONDVAR::cv_status::timeout;
-#endif
+				r = myEvent.wait_for(lock, std::chrono::milliseconds(timeout)) == std::cv_status::timeout;
 			return r;
 		} ();
 		threadYield();
 		result = (res == false);
 	}
-	{ MUTEXLIB::unique_lock<MUTEXLIB::mutex> lock(myEventMutex);
+	{ std::unique_lock<std::mutex> lock(myEventMutex);
 		isSignaled = false;
 	}
 	return result ? 1 : 0;

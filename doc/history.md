@@ -132,6 +132,15 @@ Copyright (c) 2008-2013, 2019 MihailJP
 - md2html.pyを修正
 - 型関係の修正
 - strcode.hを修正
+- Clang++で見つかった問題を修正
+  - dangling elseを解消
+  - `-Wparentheses`に対処
+  - インクリメントを分離
+  - 喰いタンのルール判定で等号比較していたのをメソッドに修正
+  - 明示的なoverride指定
+  - 論理積と論理和の順序を明示
+  - `-Wno-switch`を指定
+- Boost関係のコードを削除
 
 ### [2.2.2] 2013年11月30日
 

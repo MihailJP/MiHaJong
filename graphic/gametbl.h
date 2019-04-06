@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "exports.h"
-#include "../common/mutex.h"
+#include <mutex>
 #include "../common/gametbl.h"
 
 namespace mihajong_graphic {
@@ -13,7 +13,7 @@ class GameStatus {
 private:
 	class GStatModFlag {
 	public:
-		MUTEXLIB::recursive_mutex myCriticalSection;
+		std::recursive_mutex myCriticalSection;
 		bool myModificationFlag;
 		GStatModFlag();
 		GStatModFlag(const GStatModFlag&) = delete; // Delete unexpected copy constructor

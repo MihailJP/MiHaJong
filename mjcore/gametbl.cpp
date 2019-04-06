@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #endif
-#include "regex.h"
+#include <regex>
 #include "except.h"
 #include "func.h"
 #include "tileutil.h"
@@ -204,9 +204,9 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 			std::atoi(RuleData::chkRule("starting_point_mantissa_tens")) * 10 +
 			std::atoi(RuleData::chkRule("starting_point_mantissa_ones"));
 		/* 指数部の処理 */
-		REGEX::smatch matchDat; int exponent = 0;
+		std::smatch matchDat; int exponent = 0;
 		std::string expConf(RuleData::chkRule("starting_point_exponent"));
-		if (REGEX::regex_match(expConf, matchDat, REGEX::regex("exp_(\\d+)")))
+		if (std::regex_match(expConf, matchDat, std::regex("exp_(\\d+)")))
 			exponent = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 		for (int j = 0; j < exponent; ++j)
 			initialPoints *= 10;

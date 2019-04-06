@@ -1,7 +1,7 @@
 ﻿#include "agari.h"
 
 #include <functional>
-#include "regex.h"
+#include <regex>
 #include "../graphic/graphic.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
@@ -385,14 +385,14 @@ namespace {
 #ifndef GUOBIAO
 		int penalty = 0;
 		std::string penaConf(RuleData::chkRule("penalty_negative"));
-		REGEX::smatch matchDat;
-		if (REGEX::regex_match(penaConf, matchDat, REGEX::regex("(\\d+)pts"))) { // 点棒で精算
+		std::smatch matchDat;
+		if (std::regex_match(penaConf, matchDat, std::regex("(\\d+)pts"))) { // 点棒で精算
 			penalty = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 			if (isSomeoneDobon(gameStat)) {
 				calcDobonDelta(gameStat, AgariPlayerPriority, penalty);
 				endround::transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValDobon, 3000);
 			}
-		} else if (REGEX::regex_match(penaConf, matchDat, REGEX::regex("chip(\\d+)"))) { // チップで精算
+		} else if (std::regex_match(penaConf, matchDat, std::regex("chip(\\d+)"))) { // チップで精算
 			if (RuleData::chkRuleApplied("chip")) {
 				penalty = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 				if (isSomeoneDobon(gameStat)) {
@@ -523,10 +523,10 @@ namespace {
 
 	void calculateTsumibouDelta(const GameTable* gameStat) { // 積み棒の計算
 		int tsumiboh_rate = 0;
-		REGEX::smatch matchDat;
+		std::smatch matchDat;
 		const std::string tsumiboh_rate_str(RuleData::chkRule("tsumiboh_rate"));
 		// MEMORANDUM: 検索対象文字列をin-situで作ってはダメ 必ず引数に渡す前にオブジェクトを作っておくこと
-		if (REGEX::regex_match(tsumiboh_rate_str, matchDat, REGEX::regex("counter_(\\d+)")))
+		if (std::regex_match(tsumiboh_rate_str, matchDat, std::regex("counter_(\\d+)")))
 			tsumiboh_rate = std::stoi(matchDat[1].str()) / (ACTUAL_PLAYERS - 1);
 		endround::transfer::resetDelta();
 		if (gameStat->TsumoAgariFlag) {
@@ -550,7 +550,7 @@ namespace {
 		if ((ChipAmount <= 0) || (!RuleData::chkRuleApplied("chip"))) return;
 		endround::transfer::resetDelta();
 		const std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
-		if ((!gameStat->TsumoAgariFlag) && (!REGEX::regex_match(limithand_bonus, REGEX::regex("chip_\\d+_each")))) {
+		if ((!gameStat->TsumoAgariFlag) && (!std::regex_match(limithand_bonus, std::regex("chip_\\d+_each")))) {
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Furikomi, -ChipAmount);
 			endround::transfer::addDelta(gameStat->CurrentPlayer.Agari   ,  ChipAmount);
 		} else {
@@ -722,13 +722,13 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	
 	ChipAmount = 0;
 	if ((yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan) >= 8) { // 役満祝儀
-		REGEX::smatch vals;
+		std::smatch vals;
 		std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
-		if (REGEX::regex_match(limithand_bonus, vals, REGEX::regex("chip(\\d+)")))
+		if (std::regex_match(limithand_bonus, vals, std::regex("chip(\\d+)")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
-		else if (REGEX::regex_match(limithand_bonus, vals, REGEX::regex("chip_tsumo(\\d+)each_ron(\\d)")))
+		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_tsumo(\\d+)each_ron(\\d)")))
 			ChipAmount = std::atoi(vals[gameStat->TsumoAgariFlag ? 1 : 2].str().c_str());
-		else if (REGEX::regex_match(limithand_bonus, vals, REGEX::regex("chip_(\\d+)_each")))
+		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_(\\d+)_each")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
 	}
 	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValYakuman, ChipAmount);
@@ -736,7 +736,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	/* 四馬路が北家の放銃だった場合 */
 	if (!gameStat->chkGameType(SanmaT)) {
 		if (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi) == sNorth) {
-			if (REGEX::regex_search(yakuInfo.yakuNameList, REGEX::basic_regex<TCHAR>(_T("(^|\\r?\\n)四馬路(\r?\n|$)")))) {
+			if (std::regex_search(yakuInfo.yakuNameList, std::basic_regex<TCHAR>(_T("(^|\\r?\\n)四馬路(\r?\n|$)")))) {
 				transfer::resetDelta();
 				for (PlayerID i = 0; i < Players; ++i)
 					transfer::addDelta(i, 1000);

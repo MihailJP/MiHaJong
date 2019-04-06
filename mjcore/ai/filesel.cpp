@@ -54,7 +54,7 @@ void aiscript::FileSelector::filelist() {
 	if (!dir) {
 		error(_T("ファイル検索できません！！")); return;
 	}
-	while (dirp = readdir(dir)) { // 検索
+	while ((dirp = readdir(dir))) { // 検索
 		if (!strcmp(dirp->d_name + strlen(dirp->d_name) - 4, ".lua")) {
 			CodeConv::tostringstream o; o << _T("検出: ") << (dirp->d_name); info(o.str().c_str());
 			files.push_back(scriptPath + std::string("/") + std::string(dirp->d_name));

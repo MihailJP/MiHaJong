@@ -28,8 +28,8 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 		for (TileCode k = CharacterOne; k <= RedDragon; k = static_cast<TileCode>(k + 1)) {
 			if (machiInfo[player].Machihai[k].MachihaiFlag) // 待ち牌になっている場合
 				tileRenderer->NewTile(player * 9 + tile, Tile(k),
-				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile++),
-				y + 20, Portrait, Obverse); // その牌を表示
+				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile),
+				y + 20, Portrait, Obverse), ++tile; // その牌を表示
 		}
 		if (machiInfo[player].FuritenFlag)
 			txtRenderer->NewText(player, _T("(フリテン)"), x - 90, y + 40);

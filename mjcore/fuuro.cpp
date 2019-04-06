@@ -21,7 +21,7 @@
 #include "remote.h"
 #include "../graphic/graphic.h"
 #include "../graphic/scenes/table/naki_id.h"
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 namespace {
