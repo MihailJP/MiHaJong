@@ -14,6 +14,7 @@ private:
 	std::array<RankRenderer*, mihajong_structs::Players> rankRenderer;
 	HugeTextRenderer* titleRenderer;
 	Timer myTimer;
+	Background* background;
 public:
 	ResultScreen(ScreenManipulator* const manipulator);
 	ResultScreen(const ResultScreen&) = delete; // Delete unexpected copy constructor
