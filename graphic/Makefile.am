@@ -72,7 +72,7 @@ dist_pkgdata_DATA = \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png \
-	data/titlback.png
+	data/splash.png data/titlback.png
 EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters
 if WITH_WINAPI

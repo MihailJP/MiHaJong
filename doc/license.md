@@ -60,6 +60,21 @@ Copyright (c) 2008-2013, 2019 MihailJP
 参照：[https://openclipart.org/share](https://openclipart.org/share)
 
 
+初期ロード画面の背景画像について
+--------------------------------
+　初期ロード画面の背景画像は、2019年2月22日に兵庫県明石市で撮影された梅の花の写真であり、
+MihailJP 自身が撮影し、サイズ変更・透明化処理を行ったものです。
+ライセンスは次のとおりです。
+
+> This file is made available under the Creative Commons [CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/deed.en).
+>
+> The person who associated a work with this deed has dedicated the work to the public domain
+> by waiving all of his or her rights to the work worldwide under copyright law,
+> including all related and neighboring rights, to the extent allowed by law.
+> You can copy, modify, distribute and perform the work, even for commercial purposes,
+> all without asking permission.
+
+
 タイトル画面の背景画像について
 ------------------------------
 　タイトル画面の背景画像は、2017年11月6日に撮影された米国オレゴン州の中国庭園「蘭蘇園」(Lan Su Chinese Garden) の写真であり、
