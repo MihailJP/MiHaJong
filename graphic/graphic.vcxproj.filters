@@ -419,9 +419,6 @@
     <ClInclude Include="..\common\clock.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\condvar.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\discard.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>

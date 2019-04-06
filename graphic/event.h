@@ -4,7 +4,7 @@
 #include "../common/strcode.h"
 #include <cstdint>
 #include <mutex>
-#include "../common/condvar.h"
+#include <condition_variable>
 #include <exception>
 
 namespace mihajong_graphic {
@@ -15,7 +15,7 @@ class DemonstrationTerminated : public std::exception {};
 #ifdef GRAPHIC_EXPORTS
 class Event { // イベントの基底クラス
 protected:
-	CONDVAR::condition_variable myEvent;
+	std::condition_variable myEvent;
 	std::mutex myEventMutex;
 	bool isSignaled, autoResetFlag;
 	unsigned waitingThreads;
