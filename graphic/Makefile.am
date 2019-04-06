@@ -47,7 +47,7 @@ libmihajong_graphic_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_U
 endif
 libmihajong_graphic_la_LIBADD = ../sound/libmihajong-sound.la ../astro/libmihajong-astro.la
 if WITH_WINAPI
-libmihajong_graphic_la_LIBADD += graphic.o 
+libmihajong_graphic_la_LIBADD += graphic.o
 endif
 if WITH_BOOST_CHRONO
 libmihajong_graphic_la_CXXFLAGS += -DWITH_BOOST_CHRONO $(BOOST_CHRONO_LIB)
@@ -72,7 +72,7 @@ dist_pkgdata_DATA = \
 	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
 	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
 	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png \
-	titlback.png
+	data/titlback.png
 EXTRA_DIST = \
 	graphic.vcxproj graphic.vcxproj.filters
 if WITH_WINAPI

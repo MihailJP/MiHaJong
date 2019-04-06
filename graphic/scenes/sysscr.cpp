@@ -1,6 +1,7 @@
 ﻿#include "sysscr.h"
 
 #include <cassert>
+#include <cmath>
 #include "../gametbl.h"
 #include "../resource.h"
 #include "../sprite.h"
@@ -142,7 +143,7 @@ RECT SystemScreen::TitleBackground::getRect() {
 		? static_cast<int>(MainPosY)
 		: static_cast<int>((1.0 - std::pow(1.0 - static_cast<double>(timer().elapsed()) / 1'000'000.0, 2)) * static_cast<double>(MainPosY));
 	const int x = static_cast<int>(((std::sin(static_cast<double>(std::max(9'000'000uLL, timer().elapsed() + 8'000'000uLL)) / 10'000'000.0) + 1.0) / 2.0) * static_cast<double>(PictureWidth - width));
-	const RECT rect = {x, y, x + width, y + Geometry::BaseSize};
+	const RECT rect = {x, y, x + width, y + static_cast<int>(Geometry::BaseSize)};
 	return rect;
 }
 
