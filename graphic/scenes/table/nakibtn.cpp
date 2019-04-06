@@ -221,8 +221,8 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		}
 		return false;
 	} ();
-	if (KanFlag && (playerStat->Tsumohai()) &&
-		(!playerStat->RichiFlag.RichiFlag) || utils::chkAnkanAbility(gameStat, ActivePlayer))
+	if ((KanFlag && (playerStat->Tsumohai()) &&
+		(!playerStat->RichiFlag.RichiFlag)) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[btnKan] = true;
 
 	const TileCode flowerTile = (gameStat->gameType & SanmaX) ? NorthWind : Flower;
