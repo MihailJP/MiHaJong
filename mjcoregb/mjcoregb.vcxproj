@@ -292,6 +292,7 @@
     <ClCompile Include="..\mjcore\yaku\yk_tools.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\datetimetime.h" />
     <ClInclude Include="..\common\scrmode.h" />
     <ClInclude Include="..\mjcore\conffile\conffile.h" />
     <ClInclude Include="..\common\bgmid.h" />

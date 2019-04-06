@@ -36,6 +36,10 @@ void SystemScreen::clearWithGameTypeColor() {
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(64, 0, 64), 1.0f, 0);
 		break;
+	case SanmaSeto:
+		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
+			D3DCOLOR_XRGB(64, 64, 64), 1.0f, 0);
+		break;
 	case GuobiaoMJ:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(64, 64, 0), 1.0f, 0);
@@ -56,6 +60,9 @@ void SystemScreen::clearWithGameTypeColor() {
 		break;
 	case SanmaS:
 		glClearColor(.25, 0, .25, 1);
+		break;
+	case SanmaSeto:
+		glClearColor(.25, .25, .25, 1);
 		break;
 	case GuobiaoMJ:
 		glClearColor(.25, .25, 0, 1);

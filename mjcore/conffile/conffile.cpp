@@ -7,42 +7,52 @@
 #include <regex>
 #include <cassert>
 #include <locale>
+#ifndef _WIN32
+#include <unistd.h>
+#endif /* _WIN32 */
 
 namespace ConfigFile {
 
 typedef std::basic_regex<TCHAR> tregex;
-CodeConv::tstring lower(const CodeConv::tstring& str) {
-	CodeConv::tstring result;
-	for (auto i = str.begin(); i != str.end(); ++i) {
-		result += std::tolower(*i, std::locale::classic());
-	}
-	return result;
-}
 
 /* コンフィグのパス */
 std::string ConfigFile::confPath() {
+	constexpr size_t bufSize = 1024u;
 	std::string configpath = "";
-	char* cur = new char[1024];
-	GetCurrentDirectoryA(1024, cur);
-	char* progfiles = new char[1024];
-	char* appdata = new char[1024];
-#if defined(_MSC_VER)
-	size_t* sz = new size_t;
-	getenv_s(sz, progfiles, 1024, "ProgramFiles");
-	getenv_s(sz, appdata, 1024, "APPDATA");
+#ifdef _WIN32
+	char* cur = new char[bufSize] {};
+	GetCurrentDirectoryA(bufSize, cur);
+	char* progfiles = new char[bufSize] {};
+	char* appdata = new char[bufSize] {};
+#if defined(_MSC_VER) || defined(HAVE_GETENV_S)
+	size_t len = 0;
+	getenv_s(&len, progfiles, bufSize, "ProgramFiles");
+	getenv_s(&len, appdata, bufSize, "APPDATA");
 #else
-	strncpy(progfiles, getenv("ProgramFiles"), 1023);
-	strncpy(appdata, getenv("APPDATA"), 1023);
-	progfiles[1023] = appdata[1023] = '\0';
+	if (getenv("ProgramFiles"))
+		strncpy(progfiles, getenv("ProgramFiles"), bufSize - 1);
+	if (getenv("APPDATA"))
+		strncpy(appdata, getenv("APPDATA"), bufSize - 1);
+	progfiles[bufSize - 1] = appdata[bufSize - 1] = '\0';
 #endif
 
 	if (strstr(cur, progfiles) == cur)
 		configpath = std::string(appdata) + std::string("\\MiHaJong\\");
 
 	delete[] cur; delete[] appdata; delete[] progfiles;
-#if defined(_MSC_VER)
-	delete sz;
+#else /* _WIN32 */
+	char* homedir = new char[bufSize] {};
+#ifdef HAVE_GETENV_S
+	size_t len();
+	getenv_s(&len, homedir, bufSize, "HOME");
+#else
+	if (getenv("HOME"))
+		strncpy(homedir, getenv("HOME"), bufSize - 1);
+	homedir[bufSize - 1] = '\0';
 #endif
+	configpath = std::string(homedir) + std::string("/.mihajong/");
+	delete[] homedir;
+#endif /* _WIN32 */
 	return configpath;
 }
 
@@ -52,11 +62,7 @@ void ConfigFile::load() {
 		bool prefFileExists = exist(preferenceFile.c_str()); // 設定ファイルがあるかどうか調べる
 		if (prefFileExists) { // 設定ファイル読み込み
 			CodeConv::tifstream file(preferenceFile.c_str());
-#ifdef UNICODE
-			(void)file.imbue(std::locale(".65001"));
-#else /* UNICODE */
-			(void)file.imbue(std::locale(".932"));
-#endif /* UNICODE */
+			CodeConv::setStreamLocale(file);
 			CodeConv::tstring line, text;
 			while (std::getline(file, line)) text += line + _T("\n");
 			INIParser::parseini(configMap, text.c_str(), false);
@@ -70,11 +76,7 @@ ConfigFile::ConfigFile() : preferenceFile(confPath() + "config.ini") {
 
 void ConfigFile::save() {
 	CodeConv::tofstream file(preferenceFile);
-#ifdef UNICODE
-	(void)file.imbue(std::locale(".65001"));
-#else /* UNICODE */
-	(void)file.imbue(std::locale(".932"));
-#endif /* UNICODE */
+	CodeConv::setStreamLocale(file);
 	file << _T("MiHaJong Configuration File\n\n");
 	file << _T("[preferences]\n\n");
 	file << _T("; プレイヤー名\n");
@@ -83,6 +85,7 @@ void ConfigFile::save() {
 	file << _T("; 有効なIPv6またはIPv4アドレス、もしくはホスト名(DNS名前解決されます)。\n");
 	file << _T("; IPv4アドレスを指定時はIPv4-mapped IPv6に変換されます。\n");
 	file << _T("server=") << configMap[_T("preferences")][_T("server")] << _T("\n\n");
+#ifdef _WIN32
 	file << _T("; フルスクリーン/ウィンドウの別\n");
 	file << _T("; Windows版のみ。Linux版では無視されます。\n");
 	file << _T("; フルスクリーンにするには、\"fullscreen\"を、\n");
@@ -90,17 +93,25 @@ void ConfigFile::save() {
 	file << _T("; なお、\"borderless\"を指定すると、ウィンドウを全画面に表示します。\n");
 	file << _T("; デフォルトではウィンドウモードです。\n");
 	file << _T("screen=") << configMap[_T("preferences")][_T("screen")] << _T("\n\n");
+#endif /* _WIN32 */
 	file << _T("; ウィンドウサイズ/解像度\n");
 	file << _T("; ウィンドウモードではウィンドウサイズ、フルスクリーンでは解像度を設定します。\n");
 	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga\n");
 	file << _T("; screenが\"borderless\"のときは無視されます。\n");
 	file << _T("scrsize=") << configMap[_T("preferences")][_T("scrsize")] << _T("\n\n");
+#ifdef _WIN32
 	file << _T("; モニタ番号\n");
 	file << _T("; Windows版のみ。Linux版では無視されます。\n");
 	file << _T("; 使用するモニタの番号を指定します。\n");
 	file << _T("; 番号は1から始まります。\n");
 	file << _T("; screenが\"fullscreen\"のときは無視されます。\n");
 	file << _T("monitor=") << configMap[_T("preferences")][_T("monitor")] << _T("\n\n");
+	file << _T("; MIDIデバイス名\n");
+	file << _T("; Windows版のみ。Linux版では無視されます。\n");
+	file << _T("; 使用するMIDIデバイスの名前を指定します。\n");
+	file << _T("; 存在しないデバイス名が指定された場合はDirectSoundが使用されます。\n");
+	file << _T("midi=") << configMap[_T("preferences")][_T("midi")] << _T("\n\n");
+#endif /* _WIN32 */
 	file << _T("; BGM音量\n");
 	file << _T("; 0～100の数値を指定してください。\n");
 	file << _T("bgmvolume=") << configMap[_T("preferences")][_T("bgmvolume")] << _T("\n\n");
@@ -188,6 +199,7 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 }
 
 unsigned int ConfigFile::screenResolutionX() {
+#ifdef _WIN32
 	if (scrMode() == ScreenMode::scrModeBorderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
@@ -205,6 +217,7 @@ unsigned int ConfigFile::screenResolutionX() {
 			return width;
 		}
 	} else {
+#endif /* WIN32 */
 		switch (screenResolution()) {
 		case screenSVGA:   return  800u;
 		case screenXGA:    return 1024u;
@@ -215,9 +228,12 @@ unsigned int ConfigFile::screenResolutionX() {
 		case screenWUXGA:  return 1920u;
 		default:           return    0u;
 		}
+#ifdef _WIN32
 	}
+#endif /* WIN32 */
 }
 unsigned int ConfigFile::screenResolutionY() {
+#ifdef _WIN32
 	if (scrMode() == ScreenMode::scrModeBorderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
@@ -235,6 +251,7 @@ unsigned int ConfigFile::screenResolutionY() {
 			return height;
 		}
 	} else {
+#endif /* WIN32 */
 		switch (screenResolution()) {
 		case screenSVGA:   return  600u;
 		case screenXGA:    return  768u;
@@ -245,7 +262,9 @@ unsigned int ConfigFile::screenResolutionY() {
 		case screenWUXGA:  return 1200u;
 		default:           return    0u;
 		}
+#ifdef _WIN32
 	}
+#endif /* WIN32 */
 }
 
 /* モニタ番号 */
@@ -259,6 +278,14 @@ unsigned int ConfigFile::monitorNumber() {
 }
 void ConfigFile::monitorNumber(unsigned int val) {
 	configMap[_T("preferences")][_T("monitor")] = to_tstring(val);
+}
+
+/* MIDIデバイス名 */
+CodeConv::tstring ConfigFile::midiDevice() {
+	return configMap[_T("preferences")][_T("midi")];
+}
+void ConfigFile::midiDevice(const CodeConv::tstring& name) {
+	configMap[_T("preferences")][_T("midi")] = name;
 }
 
 /* BGM音量 */

@@ -14,6 +14,9 @@
 #include <fstream>
 #include <vector>
 #include "audioobj.h"
+#if defined(MIDI_SUPPORT) && defined(_WIN32)
+#include "GuruGuruSMF/GuruGuruSMF4_Cpp.h"
+#endif
 
 namespace sound {
 
@@ -34,12 +37,11 @@ namespace sound {
 		void InitXAudio(Window hWnd = 0);
 #endif /* _WIN32 */
 	public:
-		SoundManipulator();
-#ifdef _WIN32
-		SoundManipulator(HWND hWnd);
-#else /* _WIN32 */
-		SoundManipulator(Window hWnd);
-#endif /* _WIN32 */
+#if defined(_WIN32) && defined(MIDI_SUPPORT)
+		SoundManipulator(int = GuruGuruSmf::Device::DirectMusic, HWND = nullptr);
+#else /* defined(_WIN32) && defined(MIDI_SUPPORT) */
+		SoundManipulator(int = 0, Window = 0);
+#endif /* defined(_WIN32) && defined(MIDI_SUPPORT) */
 		SoundManipulator(const SoundManipulator&) = delete; // Delete unexpected copy constructor
 		SoundManipulator& operator= (const SoundManipulator&) = delete; // Delete unexpected assign operator
 		~SoundManipulator();

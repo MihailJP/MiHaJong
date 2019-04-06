@@ -13,6 +13,7 @@
 #include "../common/version.h"
 #include "ruletbl.h"
 #include "yaku/yaku.h"
+#include "../common/datetime.h"
 
 /* レガシー牌譜形式（プレーンテキスト、HTML）は廃止しました。XMLに統一します。 */
 
@@ -138,6 +139,7 @@ void haifu::haifubufinit() {
 	CodeConv::tostringstream headerTxt; headerTxt.str(_T(""));
 	headerTxt << _T("MiHaJong ");
 	switch (GameStat.gameType) {
+		case SanmaSeto: headerTxt << _T("瀬戸内三麻"); break;
 		case SanmaS:    headerTxt << _T("数牌三麻"); break;
 		case Sanma4:    headerTxt << _T("四人三麻"); break;
 		case Sanma:     headerTxt << _T("三人打ち"); break;
@@ -179,6 +181,7 @@ void haifu::haifubufinit() {
 		GameStat.chkGameType(Sanma) ? _T("sanma") :
 		GameStat.chkGameType(Sanma4) ? _T("sanma-4players") :
 		GameStat.chkGameType(SanmaS) ? _T("sanma-numerals") :
+		GameStat.chkGameType(SanmaSeto) ? _T("sanma-setouchi") :
 		GameStat.chkGameType(GuobiaoMJ) ? _T("guobiao") : _T(""))
 		<< _T("\">") << std::endl;
 	RuleData::forEachRule([&](std::string key, std::string val) -> void {
@@ -206,42 +209,19 @@ void haifu::haifubufinit() {
 }
 
 void haifu::tools::haifuRecTime(CodeConv::tstring tagName) { // 現在時刻タグ
-#ifdef _WIN32
-	SYSTEMTIME currTime; GetLocalTime(&currTime);
-	TIME_ZONE_INFORMATION tz; GetTimeZoneInformation(&tz);
+	const auto currTime(DateTime::localTime());
+	int tz = DateTime::timeZone();
 	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
-		std::setw(4) << std::setfill(_T('0')) << currTime.wYear << _T("-") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wMonth << _T("-") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wDay << _T("T") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wHour << _T(":") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wMinute << _T(":") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.wSecond << _T(".") <<
-		std::setw(3) << std::setfill(_T('0')) << currTime.wMilliseconds <<
-		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((-tz.Bias) / 60) << _T(":") <<
-		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((-tz.Bias) % 60) <<
+		std::setw(4) << std::setfill(_T('0')) << static_cast<int>(currTime.year) << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << static_cast<int>(currTime.month) << _T("-") <<
+		std::setw(2) << std::setfill(_T('0')) << static_cast<int>(currTime.day) << _T("T") <<
+		std::setw(2) << std::setfill(_T('0')) << static_cast<int>(currTime.hour) << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << static_cast<int>(currTime.minute) << _T(":") <<
+		std::setw(2) << std::setfill(_T('0')) << static_cast<int>(currTime.second) << _T(".") <<
+		std::setw(3) << std::setfill(_T('0')) << static_cast<int>(currTime.millisecond) <<
+		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << (tz / 60) << _T(":") <<
+		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << (tz % 60) <<
 		_T("</") << tagName << _T(">") << std::endl;
-#else /*_WIN32*/
-	timespec tempus; clock_gettime(CLOCK_REALTIME, &tempus);
-	tm currTime;
-	localtime_s(&currTime, &tempus.tv_sec);
-	constexpr signed long tz = []() -> signed long {
-		time_t t1 = 86400; // GNU Cはそうではないが、time_tがunsignedの処理系を見たことがあるので86400とする
-		tm* tmDat = gmtime(&t1); // 協定世界時を算出
-		time_t t2 = mktime(tmDat); // わざと地方時と解釈することで時差を求める
-		return t1 - t2; // 秒単位で時差を返す。日本時間だったら32400となる
-	}();
-	XMLhaifuBuffer << _T("\t\t<") << tagName << _T(">") <<
-		std::setw(4) << std::setfill(_T('0')) << (currTime.tm_year + 1900) << _T("-") <<
-		std::setw(2) << std::setfill(_T('0')) << (currTime.tm_mon + 1) << _T("-") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.tm_mday << _T("T") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.tm_hour << _T(":") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.tm_min << _T(":") <<
-		std::setw(2) << std::setfill(_T('0')) << currTime.tm_sec << _T(".") <<
-		std::setw(3) << std::setfill(_T('0')) << (tempus.tv_nsec / 1000000) <<
-		std::showpos << std::setw(3) << std::setfill(_T('0')) << std::internal << ((tz + 86400) / 3600 - (86400 / 3600)) << _T(":") <<
-		std::noshowpos << std::setw(2) << std::setfill(_T('0')) << ((tz + 86400) % 3600 / 60) <<
-		_T("</") << tagName << _T(">") << std::endl;
-#endif /*_WIN32*/
 }
 
 /* 一局分の牌譜バッファを初期化 */
@@ -275,7 +255,7 @@ void haifu::haifurechaipai(const GameTable* const gameStat) {
 		XhaifuBufferBody << _T("\t\t\t<initial-hand player=\"player") << p << _T("\">") << std::endl;
 #endif /* GUOBIAO */
 		for (int i = 0; i < NumOfTilesInHand; i++) {
-			if (gameStat->Player[p].Hand[i].tile != NoTile) {
+			if (gameStat->Player[p].Hand[i]) {
 				XhaifuBufferBody << _T("\t\t\t\t");
 				tools::recordTile_Inline(gameStat->Player[p].Hand[i], false);
 				XhaifuBufferBody << std::endl;
@@ -327,7 +307,7 @@ void haifu::haifurecmota(const GameTable* const gameStat, const DiscardTileNum& 
 #else /* GUOBIAO */
 		XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
-	} else if (gameStat->statOfActive().Tsumohai().tile == NoTile) {
+	} else if (!gameStat->statOfActive().Tsumohai()) {
 		// 鳴いた直後 (何もしない)
 	} else if ((DiscardTileIndex.id) == (NumOfTilesInHand - 1)) {
 		// ツモ切り
@@ -563,7 +543,7 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 	bool agariFlag = false;
 	XhaifuBufferBody << _T("\t\t\t\t<hand>") << std::endl;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[player].Hand[i].tile != NoTile) {
+		if (gameStat->Player[player].Hand[i].tile) {
 			if (i == NumOfTilesInHand - 1) {
 				if ((RoundEndType == Ryuukyoku)||(RoundEndType == Agari)||(RoundEndType == Chonbo)) {
 					if (gameStat->TsumoAgariFlag) {
@@ -631,19 +611,19 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	Tile meldTile[3];
 	switch (meld.mstat) {
 	case meldSequenceExposedLower:
-		meldTile[0].tile = meld.tile; meldTile[0].red = meld.red[0];
-		meldTile[1].tile = TileCode(meld.tile + 1); meldTile[1].red = meld.red[1];
-		meldTile[2].tile = TileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+		meldTile[0] = Tile(meld.tile, meld.red[0]);
+		meldTile[1] = Tile(TileCode(meld.tile + 1), meld.red[1]);
+		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
 	case meldSequenceExposedMiddle:
-		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
-		meldTile[0].tile = TileCode(meld.tile + 1); meldTile[0].red = meld.red[1];
-		meldTile[2].tile = TileCode(meld.tile + 2); meldTile[2].red = meld.red[2];
+		meldTile[1] = Tile(meld.tile, meld.red[0]);
+		meldTile[0] = Tile(TileCode(meld.tile + 1), meld.red[1]);
+		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
 	case meldSequenceExposedUpper:
-		meldTile[1].tile = meld.tile; meldTile[1].red = meld.red[0];
-		meldTile[2].tile = TileCode(meld.tile + 1); meldTile[2].red = meld.red[1];
-		meldTile[0].tile = TileCode(meld.tile + 2); meldTile[0].red = meld.red[2];
+		meldTile[1] = Tile(meld.tile, meld.red[0]);
+		meldTile[2] = Tile(TileCode(meld.tile + 1), meld.red[1]);
+		meldTile[0] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
 	default:
 		// This must not occur...
@@ -657,7 +637,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	XhaifuBufferBody << _T("\t\t\t\t</sequence>") << std::endl;
 }
 inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID player, MeldCode meld) {
-	Tile meldTile = {meld.tile, meld.red[0]};
+	const Tile meldTile(meld.tile, meld.red[0]);
 	XhaifuBufferBody << _T("\t\t\t\t\t");
 	if ((meld.mstat == meldQuadAddedLeft) ||
 		(meld.mstat == meldQuadAddedCenter) ||
@@ -705,7 +685,7 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	}
 	for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
 		if (i == interrupt) hfPon1(player, meld);
-		Tile meldTile = {meld.tile, meld.red[i]};
+		const Tile meldTile(meld.tile, meld.red[i]);
 		XhaifuBufferBody << _T("\t\t\t\t\t");
 		recordTile_Inline(meldTile, false);
 		XhaifuBufferBody << std::endl;
@@ -883,28 +863,18 @@ void haifu::haifusave(const GameTable* const gameStat) {
 		case Sanma: filename1 << "mihasanm"; break;
 		case Sanma4: filename1 << "mihaysnm"; break;
 		case SanmaS: filename1 << "mihassnm"; break;
+		case SanmaSeto: filename1 << "mihastsm"; break;
 		case GuobiaoMJ: filename1 << "mihagbmj"; break;
 	}
 	filename1 << "_" << MIHAJONG_MAJOR_VER << "_" <<
 		MIHAJONG_MINOR_VER << "_" << MIHAJONG_PATCH_VER;
 
-#ifdef _WIN32
-	SYSTEMTIME ltime; GetLocalTime(&ltime);
-	filename2 << std::setw(4) << std::setfill('0') << ltime.wYear;
-	filename2 << std::setw(2) << std::setfill('0') << ltime.wMonth;
-	filename2 << std::setw(2) << std::setfill('0') << ltime.wDay << "_";
-	filename2 << std::setw(2) << std::setfill('0') << ltime.wHour;
-	filename2 << std::setw(2) << std::setfill('0') << ltime.wMinute;
-#else /*_WIN32*/
-	time_t tempus = time(nullptr);
-	tm ltime;
-	localtime_s(&ltime, &tempus);
-	filename2 << std::setw(4) << std::setfill('0') << (ltime.tm_year + 1900);
-	filename2 << std::setw(2) << std::setfill('0') << (ltime.tm_mon + 1);
-	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_mday << "_";
-	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_hour;
-	filename2 << std::setw(2) << std::setfill('0') << ltime.tm_min;
-#endif /*_WIN32*/
+	const auto ltime(DateTime::localTime());
+	filename2 << std::setw(4) << std::setfill('0') << static_cast<int>(ltime.year);
+	filename2 << std::setw(2) << std::setfill('0') << static_cast<int>(ltime.month);
+	filename2 << std::setw(2) << std::setfill('0') << static_cast<int>(ltime.day) << "_";
+	filename2 << std::setw(2) << std::setfill('0') << static_cast<int>(ltime.hour);
+	filename2 << std::setw(2) << std::setfill('0') << static_cast<int>(ltime.minute);
 
 	/* ファイル書き出し */
 	std::ofstream fileout;

@@ -262,7 +262,7 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 		int sign;
 		if      (*score > 0) sign =  1;
 		else if (*score < 0) sign = -1;
-		else                                    sign =  0;
+		else                 sign =  0;
 		for (int i = DigitGroups - 1; i >= 0; --i) {
 			for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
 				if ((GameStatus::gameStat()->gameType & RichiMJ) && (i == 0) && (j == 4)) {

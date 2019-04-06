@@ -21,8 +21,13 @@
 #include "ruletbl.h"
 #include "../common/sleep.h"
 
-#define settile(TileCode, pos) {tilepos[TileCode] = pos; for (unsigned int i = 0; i < 4u; ++i) {gameStat->Deck[pos++].tile = TileCode;}}
 inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 牌を並べる
+	const auto settile = [gameStat, &tilepos](TileCode tCode, unsigned int& pos) {
+		tilepos[tCode] = pos;
+		for (unsigned int i = 0; i < 4u; ++i) {
+			gameStat->Deck[pos++].tile = tCode;
+		}
+	};
 	unsigned int p = 0; // 牌の位置ID
 	if (gameStat->chkGameType(SanmaX)) {
 		settile(CharacterOne, p); // 萬子
@@ -33,8 +38,13 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 	}
 	for (unsigned int k = 1u; k <= 9u; ++k)
 		settile(static_cast<TileCode>(TileSuitCircles + k), p); // 筒子
-	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
+	if (gameStat->chkGameType(SanmaSeto)) {
+		settile(BambooOne, p); // 索子
+		settile(BambooNine, p); // 索子
+	} else {
+		for (unsigned int k = 1u; k <= 9u; ++k)
+			settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
+	}
 	if (!gameStat->chkGameType(SanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
 			settile(static_cast<TileCode>(TileSuitHonors + k), p); // 字牌
@@ -522,13 +532,11 @@ namespace {
 		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // サーバーの場合、牌山のデータを送信
 			statsync(gameStat, gameStat->Deck[i].tile + (gameStat->Deck[i].red * TileNonflowerMax) + mihajong_socket::protocol::StartRound_Tile_Excess,
 				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信
-					if ( ((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) > TileNonflowerMax) &&
-						((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) < TileSuitFlowers) ) {
-							gameStat->Deck[i].tile = static_cast<TileCode>((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) % TileNonflowerMax);
-							gameStat->Deck[i].red  = static_cast<doraCol>((ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess) / TileNonflowerMax);
+					const auto recvTile = ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess;
+					if ((recvTile > TileNonflowerMax) && (recvTile < TileSuitFlowers)) {
+							gameStat->Deck[i] = Tile(TileCode(recvTile % TileNonflowerMax), doraCol(recvTile / TileNonflowerMax));
 					} else {
-						gameStat->Deck[i].tile = static_cast<TileCode>(ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess);
-						gameStat->Deck[i].red = Normal;
+						gameStat->Deck[i] = Tile(TileCode(recvTile));
 					}
 					return true;
 				});
@@ -584,8 +592,7 @@ namespace {
 				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
 				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
-			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
-			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
+			gameStat->Player[player].Hand[handIndex] = gameStat->Deck[gameStat->TilePointer];
 			++gameStat->TilePointer;
 			if ((i == (gameStat->chkGameType(AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
 				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneHonba);
@@ -605,8 +612,7 @@ namespace {
 				player = (i + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
 				player = (i + gameStat->GameRound) % 4;
-			gameStat->Player[player].Hand[handIndex].tile = gameStat->Deck[gameStat->TilePointer].tile;
-			gameStat->Player[player].Hand[handIndex].red  = gameStat->Deck[gameStat->TilePointer].red;
+			gameStat->Player[player].Hand[handIndex] = gameStat->Deck[gameStat->TilePointer];
 			++gameStat->TilePointer;
 			calcdoukasen(gameStat);
 			sound::Play(sound::IDs::sndTsumo);

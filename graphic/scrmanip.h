@@ -39,12 +39,20 @@ private:
 	// Linuxでは別の箇所で入力イベントを処理するため不要
 #endif /*_WIN32*/
 	MUTEXLIB::recursive_mutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
+#ifndef WITH_DIRECTX
+#ifdef _WIN32
+	HGLRC getContext();
+	void discardContext(HGLRC);
+#else /* _WIN32 */
+	GLXContext getContext(bool);
+	void discardContext(GLXContext);
+#endif /* _WIN32 */
+#endif /* WITH_DIRECTX */
 public:
 #ifdef _WIN32
 	void inputProc(WPARAM wParam, LPARAM lParam);
 	void IMEvent(UINT message, WPARAM wParam, LPARAM lParam);
 #else /*_WIN32*/
-	/* TODO: Linuxでは日本語入力が未実装 */
 	void kbdInputProc(const XEvent* event);
 #endif /*_WIN32*/
 	void Render(); // 画面の再描画

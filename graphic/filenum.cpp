@@ -25,8 +25,6 @@ std::string dataFileName(int fileID) {
 		return PKGDATADIR "/dice.png";
 	case IDB_PNG_FONT_SMALL:
 		return PKGDATADIR "/smallchr.png";
-	case IDB_PNG_TEXTBOX:
-		return PKGDATADIR "/editbox.png";
 	case IDB_PNG_TENBOU:
 		return PKGDATADIR "/tenbou.png";
 	case IDB_PNG_CHICHAMARK:

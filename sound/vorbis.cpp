@@ -18,7 +18,9 @@
 /* OGGファイル読み込み */
 void sound::OggData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
+#ifdef USE_XAUDIO2
 	std::memset(&bufInfo, 0, sizeof(buffer));
+#endif /* USE_XAUDIO2 */
 	// ファイルを開く
 	FILE* file;
 #ifdef _MSC_VER

@@ -22,7 +22,7 @@ libmihajong_sound_la_CXXFLAGS += -DWITH_DIRECTX
 endif
 EXTRA_DIST = \
 	sound.vcxproj sound.vcxproj.filters \
-	GuruGuruSMF/README libogg/Readme.txt libvorbis/Readme.txt
+	GuruGuruSMF/README OggVorbis.txt
 if WITH_WINAPI
 libmihajong_sound_la_SOURCES += ver.rc
 else

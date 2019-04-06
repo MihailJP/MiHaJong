@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
+#include <queue>
+#include <algorithm>
 #include "logging.h"
 #include "ruletbl.h"
 #include "shanten.h"
@@ -50,6 +52,16 @@ bool isYaojiu(TileCode code) {
 	return ans;
 }
 
+/* 手牌データをデバッグログに出力 */
+static void logHand(const CodeConv::tstring& label , GameTable* const gameStat, PlayerID targetPlayer) {
+	CodeConv::tostringstream o;
+	o.str(_T("")); o << label << _T(" [");
+	for (int i = 0; i < NumOfTilesInHand; i++)
+		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
+		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
+	o << _T("]"); trace(o.str());
+}
+
 /* 理牌する */
 void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	// 理牌する
@@ -58,63 +70,113 @@ void lipai(GameTable* const gameStat, PlayerID targetPlayer) {
 	o.str(_T("")); o << _T("理牌を行います。プレイヤー [") << static_cast<int>(targetPlayer) << _T("]"); debug(o.str());
 
 	/* 手牌データをデバッグログに出力：ビフォー */
-	o.str(_T("")); o << _T("理牌前の手牌 [");
-	for (int i = 0; i < NumOfTilesInHand; i++)
-		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
-		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
-	o << _T("]"); trace(o.str());
+	logHand(_T("理牌前の手牌"), gameStat, targetPlayer);
 
 	/* ソートの準備として牌のない枠を処理 */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) {
-			gameStat->Player[targetPlayer].Hand[i].tile = TilePad;
-			gameStat->Player[targetPlayer].Hand[i].red = Normal;
+		if (!gameStat->Player[targetPlayer].Hand[i]) {
+			gameStat->Player[targetPlayer].Hand[i] = Tile(TilePad);
 		}
 	}
 
-	/* ここからソート作業 */
-	Tile tmpTile;
-	for (int i = 0; i < NumOfTilesInHand; i++) {
-		for (int j = i + 1; j < NumOfTilesInHand; j++) {
-			if (gameStat->Player[targetPlayer].Hand[i].tile >
-				gameStat->Player[targetPlayer].Hand[j].tile) {
-					/* Tile構造体はPODだから、memcpyしちゃってもいいよね？ */
-					memcpy(&tmpTile, &(gameStat->Player[targetPlayer].Hand[i]), sizeof(Tile));
-					memcpy( &(gameStat->Player[targetPlayer].Hand[i]),
-						&(gameStat->Player[targetPlayer].Hand[j]), sizeof(Tile));
-					memcpy(&(gameStat->Player[targetPlayer].Hand[j]), &tmpTile, sizeof(Tile));
-			}
-			else if ((gameStat->Player[targetPlayer].Hand[i].tile ==
-				gameStat->Player[targetPlayer].Hand[j].tile) &&
-				(gameStat->Player[targetPlayer].Hand[i].red <
-				gameStat->Player[targetPlayer].Hand[j].red)) {
-					/* 同じ種類の牌でも赤ドラかそうでないかで並べ替える */
-					memcpy(&tmpTile, &(gameStat->Player[targetPlayer].Hand[i]), sizeof(Tile));
-					memcpy( &(gameStat->Player[targetPlayer].Hand[i]),
-						&(gameStat->Player[targetPlayer].Hand[j]), sizeof(Tile));
-					memcpy(&(gameStat->Player[targetPlayer].Hand[j]), &tmpTile, sizeof(Tile));
-			}
-		}
-	}
+	/* ソート作業 */
+	std::sort(gameStat->Player[targetPlayer].Hand, gameStat->Player[targetPlayer].Hand + NumOfTilesInHand);
 
 	/* 空欄だったところは元に戻してあげましょう */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[targetPlayer].Hand[i].tile == TilePad) {
-			gameStat->Player[targetPlayer].Hand[i].tile = NoTile;
-			gameStat->Player[targetPlayer].Hand[i].red = Normal;
+			gameStat->Player[targetPlayer].Hand[i] = Tile();
 		}
 	}
 
 	/* 手牌データをデバッグログに出力：アフター */
-	o.str(_T("")); o << _T("理牌後の手牌 [");
-	for (int i = 0; i < NumOfTilesInHand; i++)
-		o << std::setw(2) << std::setfill(_T('0')) << static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile)
-		<< ((i < (NumOfTilesInHand - 1)) ? _T(" ") : _T(""));
-	o << _T("]"); trace(o.str());
+	logHand(_T("理牌後の手牌"), gameStat, targetPlayer);
 
 	/* 理牌完了！ */
 	return;
 }
+
+namespace MoveTile {
+
+/* 手動理牌同期用キュー */
+static std::array<std::queue<std::pair<int, int> >, Players> moveTileQueue;
+
+void enqueue(PlayerID targetPlayer, int from, int to) {
+	if ((from < 0) || (from >= NumOfTilesInHand))
+		throw std::out_of_range("'from' out of range");
+	if ((to < 0) || (to >= NumOfTilesInHand))
+		throw std::out_of_range("'to' out of range");
+	moveTileQueue.at(targetPlayer).push(std::make_pair(from, to));
+}
+
+std::pair<int, int> dequeue(PlayerID targetPlayer) {
+	if (moveTileQueue.at(targetPlayer).empty())
+		throw std::runtime_error("LIPAI queue is empty");
+	auto val(moveTileQueue.at(targetPlayer).front());
+	moveTileQueue.at(targetPlayer).pop();
+	return val;
+}
+
+void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve) {
+	std::queue<std::pair<int, int> > tmpQueue;
+	try {
+		std::pair<int, int> indices;
+		while (true) {
+			indices = dequeue(targetPlayer);
+			tmpQueue.push(indices);
+			moveTile(gameStat, targetPlayer, false, indices.first);
+			moveTile(gameStat, targetPlayer, true, indices.second);
+		}
+	} catch (std::runtime_error&) {}
+	if (preserve) {
+		while (!tmpQueue.empty()) {
+			auto indices(tmpQueue.front());
+			tmpQueue.pop();
+			enqueue(targetPlayer, indices.first, indices.second);
+		}
+	}
+}
+
+/* 手動理牌処理 */
+void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, int tileIndex) {
+	static int index = 0;
+
+	CodeConv::tostringstream o;
+	o.str(_T("")); o << _T("牌の移動 プレイヤー [") << static_cast<int>(targetPlayer)
+		<< _T("] 実行[") << execute << _T("] 位置 [") << tileIndex << _T("]"); debug(o.str());
+
+	if ((tileIndex < 0) || (tileIndex > TsumohaiIndex)) {
+		warn(_T("位置指定が正しくありません。無視します。"));
+		return;
+	}
+
+	if (execute) { // 実行モード
+		/* 手牌データをデバッグログに出力：ビフォー */
+		logHand(_T("移動前の手牌"), gameStat, targetPlayer);
+
+		/* ここから移動作業 */
+		Tile tmpTile = gameStat->Player[targetPlayer].Hand[tileIndex]; // 退避用
+		if (tileIndex < index) { // 前に移動
+			for (int i = tileIndex; i > index; --i)
+				gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[i - 1];
+		} else if (tileIndex > index) { // 後ろに移動
+			for (int i = tileIndex; i < index; ++i)
+				gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[i + 1];
+		}
+		gameStat->Player[targetPlayer].Hand[index] = tmpTile;
+		index = tileIndex;
+
+		/* 手牌データをデバッグログに出力：アフター */
+		logHand(_T("移動後の手牌"), gameStat, targetPlayer);
+	} else { // 移動元指定
+		index = tileIndex;
+	}
+
+	/* 移動完了！ */
+	return;
+}
+
+} /* namespace */
 
 /* 場に見えてる個数 */
 MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
@@ -145,7 +207,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				// まず、正しいコードになっているかを確認する(デバッグ時)
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep <= 7);
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep > 0);
-				assert(gameStat->Player[i].Meld[j].tile < TileSuitHonors);
+				assert(Tile(gameStat->Player[i].Meld[j].tile).isNumber());
 				// カウントアップ
 				for (int k = gameStat->Player[i].Meld[j].tile;
 					k <= gameStat->Player[i].Meld[j].tile + 2; k++)
@@ -266,12 +328,12 @@ MJCORE TileStatus gettilestatus(
 	if (*theTile == NoTile) return tlStat; // なかったら戻る
 
 	tlStat.isExistent = true; // ここにたどり着いたら、それは存在する牌です
-	auto tlCount = countTilesInHand(gameStat, targetPlayer); // 牌を数えろ、話はそれからだ
+	const auto tlCount = countTilesInHand(gameStat, targetPlayer); // 牌を数えろ、話はそれからだ
 
 	if (tlCount[*theTile] == 4) tlStat.canFormQuad = true; // 暗槓が可能な牌
 	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // 暗刻を形成している場合
 	
-	if (*theTile < TileSuitHonors) { // 順子を形成している場合
+	if (Tile(*theTile).isNumber()) { // 順子を形成している場合
 		if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) + 2] >= 1))
 			tlStat.formsSequence = true;
 		else if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
@@ -282,7 +344,7 @@ MJCORE TileStatus gettilestatus(
 
 	if ((tlCount[*theTile] >= 2)&&(!tlStat.formsTriplet)) tlStat.formsPair = true; // 対子を形成している場合
 
-	if (*theTile < TileSuitHonors) { // 辺張を形成している場合
+	if (Tile(*theTile).isNumber()) { // 辺張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TileSuitStep == 1))
 				tlStat.seqSingleSideWait = true;
@@ -295,7 +357,7 @@ MJCORE TileStatus gettilestatus(
 		}
 	}
 	
-	if (*theTile < TileSuitHonors) { // 両面塔子を形成している場合
+	if (Tile(*theTile).isNumber()) { // 両面塔子を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 1] >= 1)&&(*theTile % TileSuitStep != 1)&&
 				(*theTile % TileSuitStep != 8)) tlStat.seqDoubleSideWait = true;
@@ -304,7 +366,7 @@ MJCORE TileStatus gettilestatus(
 		}
 	}
 	
-	if (*theTile < TileSuitHonors) { // 嵌張を形成している場合
+	if (Tile(*theTile).isNumber()) { // 嵌張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
 			if ((tlCount[int(*theTile) + 2] >= 1)&&(*theTile % TileSuitStep != 9))
 				tlStat.seqMidWait = true;
@@ -354,7 +416,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	for (int p = 0; p < Players; p++) {
 		if ((p != targetPlayer) && (gameStat->Player[p].RichiFlag.OpenFlag)) { // 自分以外のオープンリーチ者の時、
 			for (int i = 0; i < NumOfTilesInHand; i++) { // それぞれの手牌について、
-				if (gameStat->Player[p].Hand[i].tile != NoTile) { // ブランクではなくて、
+				if (gameStat->Player[p].Hand[i]) { // ブランクではなくて、
 					if (machihaiInfo.Machihai[gameStat->Player[p].Hand[i].tile].MachihaiCount > 0) { // 1枚以上あるはずの待ち牌と認識されている時
 						machihaiInfo.Machihai[gameStat->Player[p].Hand[i].tile].MachihaiCount--;
 						machihaiInfo.MachihaiTotal--; // 待ち牌の数を減らす
@@ -371,7 +433,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 /* オープン立直の待ち牌 */
 void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 	// オープンリーチの待ち牌情報を更新する
-	assert(gameStat->Player[targetPlayer].Tsumohai().tile == NoTile);
+	assert(!gameStat->Player[targetPlayer].Tsumohai());
 	for (int i = 0; i < TileNonflowerMax; i++) {
 		/* 変な牌で計算しないようにしましょう */
 		if (i % TileSuitStep == 0) continue;
@@ -405,6 +467,7 @@ namespace setdora_tools {
 	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ネクスト牌
 		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) + 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
+		else if ((gameStat->chkGameType(SanmaSeto))&&(ans == BambooTwo)) ans = BambooNine;
 		else if (ans == static_cast<TileCode>(10)) ans = CharacterOne;
 		else if (ans == static_cast<TileCode>(20)) ans = CircleOne;
 		else if (ans == static_cast<TileCode>(30)) ans = BambooOne;
@@ -416,6 +479,7 @@ namespace setdora_tools {
 	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // 前の牌
 		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) - 1);
 		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
+		else if ((gameStat->chkGameType(SanmaSeto))&&(ans == BambooEight)) ans = BambooOne;
 		else if (ans == static_cast<TileCode>(0)) ans = CharacterNine;
 		else if (ans == static_cast<TileCode>(10)) ans = CircleNine;
 		else if (ans == static_cast<TileCode>(20)) ans = BambooNine;
@@ -426,7 +490,7 @@ namespace setdora_tools {
 
 	void addDora(GameTable* const gameStat, TileCode tc, int Mode) {
 		for (int i = (RuleData::chkRuleApplied("nagatacho") ? tc % 10 : tc);
-			i <= static_cast<int>((RuleData::chkRuleApplied("nagatacho") && (tc < TileSuitHonors)) ? TileSuitHonors : tc);
+			i <= ((RuleData::chkRuleApplied("nagatacho") && Tile(tc).isNumber()) ? static_cast<int>(TileSuitHonors) : static_cast<int>(tc));
 			i += 10) {
 				CodeConv::tostringstream o;
 				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する
@@ -445,7 +509,7 @@ void setdora(GameTable* const gameStat, int Mode) {
 		_T("] 牌コード [") << static_cast<int>(gameStat->Deck[gameStat->DoraPointer + Mode].tile) <<
 		_T("] モード [") << Mode << _T("]");
 	debug(o.str().c_str());
-	if (gameStat->Deck[gameStat->DoraPointer + Mode].tile > TileSuitFlowers) {
+	if (gameStat->Deck[gameStat->DoraPointer + Mode].isFlower()) {
 		// 花牌がドラ表示牌になったとき
 		setdora_tools::addDora(gameStat, Flower, Mode);
 	} else {
@@ -491,30 +555,6 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 			return false;
 		}
 	}
-	int CheckForTileClass(const GameTable* const gameStat, PlayerID targetPlayer) {
-		/* 字牌に順子はないのでこれ以降のチェックをせずとも槓が可能とわかる */
-		CodeConv::tostringstream o;
-		switch (gameStat->Player[targetPlayer].Tsumohai().tile) {
-		case EastWind: case SouthWind: case WestWind: case NorthWind:
-		case WhiteDragon: case GreenDragon: case RedDragon:
-			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
-				_T("] は字牌です。"); debug(o.str());
-			return 1;
-		case Spring: case Summer: case Autumn: case Winter:
-		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
-			/* 花牌を槓？　ご冗談を */
-			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
-				_T("] は花牌です。"); debug(o.str());
-			return 2;
-		default:
-			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
-				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
-				_T("] は数牌です。"); debug(o.str());
-			return 0;
-		}
-	}
 	bool CheckForAtama(const GameTable* const gameStat, PlayerID targetPlayer) {
 		/* ツモった牌が雀頭になりうるか調べる */
 		CodeConv::tostringstream o;
@@ -525,12 +565,12 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		for (int i = 0; i < (NumOfTilesInHand-1); i++) {
 			if (tmpGameStat.Player[targetPlayer].Hand[i].tile ==
 				tmpGameStat.Player[targetPlayer].Tsumohai().tile) {
-					tmpGameStat.Player[targetPlayer].Hand[i].tile = NoTile;
+					tmpGameStat.Player[targetPlayer].Hand[i] = Tile();
 					tmpTakenCount++;
 			}
 			if (tmpTakenCount == 2) break;
 		}
-		tmpGameStat.Player[targetPlayer].Tsumohai().tile = NoTile;
+		tmpGameStat.Player[targetPlayer].Tsumohai() = Tile();
 		/*	
 			例：
 			面子を２、対子や塔子を１、雀頭候補を①と定義する。
@@ -567,7 +607,7 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if (tmpGameStat.Player[targetPlayer].Hand[i].tile ==
 				tmpGameStat.Player[targetPlayer].Tsumohai().tile) {
-					tmpGameStat.Player[targetPlayer].Hand[i].tile = NoTile;
+					tmpGameStat.Player[targetPlayer].Hand[i] = Tile();
 					tmpTakenCount++;
 			}
 		}
@@ -613,10 +653,8 @@ MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PlayerID targetPlay
 	if (chkAnkanAbilityTools::CheckForNumOfTiles(gameStat, targetPlayer)) return false;
 
 	/* 字牌に順子はないのでこれ以降のチェックをせずとも槓が可能とわかる */
-	switch (chkAnkanAbilityTools::CheckForTileClass(gameStat, targetPlayer)) {
-		case 1: return true; // 字牌
-		case 2: return false; // 花牌
-	}
+	if      (gameStat->Player[targetPlayer].Tsumohai().isHonor())  return true;  // 字牌
+	else if (gameStat->Player[targetPlayer].Tsumohai().isFlower()) return false; // 花牌
 
 	/* ツモった牌が雀頭になりうるなら戻る */
 	if (chkAnkanAbilityTools::CheckForAtama(gameStat, targetPlayer)) return false;

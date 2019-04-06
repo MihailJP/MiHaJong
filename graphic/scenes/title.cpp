@@ -132,6 +132,7 @@ void TitleScreen::versionInfo() {
 		case Sanma:     color = 0x008080ff; gameTypeText = _T("三人打ち"); break;
 		case Sanma4:    color = 0x0080ffff; gameTypeText = _T("四人三麻"); break;
 		case SanmaS:    color = 0x00ff80ff; gameTypeText = _T("数牌三麻"); break;
+		case SanmaSeto: color = 0x00ffffff; gameTypeText = _T("瀬戸内三麻"); break;
 		case GuobiaoMJ: color = 0x00ffff80; gameTypeText = _T("国標麻将"); break;
 		default: assert(false); // This may not occur.
 	}
@@ -167,7 +168,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->dwData));
 	switch (od->dwOfs)
 #else /*_WIN32*/
-	constexpr bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
+	const bool flag = ((myTimer.elapsed() > 180u * timePerFrame) && (od->type == KeyPress));
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{

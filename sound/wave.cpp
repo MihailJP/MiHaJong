@@ -53,7 +53,9 @@ void sound::WaveData::ReadWaveData(std::ifstream& file) {
 /* WAVEファイル読み込み */
 void sound::WaveData::Prepare(const std::string& filename) {
 	std::memset(&format, 0, sizeof(format));
+#ifdef USE_XAUDIO2
 	std::memset(&bufInfo, 0, sizeof(buffer));
+#endif /* USE_XAUDIO2 */
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
 	if (!file) throw CodeConv::tstring(_T("ファイルを開けませんでした"));
 	if (!checkTag(file, "RIFF")) throw CodeConv::tstring(_T("RIFFチャンクがないです"));

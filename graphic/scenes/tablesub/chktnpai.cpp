@@ -27,7 +27,7 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 		int tile = 0;
 		for (TileCode k = CharacterOne; k <= RedDragon; k = static_cast<TileCode>(k + 1)) {
 			if (machiInfo[player].Machihai[k].MachihaiFlag) // 待ち牌になっている場合
-				tileRenderer->NewTile(player * 9 + tile, k, Normal,
+				tileRenderer->NewTile(player * 9 + tile, Tile(k),
 				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile++),
 				y + 20, Portrait, Obverse); // その牌を表示
 		}
@@ -45,7 +45,8 @@ void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
 		ShowCallMsg(player, calltext::Tenpai, x, y - 40);
 	else if (GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag)
 		ShowCallMsg(player, calltext::Chonbo, x, y); // ノーテンリーチしてた場合は錯和と表示
-	else ShowCallMsg(player, calltext::Noten, x, y); // 不聴
+	else if (GameStatus::gameStat()->Player[player].Hand[0]) // 配牌をもらっていない場合は除外
+		ShowCallMsg(player, calltext::Noten, x, y); // 不聴
 }
 
 void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {

@@ -14,6 +14,7 @@
 #include "../graphic/graphic.h"
 #include "yaku/yaku.h"
 #include "ruletbl.h"
+#include "conffile/conffile.h"
 
 #ifdef _WIN32
 MJCORE void initapp(GameTypeID gameType, HWND hwnd)
@@ -36,6 +37,9 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 		break;
 	case SanmaS:
 		configFile = confpath::confPath() + "mihassnm.ini";
+		break;
+	case SanmaSeto:
+		configFile = confpath::confPath() + "mihastsm.ini";
 		break;
 	}
 
@@ -80,7 +84,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 			isTenpai, isRichiReqSatisfied, ShantenAnalyzer::calcShanten, chkdaopaiability,
 			yaku::yakuCalculator::chkShisanBuDa, yaku::yakuCalculator::chkShisiBuDa,
 			countTilesInHand, chkAnkanAbility, isPao, isPaoAgari, sound::util::bgmplay,
-			getName, isWatchMode, isAboveBase, isStandAlone);
+			getName, isWatchMode, isAboveBase, isStandAlone, MoveTile::enqueue);
 		{
 			using namespace mihajong_graphic::preferences;
 			auto tmpAddr(CodeConv::toANSI(RuleData::confFile.serverAddress()));
@@ -90,7 +94,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	}
 
 	/* 音源を初期化 */
-	if (sound::Initialize(hwnd) == 0)
+	if (sound::Initialize(hwnd, RuleData::confFile.midiDevice().c_str()) == 0)
 		info(_T("サウンドDLLを初期化しました。"));
 	else
 		error(_T("サウンドDLLの初期化に失敗しました。"));

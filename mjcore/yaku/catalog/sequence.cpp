@@ -193,7 +193,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	));
 #ifdef GUOBIAO
 	/* 喜相逢 */
-	auto XiXiangFeng =
+	const auto XiXiangFeng =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int yakuCnt = 0;
 			for (int i = 1; i <= 7; i++) {
@@ -229,7 +229,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* イーチートンカン */
-	auto ikki_tsuukan =
+	const auto ikki_tsuukan =
 		[](const MENTSU_ANALYSIS* const analysis, bool* const yakuFlag, int* const yakuCol) -> void {
 			*yakuFlag = false;
 			for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
@@ -241,7 +241,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				}
 			}
 		};
-	auto ittsuu_monotonic =
+	const auto ittsuu_monotonic =
 		[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis, bool* const yakuFlag, int* const yakuCol) -> void {
 			int samecol = 0;
 			ikki_tsuukan(analysis, yakuFlag, yakuCol);
@@ -280,7 +280,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 一気通貫全帯幺九 */
-	auto ittsuu_chanta_counting =
+	const auto ittsuu_chanta_counting =
 		[](const MENTSU_ANALYSIS* const analysis, int* const yaojiu, int* const zipai) -> void {
 			*yaojiu = *zipai = 0;
 			for (int i = 0; i < SizeOfMeldBuffer; i++) {
@@ -478,7 +478,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		));
 	/* ゴールドラッシュ */
 	if (RuleData::chkRuleApplied("goldrush")) {
-		auto goldrush1 =
+		const auto goldrush1 =
 			[ittsuu_monotonic](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag; int yakuCol;
 				ittsuu_monotonic(analysis, &yakuFlag, &yakuCol);
@@ -487,7 +487,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 					(analysis->DuiziCount[GreenDragon] >= 1) // 發の刻子か雀頭がある
 					);
 			};
-		auto goldrush2 =
+		const auto goldrush2 =
 			[goldrush1](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (goldrush1(analysis) && // goldrush1の条件を満たし
 					(analysis->DuiziCount[WestWind] >= 1) // 西の刻子か雀頭がある
@@ -622,7 +622,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* ゴールデンゲートブリッジ */
-	auto chkGoldenGateBridge =
+	const auto chkGoldenGateBridge =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
@@ -750,7 +750,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* 四歩高 */
-	auto puukao =
+	const auto puukao =
 		[](const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step, bool suupuukao) -> bool {
 			bool yakuFlag = false;
@@ -887,7 +887,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 
 #ifdef GUOBIAO
 	/* 連六 */
-	auto LianLiu =
+	const auto LianLiu =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int yakuCnt = 0;
 			for (int j = 0; j < TileSuitHonors; j += TileSuitStep)
@@ -910,7 +910,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		}
 	));
 	/* 老少副 */
-	auto LaoShaoFu =
+	const auto LaoShaoFu =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int yakuCnt = 0;
 			for (int j = 0; j < TileSuitHonors; j += TileSuitStep)
@@ -958,7 +958,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* 花龍 */
-	auto sanshoku_tsuukan =
+	const auto sanshoku_tsuukan =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (const auto& k : parsedat_trichrome3)
@@ -1019,7 +1019,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 
 	/* 双龍双亀 */
 #endif /* GUOBIAO */
-	auto ShuangLong =
+	const auto ShuangLong =
 		[](const MENTSU_ANALYSIS* const analysis, int suit1, int suit2, TileCode head) -> bool {
 			return ((analysis->ShunziCount[suit1 + 1] >= 1) &&
 				(analysis->ShunziCount[suit1 + 7] >= 1) &&
@@ -1109,10 +1109,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	// ---------------------------------------------------------------------
 
 	/* 吃三嵌 */
-	auto kanchanCount =
+	const auto kanchanCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++)
+			for (int i = 1; i < SizeOfMeldBuffer; i++)
 				if (analysis->MianziDat[i].mstat == meldSequenceExposedMiddle) ++count;
 			return count;
 		};
@@ -1132,10 +1132,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 吃三辺 */
-	auto penchanCount =
+	const auto penchanCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++) {
+			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
 					if ((analysis->MianziDat[i].mstat == meldSequenceExposedLower) &&
 						(analysis->MianziDat[i].tile == TileSuitStep + 7)) ++count;
@@ -1161,10 +1161,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 吃小順 */
-	auto xiaoShunCount =
+	const auto xiaoShunCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++) {
+			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				if (analysis->MianziDat[i].mstat == meldSequenceExposedLower) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
@@ -1190,10 +1190,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 	/* 吃大順 */
-	auto daShunCount =
+	const auto daShunCount =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
-			for (int i = 1; i <= SizeOfMeldBuffer; i++) {
+			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				if (analysis->MianziDat[i].mstat == meldSequenceExposedUpper) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {

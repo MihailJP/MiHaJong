@@ -3,7 +3,7 @@
 extern GameTable GameStat;
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
-	auto chktiles = // 面子手・七対子兼用の判定関数オブジェクト
+	const auto chktiles = // 面子手・七対子兼用の判定関数オブジェクト
 		[](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetKez, int numOfKez,
 		const TileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
@@ -15,7 +15,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					== NumOfTilesInHand / 2);
 			else return false;
 		};
-	auto chktiles_nodup = // 面子手・七対子兼用の判定関数オブジェクト
+	const auto chktiles_nodup = // 面子手・七対子兼用の判定関数オブジェクト
 		[](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetKez, int numOfKez,
 		const TileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
@@ -32,7 +32,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	/* 緑一色 */
 	{
-		auto allgrean =
+		const auto allgrean =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode kezi[] = {BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, GreenDragon};
 				return chktiles(analysis, kezi, 6, kezi, 1, false);
@@ -78,7 +78,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 	/* 裸単騎１飜というローカル役 */
 	{
-		auto chkHadakaTanki =
+		const auto chkHadakaTanki =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int count = 0;
 				for (int i = 1; i < SizeOfMeldBuffer; i++)
@@ -181,7 +181,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		));
 	/* 白有り緑一色 */
 	if (RuleData::chkRuleApplied("all_green_with_white")) {
-		auto allgreen_white =
+		const auto allgreen_white =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, WhiteDragon,
@@ -203,7 +203,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	}
 	/* 緑一色輪 */
 	if (RuleData::chkRuleApplied("ryuuiisohrin")) {
-		auto allgreen_five =
+		const auto allgreen_five =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
@@ -376,7 +376,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		));
 	/* 断紅和 */
 	if (RuleData::chkRuleApplied("no_red")) {
-		auto hontanhon =
+		const auto hontanhon =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
@@ -386,7 +386,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				};
 				return chktiles(analysis, kezi, 14, kezi, 1, false);
 			};
-		auto chintanhon =
+		const auto chintanhon =
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode kezi[] = {
 					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
@@ -460,7 +460,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 
 #ifdef GUOBIAO
 	{
-		auto suukuiyii =
+		const auto suukuiyii =
 			[](const MENTSU_ANALYSIS* const analysis) -> int {
 				int count = 0;
 				for (int i = 1; i < TileNonflowerMax; ++i)
@@ -591,7 +591,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	// ---------------------------------------------------------------------
 
 	{
-		auto suukuisan =
+		const auto suukuisan =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < TileSuitHonors; i++) {
 					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i)) {
@@ -672,7 +672,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			}
 		));
 	{
-		auto suukuiyii =
+		const auto suukuiyii =
 			[](const MENTSU_ANALYSIS* const analysis) -> int {
 				int count = 0;
 				for (int i = 1; i < TileSuitHonors; i++) {
@@ -819,11 +819,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					};
 					if (chktiles(analysis, kezi, 3, shunzi, 1, true) &&
 						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)) &&
-						(analysis->MianziDat[0].tile > TileSuitHonors))
+						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 					if (chktiles(analysis, kezi, 3, shunzi + 1, 1, true) &&
 						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)) &&
-						(analysis->MianziDat[0].tile > TileSuitHonors))
+						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 				}
 				return flag;
@@ -943,7 +943,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		for (int i = 1; i <= 9; i++) {
 			if (RuleData::chkRuleApplied(ruleCodeList[i])) {
 #endif /* GUOBIAO */
-				auto f =
+				const auto f =
 					[chktiles, i](const MENTSU_ANALYSIS* const analysis) -> bool {
 						const TileCode kezi[] = {
 							static_cast<TileCode>(i+TileSuitCharacters),

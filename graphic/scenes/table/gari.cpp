@@ -27,7 +27,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 	case sOpposite:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
-				TileTexture->NewTile(i, flowerParam[i].tileCode, Normal,
+				TileTexture->NewTile(i, Tile(flowerParam[i].tileCode),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				GariPosV(),
 				UpsideDown, Obverse);
@@ -37,7 +37,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 	case sLeft:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
-				TileTexture->NewTile(i + 8, flowerParam[i].tileCode, Normal,
+				TileTexture->NewTile(i + 8, Tile(flowerParam[i].tileCode),
 				GariPosV(),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				Clockwise, Obverse);
@@ -47,7 +47,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 	case sRight:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
-				TileTexture->NewTile(23 - i, flowerParam[i].tileCode, Normal,
+				TileTexture->NewTile(23 - i, Tile(flowerParam[i].tileCode),
 				TableSize - GariPosV(),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				Withershins, Obverse);
@@ -57,7 +57,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 	case sSelf:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
-				TileTexture->NewTile(i + 24, flowerParam[i].tileCode, Normal,
+				TileTexture->NewTile(i + 24, Tile(flowerParam[i].tileCode),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				TableSize - GariPosV(),
 				Portrait, Obverse);
@@ -78,7 +78,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case sOpposite:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(i, NorthWind, Normal,
+				TileTexture->NewTile(i, Tile(NorthWind),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				GariPosV(),
 				UpsideDown, Obverse);
@@ -88,7 +88,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case sLeft:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(i + 4, NorthWind, Normal,
+				TileTexture->NewTile(i + 4, Tile(NorthWind),
 				GariPosV(),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				Clockwise, Obverse);
@@ -98,7 +98,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case sRight:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(11 - i, NorthWind, Normal,
+				TileTexture->NewTile(11 - i, Tile(NorthWind),
 				TableSize - GariPosV(),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				Withershins, Obverse);
@@ -108,7 +108,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case sSelf:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(i + 12, NorthWind, Normal,
+				TileTexture->NewTile(i + 12, Tile(NorthWind),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				TableSize - GariPosV(),
 				Portrait, Obverse);

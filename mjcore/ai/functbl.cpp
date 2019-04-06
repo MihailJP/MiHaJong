@@ -146,6 +146,8 @@ inline void aiscript::table::functable::gametype(lua_State* const L) {
 	else if (GameStat.chkGameType(Sanma)) lua_pushstring(L, "sanma");
 	else if (GameStat.chkGameType(Sanma4)) lua_pushstring(L, "sanma_with_four_players");
 	else if (GameStat.chkGameType(SanmaS)) lua_pushstring(L, "sanma_without_honors");
+	else if (GameStat.chkGameType(SanmaSeto)) lua_pushstring(L, "sanma_setouchi");
+	else if (GameStat.chkGameType(GuobiaoMJ)) lua_pushstring(L, "guobiao");
 	else lua_pushnil(L);
 	lua_setfield(L, -2, "gametype");
 }
@@ -250,6 +252,7 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 	lua_pushlightuserdata(L, nullptr); lua_setfield(L, -2, "addr"); // pointer to C++ struct
 	lua_pushinteger(L, playerID + 1); lua_setfield(L, -2, "playerid"); // Player ID
 	/* ここにメソッドを書く */
+	lua_pushcfunction(L, luafunc::movetile); lua_setfield(L, -2, "movetile");
 	lua_pushcfunction(L, luafunc::evaluate); lua_setfield(L, -2, "evaluate");
 	lua_pushcfunction(L, luafunc::getactiveplayer); lua_setfield(L, -2, "getactiveplayer");
 	lua_pushcfunction(L, luafunc::getbakaze); lua_setfield(L, -2, "getbakaze");

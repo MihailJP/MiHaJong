@@ -14,7 +14,7 @@ RuleWrite storeRule = nullptr;
 RuleRead exportRule = nullptr;
 ConfSave saveConfigFile = nullptr;
 CheckRule chkRule = nullptr;
-extern const char* digit = nullptr;
+const char* digit = nullptr;
 std::string conffile = "";
 
 EXPORT void setfunc(

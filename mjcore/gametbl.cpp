@@ -79,8 +79,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		gameStat->PaoFlag[i].agariPlayer = gameStat->PaoFlag[i].paoPlayer = -1;
 
 	for (int i = 0; i < SizeOfDeckBuf; i++) { // ちゃんと初期化してあげましょうね
-		gameStat->Deck[i].tile = NoTile;
-		gameStat->Deck[i].red = Normal;
+		gameStat->Deck[i] = Tile();
 	}
 
 #ifdef GUOBIAO
@@ -139,22 +138,19 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 	gameStat->TsumoAgariFlag = false;
 	gameStat->AgariSpecialStat = 0;
 	resetDeclarationFlag(gameStat);
-	gameStat->CurrentDiscard.tile = NoTile;
-	gameStat->CurrentDiscard.red = Normal;
+	gameStat->CurrentDiscard = Tile();
 	gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive =
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Furikomi = (PlayerID)-1;
 
 	for (int pl = 0; pl < Players; pl++) {
 		gameStat->Player[pl].ConnectionLost = false; // 回線切断による和了り放棄
 		for (int i = 0; i < NumOfTilesInHand; i++) { // 手牌の配列(４人分)
-			gameStat->Player[pl].Hand[i].tile = NoTile;
-			gameStat->Player[pl].Hand[i].red = Normal;
+			gameStat->Player[pl].Hand[i] = Tile();
 		}
 		gameStat->Player[pl].DiscardPointer = 0; // ちゃんとリセットしてあげましょうね
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {
 			// 捨牌の配列(４人分)
-			gameStat->Player[pl].Discard[i].tcode.tile = NoTile;
-			gameStat->Player[pl].Discard[i].tcode.red = Normal;
+			gameStat->Player[pl].Discard[i].tcode = Tile();
 			gameStat->Player[pl].Discard[i].dstat = discardNormal;
 			gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 		}
@@ -281,8 +277,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->Player[p].YakitoriFlag = gameStat->Player[p].YakitoriFlag;
 		if ((gameStat->Player[p].RichiFlag.OpenFlag)||(p == targetPlayer)) {
 			for (int i = 0; i < NumOfTilesInHand; i++) {
-				sandbox->Player[p].Hand[i].tile = gameStat->Player[p].Hand[i].tile;
-				sandbox->Player[p].Hand[i].red = gameStat->Player[p].Hand[i].red;
+				sandbox->Player[p].Hand[i] = gameStat->Player[p].Hand[i];
 			}
 			sandbox->Player[p].renpaiTenhohStat = gameStat->Player[p].renpaiTenhohStat;
 		}
@@ -290,8 +285,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {
 			sandbox->Player[p].Discard[i].isDiscardThrough = gameStat->Player[p].Discard[i].isDiscardThrough;
 			sandbox->Player[p].Discard[i].dstat = gameStat->Player[p].Discard[i].dstat;
-			sandbox->Player[p].Discard[i].tcode.tile = gameStat->Player[p].Discard[i].tcode.tile;
-			sandbox->Player[p].Discard[i].tcode.red = gameStat->Player[p].Discard[i].tcode.red;
+			sandbox->Player[p].Discard[i].tcode = gameStat->Player[p].Discard[i].tcode;
 		}
 		sandbox->Player[p].DiscardPointer = gameStat->Player[p].DiscardPointer;
 		for (int i = 0; i < SizeOfMeldBuffer; i++) {
@@ -343,11 +337,11 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	for (int i = 0; i < 6; i++) {
 		if (gameStat->chkGameType(AllSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
-				sandbox->Deck[102 - gameStat->ExtraRinshan - i * 2].tile =
-				gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2].tile;
+				sandbox->Deck[102 - gameStat->ExtraRinshan - i * 2] =
+				gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2];
 		} else {
 			if (gameStat->DoraPointer <= (130 - i * 2))
-				sandbox->Deck[130 - i * 2].tile = gameStat->Deck[130 - i * 2].tile;
+				sandbox->Deck[130 - i * 2] = gameStat->Deck[130 - i * 2];
 		}
 	}
 	sandbox->TilePointer = gameStat->TilePointer;
@@ -364,8 +358,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->DoraFlag.Omote[i] = gameStat->DoraFlag.Omote[i];
 		sandbox->DoraFlag.Ura[i] = gameStat->DoraFlag.Ura[i];
 	}
-	sandbox->CurrentDiscard.tile = gameStat->CurrentDiscard.tile;
-	sandbox->CurrentDiscard.red = gameStat->CurrentDiscard.red;
+	sandbox->CurrentDiscard = gameStat->CurrentDiscard;
 	sandbox->CurrentPlayer.Active = gameStat->CurrentPlayer.Active;
 	sandbox->CurrentPlayer.Passive = gameStat->CurrentPlayer.Passive;
 	sandbox->CurrentPlayer.Agari = gameStat->CurrentPlayer.Agari;

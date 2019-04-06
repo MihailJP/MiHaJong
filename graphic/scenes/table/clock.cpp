@@ -10,6 +10,7 @@
 #include "../../../astro/astro.h"
 #include <ctime>
 #include "../../matrix.h"
+#include "../../../common/datetime.h"
 
 constexpr float pi = 3.1415927f;
 
@@ -109,7 +110,7 @@ void GameTableScreen::Clock::renderShadow() {
 			static_cast<double>((circleVert[i].color & 0x0000ff00) >>  8) / 255.0,
 			static_cast<double>((circleVert[i].color & 0x000000ff)      ) / 255.0,
 			static_cast<double>((circleVert[i].color & 0xff000000) >> 24) / 255.0);
-		glVertex2f(circleVert[i].x, circleVert[i].y);
+		glVertex2f(circleVert[i].x, Geometry::WindowHeight - circleVert[i].y);
 	}
 	glEnd();
 	glPopMatrix();
@@ -125,12 +126,10 @@ void GameTableScreen::Clock::renderPanel() {
 }
 
 void GameTableScreen::Clock::renderHour() {
-	time_t Zeit = time(nullptr);
-	tm lt;
-	localtime_s(&lt, &Zeit);
+	const auto lt(DateTime::localTime());
 
 	constexpr RECT rect = {1024, 512, 1536, 1024};
-	const float angle = static_cast<float>((lt.tm_hour % 12) * 60 + lt.tm_min) * pi / 360.0f;
+	const float angle = static_cast<float>((lt.hour % 12) * 60 + lt.minute) * pi / 360.0f;
 	const TransformMatrix matrix(setClockMatrix(angle));
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(
@@ -138,12 +137,10 @@ void GameTableScreen::Clock::renderHour() {
 }
 
 void GameTableScreen::Clock::renderMinute() {
-	time_t Zeit = time(nullptr);
-	tm lt;
-	localtime_s(&lt, &Zeit);
+	const auto lt(DateTime::localTime());
 
 	constexpr RECT rect = {1024, 0, 1536, 512};
-	const float angle = static_cast<float>((lt.tm_min % 60) * 60 + lt.tm_sec) * pi / 1800.0f;
+	const float angle = static_cast<float>((lt.minute % 60) * 60 + lt.second) * pi / 1800.0f;
 	const TransformMatrix matrix(setClockMatrix(angle));
 
 	SpriteRenderer::instantiate(parent->caller->getDevice())->ShowSprite(

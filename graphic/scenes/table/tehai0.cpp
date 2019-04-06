@@ -26,10 +26,9 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	case sOpposite: /* 対面の手牌 */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
+			if (gameStat->Player[targetPlayer].Hand[i])
 				TileTexture->NewTile(i,
-				gameStat->Player[targetPlayer].Hand[i].tile,
-				gameStat->Player[targetPlayer].Hand[i].red,
+				gameStat->Player[targetPlayer].Hand[i],
 				x + ShowTile::VertTileWidth * (HandLength - (tilePos++)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				y, UpsideDown, tileStat);
 			else TileTexture->DelTile(i);
@@ -37,10 +36,9 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	case sLeft: /* 上家の手牌 */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
-			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
+			if (gameStat->Player[targetPlayer].Hand[i])
 				TileTexture->NewTile(i + NumOfTilesInHand,
-				gameStat->Player[targetPlayer].Hand[i].tile,
-				gameStat->Player[targetPlayer].Hand[i].red,
+				gameStat->Player[targetPlayer].Hand[i],
 				x,
 				y + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				Clockwise, tileStat);
@@ -49,13 +47,12 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	case sRight: /* 下家の手牌 */
 		tilePos = 0;
 		for (int i = HandLength; i >= 0; --i)
-			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
+			if (gameStat->Player[targetPlayer].Hand[i])
 				++tilePos;
 		for (int i = HandLength; i >= 0; --i)
-			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile)
+			if (gameStat->Player[targetPlayer].Hand[i])
 				TileTexture->NewTile((NumOfTilesInHand - 1 - i) + NumOfTilesInHand * 2,
-				gameStat->Player[targetPlayer].Hand[i].tile,
-				gameStat->Player[targetPlayer].Hand[i].red,
+				gameStat->Player[targetPlayer].Hand[i],
 				x,
 				y + ShowTile::VertTileWidth * (HandLength - (--tilePos)) - ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0),
 				Withershins, tileStat);
@@ -64,13 +61,12 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	case sSelf: /* 自分の手牌 */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
-			if (gameStat->Player[targetPlayer].Hand[i].tile != NoTile) {
+			if (gameStat->Player[targetPlayer].Hand[i]) {
 				const ArgbColor tileColor = colorFunc(i);
 				const int tileX = x + ShowTile::VertTileWidth * (tilePos++) + ((i == HandLength) && (!gameStat->TianHuFlag) ? ShowTile::VertTileWidth / 3 : 0);
 				const int tileY = y;
 				TileTexture->NewTile(i + NumOfTilesInHand * 3,
-					gameStat->Player[targetPlayer].Hand[i].tile,
-					gameStat->Player[targetPlayer].Hand[i].red,
+					gameStat->Player[targetPlayer].Hand[i],
 					tileX, tileY, Portrait, tileStat, tileColor);
 				regionFunc(&tileX, &tileY, i);
 			} else {

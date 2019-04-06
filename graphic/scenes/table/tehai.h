@@ -14,6 +14,7 @@ private:
 	static constexpr unsigned int HandPosH = (TableSize - ShowTile::VertTileWidth * (HandLength - 1)) / 2;
 	static constexpr unsigned int HandPosV = DeckPosV - 144;
 	int tileCursor; // 手牌カーソル
+	int firstChosenTile; // 鳴き選択用
 	std::bitset<NumOfTilesInHand> tileEnabled;
 public:
 	void Reconstruct(const GameTable* gameStat, PlayerID targetPlayer); // 手牌の再構築
@@ -28,6 +29,8 @@ public:
 	bool isCursorEnabled() {return tileCursor != tileCursorOff;}
 	int incrTileCursor() {return ++tileCursor;}
 	int decrTileCursor() {return --tileCursor;}
+	int getFirstChosenTile() {return firstChosenTile;}
+	void setFirstChosenTile(int val = tileCursorOff) {firstChosenTile = val;}
 public:
 	void enable() {tileEnabled.set();}
 	void enable(unsigned tileID) {tileEnabled[tileID] = true;}

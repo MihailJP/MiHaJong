@@ -18,17 +18,19 @@
 #include "soundobj.h"
 #endif /* SOUND_EXPORTS */
 
+#include "../common/strcode.h"
+
 namespace sound {
 
 #ifdef SOUND_EXPORTS
 	extern SoundManipulator* soundManipulator;
 #endif
 
-	SOUNDDLL_EXPORT int Initialize(); // 初期化
+	SOUNDDLL_EXPORT int Initialize(LPCTSTR midiDev = nullptr); // 初期化
 #ifdef _WIN32
-	SOUNDDLL_EXPORT int Initialize(HWND hWnd); // 初期化
+	SOUNDDLL_EXPORT int Initialize(HWND hWnd, LPCTSTR midiDev = nullptr); // 初期化
 #else /* _WIN32 */
-	SOUNDDLL_EXPORT int Initialize(Window hWnd); // 初期化
+	SOUNDDLL_EXPORT int Initialize(Window hWnd, LPCTSTR midiDev = nullptr); // 初期化
 #endif /* _WIN32 */
 	SOUNDDLL_EXPORT void Cleanup(); // 後始末
 

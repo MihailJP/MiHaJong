@@ -149,8 +149,8 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			PNG_TRANSFORM_PACKING | PNG_TRANSFORM_STRIP_16,
 			nullptr);
 		png_byte** rows = png_get_rows(pngPtr, infoPtr);
-		constexpr unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
-		constexpr unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
+		const unsigned pngWidth = png_get_image_width(pngPtr, infoPtr);
+		const unsigned pngHeight = png_get_image_height(pngPtr, infoPtr);
 		unsigned pngChannels = png_get_channels(pngPtr, infoPtr);
 		char* imageDat = new char[pngWidth * pngHeight * 4];
 		for (int y = 0; y < pngHeight; ++y) {

@@ -15,6 +15,16 @@
 
 namespace sound {
 
+#ifndef _WIN32
+	struct WaveFormat {
+		uint32_t nSamplesPerSec;
+		uint32_t nAvgBytesPerSec;
+		uint16_t nBlockAlign;
+		uint16_t wBitsPerSample;
+		uint16_t nChannels;
+	};
+#endif /* _WIN32 */
+
 	/* 音声データ用スーパークラス */
 	class SoundData : public AudioData {
 	protected:

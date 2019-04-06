@@ -109,6 +109,13 @@ MiHaJong本体から呼び出されるその他の関数
 　自分自身を表すプレイヤー番号です。
 
 
+### `gametbl:movetile(from, to)`
+
+　インデックスfromの位置の牌をtoに移動します。返り値はありません。
+
+　鳴きたい牌を指定するとき、toを1にして使います。
+
+
 ### `gametbl:evaluate(tsumoflag, [tiletbl])`
 
 　現在の手が和了になっているなら、その点数を調べます。
@@ -801,6 +808,7 @@ Lua標準ライブラリの `math.random` (これはC言語のrand()です)よ�
 - `"sanma"`: 三人打ち。
 - `"sanma_with_four_players"`: 四人三麻。
 - `"sanma_without_honors"`: 数牌三麻。
+- `"sanma_setouchi"`: 瀬戸内三麻。
 - `"guobiao"`: 中国麻雀。
 
 

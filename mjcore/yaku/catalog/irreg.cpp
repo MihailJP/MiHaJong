@@ -3,7 +3,7 @@
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 {
 	/* チートイ */
-	auto isQiDui =
+	const auto isQiDui =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 #ifdef GUOBIAO
 			return analysis->shanten[shantenPairs] == -1;
@@ -23,7 +23,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	));
 
 #ifndef GUOBIAO
-	auto chktiles = // 判定関数オブジェクト
+	const auto chktiles = // 判定関数オブジェクト
 		[isQiDui](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetDuiz, int numOfDuiz) -> bool {
 			if (isQiDui(analysis))
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetDuiz, numOfDuiz)
@@ -188,7 +188,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	// ---------------------------------------------------------------------
 
 	{
-		auto gyakusharin =
+		const auto gyakusharin =
 			[isQiDui](const MENTSU_ANALYSIS* const analysis, int suit) -> bool {
 				std::array<TileCode, 7> honors = {
 					EastWind, SouthWind, WestWind, NorthWind,

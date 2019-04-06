@@ -22,6 +22,7 @@ getName_type getName = nullptr;
 isWatchMode_type isWatchMode = nullptr;
 isAboveBase_type isAboveBase = nullptr;
 isStandAlone_type isStandAlone = nullptr;
+moveTile_type moveTile = nullptr;
 
 EXPORT void setfunc(
 	playerRelative_type ptr_playerRelative,
@@ -42,7 +43,8 @@ EXPORT void setfunc(
 	getName_type ptr_getName,
 	isWatchMode_type ptr_isWatchMode,
 	isAboveBase_type ptr_isAboveBase,
-	isStandAlone_type ptr_isStandAlone)
+	isStandAlone_type ptr_isStandAlone,
+	moveTile_type ptr_moveTile)
 {
 	playerRelative = ptr_playerRelative;
 	RelativePositionOf = ptr_RelativePositionOf;
@@ -63,6 +65,7 @@ EXPORT void setfunc(
 	isWatchMode = ptr_isWatchMode;
 	isAboveBase = ptr_isAboveBase;
 	isStandAlone = ptr_isStandAlone;
+	moveTile = ptr_moveTile;
 }
 
 }

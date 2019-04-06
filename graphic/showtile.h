@@ -41,7 +41,7 @@ private:
 	void RenderHori(const TileDescriptor* tile, const RECT* rect);
 	void RenderSide(const TileDescriptor* tile, const RECT* rect);
 public:
-	void NewTile(unsigned int ID, TileCode tile, doraCol red, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol = 0xffffffff);
+	void NewTile(unsigned int ID, Tile tile, int x, int y, TileDirection direction, TileSide side, ArgbColor filterCol = 0xffffffff);
 	void DelTile(unsigned int ID);
 	void Render();
 	ShowTile(DevicePtr device);
@@ -52,8 +52,7 @@ public:
 
 struct ShowTile::TileDescriptor {
 	bool exist;
-	TileCode tile;
-	doraCol red;
+	Tile tile;
 	int X, Y;
 	TileDirection direction;
 	TileSide side;

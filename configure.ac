@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT(mihajong, 2.2.2, mihailjp@gmail.com)
+AC_INIT(mihajong, 2.3.0, mihailjp@gmail.com)
 AC_LIBTOOL_WIN32_DLL
 AC_DISABLE_STATIC
 lt_cv_deplibs_check_method='pass_all'
@@ -20,13 +20,24 @@ AC_DEFINE_UNQUOTED([PKGDATADIR], ["$pkgdatadir"], [Package data directory.])
 # Checks for programs.
 AC_LANG([C++])
 AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX_11([noext])
+AX_CXX_COMPILE_STDCXX_14([noext])
 AC_PROG_CC
 AX_PROG_LUA([5.1])
 
 # Checks for Win32
 AC_CHECK_HEADER([windows.h], [using_winapi=yes], [using_winapi=no])
 AM_CONDITIONAL(WITH_WINAPI, test x$using_winapi != xno)
+
+# Check for OSX
+AC_MSG_CHECKING([for OSX])
+AS_IF([test "x$host_vendor" = xapple], [
+	AC_MSG_RESULT([yes])
+	AC_MSG_NOTICE([It seems we are using Mac OS X.])
+	AC_MSG_NOTICE([Please make sure openal-soft is installed with Homebrew.])
+	AC_MSG_NOTICE([The framework shipped with Macintosh will not be used.])
+	CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openal-soft/include"
+	LDFLAGS="$LDFLAGS -L/usr/local/opt/openal-soft/lib"
+], [AC_MSG_RESULT([no])])
 
 # Resource editor
 AS_IF([test "x$using_winapi" != xno],
@@ -74,7 +85,6 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_LIB([opengl32], [main], [], AC_MSG_ERROR([opengl32 is unavailable]))],
 		[AX_PTHREAD([], AC_MSG_ERROR([pthread is unavailable]))
 		 AC_CHECK_LIB([openal], [main], [], AC_MSG_ERROR([openal is unavailable]))
-		 AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))
 		 AC_CHECK_LIB([png], [main], [], AC_MSG_ERROR([libpng is unavailable]))]
 	 )]
 )
@@ -121,16 +131,11 @@ AS_IF([test "x$with_directx" = xno],
 		 AC_CHECK_HEADER([netinet/in.h], [], AC_MSG_ERROR([netinet/in.h is unavailable]))
 		 AC_CHECK_HEADER([netdb.h], [], AC_MSG_ERROR([netdb.h is unavailable]))
 		 AC_CHECK_HEADER([fcntl.h], [], AC_MSG_ERROR([fcntl.h is unavailable]))
-		 AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
-		 AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
-		 AC_CHECK_HEADER([X11/keysym.h], [], AC_MSG_ERROR([X11/keysym.h is unavailable]))
-		 AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
 		 AC_CHECK_HEADER([png.h], [], AC_MSG_ERROR([png.h is unavailable]))
 		 AC_CHECK_HEADER([sys/stat.h], [], AC_MSG_ERROR([sys/stat.h is unavailable]))
 		 AC_CHECK_HEADER([dirent.h], [], AC_MSG_ERROR([dirent.h is unavailable]))
 		 AC_CHECK_HEADER([sched.h], [], AC_MSG_ERROR([sched.h is unavailable]))]
-	 )
-	 AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))]
+	 )]
 )
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -155,10 +160,23 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_MKTIME
-AS_IF([test "x$using_winapi" = xno],
-	[AC_PATH_X]
-)
-AC_CHECK_FUNCS([clock_gettime floor gethostbyname memmove memset mkdir pow setlocale socket sqrt strstr])
+AS_IF([test "x$using_winapi" = xno], [
+	AC_PATH_X
+	AS_IF([test "x$no_x" = xyes], [AC_MSG_ERROR([X is missing])])
+	AS_IF([test "x$x_includes" != x],	[CPPFLAGS="$CPPFLAGS -I$x_includes"])
+	AS_IF([test "x$x_libraries" != x],	[LDFLAGS="$LDFLAGS -L$x_libraries"])
+	AC_CHECK_LIB([X11], [main], [], AC_MSG_ERROR([X11 is unavailable]))
+	AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR([GL is unavailable]))
+	AC_CHECK_HEADER([X11/Xlib.h], [], AC_MSG_ERROR([X11/Xlib.h is unavailable]))
+	AC_CHECK_HEADER([X11/Xutil.h], [], AC_MSG_ERROR([X11/Xutil.h is unavailable]))
+	AC_CHECK_HEADER([X11/keysym.h], [], AC_MSG_ERROR([X11/keysym.h is unavailable]))
+])
+AS_IF([test "x$with_directx" = xno], [
+	AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))
+	AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
+])
+AC_CHECK_FUNCS([clock_gettime floor getaddrinfo getenv_s gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
+
 
 AC_ARG_ENABLE([midi],
 	[AS_HELP_STRING([--enable-midi],
@@ -168,36 +186,62 @@ AC_ARG_ENABLE([midi],
 )
 AM_CONDITIONAL(MIDI_SUPPORT, test x$enable_midi != xno)
 
-AC_ARG_WITH([oggvorbis],
-	[AS_HELP_STRING([--without-oggvorbis],
-		[disable Ogg Vorbis support as background music])],
-	[],
-	[with_oggvorbis=yes]
-)
-AM_CONDITIONAL(VORBIS_SUPPORT, test x$with_oggvorbis != xno)
-AS_IF([test "x$with_oggvorbis" != xno],
-	[MH_OGG_VORBIS_LIBS
-	 MH_OGG_VORBIS_HEADERS]
-)
+MH_OGG_VORBIS([], [
+	AC_MSG_WARN([libogg/libvorbis library not available: disabled])
+])
 
 AX_BOOST_BASE
-AX_BOOST_REGEX
-AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
-AX_BOOST_CHRONO
-AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
-AX_BOOST_DATE_TIME
-AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
-AX_BOOST_THREAD
-AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
-AX_BOOST_SYSTEM
-AM_CONDITIONAL(WITH_BOOST_SYSTEM, test x$want_boost != xno)
-AS_IF([test "x$want_boost" != xno],
-	[MH_TEST_SLEEP
-	 AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
-	 MH_TEST_WAIT
-	 AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
-	 AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))]
-)
+AS_IF([test "x$want_boost" != xno], [
+	AX_BOOST_REGEX
+	AM_CONDITIONAL(WITH_BOOST_REGEX, test x$want_boost != xno)
+	AX_BOOST_CHRONO
+	AM_CONDITIONAL(WITH_BOOST_CHRONO, test x$want_boost != xno)
+	AX_BOOST_DATE_TIME
+	AM_CONDITIONAL(WITH_BOOST_DATE_TIME, test x$want_boost != xno)
+	AX_BOOST_THREAD
+	AM_CONDITIONAL(WITH_BOOST_THREAD, test x$want_boost != xno)
+	AX_BOOST_SYSTEM
+	AM_CONDITIONAL(WITH_BOOST_SYSTEM, test x$want_boost != xno)
+], [
+	AM_CONDITIONAL(WITH_BOOST_REGEX, false)
+	AM_CONDITIONAL(WITH_BOOST_CHRONO, false)
+	AM_CONDITIONAL(WITH_BOOST_DATE_TIME, false)
+	AM_CONDITIONAL(WITH_BOOST_THREAD, false)
+	AM_CONDITIONAL(WITH_BOOST_SYSTEM, false)
+])
+AS_IF([test "x$want_boost" != xno], [
+MH_TEST_SLEEP
+	AM_CONDITIONAL(OLDER_BOOST_SLEEP, test x$sleep_func = xsleep)
+	MH_TEST_WAIT
+	AM_CONDITIONAL(OLDER_BOOST_WAIT, test x$wait_func = xtimed_wait)
+	AC_CHECK_HEADER([boost/container/vector.hpp], [], AC_MSG_ERROR([boost/container/vector.hpp is unavailable]))
+], [
+	AM_CONDITIONAL(OLDER_BOOST_SLEEP, false)
+	AM_CONDITIONAL(OLDER_BOOST_WAIT, false)
+])
+
+AC_PATH_PROG([RUBY], [ruby])
+AX_PROG_RUBY_VERSION([1.9], [], [AC_MSG_ERROR([Ruby is unavailable or too old])])
+AM_PATH_PYTHON([2.6], [], [AC_MSG_ERROR([Python is unavailable or too old])])
+MH_CHECK_RUBY_MODULE([pathname], [], [
+	AC_MSG_ERROR([Ruby module 'pathname' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([csv], [], [
+	AC_MSG_ERROR([Ruby module 'csv' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([digest/sha2], [], [
+	AC_MSG_ERROR([Ruby module 'digest/sha2' is unavailable. Check the installation.])
+])
+MH_CHECK_RUBY_MODULE([lzma], [], [
+	MH_CHECK_PYTHON_MODULE([lzma], [], [
+		MH_CHECK_PYTHON_MODULE([pylzma], [], [
+			AC_MSG_ERROR([LZMA module not available])
+		])
+	])
+])
+MH_CHECK_PYTHON_MODULE([markdown], [], [
+	AC_MSG_ERROR([Python module 'markdown' is unavailable])
+])
 
 AC_CONFIG_FILES([Makefile
                  astro/Makefile

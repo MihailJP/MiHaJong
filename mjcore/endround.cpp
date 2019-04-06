@@ -105,7 +105,7 @@ namespace { // 内部処理に使う関数
 		/* 多牌や少牌をしていないかのチェック */
 		unsigned tmptilecnt = 0;
 		for (unsigned i = 0; i < NumOfTilesInHand; ++i)
-			if (gameStat->statOfActive().Hand[i].tile != NoTile)
+			if (gameStat->statOfActive().Hand[i])
 				++tmptilecnt;
 		tmptilecnt += gameStat->statOfActive().MeldPointer * 3;
 		if ((tmptilecnt != (NumOfTilesInHand - 1)) && (!gameStat->statOfActive().AgariHouki)) {
@@ -150,7 +150,7 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の�
 		return SuufonRenda;
 #endif /* GUOBIAO */
 
-	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai().tile = NoTile; // バグ防止のため
+	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai() = Tile(); // バグ防止のため
 #ifndef GUOBIAO
 	if (chkKuikae(gameStat)) { // 喰い替えの場合の処理
 		gameStat->AgariSpecialStat = agariKuikae;

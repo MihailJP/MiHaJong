@@ -103,7 +103,7 @@ public:
 	T getNumerator() const {return num;}
 	T getDenominator() const {return denom;}
 	// Cast into float
-	operator float() const {return static_cast<float>num / static_cast<float>denom;}
-	operator double() const {return static_cast<double>num / static_cast<double>denom;}
-	operator long double() const {return static_cast<long double>num / static_cast<long double>denom;}
+	operator float() const {return static_cast<float>(num) / static_cast<float>(denom);}
+	operator double() const {return static_cast<double>(num) / static_cast<double>(denom);}
+	operator long double() const {return static_cast<long double>(num) / static_cast<long double>(denom);}
 };

@@ -24,7 +24,7 @@ double time_to_julian(int year, int month, int day, int hour, int min, int sec, 
 }
 
 #ifdef _WIN32
-EXPORT double systime_to_julian(const LPSYSTEMTIME sysTime)
+EXPORT double systime_to_julian(const SYSTEMTIME* sysTime)
 { /* Calculate Julian day from given SYSTEMTIME struct */
 	SYSTEMTIME time_utc;
 

@@ -8,6 +8,7 @@
 #endif /*_WIN32*/
 #include "../../../common/mutex.h"
 #include "../../timer.h"
+#include "../../../common/discard.h"
 
 namespace mihajong_graphic {
 
@@ -22,7 +23,7 @@ private:
 #endif /*_WIN32*/
 public: // ボタン番号
 	enum ButtonID {
-		btnChii1, btnChii2, btnChii3, btnPon, btnKan, btnPass, btnRon,
+		btnChii = 2, btnPon, btnKan, btnPass, btnRon,
 		btnMAXIMUM,
 		btnOpenRiichi = 0, btnRiichi, btnKyuushu, btnFlower, btnTsumo = btnRon,
 	};
@@ -48,16 +49,17 @@ public:
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
+	void setMode(DiscardTileNum::discardType, ButtonID, std::function<bool(int, GameTable*)> = [](int, GameTable*){return false;});
 private: // ボタンの押し込み
 	int sunkenButton;
-	static const int NoSunkenButton = -3;
+	static constexpr int NoSunkenButton = -3;
 public:
 	bool isSunkenButtonExists();
 	int getSunkenButtonID();
 	void setSunkenButton(int buttonID = NoSunkenButton);
 private: // カーソル
 	int cursor;
-	static const int CursorDisabled = -3;
+	static constexpr int CursorDisabled = -3;
 public:
 	bool isCursorEnabled();
 	int getCursor();

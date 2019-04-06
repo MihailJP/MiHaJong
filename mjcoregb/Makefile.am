@@ -33,7 +33,7 @@ nodist_libmihagbmj_la_SOURCES = \
 	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/rankval_csv.h
 BUILT_SOURCES = $(nodist_libmihagbmj_la_SOURCES)
 libmihagbmj_la_LDFLAGS = -no-undefined -release $(VERSION)
-libmihagbmj_la_CXXFLAGS = -DGUOBIAO -DMJCORE_EXPORTS
+libmihagbmj_la_CXXFLAGS = $(LUA_INCLUDE) -DGUOBIAO -DMJCORE_EXPORTS
 if WITH_BOOST_REGEX
 libmihagbmj_la_CXXFLAGS += -DWITH_BOOST_REGEX $(BOOST_REGEX_LIB)
 endif

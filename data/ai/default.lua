@@ -166,6 +166,18 @@ function numofquads (gametbl) -- 槓子の数を数える
 	return count
 end
 
+function iskuikae(gametbl, index) -- 食い変え判定
+	local ldList = {gametbl:getpreviousdiscard()}
+	for lastDiscard in igetiter(ldList) do
+		if lastDiscard then
+			if gametbl:gethand()[index] == lastDiscard then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 function ontsumo (gametbl) -- ＡＩの打牌
 	if not player_rel then
 		player_rel = { -- プレイヤー番号
@@ -254,6 +266,11 @@ function riichi_decision (gametbl)
 			local tmpHandTileCode = tmpHaiHand[cnt]
 			-- 存在しない牌の場合
 			if not gametbl:gethand()[cnt] then ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -9999999; break end
+			-- 食い変え防止用
+			if iskuikae(gametbl, cnt) then
+				ev.do_not_discard[cnt], ev.haiDiscardability[cnt] = true, -9999999; break
+			end
+			
 			-- 向聴数から、大まかな評価値を算出
 			local haiHand = clone(tmpHaiHand)
 			local Shanten = gametbl:getshanten(haiHand)
@@ -309,6 +326,9 @@ function riichi_decision (gametbl)
 		if Richiability > 0 then
 			local dahaiType, teDahai = mihajong.DiscardType.Normal, 14
 			for cnt = 14, 1, -1 do
+				if ev.do_not_discard[teDahai] then -- 鳴いた直後の多牌対策
+					ev.haiDiscardability[teDahai] = ev.haiDiscardability[cnt] - 1
+				end
 				if (not ev.do_not_discard[cnt]) and (ev.haiDiscardability[teDahai] < ev.haiDiscardability[cnt]) then
 					teDahai = cnt
 				end
