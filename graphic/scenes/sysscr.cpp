@@ -87,11 +87,7 @@ unsigned SystemScreen::strwidth(const std::string& str) {
 
 // -------------------------------------------------------------------------
 
-#if defined(_WIN32) && defined(WITH_DIRECTX)
-TexturePtr SystemScreen::Background::texture = nullptr;
-#else
-TexturePtr SystemScreen::Background::texture = 0;
-#endif
+TexturePtr SystemScreen::Background::texture = (TexturePtr)0;
 std::map<ScreenManipulator*, Timer> SystemScreen::Background::timers;
 
 void SystemScreen::Background::LoadTexture(DevicePtr device) {
@@ -102,6 +98,7 @@ void SystemScreen::Background::DisposeTexture() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (texture) texture->Release();
 #endif
+	texture = (TexturePtr)0;
 }
 
 SystemScreen::Background::Background(SystemScreen* const parent) {
