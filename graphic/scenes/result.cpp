@@ -131,13 +131,14 @@ ResultScreen::RankRenderer::RankRenderer(DevicePtr device, int id) {
 	else
 		sound::Play(sound::IDs::sndYakulst1);
 
-	if ((4 - id) == 1)
+	if ((4 - id) == 1) {
 		if (rank[GameStatus::gameStat()->PlayerID] == 1)
 			sound::util::bgmplay(sound::IDs::musEnding);
 		else if (rank[GameStatus::gameStat()->PlayerID] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))
 			sound::util::bgmplay(sound::IDs::musEnding3);
 		else
 			sound::util::bgmplay(sound::IDs::musEnding2);
+	}
 }
 
 ResultScreen::RankRenderer::~RankRenderer() {

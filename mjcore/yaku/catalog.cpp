@@ -114,13 +114,16 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 		}
 	};
 	unsigned count[4] = {0};
-	for (unsigned k = 0; k < 4; k++)
-		for (unsigned i = 0; i < 9; i++)
-			if (Tiles[k][i] != NoTile)
+	for (unsigned k = 0; k < 4; k++) {
+		for (unsigned i = 0; i < 9; i++) {
+			if (Tiles[k][i] != NoTile) {
 				if (analysis->shanten[shantenRegular] == -1)
 					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];
+			}
+		}
+	}
 	if (analysis->shanten[shantenRegular] == -1) {
 		assert(count[0] + count[1] + count[2] + count[3] == SizeOfMeldBuffer);
 	} else {
