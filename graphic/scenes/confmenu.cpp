@@ -130,15 +130,15 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	case DIK_UP: case DIK_K: // 前の項目
+	case DIK_UP: case DIK_K: case DIK_W: // 前の項目
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Prev(1);
 		break;
-	case DIK_DOWN: case DIK_J: // 次の項目
+	case DIK_DOWN: case DIK_J: case DIK_S: // 次の項目
 		if (keyDown && (buttonCursor == -1))
 			BtnEvent_Content_Item_Next(1);
 		break;
-	case DIK_LEFT: case DIK_H: // 前の選択肢
+	case DIK_LEFT: case DIK_H: case DIK_A: // 前の選択肢
 		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Down();
@@ -146,7 +146,7 @@ void ConfigMenuProto::KeyboardInput(const XEvent* od)
 				BtnEvent_Button_Next();
 		}
 		break;
-	case DIK_RIGHT: case DIK_L: // 次の選択肢
+	case DIK_RIGHT: case DIK_L: case DIK_D: // 次の選択肢
 		if (keyDown) {
 			if (buttonCursor == -1)
 				BtnEvent_Content_Roll_Up();

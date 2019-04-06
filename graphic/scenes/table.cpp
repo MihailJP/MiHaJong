@@ -34,7 +34,7 @@
 #endif
 
 namespace mihajong_graphic {
-	
+
 GameTableScreen::GameTableScreen(ScreenManipulator* const manipulator) : TableProtoScene(manipulator) {
 	LoadTexture(&tBorder, MAKEINTRESOURCE(IDB_PNG_TBLBORDER));
 	LoadTexture(&tBaize, MAKEINTRESOURCE(IDB_PNG_TBLBAIZE));
@@ -422,14 +422,14 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 #endif /*_WIN32*/
 	{
 	/* ボタン選択/牌選択 モード切り替え */
-	case DIK_UP: case DIK_K: // 牌選択モードに切り替え
+	case DIK_UP: case DIK_K: case DIK_W: // 牌選択モードに切り替え
 		if (keyDown && (buttonReconst->isCursorEnabled()) && ((!isNakiSel) || (tileSelectMode == DiscardTileNum::MeldSel))) {
 			tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
 			buttonReconst->setCursor();
 			cursorMoved();
 		}
 		break;
-	case DIK_DOWN: case DIK_J: // ボタン選択モードに切り替え
+	case DIK_DOWN: case DIK_J: case DIK_S: // ボタン選択モードに切り替え
 		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
@@ -437,7 +437,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 		}
 		break;
 	/* カーソル移動 */
-	case DIK_LEFT: case DIK_H:
+	case DIK_LEFT: case DIK_H: case DIK_A:
 		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->decrTileCursor() < 0) tehaiReconst->setTileCursor(NumOfTilesInHand - 1);
@@ -449,7 +449,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 			cursorMoved();
 		}
 		break;
-	case DIK_RIGHT: case DIK_L:
+	case DIK_RIGHT: case DIK_L: case DIK_D:
 		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			do {
 				if (tehaiReconst->incrTileCursor() >= NumOfTilesInHand) tehaiReconst->setTileCursor(0);

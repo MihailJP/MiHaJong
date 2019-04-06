@@ -179,14 +179,14 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	switch (od->xkey.keycode)
 #endif /*_WIN32*/
 	{
-	case DIK_UP: case DIK_K: // カーソル上
+	case DIK_UP: case DIK_K: case DIK_W: // カーソル上
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (--menuCursor == 0) menuCursor = 5;
 			cursorTimeout.skipTo(0);
 		}
 		break;
-	case DIK_DOWN: case DIK_J: // カーソル下
+	case DIK_DOWN: case DIK_J: case DIK_S: // カーソル下
 		if (flag) {
 			sound::Play(sound::IDs::sndCursor);
 			if (++menuCursor > 5) menuCursor = 1;
