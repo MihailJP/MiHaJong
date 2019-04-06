@@ -65,7 +65,6 @@ Copyright (c) 2008-2013, 2019 MihailJP
   - Ogg Vorbisの読み込みを並列化
   - 結果画面のBGMが鳴りっぱなしになるバグを修正
   - MIDIデバイスを指定できるようにする
-- \*.vcxproj.userをリポジトリから除去
 - make installで不要なドキュメントファイルまでインストールされていたのを修正
 - コードをリファクタリング
 
@@ -77,13 +76,15 @@ Copyright (c) 2008-2013, 2019 MihailJP
 - 名前空間を移動
 - 関数名の間違いを修正
 - POD判定をtrivially copyable/standard layout判定に置き換え
-- YakuResult::Init()をコンストラクタに置き換え
+  - YakuResult::Init()をコンストラクタに置き換え
+  - LargeNum関係
+    - LargeNumクラスのコンストラクタ
+    - LNumラッパークラスを削除
+    - LargeNumをconstexprにする
+    - 型関係の修正
 - 役満用のデータを使うかの判定処理を移動
 - ドラ込みの翻をイディオムからメソッド化
 - 成立役リストの処理をcommonに移動
-- Visual Studioプロジェクトファイルにcommonヘッダを入れる
-- LargeNumクラスのコンストラクタ
-- LNumラッパークラスを削除
 - malloc/freeをnew/deleteに書き換え
 - localtime()をlocaltime_s()に書き換え
 - 暗黙の型変換をキャストに書き換え
@@ -96,42 +97,44 @@ Copyright (c) 2008-2013, 2019 MihailJP
   - Windows7互換用にプリプロセッサを設定
   - Visual Studioでワイド文字版をデフォルトにする
   - ANSI版の構成を削除
+  - Visual Studioプロジェクトファイルにcommonヘッダを入れる
 - VersionHelpers.hを使うようにする
 - LargeNum→int64_tで正しくない結果になる可能性があるのを修正
 - ifstream::imbue()の返り値の破棄を明示
 - 潜在的な未初期化に対処
 - 受信バッファをヒープに移動
 - オーバーフローの可能性を排除
-- LzFindMt.cの警告を無視
+- LZMA関係
+  - LzFindMt.cの警告を無視
+  - LZMA伸長時ポインタの型が正しくないのを修正
 - ルール設定の読み込みにifstreamを使う
 - 二重配列の初期化
-- 音声データのヘッダファイル・定義ファイルをクラスで分離
-- USE_XAUDIO2の有無だけで判断するようにする
-- OGG読み込み時のバッファサイズを調整
-- 不要になったコードの削除
-- libogg、libvorbisをサブモジュールに変更
-- libogg、libvorbisのリリースビルドを使うようにする
+- 音声モジュール周り
+  - 音声データのヘッダファイル・定義ファイルをクラスで分離
+  - USE_XAUDIO2の有無だけで判断するようにする
+  - OGG読み込み時のバッファサイズを調整
+  - libogg、libvorbis関係
+    - サブモジュールに変更
+    - リリースビルドを使うようにする
+    - プロジェクトをソリューションに統合
 - std::random_shuffle()を使わないようにする
-- LZMA伸長時ポインタの型が正しくないのを修正
 - 行列の計算を関数にまとめる
-- libogg、libvorbisのプロジェクトをソリューションに統合
-- リモートの手動理牌に対応させる
-- AIの理牌コード
-- テスト用のインターフェイスを作る
-- 牌データにメソッドを追加
-- tilecode.hにコメントを付ける
-- 選択した牌を移動する処理を追加
+- 鳴き選択関係
+  - リモートの手動理牌に対応させる
+  - AIの理牌コード
+  - 牌データにメソッドを追加
+  - 選択した牌を移動する処理を追加
+  - ソート処理に標準ライブラリを使うようにする
 - Tileオブジェクト周りのリファクタリング
-- ShowTile::NewTileの引数を変更
-- configure.acでC++14をチェックするようにする
-- ソート処理に標準ライブラリを使うようにする
-- LargeNumをconstexprにする
-- Pythonのモジュールの有無を確認するようにする
+  - tilecode.hにコメントを付ける
+  - ShowTile::NewTileの引数を変更
+- Autotools関係
+  - configure.acでC++14をチェックするようにする
+  - Pythonのモジュールの有無を確認するようにする
+  - configureでrubyをチェックするようにする
 - カレンダー関係のリファクタリング
-- configureでrubyをチェックするようにする
 - 役判定ルーチン内の関数オブジェクトをconstにする
 - md2html.pyを修正
-- 型関係の修正
 - strcode.hを修正
 - Clang++で見つかった問題を修正
   - dangling elseを解消
@@ -141,7 +144,9 @@ Copyright (c) 2008-2013, 2019 MihailJP
   - 明示的なoverride指定
   - 論理積と論理和の順序を明示
   - `-Wno-switch`を指定
-- Boost関係のコードを削除
+- \*.vcxproj.userをリポジトリから除去
+- Boost対応を廃止
+- 不要になったコードの削除
 
 ### [2.2.2] 2013年11月30日
 
