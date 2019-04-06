@@ -6,7 +6,7 @@ Copyright (c) 2008-2013, 2019 MihailJP
 はじめに
 --------
 　このゲームは、ごく普通の麻雀ゲームです。
- 
+
 　日本で一般的に行なわれているリーチ麻雀で行なわれますが、「喰い断の有無」「二翻縛りの有無」といったローカルルールや、
 「大車輪」「八連荘」「十三不塔」などローカル役などの設定項目が多数存在します。
 設定できる項目の中には「西中島南方」「双龍争珠」「覇王鞭」「青天井ルール」と言った、ソフトウェアとして実装されるのが稀なものも含まれます。
@@ -20,6 +20,7 @@ Copyright (c) 2008-2013, 2019 MihailJP
 --------
 - Windows版はWindows 7/10、Direct X 9 (June 2010) 以降
 - Linux版はX11(xlib)、OpenGL(GLX)、OpenAL、libpng、libluaが必要
+  - MacのXQuartzでも一応動作可
 
 
 インストールのしかた
@@ -28,7 +29,7 @@ Copyright (c) 2008-2013, 2019 MihailJP
 Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、自動的に認識し設定や牌譜のファイルの出力先を再設定します
 (Program Filesへのインストール自体は管理者権限が必要ですが、プレイ時には管理者権限は不要です)。
 
-　Linux版は ./configure --with-boost-regex && make && sudo make install して下さい。
+　Linux版は ./configure && make && sudo make install して下さい。
 
 ※GCCのstd::regexは壊れているため、boost::regexを使用して下さい。
 
@@ -37,7 +38,7 @@ Vista 以降をお使いの場合で C:\Program Files 以下にインストー�
 ------------------------
 　レジストリは使わないので、インストールした先をフォルダーごと削除するだけです。
 牌譜を取っておきたい場合は haifu フォルダーをバックアップしておきます。
- 
+
 　Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、
 設定と牌譜は C:\Users\(ユーザー名)\AppData\Roaming\MiHaJong 以下に出力されますので、必要のない方はこれも削除します。
 
@@ -77,16 +78,24 @@ MiHaJongでは、基本的に2006年版のルールに準拠していますが�
 
 MihailJPの開発環境
 ------------------
-- OS：Windows 10 Home 64bit
-- OS：OpenSUSE 12.3 x86_64
-- 物理メモリ：12GB
-- CPU：Intel Core i7 860
-- GPU：GeForce GTX 950
-- 開発環境：Visual Studio Community 2017 (Windows)、GCC 4.7 (Linux)
-- 画像編集ツール：GIMP 2.8
-- テキストエディタ：Mery、Notepad++、Kate
-- Gitクライアント：GitHub Desktop (Windows)、GIT (Linux)
-
+- Windows環境
+  - OS：Windows 10 Home 64bit
+  - 物理メモリ：12GB
+  - CPU：Intel Core i7 860 (hyper-threading disabled)
+  - GPU：GeForce GTX 950
+    - Heterogeneous triple-monitor desktop consisting of Full-HD, SXGA and SXGA
+  - 開発環境：Visual Studio Community 2017
+  - 画像編集ツール：GIMP 2.8
+  - テキストエディタ：Notepad++
+  - Gitクライアント：GitHub Desktop、Git Bash
+- Linux環境
+  - OS：OpenSUSE Leap x86_64 on VMware Player
+  - 割り当てメモリ：4GB
+  - テキストエディタ：Kate
+- Mac OS X環境
+  - 機種：MacBook Air 11-inch, Early 2014
+  - OS：macOS 10.14 (Mojave)
+  - テキストエディタ：Atom
 
 ビルドに別途必要なもの
 ----------------------
@@ -107,11 +116,16 @@ MihailJPの開発環境
 
 Linux版の制限
 -------------
-- チャットウィンドウや名前設定で日本語の入力ができません。
 - フルスクリーンにできません。
 - 効果音が鳴りません。
 - BGMが鳴りません。
 - ジョイスティックは使えません。
+
+
+Mac版の制限
+-----------
+- X11に依存します。
+- Linux版と同じ制限があります。
 
 
 ライセンスについて
