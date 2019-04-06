@@ -38,7 +38,7 @@ private:
 	void inputProc(input::InputDevice* inputDev, std::function<void (Scene*, LPDIDEVICEOBJECTDATA)> f);
 	// Linuxでは別の箇所で入力イベントを処理するため不要
 #endif /*_WIN32*/
-	MUTEXLIB::recursive_mutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
+	std::recursive_mutex CS_SceneAccess; // シーンアクセスのクリティカルセクション
 #ifndef WITH_DIRECTX
 #ifdef _WIN32
 	HGLRC getContext();

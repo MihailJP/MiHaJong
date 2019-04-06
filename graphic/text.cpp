@@ -91,7 +91,7 @@ void ITextRenderer::spriteRecalc(unsigned int ID, SpriteAttr* sprite, float chrA
 	sprite->matrix = getMatrix(static_cast<float>(sprite->X), static_cast<float>(sprite->Y), sprite->widthScale, sprite->heightScale);
 }
 void ITextRenderer::reconstruct(unsigned int ID, bool rescanStr) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
 	if (SpriteData.size() <= ID) SpriteData.resize(static_cast<std::size_t>(ID) + 1, std::vector<SpriteAttr*>()); // 配列の拡張
 	if ((!SpriteData[ID].empty()) && rescanStr) deleteSprite(ID); // 既に存在した場合
 	if (!StringData[ID]) /* ぬるぽ */
@@ -124,13 +124,13 @@ void ITextRenderer::reconstruct() {
 
 /* スプライトを削除する */
 void ITextRenderer::deleteSprite(unsigned int ID) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
 	for (const auto& k : SpriteData[ID])
 		delete k;
 	SpriteData[ID].clear();
 }
 void ITextRenderer::deleteSprite() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
 	for (unsigned int i = 0; i < SpriteData.size(); i++)
 		deleteSprite(i);
 	SpriteData.clear();
@@ -138,7 +138,7 @@ void ITextRenderer::deleteSprite() {
 
 /* レンダリング */
 void ITextRenderer::Render() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(SpriteMutex);
+	std::unique_lock<std::recursive_mutex> lock(SpriteMutex);
 	for (const auto& i : SpriteData) {
 		for (const auto& k : i) {
 			if (!k) continue;

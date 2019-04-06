@@ -18,7 +18,7 @@
 #include "result.h"
 #include "ruletbl.h"
 #include "remote.h"
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 /* 半荘の進行 */

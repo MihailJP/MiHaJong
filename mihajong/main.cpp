@@ -8,7 +8,7 @@
 #include "../mjcore/mjimport.h"
 #include "../graphic/graphic.h"
 #include "resource.h"
-#include "../common/thread.h"
+#include <thread>
 #include "../common/sleep.h"
 #include "../common/scrmode.h"
 

@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <dinput.h>
 #include <utility>
-#include "../common/mutex.h"
+#include <mutex>
 
 namespace mihajong_graphic {
 namespace input {
@@ -40,7 +40,7 @@ public:
 };
 class Joystick : public InputDevice {
 private:
-	static MUTEXLIB::recursive_mutex myMutex;
+	static std::recursive_mutex myMutex;
 	static Joystick* currentInstance;
 	static LPDIRECTINPUT8 currentInterface;
 	HWND myHWnd;

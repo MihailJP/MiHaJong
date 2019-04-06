@@ -47,52 +47,52 @@ constexpr GameTableScreen::ButtonReconst::BtnData
 };
 
 GameTableScreen::ButtonReconst::ButtonSet GameTableScreen::ButtonReconst::getButtonSet() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return currentButtonSet;
 }
 std::bitset<GameTableScreen::ButtonReconst::btnMAXIMUM> GameTableScreen::ButtonReconst::areEnabled() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return buttonEnabled;
 }
 bool GameTableScreen::ButtonReconst::isEnabled(ButtonID buttonID) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return (buttonID >= 0) && (buttonID < btnMAXIMUM) && buttonEnabled[buttonID];
 }
 bool GameTableScreen::ButtonReconst::isSunkenButtonExists() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return sunkenButton != NoSunkenButton;
 }
 int GameTableScreen::ButtonReconst::getSunkenButtonID() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return sunkenButton;
 }
 void GameTableScreen::ButtonReconst::setSunkenButton(int buttonID) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	sunkenButton = buttonID;
 }
 bool GameTableScreen::ButtonReconst::isCursorEnabled() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return cursor != CursorDisabled;
 }
 int GameTableScreen::ButtonReconst::getCursor() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return cursor;
 }
 void GameTableScreen::ButtonReconst::setCursor(int cursorPos) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	cursor = cursorPos;
 }
 int GameTableScreen::ButtonReconst::incCursor() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return ++cursor;
 }
 int GameTableScreen::ButtonReconst::decCursor() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return --cursor;
 }
 
 void GameTableScreen::ButtonReconst::Render() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 #ifndef _WIN32
 	if (!initialized) {
 		reconstruct();
@@ -119,7 +119,7 @@ void GameTableScreen::ButtonReconst::Render() {
 }
 
 void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 #include "color.h"
 	Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][buttonID].color;
 	/*if (!buttonEnabled[buttonID]) { // 暗転処理
@@ -138,13 +138,13 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 		buttonDat[currentButtonSet][buttonID].x + 117, buttonDat[currentButtonSet][buttonID].y + 36);
 }
 void GameTableScreen::ButtonReconst::reconstruct() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	for (unsigned i = 0; i < btnMAXIMUM; ++i)
 		reconstruct(static_cast<ButtonID>(i));
 }
 
 void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	currentButtonSet = btnSet;
 	cursor = CursorDisabled;
 	sunkenButton = NoSunkenButton;
@@ -156,21 +156,21 @@ void GameTableScreen::ButtonReconst::ChangeButtonSet(ButtonSet btnSet) {
 }
 
 void GameTableScreen::ButtonReconst::enable(ButtonID buttonID) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	buttonEnabled[buttonID] = true; reconstruct(buttonID);
 }
 void GameTableScreen::ButtonReconst::disable(ButtonID buttonID) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	buttonEnabled[buttonID] = false; reconstruct(buttonID);
 }
 void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flagset) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	buttonEnabled = flagset;
 	reconstruct();
 }
 
 void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // 状態をリセット
 	const GameTable* const gameStat = GameStatus::retrGameStat();
 	auto tilesMoreThan = [gameStat](int tiles) {
@@ -242,7 +242,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 }
 
 void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	currentButtonSet = btnSetNormal; buttonEnabled.reset(); // 状態をリセット
 	GameTable* const gameStat = new GameTable;
 	memcpy(gameStat, GameStatus::retrGameStat(), sizeof (GameTable));
@@ -320,7 +320,7 @@ GameTableScreen::ButtonReconst::~ButtonReconst() {
 
 /* モード設定 */
 void GameTableScreen::ButtonReconst::setMode(DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	caller->tileSelectMode = mode;
 	this->setSunkenButton(button);
 	for (int i = 0; i < btnMAXIMUM; ++i)
@@ -338,7 +338,7 @@ void GameTableScreen::ButtonReconst::setMode(DiscardTileNum::discardType mode, B
 
 /* ボタンが押された時の処理 */
 void GameTableScreen::ButtonReconst::ButtonPressed() {
-	MUTEXLIB::unique_lock<MUTEXLIB::recursive_mutex> lock(reconstructionCS);
+	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	sound::Play(sound::IDs::sndButton);
 	if (!this->isEnabled(static_cast<ButtonID>(this->getCursor()))) {
 		sound::Play(sound::IDs::sndCuohu);

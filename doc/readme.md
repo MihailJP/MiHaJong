@@ -31,9 +31,7 @@ Copyright (c) 2008-2013, 2019 MihailJP
 Vista 以降をお使いの場合で C:\Program Files 以下にインストールした場合、自動的に認識し設定や牌譜のファイルの出力先を再設定します
 (Program Filesへのインストール自体は管理者権限が必要ですが、プレイ時には管理者権限は不要です)。
 
-　Linux版は `./configure --with-boost-regex && make && sudo make install` して下さい。
-
-**※GCCのstd::regexは壊れているため、boost::regexを使用して下さい。**
+　Linux版は `./configure -&& make && sudo make install` して下さい。
 
 
 アンインストールのしかた
@@ -80,7 +78,7 @@ MiHaJongでは、基本的に2006年版のルールに準拠していますが�
 MihailJPの開発環境
 ------------------
 - OS：Windows 10 Home 64bit
-- OS：OpenSUSE 12.3 x86\_64
+- OS：OpenSUSE Leap 15.0 x86\_64
 - 物理メモリ：12GB
 - CPU：Intel Core i7 860
 - GPU：GeForce GTX 950
@@ -98,18 +96,12 @@ MihailJPの開発環境
 - [markdown_py](https://pypi.python.org/pypi/Markdown)
 - [libogg/libvorbis](http://www.xiph.org/downloads/) (Visual C++の場合はスタティックリンクします)
 - [GuruGuruSMF](http://gurugurusmf.migmig.net/) (Windowsのみ)
-- [boost::regex](http://www.boost.org/) (GCCはstd::regexが壊れているため必要。Visual C++の場合は不要)
 - [OpenAL](http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)
 - [libpng](http://www.libpng.org/pub/png/libpng.html) (Linuxのみ)
-- [boost::thread](http://www.boost.org/) (GCC4.7.xまではstd::threadが使えないため必要)
-- [boost::chrono](http://www.boost.org/) (boost::threadを使う場合必要)
-- [boost::date_time](http://www.boost.org/) (バージョン1.49以前のboost::threadを使う場合必要)
-- [boost::system](http://www.boost.org/) (boost::threadを使う場合必要)
 
 
 Linux版の制限
 -------------
-- 名前設定で日本語の入力ができません。
 - フルスクリーンにできません。
 - 効果音が鳴りません。
 - BGMが鳴りません。

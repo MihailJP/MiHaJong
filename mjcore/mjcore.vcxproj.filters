@@ -422,13 +422,7 @@
     <ClInclude Include="confitms.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="regex.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\bgmid.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\chrono.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\discard.h">
@@ -441,9 +435,6 @@
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\machihai.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\mutex.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\nmrules.h">
@@ -461,9 +452,6 @@
     <ClInclude Include="..\common\strcode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\thread.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\tilecode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
@@ -474,9 +462,6 @@
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\clock.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="..\common\condvar.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\common\gametype.h">

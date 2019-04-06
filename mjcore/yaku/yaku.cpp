@@ -9,9 +9,6 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
-#ifdef WITH_BOOST_THREAD
-#include <boost/container/vector.hpp>
-#endif /*WITH_BOOST_THREAD*/
 #ifdef _WIN32
 #include <windows.h>
 #else /*_WIN32*/
@@ -687,7 +684,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	YAKUSTAT result;
 	constexpr ParseMode pMode = {NoTile, Ke_Shun};
 	// 計算を実行
-	THREADLIB::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
+	std::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
 	myThread.join(); // 同期
 	// 高点法の処理
 	memcpy(yakuInfo, &result, sizeof(YAKUSTAT));
@@ -710,7 +707,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
-	MVCONTAINER::vector<THREADLIB::thread> myThreads;
+	std::vector<std::thread> myThreads;
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].pMode.AtamaCode = static_cast<TileCode>(i / 4);
 		calcprm[i].pMode.Order = static_cast<ParseOrder>(i % 4);
@@ -718,7 +715,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
-		myThreads.push_back(THREADLIB::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &calcprm[i].analysis));
+		myThreads.push_back(std::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &calcprm[i].analysis));
 	}
 	for (auto& thread : myThreads)
 		thread.join(); // 同期

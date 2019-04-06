@@ -2,7 +2,7 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /* _WIN32 */
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 namespace mihajong_socket {
@@ -85,7 +85,7 @@ namespace client {
 		inst->preparationThread();
 	}
 	void starter::startThread () { // スレッドを開始する
-		myThread = THREADLIB::thread(initiate, this);
+		myThread = std::thread(initiate, this);
 	}
 	bool starter::isConnected () { // 接続成功したかどうか
 		return connected;

@@ -82,7 +82,7 @@ sound::OggData::OggData(IXAudio2** Engine, const std::string& filename, bool loo
 sound::OggData::OggData(void* Engine, const std::string& filename, bool looped) {
 #endif /* USE_XAUDIO2 */
 	assert(!loaderThread.joinable());
-	loaderThread = THREADLIB::thread([=]() {
+	loaderThread = std::thread([=]() {
 		Prepare(filename);
 		PrepareBuffer(Engine, looped);
 	});
