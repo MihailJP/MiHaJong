@@ -452,9 +452,6 @@
     <ClInclude Include="..\common\strcode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\thread.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\tilecode.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>

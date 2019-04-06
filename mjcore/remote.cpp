@@ -30,7 +30,7 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
 	remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = 0;
-	myThread = THREADLIB::thread(startthread, this);
+	myThread = std::thread(startthread, this);
 }
 RemoteDahai::~RemoteDahai() {
 	myThread.join();
@@ -154,7 +154,7 @@ DiscardTileNum remotedahai (GameTable* const gameStat) {
 /* 接続先の鳴き */
 RemoteNaki::RemoteNaki (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
-	myThread = THREADLIB::thread(startthread, this);
+	myThread = std::thread(startthread, this);
 }
 RemoteNaki::~RemoteNaki() {
 	myThread.join();

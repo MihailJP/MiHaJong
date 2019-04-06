@@ -188,7 +188,6 @@
     <ClInclude Include="..\common\nmrules.h" />
     <ClInclude Include="..\common\sleep.h" />
     <ClInclude Include="..\common\strcode.h" />
-    <ClInclude Include="..\common\thread.h" />
     <ClInclude Include="..\common\version.h" />
     <ClInclude Include="class.h" />
     <ClInclude Include="client.h" />

@@ -3,7 +3,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif /*_WIN32*/
-#include "../../common/thread.h"
+#include <thread>
 #include <lua.hpp>
 #include "../discard.h"
 #include "../gametbl.h"

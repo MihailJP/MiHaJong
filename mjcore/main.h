@@ -7,14 +7,14 @@
 #else /*_WIN32*/
 #include <X11/Xlib.h>
 #endif /*_WIN32*/
-#include "../common/thread.h"
+#include <thread>
 
 #ifdef MJCORE_EXPORTS
 
 class GameThread {
 private:
 	GameTypeID myGameType;
-	THREADLIB::thread myThread;
+	std::thread myThread;
 #ifdef _WIN32
 	HWND hWnd;
 #else /*_WIN32*/

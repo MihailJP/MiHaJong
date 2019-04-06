@@ -1,7 +1,7 @@
 ﻿#include "event.h"
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
-#include "../common/thread.h"
+#include <thread>
 #include <chrono>
 #include "../common/sleep.h"
 

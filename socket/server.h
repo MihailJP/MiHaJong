@@ -12,7 +12,7 @@
 #include <string>
 #include <cstdint>
 #include "../common/strcode.h"
-#include "../common/thread.h"
+#include <thread>
 #endif
 
 namespace mihajong_socket {
@@ -28,7 +28,7 @@ namespace server {
 		unsigned int CurrentConnection;
 		std::array<CodeConv::tstring, 4> playerName;
 		char ruleConf[RULE_LINES][RULE_IN_LINE + 1];
-		THREADLIB::thread myThread;
+		std::thread myThread;
 		int preparationThread (); // 接続を待ち、接続処理をする
 	public:
 		static void initiate (starter* inst); // CreateThread()に渡す引数用

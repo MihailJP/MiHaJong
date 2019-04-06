@@ -307,7 +307,6 @@
     <ClInclude Include="..\common\shanten.h" />
     <ClInclude Include="..\common\sleep.h" />
     <ClInclude Include="..\common\strcode.h" />
-    <ClInclude Include="..\common\thread.h" />
     <ClInclude Include="..\common\tilecode.h" />
     <ClInclude Include="..\common\version.h" />
     <ClInclude Include="..\common\yakurslt.h" />

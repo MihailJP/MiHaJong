@@ -538,10 +538,10 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 // -------------------------------------------------------------------------
 
 void mihajong_socket::Sock::client_thread::startThread () { // スレッドを開始する
-	myThread = THREADLIB::thread(thread, this);
+	myThread = std::thread(thread, this);
 }
 void mihajong_socket::Sock::server_thread::startThread () { // スレッドを開始する
-	myThread = THREADLIB::thread(thread, this);
+	myThread = std::thread(thread, this);
 }
 
 

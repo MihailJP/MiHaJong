@@ -21,7 +21,7 @@ GameThread::GameThread(GameTypeID gameType, Window hwnd)
 {
 	myGameType = gameType;
 	hWnd = hwnd;
-	myThread = THREADLIB::thread(ThreadMain, this);
+	myThread = std::thread(ThreadMain, this);
 }
 
 GameThread::~GameThread() {
