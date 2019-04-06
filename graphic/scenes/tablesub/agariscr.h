@@ -61,7 +61,7 @@ public:
 	TableSubsceneAgariScreen(const TableSubsceneAgariScreen&) = delete; // Delete unexpected copy constructor
 	TableSubsceneAgariScreen& operator= (const TableSubsceneAgariScreen&) = delete; // Delete unexpected assign operator
 	~TableSubsceneAgariScreen();
-	void Render();
+	void Render() override;
 };
 
 class TableSubsceneAgariScreenUradora : public TableSubsceneAgariScreenProto {
@@ -73,7 +73,7 @@ public:
 	TableSubsceneAgariScreenUradora(const TableSubsceneAgariScreenUradora&) = delete; // Delete unexpected copy constructor
 	TableSubsceneAgariScreenUradora& operator= (const TableSubsceneAgariScreenUradora&) = delete; // Delete unexpected assign operator
 	~TableSubsceneAgariScreenUradora();
-	void Render();
+	void Render() override;
 };
 
 // -------------------------------------------------------------------------
@@ -111,9 +111,9 @@ private:
 	std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, std::function<int (unsigned)>, TileDirection, TileDirection, TileDirection>
 		playerPosition(const GameTable* gameStat, PlayerID targetPlayer, signed PositionOffset, unsigned IDOffset, unsigned meldID,
 		unsigned h1, unsigned h2, unsigned h3, unsigned h4, unsigned v1, unsigned v2, unsigned v3, unsigned v4,
-		bool r1, bool r2, bool r3, bool r4);
+		bool r1, bool r2, bool r3, bool r4) override;
 public:
-	void Render();
+	void Render() override;
 	explicit AgariNaki(TableSubsceneAgariScreenProto* caller);
 	AgariNaki(const AgariNaki&) = delete; // Delete unexpected copy constructor
 	AgariNaki& operator= (const AgariNaki&) = delete; // Delete unexpected assign operator

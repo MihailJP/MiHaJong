@@ -113,7 +113,7 @@ public:
 	client_thread(Sock* callee) : network_thread(callee) {}
 	client_thread(const client_thread&) = delete; // Delete unexpected copy constructor
 	client_thread& operator= (const client_thread&) = delete; // Delete unexpected assign operator
-	void startThread(); // スレッドを開始する
+	void startThread() override; // スレッドを開始する
 protected:
 	int establishConnection () override; // 接続を確立する
 };
@@ -123,7 +123,7 @@ public:
 	server_thread(Sock* callee) : network_thread(callee) {}
 	server_thread(const server_thread&) = delete; // Delete unexpected copy constructor
 	server_thread& operator= (const server_thread&) = delete; // Delete unexpected assign operator
-	void startThread(); // スレッドを開始する
+	void startThread() override; // スレッドを開始する
 protected:
 	int establishConnection () override; // 接続を確立する
 };
