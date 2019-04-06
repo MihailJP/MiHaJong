@@ -23,6 +23,8 @@
 #define IDB_PNG_CHECKBOX                     118
 #define IDB_PNG_TILE_BLACK                   119
 #define IDB_PNG_MOON_CLOCK                   120
+#define IDB_PNG_SPLASH_SCREEN                121
+#define IDB_PNG_TITLE_BACKGROUND             122
 
 #define CHARMAP_FILE                         257
 #define IDB_CHARMAP_FONT                     130

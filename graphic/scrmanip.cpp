@@ -142,6 +142,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	redrawFlag = false;
 	pDevice = nullptr; hWnd = windowHandle;
 	InitDevice(fullscreen);
+	SplashScreen::LoadTexture(pDevice);
 	myScene = new SplashScreen(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
@@ -154,6 +155,7 @@ ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, b
 	redrawFlag = false;
 	pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
 	InitDevice(fullscreen);
+	SplashScreen::LoadTexture(pDevice);
 	myScene = new SplashScreen(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;

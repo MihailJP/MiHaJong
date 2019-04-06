@@ -14,6 +14,7 @@ protected:
 	virtual const unsigned numberOfItems() = 0;
 	virtual const unsigned numberOfButtons() = 0;
 protected:
+	Background* background;
 	ButtonPic* myButtonPic;
 	void CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption);
 	signed short int buttonCursor;

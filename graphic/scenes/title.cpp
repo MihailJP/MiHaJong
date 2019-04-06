@@ -32,15 +32,19 @@ namespace mihajong_graphic {
 TitleScreen::TitleScreen(ScreenManipulator* const manipulator) : SystemScreen(manipulator) {
 	sTitleLogo = {nullptr, nullptr, nullptr};
 	TitleSprite::LoadTexture(caller->getDevice());
+	TitleBackground::LoadTexture(caller->getDevice());
 	for (int i = 0; i < nsTitleLogo; i++)
 		sTitleLogo[i] = new TitleSprite(caller->getDevice(), 500 * i, 0, (i == 2) ? 700 : 500, 300);
+	backGround = nullptr;
 	menuCursor = 1;
 }
 
 TitleScreen::~TitleScreen() {
 	TitleSprite::DisposeTexture();
+	TitleBackground::DisposeTexture();
 	for (int i = 0; i < nsTitleLogo; i++)
 		if (sTitleLogo[i]) delete sTitleLogo[i];
+	if (backGround) delete backGround;
 }
 
 void TitleScreen::zoomingLogo(TitleSprite* sprite, int X, int Y, unsigned startF, unsigned endF) {
@@ -147,6 +151,9 @@ void TitleScreen::versionInfo() {
 
 void TitleScreen::Render() {
 	clearWithGameTypeColor();
+	if ((myTimer.elapsed() >= 2'000'000uLL) && (!backGround))
+		backGround = new TitleBackground(this);
+	if (backGround) backGround->show();
 	menuLabels();
 	versionInfo();
 	myTextRenderer->Render();
@@ -201,6 +208,10 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 #endif /*_WIN32*/
 			sound::Play(sound::IDs::sndClick);
 			myTimer.skipTo(180 * timePerFrame);
+			if (backGround)
+				backGround->skipIntoLoop();
+			else
+				backGround = new TitleBackground(this, true);
 			cursorTimeout.skipTo(0);
 		}
 		break;
@@ -275,6 +286,10 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 			} else if (!flag1) {
 				sound::Play(sound::IDs::sndClick);
 				myTimer.skipTo(180 * timePerFrame);
+				if (backGround)
+					backGround->skipIntoLoop();
+				else
+					backGround = new TitleBackground(this, true);
 			}
 			cursorTimeout.skipTo(0);
 		}
