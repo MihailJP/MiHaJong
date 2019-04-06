@@ -2,7 +2,7 @@
 #include "../sound/sound.h"
 #include "../common/bgmid.h"
 #include "../common/thread.h"
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 namespace mihajong_graphic {
@@ -55,7 +55,7 @@ uint32_t Event::wait(int32_t timeout) {
 			bool r = false;
 			std::unique_lock<std::mutex> lock(myEventMutex);
 			while ((!isSignaled) && (r == false))
-				r = myEvent.wait_for(lock, CHRONO::chrono::milliseconds(timeout)) == std::cv_status::timeout;
+				r = myEvent.wait_for(lock, std::chrono::milliseconds(timeout)) == std::cv_status::timeout;
 			return r;
 		} ();
 		threadYield();

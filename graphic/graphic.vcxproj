@@ -233,7 +233,6 @@
     <ClInclude Include="..\common\datetime.h" />
     <ClInclude Include="..\common\scrmode.h" />
     <ClInclude Include="..\common\bgmid.h" />
-    <ClInclude Include="..\common\chrono.h" />
     <ClInclude Include="..\common\clock.h" />
     <ClInclude Include="..\common\discard.h" />
     <ClInclude Include="..\common\gametbl.h" />

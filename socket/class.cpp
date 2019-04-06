@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #endif /* _WIN32 */
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 uint16_t mihajong_socket::Sock::portnum() {

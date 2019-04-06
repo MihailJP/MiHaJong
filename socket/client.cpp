@@ -2,7 +2,7 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif /* _WIN32 */
-#include "../common/chrono.h"
+#include <chrono>
 #include "../common/sleep.h"
 
 namespace mihajong_socket {

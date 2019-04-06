@@ -184,7 +184,6 @@
     <ClCompile Include="socket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\common\chrono.h" />
     <ClInclude Include="..\common\clock.h" />
     <ClInclude Include="..\common\nmrules.h" />
     <ClInclude Include="..\common\sleep.h" />

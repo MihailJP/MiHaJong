@@ -413,9 +413,6 @@
     <ClInclude Include="..\common\bgmid.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\chrono.h">
-      <Filter>Common\ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\clock.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
