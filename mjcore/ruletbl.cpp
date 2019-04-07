@@ -10,7 +10,7 @@
 #include <windows.h>
 #endif /*_WIN32*/
 #include <cassert>
-#include "regex.h"
+#include <regex>
 #include "logging.h"
 #include "decomp.h"
 #include "reader/readrsrc.h"

@@ -5,7 +5,7 @@
 #include "func.h"
 #include "ruletbl.h"
 #include <vector>
-#include "regex.h"
+#include <regex>
 #include "envtbl.h"
 
 #ifdef None
