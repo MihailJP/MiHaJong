@@ -21,7 +21,7 @@ void SplashScreen::DisposeTexture() {
 }
 
 SplashScreen::SplashScreen(ScreenManipulator* const manipulator) : Scene(manipulator) {
-	LoadTexture(caller->getDevice());
+	LoadTexture(manipulator->getDevice());
 #ifdef WITH_DIRECTX
 	myMatrix = getMatrix();
 #else /* WITH_DIRECTX */

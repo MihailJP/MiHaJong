@@ -73,6 +73,9 @@ public:
 	DevicePtr getDevice() {return nullptr;}
 	void mouseInputProc(const XEvent* event);
 #endif /*_WIN32*/
+#ifndef WITH_DIRECTX
+	void preloadTextures();
+#endif /*WITH_DIRECTX*/
 	void transit(sceneID scene);
 	void subscene(unsigned int subsceneID);
 };

@@ -7,6 +7,8 @@ using namespace Gdiplus;
 #ifndef _WIN32
 #include <iostream>
 #endif
+#include <mutex>
+#include <condition_variable>
 
 namespace mihajong_graphic {
 
@@ -14,6 +16,12 @@ namespace mihajong_graphic {
 HINSTANCE GraphicDLL = nullptr;
 #endif /*_WIN32*/
 MainWindow* myMainWindow = nullptr;
+
+namespace {
+	std::mutex initMutex;
+	std::condition_variable condVar;
+	bool initialized = false;
+}
 
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 GdiplusStartupInput gdiplusInput;
@@ -27,6 +35,7 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 #endif /*_WIN32*/
 {
 	/* ウィンドウの初期化 */
+	std::unique_lock<std::mutex> lock(initMutex);
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);
 #endif
@@ -40,20 +49,29 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 #ifdef _WIN32
 	catch (LPTSTR e) {
 		MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
+		lock.unlock(), condVar.notify_all();
 		return FALSE;
 	}
+	initialized = true, lock.unlock(), condVar.notify_all();
 	return TRUE;
 #else /*_WIN32*/
 	catch (LPTSTR e) {
 		std::cerr << e << std::endl;
+		lock.unlock(), condVar.notify_all();
 		return false;
 	}
+	initialized = true, lock.unlock(), condVar.notify_all();
 	return true;
 #endif /*_WIN32*/
 }
 
 EXPORT void RefreshWindow() {
 	myMainWindow->Render();
+}
+
+EXPORT void WaitForWindowInit() {
+	std::unique_lock<std::mutex> lock(initMutex);
+	condVar.wait(lock, [] {return initialized;});
 }
 
 #ifdef _WIN32

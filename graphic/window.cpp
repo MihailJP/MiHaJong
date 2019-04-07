@@ -242,12 +242,18 @@ MainWindow::MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned
 	initWindow(hThisInst, nWinMode, scrMode, monitor);
 	myScreenManipulator = new ScreenManipulator(hWnd, scrMode == ScreenMode::scrModeFullscreen);
 	myInputManipulator = new input::InputManipulator(hWnd, scrMode == ScreenMode::scrModeFullscreen);
+#ifndef WITH_DIRECTX
+	myScreenManipulator->Render();
+	myScreenManipulator->preloadTextures();
+#endif /*WITH_DIRECTX*/
 }
 #else /*_WIN32*/
 MainWindow::MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor) {
 	Geometry::WindowWidth = width; Geometry::WindowHeight = height;
 	initWindow(hThisInst, nWinMode, scrMode, monitor);
 	myScreenManipulator = new ScreenManipulator(disp, hWnd, scrMode == ScreenMode::scrModeFullscreen);
+	myScreenManipulator->Render();
+	myScreenManipulator->preloadTextures();
 }
 #endif /*_WIN32*/
 

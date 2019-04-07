@@ -106,8 +106,14 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 	pDevice = getContext(false);
 	glXMakeCurrent(disp, hWnd, pDevice);
 #endif
+	
+	TexturePtr dummyTexture;
+	LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(IDB_PNG_FONT));
+	LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(IDB_PNG_SPLASH_SCREEN));
+}
 
-	constexpr intptr_t textureList[] = { // テクスチャの先行読み込み
+void ScreenManipulator::preloadTextures() { // テクスチャの先行読み込み
+	constexpr intptr_t textureList[] = {
 		IDB_PNG_TBLBAIZE,
 		IDB_PNG_TBLBORDER,
 		IDB_PNG_SDBAR,
@@ -157,7 +163,6 @@ ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, b
 	redrawFlag = false;
 	pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
 	InitDevice(fullscreen);
-	SplashScreen::LoadTexture(pDevice);
 	myScene = new SplashScreen(this);
 	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;

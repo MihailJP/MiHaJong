@@ -36,6 +36,9 @@ void GameThread::ThreadMain(GameThread* lpParam) {
 #else /*_WIN32*/
 	Window hwnd = lpParam->hWnd;
 #endif /*_WIN32*/
+#ifndef WITH_DIRECTX
+	mihajong_graphic::WaitForWindowInit();
+#endif /*WITH_DIRECTX*/
 	initapp(gameType, hwnd);
 	startgame(gameType);
 	cleanup();

@@ -25,6 +25,7 @@ namespace mihajong_graphic {
 EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr,
 	unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor);
 EXPORT void RefreshWindow();
+EXPORT void WaitForWindowInit();
 EXPORT BOOL Transit(sceneID scene);
 EXPORT BOOL Subscene(unsigned int subsceneID);
 EXPORT void CleanupWindow();
@@ -32,6 +33,7 @@ EXPORT void CleanupWindow();
 EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr,
 	unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor);
 EXPORT void RefreshWindow();
+EXPORT void WaitForWindowInit();
 EXPORT bool Transit(sceneID scene);
 EXPORT bool Subscene(unsigned int subsceneID);
 EXPORT void CleanupWindow();
