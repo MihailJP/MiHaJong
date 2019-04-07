@@ -75,6 +75,7 @@ public:
 #endif /*_WIN32*/
 #ifndef WITH_DIRECTX
 	void preloadTextures();
+	void disposeTextures();
 #endif /*WITH_DIRECTX*/
 	void transit(sceneID scene);
 	void subscene(unsigned int subsceneID);

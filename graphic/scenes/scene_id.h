@@ -3,6 +3,7 @@
 namespace mihajong_graphic {
 
 enum sceneID { // シーン番号
+	sceneNull, // なにもなし（後始末用）
 	sceneSplash, // スプラッシュスクリーン的なシーン
 	sceneTitle, // タイトル画面
 	sceneConfig, // コンフィグ画面

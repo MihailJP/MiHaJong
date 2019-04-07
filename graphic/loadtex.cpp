@@ -193,13 +193,17 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 
 void UnloadAllTextures() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	// Direct3Dのみ。OpenGLでは不要？
 	for (const auto& k : Textures) {
 		ULONG refs = k.second->Release();
 		CodeConv::tostringstream o;
 		o << _T("UnloadAllTextures(): Texture resource #") << k.first << _T(": remaining number of refs is ") << refs << std::endl;
 		OutputDebugString(o.str().c_str());
 	}
+#else
+for (const auto& k : Textures) {
+	const GLuint tx[1] = {k.second};
+	glDeleteTextures(1, tx);
+}
 #endif
 	Textures.clear();
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)

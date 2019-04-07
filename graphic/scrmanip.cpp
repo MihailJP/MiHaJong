@@ -141,6 +141,10 @@ void ScreenManipulator::preloadTextures() { // テクスチャの先行読み込
 	TexturePtr dummyTexture;
 	for (const intptr_t* i = textureList; *i != 0; ++i)
 		LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(*i));
+}
+
+void ScreenManipulator::disposeTextures() {
+	UnloadAllTextures();
 #endif
 }
 #ifdef _WIN32
@@ -219,7 +223,12 @@ void ScreenManipulator::transit(sceneID scene) {
 #endif
 	redrawFlag = false;
 	delete myScene; myScene = nullptr;
+	if ((scene != sceneNull) && (!myFPSIndicator))
+		myFPSIndicator = new FPSIndicator(this);
 	switch (scene) {
+	case sceneNull:
+		delete myFPSIndicator, myFPSIndicator = nullptr;
+		break;
 	case sceneSplash:
 		myScene = new SplashScreen(this); redrawFlag = true;
 		break;
@@ -286,11 +295,13 @@ ScreenManipulator::~ScreenManipulator() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	if (pDevice) {pDevice->Release(); pDevice = nullptr;}
 #else
+	disposeTextures();
 	wglMakeCurrent(nullptr, nullptr);
 	wglDeleteContext(rContext);
 	ReleaseDC(hWnd, pDevice);
 #endif
 #else /*_WIN32*/
+	disposeTextures();
 	glXMakeCurrent(disp, 0, nullptr);
 	glXDestroyContext(disp, pDevice);
 #endif /*_WIN32*/

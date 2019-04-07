@@ -22,6 +22,7 @@
 #include "ruletbl.h"
 #include <regex>
 #include "conffile/conffile.h"
+#include "../graphic/graphic.h"
 
 /* 順位を計算する */
 PlayerRankList calcRank(const GameTable* const gameStat) {
@@ -284,6 +285,8 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 }
 
 MJCORE void cleanup() {
+	mihajong_graphic::Transit(mihajong_graphic::sceneNull);
+	info(_T("グラフィックDLLの後始末をしました。"));
 	sound::Cleanup();
 	info(_T("サウンドDLLを解放しました。"));
 	for (int i = 0; i < Players; i++) {
