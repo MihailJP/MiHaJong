@@ -1,14 +1,14 @@
-OBJPATH=$(SolutionDir)$(IntDir)
+OBJPATH=..\$(IntDir)
+ZIP=zip
 ZIPNAME=mihajong
-TMPPATH=$(OBJPATH)$(ZIPNAME)\ 
+TMPPATH=$(OBJPATH)$(ZIPNAME)\\
 ARCHIVENAME=$(ZIPNAME).zip
 ARCHIVE=$(OBJPATH)$(ARCHIVENAME)
-DOCPATH=$(SolutionDir)doc\ 
-DATAPATH=$(SolutionDir)data\ 
+DOCPATH=..\doc\\
+DATAPATH=..\data\\
 ARCHIVE_CONTENT=$(TMPPATH)astro.bin $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.bin $(TMPPATH)mjcore.bin $(TMPPATH)mjcoregb.bin $(TMPPATH)socket.bin $(TMPPATH)sound.bin \
 	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe $(TMPPATH)mihagbmj.exe \
 	$(TMPPATH)readme.txt $(TMPPATH)manual.css \
-	$(TMPPATH)history.md $(TMPPATH)license.md $(TMPPATH)playing.md $(TMPPATH)readme.md $(TMPPATH)rulesyms.md $(TMPPATH)script.md $(TMPPATH)addyaku.md \
 	$(TMPPATH)history.html $(TMPPATH)license.html $(TMPPATH)playing.html $(TMPPATH)readme.html $(TMPPATH)rulesyms.html $(TMPPATH)script.html $(TMPPATH)addyaku.html \
 	$(TMPPATH)ai\default.lua $(TMPPATH)gbai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
 
@@ -17,8 +17,8 @@ all: $(ARCHIVE)
 $(ARCHIVE): $(ARCHIVE_CONTENT)
 	- mkdir $(TMPPATH)bgm
 	- mkdir $(TMPPATH)sound
-	copy $(SolutionDir)mihajong\sound\*.* $(TMPPATH)sound
-	cd $(OBJPATH) && zip -9r $(ARCHIVENAME) $(ZIPNAME)
+	copy ..\mihajong\sound\*.* $(TMPPATH)sound
+	cd $(OBJPATH) && $(ZIP) -9r $(ARCHIVENAME) $(ZIPNAME)
 
 $(TMPPATH)astro.bin: $(OBJPATH)astro.bin
 	- mkdir $(TMPPATH)
@@ -41,7 +41,7 @@ $(TMPPATH)socket.bin: $(OBJPATH)socket.bin
 $(TMPPATH)sound.bin: $(OBJPATH)sound.bin
 	- mkdir $(TMPPATH)
 	copy $** $@
-$(TMPPATH)readme.txt: $(SolutionDir)README
+$(TMPPATH)readme.txt: ..\README.md
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)manual.css: $(DOCPATH)manual.css
