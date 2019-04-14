@@ -18,7 +18,7 @@ mihajong_graphic::DataLoadError::DataLoadError(const std::string& desc, std::int
 	desc + std::string("の読み込みに失敗しました" NWL "リソース番号 ") +
 	std::to_string(num) +
 	std::string(NWL "ファイル名 ") +
-	std::to_string(filename)
+	filename
 ) {}
 #endif /*_WIN32*/
 
