@@ -50,11 +50,16 @@ void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 /* サウンド読み込み */
 void sound::util::soundload(unsigned ID, const char* filename, bool looped) {
 	CodeConv::tostringstream o;
-	if (sound::LoadWave(ID, filename, looped ? 1 : 0) == 0) {
-		o << _T("音声ファイル [") << CodeConv::EnsureTStr(filename) << _T("] を読み込みました。");
+#ifdef PKGDATADIR
+	const std::string fName = std::string(PKGDATADIR) + std::string("/") + std::string(filename);
+#else /* PKGDATADIR */
+	const std::string fName(filename);
+#endif /* PKGDATADIR */
+	if (sound::LoadWave(ID, fName.c_str(), looped ? 1 : 0) == 0) {
+		o << _T("音声ファイル [") << CodeConv::EnsureTStr(fName) << _T("] を読み込みました。");
 		info(o.str().c_str());
 	} else {
-		o << _T("音声ファイル [") << CodeConv::EnsureTStr(filename) << _T("] の読み込みに失敗しました。");
+		o << _T("音声ファイル [") << CodeConv::EnsureTStr(fName) << _T("] の読み込みに失敗しました。");
 		warn(o.str().c_str());
 	}
 	return;

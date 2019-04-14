@@ -126,21 +126,38 @@ Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP 
 
 使用した効果音のデータについて
 ------------------------------
-　「ザ・マッチメイカァズ」で配布されているフリー素材を使用しております。
+　Ver. 2.3.0より、効果音データが変更されています。
+　変更後の効果音データは、freesound.org で公開されているパブリックドメイン
+のデータ及び自作データです。
+　新バージョンの効果音データは、パブリックドメインとなっています。
 
-> ＜＜素材利用規約＞＞
-> 
-> ＊ここでの”フリー素材”という言葉は、利用規約の範囲内であれば各データを無料かつ自由に使用できるという意味で掲げております。
-> 著作権の放棄は しておりません。  
-> 
-> ＊何らかの創作物の一部として使用せずに 素材その物のみを無断で転載・配布する事は禁止いたします。
-> 素材データとしての転載・再配布を行いたい場合は事前にご相談下さい。
-> 
-> 　ここの素材を加工・改造した物を”素材として”広く配布する事もできません（配布を行いたい場合は事前にご相談下さい）
-> 
-> ＊素材ファイルへの直リンクは一切禁止いたします
+- Downloaded on December 24th, 2018
+	- S: Door Bell 01.aiff by SoundCollectah -- https://freesound.org/s/167620/
+	- S: Wind Chime (G-003) +.wav by GnoteSoundz -- https://freesound.org/s/169855/
+	- S: Ping.wav by edsward -- https://freesound.org/s/341871/
+	- S: Crash.wav by FxKid2 -- https://freesound.org/s/367624/
+	- S: coin flip.wav by Raventhornn -- https://freesound.org/s/181189/
+	- S: metal tube 2.ogg by adharca -- https://freesound.org/s/278167/
+	- S: Bicycle_Bell.wav by nikiforov5000 -- https://freesound.org/s/330956/
+- Downloaded on December 23rd, 2018
+	- S: Ping Bing by GameAudio -- https://freesound.org/s/220212/
+	- S: gem_ping.wav by high_festiva -- https://freesound.org/s/194439/
+	- S: Draw sword#1.wav by fielastro -- https://freesound.org/s/423935/
+	- S: My Sword Hit 1.wav.wav by freefire66 -- https://freesound.org/s/175949/
+	- S: rosary.wav by jaset13045 -- https://freesound.org/s/347928/
+	- S: Typewriter - single key - type 1.wav by yottasounds -- https://freesound.org/s/380138/
+	- S: Bang Pop Crack Whoomph by uEffects -- https://freesound.org/s/207868/
+	- S: Knock_1.wav by Adam_N -- https://freesound.org/s/144943/
+	- S: Switch click 3.wav by Adam_N -- https://freesound.org/s/164550/
+	- S: Dice (1) pour on felt.wav by 2BACH -- https://freesound.org/s/185963/
+	- S: Clicks.wav by Agaxly -- https://freesound.org/s/217482/
+	- S: Buttons and Knobs 13.wav by potentjello -- https://freesound.org/s/194052/
+	- S: Reception Bell by FlashTrauma -- https://freesound.org/s/398281/
+- Downloaded on December 22nd, 2018
+	- S: ClockTickSound_01.wav by abyeditsound -- https://freesound.org/s/450509/
+	- S: Cha Ching.wav by guest -- https://freesound.org/s/351304/
 
-参照：[http://osabisi.sakura.ne.jp/m2/](http://osabisi.sakura.ne.jp/m2/)
+参照：[https://creativecommons.org/publicdomain/zero/1.0/deed.ja](https://creativecommons.org/publicdomain/zero/1.0/deed.ja)
 
 
 Perlからの移植コードについて
