@@ -38,3 +38,15 @@ haifudatdir = $(pkgdatadir)/haifu
 dist_haifudat_DATA = \
 	data/haifu/haifu.css data/haifu/haifu.dtd data/haifu/haifu.xsd \
 	data/haifu/haifu.xsl
+
+sounddatdir = $(pkgdatadir)/sound
+dist_sounddat_DATA = \
+	data/sound/agari1.wav data/sound/agari2.wav data/sound/bell.wav \
+	data/sound/button.wav data/sound/chi.wav data/sound/chonbo.wav \
+	data/sound/click.wav data/sound/clock.wav data/sound/countdn.wav \
+	data/sound/cursor.wav data/sound/dahai1.wav data/sound/dahai2.wav \
+	data/sound/flower.wav data/sound/kan.wav data/sound/kyuushu.wav \
+	data/sound/mekuri.wav data/sound/page.wav data/sound/pingju.wav \
+	data/sound/pon.wav data/sound/richi.wav data/sound/saikoro.wav \
+	data/sound/signal.wav data/sound/tsumo.wav data/sound/type.wav \
+	data/sound/yakulst1.wav data/sound/yakulst2.wav

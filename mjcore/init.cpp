@@ -17,6 +17,12 @@
 #include "chat.h"
 
 #ifdef _WIN32
+#define SOUNDDIR "sound\\"
+#else /*_WIN32*/
+#define SOUNDDIR "sound/"
+#endif /*_WIN32*/
+
+#ifdef _WIN32
 MJCORE void initapp(GameTypeID gameType, HWND hwnd)
 #else /*_WIN32*/
 MJCORE void initapp(GameTypeID gameType, Window hwnd)
@@ -141,40 +147,40 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	sound::util::bgmload(sound::IDs::musEnding3, "ending3", true);
 
 	/* 効果音読み込み(DirectSound使用) */
-	sound::util::soundload(sound::IDs::sndDahai1, "sound\\dahai1.wav", false);
-	sound::util::soundload(sound::IDs::sndDahai2, "sound\\dahai2.wav", false);
-	sound::util::soundload(sound::IDs::sndTsumo, "sound\\tsumo.wav", false);
-	sound::util::soundload(sound::IDs::sndSaikoro, "sound\\saikoro.wav", false);
-	sound::util::soundload(sound::IDs::sndBell, "sound\\bell.wav", false);
-	sound::util::soundload(sound::IDs::sndCountdown, "sound\\countdn.wav", false);
-	sound::util::soundload(sound::IDs::sndCuohu, "sound\\chonbo.wav", false);
-	sound::util::soundload(sound::IDs::sndYakulst1, "sound\\yakulst1.wav", false);
-	sound::util::soundload(sound::IDs::sndYakulst2, "sound\\yakulst2.wav", false);
-	sound::util::soundload(sound::IDs::sndMekuri, "sound\\mekuri.wav", false);
-	sound::util::soundload(sound::IDs::sndButton, "sound\\button.wav", false);
-	sound::util::soundload(sound::IDs::sndClick, "sound\\click.wav", false);
-	sound::util::soundload(sound::IDs::sndCursor, "sound\\cursor.wav", false);
-	sound::util::soundload(sound::IDs::sndPage, "sound\\page.wav", false);
-	sound::util::soundload(sound::IDs::sndType, "sound\\type.wav", false);
-	sound::util::soundload(sound::IDs::sndPingju, "sound\\pingju.wav", false);
-	sound::util::soundload(sound::IDs::sndFlash, "sound\\flash.wav", false);
-	sound::util::soundload(sound::IDs::sndSignal, "sound\\signal.wav", false);
-	sound::util::soundload(sound::IDs::sndClock, "sound\\clock.wav", false);
+	sound::util::soundload(sound::IDs::sndDahai1, SOUNDDIR "dahai1.wav", false);
+	sound::util::soundload(sound::IDs::sndDahai2, SOUNDDIR "dahai2.wav", false);
+	sound::util::soundload(sound::IDs::sndTsumo, SOUNDDIR "tsumo.wav", false);
+	sound::util::soundload(sound::IDs::sndSaikoro, SOUNDDIR "saikoro.wav", false);
+	sound::util::soundload(sound::IDs::sndBell, SOUNDDIR "bell.wav", false);
+	sound::util::soundload(sound::IDs::sndCountdown, SOUNDDIR "countdn.wav", false);
+	sound::util::soundload(sound::IDs::sndCuohu, SOUNDDIR "chonbo.wav", false);
+	sound::util::soundload(sound::IDs::sndYakulst1, SOUNDDIR "yakulst1.wav", false);
+	sound::util::soundload(sound::IDs::sndYakulst2, SOUNDDIR "yakulst2.wav", false);
+	sound::util::soundload(sound::IDs::sndMekuri, SOUNDDIR "mekuri.wav", false);
+	sound::util::soundload(sound::IDs::sndButton, SOUNDDIR "button.wav", false);
+	sound::util::soundload(sound::IDs::sndClick, SOUNDDIR "click.wav", false);
+	sound::util::soundload(sound::IDs::sndCursor, SOUNDDIR "cursor.wav", false);
+	sound::util::soundload(sound::IDs::sndPage, SOUNDDIR "page.wav", false);
+	sound::util::soundload(sound::IDs::sndType, SOUNDDIR "type.wav", false);
+	sound::util::soundload(sound::IDs::sndPingju, SOUNDDIR "pingju.wav", false);
+	sound::util::soundload(sound::IDs::sndFlash, SOUNDDIR "flash.wav", false);
+	sound::util::soundload(sound::IDs::sndSignal, SOUNDDIR "signal.wav", false);
+	sound::util::soundload(sound::IDs::sndClock, SOUNDDIR "clock.wav", false);
 
 	/* 鳴き仕掛け関係の効果音を読み込む */
-	sound::util::soundload(sound::IDs::voxChi, "sound\\chi.wav", false);
-	sound::util::soundload(sound::IDs::voxPon, "sound\\pon.wav", false);
-	sound::util::soundload(sound::IDs::voxKan, "sound\\kan.wav", false);
-	sound::util::soundload(sound::IDs::voxRichi, "sound\\richi.wav", false);
-	sound::util::soundload(sound::IDs::voxTsumo, "sound\\agari1.wav", false);
-	sound::util::soundload(sound::IDs::voxRon, "sound\\agari2.wav", false);
-	sound::util::soundload(sound::IDs::voxKyuushu, "sound\\kyuushu.wav", false);
-	sound::util::soundload(sound::IDs::voxFlower, "sound\\flower.wav", false);
-	sound::util::soundload(sound::IDs::voxSikang, "sound\\kyuushu.wav", false);
-	sound::util::soundload(sound::IDs::voxSifeng, "sound\\kyuushu.wav", false);
-	sound::util::soundload(sound::IDs::voxSanjiahu, "sound\\kyuushu.wav", false);
-	sound::util::soundload(sound::IDs::voxSijiarichi, "sound\\kyuushu.wav", false);
-	sound::util::soundload(sound::IDs::voxRonFurikomi, "sound\\agari2.wav", false);
+	sound::util::soundload(sound::IDs::voxChi, SOUNDDIR "chi.wav", false);
+	sound::util::soundload(sound::IDs::voxPon, SOUNDDIR "pon.wav", false);
+	sound::util::soundload(sound::IDs::voxKan, SOUNDDIR "kan.wav", false);
+	sound::util::soundload(sound::IDs::voxRichi, SOUNDDIR "richi.wav", false);
+	sound::util::soundload(sound::IDs::voxTsumo, SOUNDDIR "agari1.wav", false);
+	sound::util::soundload(sound::IDs::voxRon, SOUNDDIR "agari2.wav", false);
+	sound::util::soundload(sound::IDs::voxKyuushu, SOUNDDIR "kyuushu.wav", false);
+	sound::util::soundload(sound::IDs::voxFlower, SOUNDDIR "flower.wav", false);
+	sound::util::soundload(sound::IDs::voxSikang, SOUNDDIR "kyuushu.wav", false);
+	sound::util::soundload(sound::IDs::voxSifeng, SOUNDDIR "kyuushu.wav", false);
+	sound::util::soundload(sound::IDs::voxSanjiahu, SOUNDDIR "kyuushu.wav", false);
+	sound::util::soundload(sound::IDs::voxSijiarichi, SOUNDDIR "kyuushu.wav", false);
+	sound::util::soundload(sound::IDs::voxRonFurikomi, SOUNDDIR "agari2.wav", false);
 
 }
 
