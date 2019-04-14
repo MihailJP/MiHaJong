@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include "../../sound/sound.h"
 #include "../../common/bgmid.h"
+#include "../except.h"
 
 namespace mihajong_graphic {
 
@@ -295,7 +296,7 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 			}
 		}
 	}
-	throw _T("ScoreBoard::scoreInfo() : Unexpected control flow");
+	throw UnexpectedControlFlow("ScoreBoard::scoreInfo() : 到達不能コードに到達しました。バグです。");
 }
 
 void TableProtoScene::ScoreBoard::renderScore() {

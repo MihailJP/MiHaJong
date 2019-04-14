@@ -2,6 +2,7 @@
 #include "scenes/scenes.h"
 #include "sprite.h"
 #include "resource.h"
+#include "except.h"
 
 namespace mihajong_graphic {
 
@@ -59,7 +60,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 	/* Direct3D オブジェクト生成 */
 	pd3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (!pd3d) // 生成失敗
-		throw _T("Direct3D オブジェクトの生成に失敗しました");
+		throw ModuleInitializationError("Direct3D オブジェクトの生成に失敗しました");
 
 	/* D3Dデバイスオブジェクト生成 */
 	D3DPRESENT_PARAMETERS d3dpp;
@@ -84,7 +85,7 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 		)))
 		return;
 	else // All the four failed
-		throw _T("Direct3D デバイスオブジェクトの生成に失敗しました");
+		throw ModuleInitializationError("Direct3D デバイスオブジェクトの生成に失敗しました");
 #else
 #ifdef _WIN32
 	pDevice = GetDC(hWnd);
@@ -257,7 +258,7 @@ void ScreenManipulator::transit(sceneID scene) {
 #ifndef WITH_DIRECTX
 		discardContext(context);
 #endif /* WITH_DIRECTX */
-		throw _T("正しくないシーン番号が指定されました");
+		throw InvalidScene("正しくないシーン番号が指定されました");
 	}
 #ifndef WITH_DIRECTX
 	discardContext(context);

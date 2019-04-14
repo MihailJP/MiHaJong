@@ -9,6 +9,7 @@ using namespace Gdiplus;
 #endif
 #include <mutex>
 #include <condition_variable>
+#include "except.h"
 
 namespace mihajong_graphic {
 
@@ -47,16 +48,16 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 		if (hwndPtr) *hwndPtr = myMainWindow->gethwnd();
 	}
 #ifdef _WIN32
-	catch (LPTSTR e) {
-		MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
+	catch (const GraphicModuleError& e) {
+		MessageBoxA(nullptr, e.what(), "Error", MB_OK | MB_ICONERROR);
 		lock.unlock(), condVar.notify_all();
 		return FALSE;
 	}
 	initialized = true, lock.unlock(), condVar.notify_all();
 	return TRUE;
 #else /*_WIN32*/
-	catch (LPTSTR e) {
-		std::cerr << e << std::endl;
+	catch (const GraphicModuleError& e) {
+		std::cerr << e.what() << std::endl;
 		lock.unlock(), condVar.notify_all();
 		return false;
 	}
@@ -76,40 +77,40 @@ EXPORT void WaitForWindowInit() {
 
 #ifdef _WIN32
 EXPORT BOOL Transit(sceneID scene) try {
-	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->transit(scene);
 	return TRUE;
 }
-catch (LPTSTR e) {
-	MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
+catch (const GraphicModuleError& e) {
+	MessageBoxA(nullptr, e.what(), "Error", MB_OK | MB_ICONERROR);
 	return FALSE;
 }
 
 EXPORT BOOL Subscene(unsigned int subsceneID) try {
-	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->subscene(subsceneID);
 	return TRUE;
 }
-catch (LPTSTR e) {
-	MessageBox(nullptr, e, _T("Error"), MB_OK | MB_ICONERROR);
+catch (const GraphicModuleError& e) {
+	MessageBoxA(nullptr, e.what(), "Error", MB_OK | MB_ICONERROR);
 	return FALSE;
 }
 #else /*_WIN32*/
 EXPORT bool Transit(sceneID scene) try {
-	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->transit(scene);
 	return true;
 }
-catch (LPTSTR e) {
+catch (const GraphicModuleError& e) {
 	return false;
 }
 
 EXPORT bool Subscene(unsigned int subsceneID) try {
-	if (!myMainWindow) throw _T("ウィンドウが初期化されていません");
+	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->subscene(subsceneID);
 	return true;
 }
-catch (LPTSTR e) {
+catch (const GraphicModuleError& e) {
 	return false;
 }
 #endif /*_WIN32*/

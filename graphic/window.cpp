@@ -7,6 +7,7 @@
 #include <iostream>
 #endif /*_WIN32*/
 #include <cstdlib>
+#include "except.h"
 
 namespace mihajong_graphic {
 
@@ -78,7 +79,7 @@ void MainWindow::initWindowClass(HINSTANCE hThisInst, LPCTSTR icon) { // ウィ�
 	myWindowClass.hbrBackground = nullptr;
 	
 	if (!RegisterClassEx(&myWindowClass))
-		throw _T("ウィンドウクラスの登録に失敗しました");
+		throw WindowInitializationError("ウィンドウクラスの登録に失敗しました");
 	else return;
 }
 
@@ -151,7 +152,7 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::Scree
 #endif
 		WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
 		nullptr, nullptr, hThisInst, nullptr);
-	if (!hWnd) throw _T("ウィンドウの生成に失敗しました");
+	if (!hWnd) throw WindowInitializationError("ウィンドウの生成に失敗しました");
 	ShowWindow(hWnd, nWinMode);
 	UpdateWindow(hWnd);
 
@@ -165,7 +166,7 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::Scree
 		dMode.dmPelsHeight = WindowHeight;
 		dMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
 		if (FAILED(ChangeDisplaySettings(&dMode, CDS_FULLSCREEN)))
-			throw _T("フルスクリーンにできませんでした");
+			throw WindowInitializationError("フルスクリーンにできませんでした");
 	}
 #endif
 	return;
@@ -203,7 +204,7 @@ bool MainWindow::WinProc(MainWindow* mainWindow) { // ウィンドウプロシ�
 void MainWindow::initWindow(void* hThisInst, int nWinMode, ScreenMode::ScreenMode scrMode, unsigned monitor) {
 	XInitThreads();
 	disp = XOpenDisplay(nullptr); // 接続先ディスプレイは DISPLAY で指定
-	if (disp == nullptr) throw _T("ディスプレイに接続出来ません。Cannot connect to display.");
+	if (disp == nullptr) throw WindowInitializationError("ディスプレイに接続出来ません");
 	int screen = DefaultScreen(disp);
 	hWnd = XCreateSimpleWindow(
 		disp,

@@ -2,6 +2,7 @@
 #include "geometry.h"
 #include "loadtex.h"
 #include "matrix.h"
+#include "except.h"
 
 /* スプライト表示処理 */
 
@@ -14,7 +15,7 @@ SpriteRenderer::SpriteRenderer(DevicePtr device) {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	// Direct3Dのみ。OpenGLでは不要？
 	if (FAILED(D3DXCreateSprite(device, &sprite)))
-		throw _T("スプライトの生成に失敗しました");
+		throw SpriteCreationError("スプライトの生成に失敗しました");
 #endif
 }
 

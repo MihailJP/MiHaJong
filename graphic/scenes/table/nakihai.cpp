@@ -1,5 +1,6 @@
 ﻿#include "nakihai.h"
 #include "../../utils.h"
+#include "../../except.h"
 
 namespace mihajong_graphic {
 
@@ -21,7 +22,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return TableSize - h2; break;
 					case 2: return TableSize - h3; break;
 					case 3: return TableSize - h4; break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			[=](unsigned i) -> int {
@@ -30,7 +31,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return TableSize - v2 + PositionOffset - (r2 ? 5 : 4); break;
 					case 2: return TableSize - v3 + PositionOffset - (r3 ? 5 : 4); break;
 					case 3: return TableSize - v4 + PositionOffset - (r4 ? 5 : 4); break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			Clockwise, UpsideDown, Withershins);
@@ -43,7 +44,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return TableSize - v2 + PositionOffset - (r2 ? 5 : 4); break;
 					case 2: return TableSize - v3 + PositionOffset - (r3 ? 5 : 4); break;
 					case 3: return TableSize - v4 + PositionOffset - (r4 ? 5 : 4); break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			[=](unsigned i) -> int {
@@ -52,7 +53,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return h2 - 5; break;
 					case 2: return h3 - 5; break;
 					case 3: return h4 - 5; break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			Portrait, Clockwise, UpsideDown);
@@ -66,7 +67,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return v2 - PositionOffset + (r2 ? 5 : 4); break;
 					case 2: return v3 - PositionOffset + (r3 ? 5 : 4); break;
 					case 3: return v4 - PositionOffset + (r4 ? 5 : 4); break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			[=](unsigned i) -> int {
@@ -75,7 +76,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return TableSize - h2; break;
 					case 2: return TableSize - h3; break;
 					case 3: return TableSize - h4; break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			UpsideDown, Withershins, Portrait);
@@ -89,7 +90,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return h2; break;
 					case 2: return h3; break;
 					case 3: return h4; break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			[=](unsigned i) -> int {
@@ -98,13 +99,13 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					case 1: return v2 - PositionOffset; break;
 					case 2: return v3 - PositionOffset; break;
 					case 3: return v4 - PositionOffset; break;
-					default: throw "Out of range";
+					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
 			Withershins, Portrait, Clockwise);
 		break;
 	default:
-		throw "Argument error";
+		throw InvalidArgument("牌の方向に異常なものが指定されました");
 	}
 }
 void GameTableScreen::NakihaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {

@@ -15,6 +15,7 @@
 #endif /*_WIN32*/
 #include "../../common/version.h"
 #include "../matrix.h"
+#include "../except.h"
 
 #ifdef max
 #undef max
@@ -138,7 +139,7 @@ void TitleScreen::versionInfo() {
 		case SanmaS:    color = 0x00ff80ff; gameTypeText = _T("数牌三麻"); break;
 		case SanmaSeto: color = 0x00ffffff; gameTypeText = _T("瀬戸内三麻"); break;
 		case GuobiaoMJ: color = 0x00ffff80; gameTypeText = _T("国標麻将"); break;
-		default: assert(false); // This may not occur.
+		default: throw InvalidGameType("GameTypeが正しくありません"); // This may not occur.
 	}
 	myTextRenderer->NewText(6, versionText,
 		realWidth - static_cast<int>(static_cast<float>(myTextRenderer->strWidthByPix(versionText)) * 1.5f * WidthRate()) - 40,

@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <sstream>
 #include <cassert>
+#include "except.h"
 
 using std::uint8_t;
 
@@ -21,8 +22,13 @@ namespace {
 	void LoadFileInResource(int name, int type, DWORD& size, const uint8_t*& data) {
 		HRSRC rc = FindResource(GraphicDLL, MAKEINTRESOURCE(name), MAKEINTRESOURCE(type));
 		DWORD err = GetLastError();
+		if (rc == nullptr)
+			throw FontMapLoadError(err, name);
 		assert(rc != nullptr);
 		HGLOBAL rcData = LoadResource(GraphicDLL, rc);
+		err = GetLastError();
+		if (rcData == nullptr)
+			throw FontMapLoadError(err, name);
 		assert(rcData != nullptr);
 		size = SizeofResource(GraphicDLL, rc);
 		assert(size != 0);
@@ -35,7 +41,7 @@ namespace {
 		FILE* file = fopen(fileName.c_str(), "rt");
 		if (!file) {
 			std::cerr << "Cannot open " << fileName << std::endl;
-			throw _T("フォントマップの読み込みに失敗しました");
+			throw FontMapLoadError(name, fileName);
 		}
 		fseek(file, 0, SEEK_END);
 		size = ftell(file);

@@ -2,6 +2,7 @@
 #include "../../rule.h"
 #include "../../utils.h"
 #include <cassert>
+#include "../../except.h"
 
 namespace mihajong_graphic {
 
@@ -46,7 +47,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 				((((targetPlayer + 2) % 3      ) * 36) + j * 2 + (74 * dice + 2 * dice2 + 36) +
 				(((gameStat->GameRound - (gameStat->GameRound / 4)) % 3)*  72)) % 108;
 		default:
-			throw _T("calcTileNum: Invalid mode!");
+			throw InvalidArgument("calcTileNum: Invalid mode!");
 		}
 	};
 	auto getRinshanFlag = [gameStat, yamahaiAttr](unsigned int a) -> std::function<bool (unsigned)> {

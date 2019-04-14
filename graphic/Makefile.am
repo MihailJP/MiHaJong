@@ -1,9 +1,9 @@
 lib_LTLIBRARIES = libmihajong-graphic.la
 libmihajong_graphic_la_SOURCES = \
-	calltext.cpp chrwidth.cpp event.cpp finscore.cpp font.cpp gametbl.cpp \
-	geometry.cpp init.cpp input.cpp loadtex.cpp matrix.cpp rule.cpp \
-	scrmanip.cpp  showtile.cpp sprite.cpp text.cpp timer.cpp utils.cpp \
-	window.cpp yakustat.cpp \
+	calltext.cpp chrwidth.cpp event.cpp except.cpp finscore.cpp font.cpp \
+	gametbl.cpp geometry.cpp init.cpp input.cpp loadtex.cpp matrix.cpp \
+	rule.cpp scrmanip.cpp  showtile.cpp sprite.cpp text.cpp timer.cpp \
+	utils.cpp window.cpp yakustat.cpp \
 	scenes/confmenu.cpp scenes/fps.cpp scenes/game.cpp scenes/proto.cpp \
 	scenes/result.cpp scenes/ruleconf.cpp scenes/splash.cpp \
 	scenes/sysscr.cpp scenes/table.cpp scenes/title.cpp scenes/waiting.cpp \
@@ -17,10 +17,10 @@ libmihajong_graphic_la_SOURCES = \
 	scenes/table/showdice.cpp scenes/table/sutehai.cpp scenes/table/tehai.cpp \
 	scenes/table/tehai0.cpp scenes/table/tiletip.cpp scenes/table/yamahai.cpp \
 	widgets/button.cpp widgets/checkbox.cpp \
-	calltext.h chrwidth.h directx.h event.h exports.h extchar.h finscore.h \
-	font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h matrix.h \
-	pi.h resource.h rule.h scrmanip.h showtile.h sprite.h text.h timer.h \
-	utils.h  window.h yakustat.h \
+	calltext.h chrwidth.h directx.h event.h except.h exports.h extchar.h \
+	finscore.h font.h gametbl.h geometry.h graphic.h init.h input.h loadtex.h \
+	matrix.h pi.h resource.h rule.h scrmanip.h showtile.h sprite.h text.h \
+	timer.h utils.h window.h yakustat.h \
 	scenes/confmenu.h scenes/fps.h scenes/game.h scenes/proto.h \
 	scenes/result.h scenes/ruleconf.h scenes/scenes.h \
 	scenes/splash.h scenes/scene_id.h scenes/sysscr.h scenes/table.h \

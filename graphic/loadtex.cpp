@@ -11,6 +11,7 @@
 #include <map>
 #include <cassert>
 #include "../common/strcode.h"
+#include "except.h"
 
 namespace mihajong_graphic {
 
@@ -37,7 +38,11 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 	} else { // ロードされていない場合
 #ifdef _WIN32
 		HRSRC Resource = FindResource(GraphicDLL, resource, MAKEINTRESOURCE(PNG_FILE));
+		if (Resource == nullptr)
+			throw TextureLoadError(GetLastError(), resourceID);
 		HGLOBAL ResourceMem = LoadResource(GraphicDLL, Resource);
+		if (ResourceMem == 0)
+			throw TextureLoadError(GetLastError(), resourceID);
 		DWORD pngSize = SizeofResource(GraphicDLL, Resource);
 		void* pngData = LockResource(ResourceMem);
 #if defined(_WIN32) && defined(WITH_DIRECTX)
@@ -53,17 +58,17 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 			*texture = Textures[resourceID];
 			return; // Congratulations, your texture has been loaded.
 		case D3DERR_NOTAVAILABLE:
-			throw _T("テクスチャの生成に失敗しました。");
+			throw TextureCreationError("", resourceID);
 		case D3DERR_OUTOFVIDEOMEMORY:
-			throw _T("テクスチャの生成に失敗しました。VRAMが足りません。");
+			throw TextureCreationError("VRAMが足りません。", resourceID);
 		case D3DERR_INVALIDCALL:
-			throw _T("テクスチャの生成に失敗しました。パラメータが正しくありません。");
+			throw TextureCreationError("パラメータが正しくありません。", resourceID);
 		case D3DXERR_INVALIDDATA:
-			throw _T("テクスチャの生成に失敗しました。データが異常です。");
+			throw TextureCreationError("データが異常です。", resourceID);
 		case E_OUTOFMEMORY:
-			throw _T("テクスチャの生成に失敗しました。メモリが足りません。");
+			throw TextureCreationError("メモリが足りません。", resourceID);
 		default: // This may not happen...
-			throw _T("テクスチャの生成に失敗しました。原因不明のエラーです。");
+			throw TextureCreationError("原因不明のエラーです。", resourceID);
 		}
 #else
 		Textures[resourceID] = 0;
@@ -112,34 +117,33 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 		TextureHeight[Textures[resourceID]] = 0;
 		glBindTexture(GL_TEXTURE_2D, Textures[resourceID]);
 		/* ファイルをオープン */
-		std::string fileName = dataFileName(resourceID);
-		CodeConv::tstring fileNameT = CodeConv::EnsureTStr(fileName);
+		const std::string fileName = dataFileName(resourceID);
 		FILE* pngFile = fopen(fileName.c_str(), "rb");
 		if (!pngFile)
-			throw (CodeConv::tstring(_T("fopen()失敗。テクスチャ画像 ")) + fileNameT + CodeConv::tstring(_T(" が読み込めませんでした。"))).c_str();
+			throw TextureCreationError(std::string("fopen()失敗。テクスチャ画像 ") + fileName + std::string(" が読み込めませんでした。"));
 		/* シグネチャの確認 */
 		unsigned char header[8];
 		fread(header, 1, 8, pngFile);
 		if (png_sig_cmp(header, 0, 8)) {
 			fclose(pngFile);
-			throw (fileNameT + CodeConv::tstring(_T(" はPNGファイルではありません！"))).c_str();
+			throw TextureCreationError(fileName + std::string(" はPNGファイルではありません！"));
 		}
 		/* 読み込み準備 */
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 		if (!pngPtr) {
 			fclose(pngFile);
-			throw _T("png_create_read_struct失敗！！");
+			throw TextureCreationError("png_create_read_struct失敗！！");
 		}
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		if (!infoPtr) {
 			png_destroy_read_struct(&pngPtr, nullptr, nullptr);
 			fclose(pngFile);
-			throw _T("png_create_info_struct失敗！！");
+			throw TextureCreationError("png_create_info_struct失敗！！");
 		}
 		if (setjmp(png_jmpbuf(pngPtr))) { /* C++なのにsetjmpとか勘弁してくれ。 */
 			png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
 			fclose(pngFile);
-			throw (fileNameT + CodeConv::tstring(_T(" の読み込みに失敗しました"))).c_str();
+			throw TextureCreationError(fileName + std::string(" の読み込みに失敗しました"));
 		}
 		/* ファイルポインタを渡す */
 		png_init_io(pngPtr, pngFile);
@@ -171,7 +175,8 @@ void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
 				}
 				break;
 			default:
-				assert(false); // アルファチャンネル無きものスプライト画像の資格なし！
+				// アルファチャンネル無きものスプライト画像の資格なし！
+				throw TextureCreationError(fileName + std::string(" にアルファチャンネルがありません"));
 			}
 		}
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

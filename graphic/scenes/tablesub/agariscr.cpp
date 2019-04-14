@@ -17,6 +17,7 @@
 #include "../../utils.h"
 #include "../../event.h"
 #include <algorithm>
+#include "../../except.h"
 
 namespace mihajong_graphic {
 
@@ -222,7 +223,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 				case 1: return h2 - PositionOffset; break;
 				case 2: return h3 - PositionOffset; break;
 				case 3: return h4 - PositionOffset; break;
-				default: throw "Out of range";
+				default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 			}
 		},
 		[=](unsigned i) -> int {
@@ -231,7 +232,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 				case 1: return v2; break;
 				case 2: return v3; break;
 				case 3: return v4; break;
-				default: throw "Out of range";
+				default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 			}
 		},
 		Withershins, Portrait, Clockwise);

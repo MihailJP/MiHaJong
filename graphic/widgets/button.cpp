@@ -5,6 +5,7 @@
 #include "../sprite.h"
 #include "../matrix.h"
 #include "../../common/strcode.h"
+#include "../except.h"
 
 namespace mihajong_graphic {
 
@@ -46,7 +47,7 @@ void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsi
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat) {
 	if (mySprites.size() <= ButtonID)
-		throw _T("ボタンが初期化されていません");
+		throw UninitializedObject("ボタンが初期化されていません");
 	mySprites[ButtonID] = std::make_tuple(stat,
 		std::get<1>(mySprites[ButtonID]), std::get<2>(mySprites[ButtonID]),
 		std::get<3>(mySprites[ButtonID]), std::get<4>(mySprites[ButtonID]),

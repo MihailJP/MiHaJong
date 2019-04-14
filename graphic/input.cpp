@@ -2,6 +2,7 @@
 #ifdef _WIN32
 #include "init.h"
 #include "../common/strcode.h"
+#include "except.h"
 
 namespace mihajong_graphic {
 namespace input {
@@ -11,12 +12,12 @@ namespace input {
 InputManipulator::InputManipulator(HWND hwnd, bool fullscreen) {
 	if (FAILED(DirectInput8Create(
 		GraphicDLL, 0x0800, IID_IDirectInput8, reinterpret_cast<void**>(&myInterface), nullptr)))
-		throw CodeConv::tstring(_T("DirectInput8Create失敗！！"));
+		throw ModuleInitializationError("DirectInput8Create失敗！！");
 	myKeyboard = new Keyboard(myInterface, hwnd);
 	myMouse = new Mouse(myInterface, hwnd, fullscreen);
 	try {
 		myJoystick = new Joystick(myInterface, hwnd);
-	} catch (...) {
+	} catch (const NoGamepadsAvailable&) {
 		myJoystick = nullptr;
 	}
 }
@@ -36,11 +37,11 @@ InputDevice::~InputDevice() {}
 
 Keyboard::Keyboard(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
 	if (FAILED(inputInterface->CreateDevice(GUID_SysKeyboard, &myInputDevice, nullptr)))
-		throw CodeConv::tstring(_T("CreateDevice失敗！！"));
+		throw KeyboardInitializationError("CreateDevice失敗！！");
 	if (FAILED(myInputDevice->SetDataFormat(&c_dfDIKeyboard)))
-		throw CodeConv::tstring(_T("SetDataFormat失敗！！"));
+		throw KeyboardInitializationError("SetDataFormat失敗！！");
 	if (FAILED(myInputDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-		throw CodeConv::tstring(_T("SetCooperativeLevel失敗！！"));
+		throw KeyboardInitializationError("SetCooperativeLevel失敗！！");
 	DIPROPDWORD diProp;
 	diProp.diph.dwSize = sizeof(diProp);
 	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
@@ -48,7 +49,7 @@ Keyboard::Keyboard(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
 	diProp.diph.dwHow = DIPH_DEVICE;
 	diProp.dwData = 1000;
 	if (FAILED(myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
-		throw CodeConv::tstring(_T("SetProperty失敗！！"));
+		throw KeyboardInitializationError("SetProperty失敗！！");
 	myInputDevice->Acquire();
 }
 
@@ -64,11 +65,11 @@ Keyboard::~Keyboard() {
 Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd, bool fullscreen) {
 	hWnd = hwnd; fullScreenFlag = fullscreen;
 	if (FAILED(inputInterface->CreateDevice(GUID_SysMouse, &myInputDevice, nullptr)))
-		throw CodeConv::tstring(_T("CreateDevice失敗！！"));
+		throw MouseInitializationError("CreateDevice失敗！！");
 	if (FAILED(myInputDevice->SetDataFormat(&c_dfDIMouse2)))
-		throw CodeConv::tstring(_T("SetDataFormat失敗！！"));
+		throw MouseInitializationError("SetDataFormat失敗！！");
 	if (FAILED(myInputDevice->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-		throw CodeConv::tstring(_T("SetCooperativeLevel失敗！！"));
+		throw MouseInitializationError("SetCooperativeLevel失敗！！");
 	DIPROPDWORD diProp;
 	diProp.diph.dwSize = sizeof(diProp);
 	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
@@ -76,7 +77,7 @@ Mouse::Mouse(LPDIRECTINPUT8 inputInterface, HWND hwnd, bool fullscreen) {
 	diProp.diph.dwHow = DIPH_DEVICE;
 	diProp.dwData = 1000;
 	if (FAILED(myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
-		throw CodeConv::tstring(_T("SetProperty失敗！！"));
+		throw MouseInitializationError("SetProperty失敗！！");
 	myInputDevice->Acquire();
 }
 
@@ -109,11 +110,11 @@ BOOL CALLBACK Joystick::enumerationCallback(const DIDEVICEINSTANCE *pdidInstance
 void Joystick::init_main() {
 	currentInterface->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerationCallback, nullptr, DIEDFL_ATTACHEDONLY);
 	if (!currentInstance->myInputDevice)
-		throw CodeConv::tstring(_T("ジョイスティックがありません"));
+		throw NoGamepadsAvailable("ジョイスティックがありません");
 	if (FAILED(currentInstance->myInputDevice->SetDataFormat(&c_dfDIJoystick)))
-		throw CodeConv::tstring(_T("SetDataFormat失敗！！"));
+		throw GamepadInitializationError("SetDataFormat失敗！！");
 	if (FAILED(currentInstance->myInputDevice->SetCooperativeLevel(currentInstance->myHWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
-		throw CodeConv::tstring(_T("SetCooperativeLevel失敗！！"));
+		throw GamepadInitializationError("SetCooperativeLevel失敗！！");
 	DIPROPDWORD diProp;
 	diProp.diph.dwSize = sizeof(diProp);
 	diProp.diph.dwHeaderSize = sizeof(diProp.diph);
@@ -121,7 +122,7 @@ void Joystick::init_main() {
 	diProp.diph.dwHow = DIPH_DEVICE;
 	diProp.dwData = 1000;
 	if (FAILED(reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->SetProperty(DIPROP_BUFFERSIZE, &diProp.diph)))
-		throw CodeConv::tstring(_T("SetProperty(DIPROP_BUFFERSIZE)失敗！！"));
+		throw GamepadInitializationError("SetProperty(DIPROP_BUFFERSIZE)失敗！！");
 	DIPROPRANGE diRange;
 	diRange.diph.dwSize = sizeof(diRange);
 	diRange.diph.dwHeaderSize = sizeof(diRange.diph);
@@ -130,7 +131,7 @@ void Joystick::init_main() {
 	diRange.lMin = -32767;
 	diRange.lMax = 32767;
 	if (FAILED(reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->SetProperty(DIPROP_RANGE, &diRange.diph)))
-		throw CodeConv::tstring(_T("SetProperty(DIPROP_RANGE)失敗！！"));
+		throw GamepadInitializationError("SetProperty(DIPROP_RANGE)失敗！！");
 	reinterpret_cast<Joystick*>(currentInstance)->myInputDevice->Acquire();
 }
 Joystick::Joystick(LPDIRECTINPUT8 inputInterface, HWND hwnd) {
