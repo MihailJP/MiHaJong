@@ -7,14 +7,14 @@
 #endif
 
 #ifdef _WIN32
-mihajong_graphic::DataLoadError::DataLoadError(const std::string& desc, unsigned long err, int num) : std::runtime_error(
+mihajong_graphic::DataLoadError::DataLoadError(const std::string& desc, unsigned long err, std::intptr_t num) : std::runtime_error(
 	desc + std::string("の読み込みに失敗しました" NWL "エラーコード ") +
 	std::to_string(err) +
 	std::string(NWL "リソース番号 ") +
 	std::to_string(num)
 ) {}
 #else /*_WIN32*/
-mihajong_graphic::DataLoadError::DataLoadError(const std::string& desc, int num, const std::string& filename) : std::runtime_error(
+mihajong_graphic::DataLoadError::DataLoadError(const std::string& desc, std::intptr_t num, const std::string& filename) : std::runtime_error(
 	desc + std::string("の読み込みに失敗しました" NWL "リソース番号 ") +
 	std::to_string(num) +
 	std::string(NWL "ファイル名 ") +

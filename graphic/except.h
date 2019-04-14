@@ -3,6 +3,7 @@
 #include <exception>
 #include <stdexcept>
 #include <string>
+#include <cstdint>
 
 namespace mihajong_graphic {
 
@@ -85,9 +86,9 @@ class DataLoadError : public GraphicModuleError, std::runtime_error {
 public:
 	explicit DataLoadError(const std::string& what) : std::runtime_error(what) {}
 #ifdef _WIN32
-	explicit DataLoadError(const std::string& desc, unsigned long err, int num);
+	explicit DataLoadError(const std::string& desc, unsigned long err, std::intptr_t num);
 #else /*_WIN32*/
-	explicit DataLoadError(const std::string& desc, int num, const std::string& filename);
+	explicit DataLoadError(const std::string& desc, std::intptr_t num, const std::string& filename);
 #endif /*_WIN32*/
 };
 
@@ -95,9 +96,9 @@ class FontMapLoadError : public DataLoadError {
 public:
 	explicit FontMapLoadError(const std::string& what) : DataLoadError(what) {}
 #ifdef _WIN32
-	explicit FontMapLoadError(unsigned long err, int num) : DataLoadError("フォントマップ", err, num) {}
+	explicit FontMapLoadError(unsigned long err, std::intptr_t num) : DataLoadError("フォントマップ", err, num) {}
 #else /*_WIN32*/
-	explicit FontMapLoadError(int num, const std::string& filename) : DataLoadError("フォントマップ", num, filename) {}
+	explicit FontMapLoadError(std::intptr_t num, const std::string& filename) : DataLoadError("フォントマップ", num, filename) {}
 #endif /*_WIN32*/
 };
 
@@ -105,9 +106,9 @@ class TextureLoadError : public DataLoadError {
 public:
 	explicit TextureLoadError(const std::string& what) : DataLoadError(what) {}
 #ifdef _WIN32
-	explicit TextureLoadError(unsigned long err, int num) : DataLoadError("テクスチャ", err, num) {}
+	explicit TextureLoadError(unsigned long err, std::intptr_t num) : DataLoadError("テクスチャ", err, num) {}
 #else /*_WIN32*/
-	explicit TextureLoadError(int num, const std::string& filename) : DataLoadError("テクスチャ", num, filename) {}
+	explicit TextureLoadError(std::intptr_t num, const std::string& filename) : DataLoadError("テクスチャ", num, filename) {}
 #endif /*_WIN32*/
 };
 

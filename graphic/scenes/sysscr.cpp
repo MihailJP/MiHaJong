@@ -125,7 +125,7 @@ void SystemScreen::Background::show() {
 		1.0f / Geometry::WindowScale()
 	));
 #endif /* WITH_DIRECTX */
-	const int alpha = (timer().elapsed() >= 1'000'000uLL) ? 255 : (static_cast<int>(timer().elapsed()) * 255) / 1'000'000uLL;
+	const int alpha = (timer().elapsed() >= 1'000'000uLL) ? 255 : static_cast<int>((timer().elapsed() * 255uLL) / 1'000'000uLL);
 	const RECT rect(getRect());
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, 0, 0,
 		Geometry::WindowWidth, Geometry::WindowHeight, (alpha << 24) | 0xffffff, &rect, 0, 0, &matrix);

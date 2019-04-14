@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4644</DisableSpecificWarnings>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
@@ -116,7 +116,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4644</DisableSpecificWarnings>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4644</DisableSpecificWarnings>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
@@ -152,7 +152,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4800</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4644</DisableSpecificWarnings>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
@@ -199,7 +199,12 @@
     <ClCompile Include="scenes\proto.cpp" />
     <ClCompile Include="scenes\splash.cpp" />
     <ClCompile Include="scenes\ruleconf.cpp" />
-    <ClCompile Include="scenes\sysscr.cpp" />
+    <ClCompile Include="scenes\sysscr.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="scenes\table.cpp" />
     <ClCompile Include="scenes\tablesub\agariscr.cpp" />
     <ClCompile Include="scenes\tablesub\call.cpp" />
