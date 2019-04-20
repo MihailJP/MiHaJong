@@ -94,9 +94,9 @@ Wikimedia Commons ユーザーの Daderot 氏により撮影され、MihailJP �
 
 時計の文字盤画像について
 ------------------------
-　時計の文字盤に使用した写真は、2011年3月19日にドイツで撮影された満月の写真であり、 
-Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP により回転・透明化処理・トリミングを行ったものです。
-ライセンスは次のとおりです。
+　時計の文字盤に使用した写真は、2019年1月20日にイタリアで撮影された満月の写真で
+あり、Flickr ユーザーの Giuseppe Donatiello 氏により撮影され、MihailJP により
+回転・透明化処理・トリミングを行ったものです。ライセンスは次のとおりです。
 
 > This file is made available under the Creative Commons [CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/deed.en).
 >
@@ -106,7 +106,7 @@ Wikimedia Commons ユーザーの Enceladus 氏により撮影され、MihailJP 
 > You can copy, modify, distribute and perform the work, even for commercial purposes,
 > all without asking permission.
 
-参照：[https://commons.wikimedia.org/wiki/File:20110319_Supermoon.jpg](https://commons.wikimedia.org/wiki/File:20110319_Supermoon.jpg)
+参照：[https://commons.wikimedia.org/wiki/File:Full_Moon_out_eclipse_on_Jan._20,_2019_(40007444073).jpg](https://commons.wikimedia.org/wiki/File:Full_Moon_out_eclipse_on_Jan._20,_2019_(40007444073).jpg)
 
 
 フォントデータについて
