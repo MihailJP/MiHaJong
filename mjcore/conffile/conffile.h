@@ -35,6 +35,10 @@ enum ScreenConfig : int {
 	screenUXGA,   // 1600 x 1200
 	screenFullHD, // 1920 x 1080
 	screenWUXGA,  // 1920 x 1200
+#ifdef WITH_4K_PICS
+	screenWQHD,   // 2560 x 1440
+	screen4K,     // 3840 x 2160
+#endif /* WITH_4K_PICS */
 	screenDefaultRes = screenXGA,
 };
 
