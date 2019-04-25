@@ -96,9 +96,9 @@ void ConfigFile::save() {
 #endif /* _WIN32 */
 	file << _T("; ウィンドウサイズ/解像度\n");
 	file << _T("; ウィンドウモードではウィンドウサイズ、フルスクリーンでは解像度を設定します。\n");
-	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga");
+	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga")
 #ifdef WITH_4K_PICS
-		<< _T(", wqhd, 4k");
+		<< _T(", wqhd, 4k")
 #endif /* WITH_4K_PICS */
 		<< _T("\n");
 	file << _T("; screenが\"borderless\"のときは無視されます。\n");

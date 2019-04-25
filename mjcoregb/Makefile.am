@@ -56,6 +56,10 @@ endif
 else
 libmihagbmj_la_CXXFLAGS += -DPKGDATADIR='"$(pkgdatadir)"' -DUNICODE -D_UNICODE
 endif
+if WITH_4K_PICS
+libmihagbmj_la_CXXFLAGS += -DWITH_4K_PICS
+endif
+
 libmihagbmj_la_LIBADD = \
 	$(LUA_LIB) \
 	../sound/libmihajong-sound.la \

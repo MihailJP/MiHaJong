@@ -64,23 +64,35 @@ endif
 if OLDER_BOOST_WAIT
 libmihajong_graphic_la_CXXFLAGS += -DOLDER_BOOST_WAIT
 endif
-dist_pkgdata_DATA = \
-	data/agariwnd.png data/baize.png data/button.png data/call.png \
-	data/cdigits.chr data/cdigits.png data/checkbox.png data/chiicha.png \
-	data/clock.png \
-	data/dice.png data/font.chr data/font.png data/frame.png \
-	data/largechr.chr data/largechr.png data/score.png data/sdigits.chr \
-	data/sdigits.png data/sidebar.png data/smallchr.chr data/smallchr.png \
-	data/tenbou.png data/tiles.png data/tiles_bk.png data/title.png \
-	data/splash.png data/titlback.png \
-	data/2x/agariwnd.png data/2x/baize.png data/2x/button.png \
-	data/2x/call.png data/2x/cdigits.png data/2x/checkbox.png \
-	data/2x/chiicha.png data/2x/clock.png data/2x/dice.png data/2x/font.png \
-	data/2x/frame.png data/2x/largechr.png data/2x/score.png \
-	data/2x/sdigits.png data/2x/sidebar.png data/2x/smallchr.png \
-	data/2x/tenbou.png data/2x/tiles.png data/2x/tiles_bk.png \
-	data/2x/title.png data/2x/splash.png data/2x/titlback.png
+if WITH_4K_PICS
+DATA1 = data/2x
+DATA2 = data
+libmihajong_graphic_la_CXXFLAGS += -DWITH_4K_PICS
+else
+DATA1 = data
+DATA2 = data/2x
+endif
+graphicdatadir = $(pkgdatadir)/graphic
+dist_graphicdata_DATA = \
+	data/cdigits.chr data/font.chr data/largechr.chr data/sdigits.chr \
+	data/smallchr.chr
+dist_graphicdata_DATA += \
+	$(DATA1)/agariwnd.png $(DATA1)/baize.png $(DATA1)/button.png \
+	$(DATA1)/call.png $(DATA1)/cdigits.png $(DATA1)/checkbox.png \
+	$(DATA1)/chiicha.png $(DATA1)/clock.png $(DATA1)/dice.png $(DATA1)/font.png \
+	$(DATA1)/frame.png $(DATA1)/largechr.png $(DATA1)/score.png \
+	$(DATA1)/sdigits.png $(DATA1)/sidebar.png $(DATA1)/smallchr.png \
+	$(DATA1)/tenbou.png $(DATA1)/tiles.png $(DATA1)/tiles_bk.png \
+	$(DATA1)/title.png $(DATA1)/splash.png $(DATA1)/titlback.png
 EXTRA_DIST = \
+	$(DATA2)/agariwnd.png $(DATA2)/baize.png $(DATA2)/button.png \
+	$(DATA2)/call.png $(DATA2)/cdigits.png $(DATA2)/checkbox.png \
+	$(DATA2)/chiicha.png $(DATA2)/clock.png $(DATA2)/dice.png $(DATA2)/font.png \
+	$(DATA2)/frame.png $(DATA2)/largechr.png $(DATA2)/score.png \
+	$(DATA2)/sdigits.png $(DATA2)/sidebar.png $(DATA2)/smallchr.png \
+	$(DATA2)/tenbou.png $(DATA2)/tiles.png $(DATA2)/tiles_bk.png \
+	$(DATA2)/title.png $(DATA2)/splash.png $(DATA2)/titlback.png
+EXTRA_DIST += \
 	graphic.vcxproj graphic.vcxproj.filters \
 	graphic_2x.vcxproj graphic_2x.vcxproj.filters
 if WITH_WINAPI
