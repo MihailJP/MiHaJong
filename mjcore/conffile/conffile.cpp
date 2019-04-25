@@ -96,7 +96,11 @@ void ConfigFile::save() {
 #endif /* _WIN32 */
 	file << _T("; ウィンドウサイズ/解像度\n");
 	file << _T("; ウィンドウモードではウィンドウサイズ、フルスクリーンでは解像度を設定します。\n");
-	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga\n");
+	file << _T("; 次の値が指定できます: svga, xga, fwxga, sxga, uxga, fullhd, wuxga")
+#ifdef WITH_4K_PICS
+		<< _T(", wqhd, 4k")
+#endif /* WITH_4K_PICS */
+		<< _T("\n");
 	file << _T("; screenが\"borderless\"のときは無視されます。\n");
 	file << _T("scrsize=") << configMap[_T("preferences")][_T("scrsize")] << _T("\n\n");
 #ifdef _WIN32
@@ -163,6 +167,10 @@ ScreenConfig ConfigFile::screenResolution() {
 		{_T("scr_1600_1200"), screenUXGA},   {_T("uxga"),   screenUXGA},
 		{_T("scr_1920_1080"), screenFullHD}, {_T("fullhd"), screenFullHD},
 		{_T("scr_1920_1200"), screenWUXGA},  {_T("wuxga"),  screenWUXGA},
+#ifdef WITH_4K_PICS
+		{_T("wqhd"),  screenWQHD},
+		{_T("4k"),  screen4K},
+#endif /* WITH_4K_PICS */
 	};
 	try {
 		return scrConfList.at(configMap[_T("preferences")][_T("scrsize")]);
@@ -193,6 +201,14 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 	case screenWUXGA:
 		configMap[_T("preferences")][_T("scrsize")] = _T("wuxga");
 		break;
+#ifdef WITH_4K_PICS
+	case screenWQHD:
+		configMap[_T("preferences")][_T("scrsize")] = _T("wqhd");
+		break;
+	case screen4K:
+		configMap[_T("preferences")][_T("scrsize")] = _T("4k");
+		break;
+#endif /* WITH_4K_PICS */
 	default:
 		throw std::out_of_range("invalid value for screen resolution");
 	}

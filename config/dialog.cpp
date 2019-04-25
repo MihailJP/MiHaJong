@@ -98,6 +98,10 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 		_T("UXGA (1600 x 1200)"),
 		_T("Full HD (1920 x 1080)"),
 		_T("WUXGA (1920 x 1200)"),
+#ifdef WITH_4K_PICS
+		_T("WQHD (2560 x 1440)"),
+		_T("4K (3840 x 2160)"),
+#endif /* WITH_4K_PICS */
 		});
 
 	const auto monitorList(monitors());

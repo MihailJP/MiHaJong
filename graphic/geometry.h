@@ -4,6 +4,11 @@ namespace mihajong_graphic {
 
 class Geometry {
 public:
+#ifdef WITH_4K_PICS
+	static constexpr float DataScale = 2.0f;
+#else /* WITH_4K_PICS */
+	static constexpr float DataScale = 1.0f;
+#endif /* WITH_4K_PICS */
 	static constexpr unsigned BaseSize = 1080u;
 	static unsigned WindowWidth;
 	static unsigned WindowHeight;

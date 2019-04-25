@@ -175,6 +175,16 @@ AS_IF([test "x$with_directx" = xno], [
 	AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))
 	AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
 ])
+
+AC_ARG_ENABLE([large_pics],
+	[AS_HELP_STRING([--enable-large-pics],
+		[use larger graphic data for 4K displays [default=no]])],
+	[],
+	[enable_large_pics=no]
+)
+AM_CONDITIONAL(WITH_4K_PICS, test x$enable_large_pics != xno)
+
+
 AC_CHECK_FUNCS([clock_gettime floor getaddrinfo getenv_s gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
 
 

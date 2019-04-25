@@ -62,17 +62,23 @@ void SpriteRenderer::End() {
 
 /* スプライト描画 */
 void SpriteRenderer::ShowSprite(
-	const TexturePtr texture, int X, int Y, int Width, int Height,
+	TexturePtr texture, int X, int Y, int Width, int Height,
 	ArgbColor color, const RECT* rect, int CenterX, int CenterY, const TransformMatrix* matrix)
 {
 	if ((!sprite) || (!texture)) return; // ぬるぽは(・∀・)ｶｴﾚ!!
-	const RECT defaultRect = {0, 0, Width, Height};
 	const TransformMatrix defaultMatrix(getMatrix());
+	const RECT txRect = {
+		static_cast<int>(static_cast<float>(rect ? rect->left : 0) * Geometry::DataScale),
+		static_cast<int>(static_cast<float>(rect ? rect->top : 0) * Geometry::DataScale),
+		static_cast<int>(static_cast<float>(rect ? rect->right : Width) * Geometry::DataScale),
+		static_cast<int>(static_cast<float>(rect ? rect->bottom : Height) * Geometry::DataScale)
+	};
 #if defined(_WIN32) && defined(WITH_DIRECTX)
-	D3DXVECTOR3 Center(static_cast<float>(CenterX), static_cast<float>(CenterY), 0.0f);
-	D3DXVECTOR3 Pos(static_cast<float>(X), static_cast<float>(Y), 0.0f);
+	const float dataScale = matrix ? 1.0f : Geometry::DataScale;
+	D3DXVECTOR3 Center(static_cast<float>(CenterX) * Geometry::DataScale, static_cast<float>(CenterY) * Geometry::DataScale, 0.0f);
+	D3DXVECTOR3 Pos(static_cast<float>(X) * dataScale, static_cast<float>(Y) * dataScale, 0.0f);
 	sprite->SetTransform(matrix ? matrix : &defaultMatrix);
-	sprite->Draw(texture, rect ? rect : &defaultRect, &Center, &Pos, color);
+	sprite->Draw(texture, &txRect, &Center, &Pos, color);
 	sprite->Flush();
 #else
 	glDisable(GL_DEPTH_TEST);
@@ -86,7 +92,6 @@ void SpriteRenderer::ShowSprite(
 	glLoadMatrixf(matrix ? &((*matrix)[0]) : &defaultMatrix[0]);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	const RECT* txRect = rect ? rect : &defaultRect;
 
 	glBegin(GL_QUADS);
 	glColor4d(
@@ -94,10 +99,10 @@ void SpriteRenderer::ShowSprite(
 		static_cast<double>((color & 0x0000ff00) >>  8) / 255.0,
 		static_cast<double>((color & 0x000000ff)      ) / 255.0,
 		static_cast<double>((color & 0xff000000) >> 24) / 255.0);
-	const double lpos = static_cast<double>(txRect->left  ) / static_cast<double>(getTextureWidth (nullptr, texture));
-	const double rpos = static_cast<double>(txRect->right ) / static_cast<double>(getTextureWidth (nullptr, texture));
-	const double tpos = static_cast<double>(txRect->top   ) / static_cast<double>(getTextureHeight(nullptr, texture));
-	const double bpos = static_cast<double>(txRect->bottom) / static_cast<double>(getTextureHeight(nullptr, texture));
+	const double lpos = static_cast<double>(txRect.left  ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	const double rpos = static_cast<double>(txRect.right ) / static_cast<double>(getTextureWidth (nullptr, texture));
+	const double tpos = static_cast<double>(txRect.top   ) / static_cast<double>(getTextureHeight(nullptr, texture));
+	const double bpos = static_cast<double>(txRect.bottom) / static_cast<double>(getTextureHeight(nullptr, texture));
 	glTexCoord2d(lpos, bpos); glVertex2i(X         - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, bpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y + Height - CenterY));
 	glTexCoord2d(rpos, tpos); glVertex2i(X + Width - CenterX, Geometry::WindowHeight - (Y          - CenterY));

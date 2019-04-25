@@ -6,59 +6,59 @@ namespace mihajong_graphic {
 std::string dataFileName(int fileID) {
 	switch (fileID) {
 	case IDB_PNG_TBLBAIZE:
-		return PKGDATADIR "/baize.png";
+		return PKGDATADIR "/graphic/baize.png";
 	case IDB_PNG_TBLBORDER:
-		return PKGDATADIR "/frame.png";
+		return PKGDATADIR "/graphic/frame.png";
 	case IDB_PNG_SDBAR:
-		return PKGDATADIR "/sidebar.png";
+		return PKGDATADIR "/graphic/sidebar.png";
 	case IDB_PNG_TILE:
-		return PKGDATADIR "/tiles.png";
+		return PKGDATADIR "/graphic/tiles.png";
 	case IDB_PNG_FONT:
-		return PKGDATADIR "/font.png";
+		return PKGDATADIR "/graphic/font.png";
 	case IDB_PNG_TITLE:
-		return PKGDATADIR "/title.png";
+		return PKGDATADIR "/graphic/title.png";
 	case IDB_PNG_BUTTON:
-		return PKGDATADIR "/button.png";
+		return PKGDATADIR "/graphic/button.png";
 	case IDB_PNG_FONT_HUGE:
-		return PKGDATADIR "/largechr.png";
+		return PKGDATADIR "/graphic/largechr.png";
 	case IDB_PNG_DICE:
-		return PKGDATADIR "/dice.png";
+		return PKGDATADIR "/graphic/dice.png";
 	case IDB_PNG_FONT_SMALL:
-		return PKGDATADIR "/smallchr.png";
+		return PKGDATADIR "/graphic/smallchr.png";
 	case IDB_PNG_TENBOU:
-		return PKGDATADIR "/tenbou.png";
+		return PKGDATADIR "/graphic/tenbou.png";
 	case IDB_PNG_CHICHAMARK:
-		return PKGDATADIR "/chiicha.png";
+		return PKGDATADIR "/graphic/chiicha.png";
 	case IDB_PNG_SCORE_INDICATOR:
-		return PKGDATADIR "/score.png";
+		return PKGDATADIR "/graphic/score.png";
 	case IDB_PNG_CALL_TEXT:
-		return PKGDATADIR "/call.png";
+		return PKGDATADIR "/graphic/call.png";
 	case IDB_PNG_CALL_DIGITS:
-		return PKGDATADIR "/cdigits.png";
+		return PKGDATADIR "/graphic/cdigits.png";
 	case IDB_PNG_AGARI_WINDOW:
-		return PKGDATADIR "/agariwnd.png";
+		return PKGDATADIR "/graphic/agariwnd.png";
 	case IDB_PNG_SCORE_DIGITS:
-		return PKGDATADIR "/sdigits.png";
+		return PKGDATADIR "/graphic/sdigits.png";
 	case IDB_PNG_CHECKBOX:
-		return PKGDATADIR "/checkbox.png";
+		return PKGDATADIR "/graphic/checkbox.png";
 	case IDB_PNG_TILE_BLACK:
-		return PKGDATADIR "/tiles_bk.png";
+		return PKGDATADIR "/graphic/tiles_bk.png";
 	case IDB_PNG_MOON_CLOCK:
-		return PKGDATADIR "/clock.png";
+		return PKGDATADIR "/graphic/clock.png";
 	case IDB_PNG_SPLASH_SCREEN:
-		return PKGDATADIR "/splash.png";
+		return PKGDATADIR "/graphic/splash.png";
 	case IDB_PNG_TITLE_BACKGROUND:
-		return PKGDATADIR "/titlback.png";
+		return PKGDATADIR "/graphic/titlback.png";
 	case IDB_CHARMAP_FONT:
-		return PKGDATADIR "/font.chr";
+		return PKGDATADIR "/graphic/font.chr";
 	case IDB_CHARMAP_FONT_HUGE:
-		return PKGDATADIR "/largechr.chr";
+		return PKGDATADIR "/graphic/largechr.chr";
 	case IDB_CHARMAP_FONT_SMALL:
-		return PKGDATADIR "/smallchr.chr";
+		return PKGDATADIR "/graphic/smallchr.chr";
 	case IDB_CHARMAP_CALL_DIGITS:
-		return PKGDATADIR "/cdigits.chr";
+		return PKGDATADIR "/graphic/cdigits.chr";
 	case IDB_CHARMAP_SCORE_DIGITS:
-		return PKGDATADIR "/sdigits.chr";
+		return PKGDATADIR "/graphic/sdigits.chr";
 	default:
 		return "";
 	}
