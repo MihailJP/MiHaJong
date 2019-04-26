@@ -115,7 +115,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;WITH_4K_PICS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4800;4644</DisableSpecificWarnings>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
@@ -124,6 +124,9 @@
       <AdditionalDependencies>d3d9.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;dinput8.lib;$(TargetDir)sound.lib;$(TargetDir)astro.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WITH_4K_PICS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -151,7 +154,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GRAPHIC_EXPORTS;WITH_DIRECTX;_WIN32_WINNT=0x0601;WITH_4K_PICS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4800;4644</DisableSpecificWarnings>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
@@ -162,6 +165,9 @@
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxerr.lib;dxguid.lib;dinput8.lib;$(TargetDir)sound.lib;$(TargetDir)astro.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WITH_4K_PICS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="except.cpp" />

@@ -129,7 +129,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>GUOBIAO;WIN32;_DEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GUOBIAO;WIN32;_DEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;_WIN32_WINNT=0x0601;WITH_4K_PICS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>
       </MultiProcessorCompilation>
       <ExceptionHandling>Async</ExceptionHandling>
@@ -192,7 +192,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>GUOBIAO;WIN32;NDEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GUOBIAO;WIN32;NDEBUG;_WINDOWS;_USRDLL;MJCORE_EXPORTS;_WIN32_WINNT=0x0601;WITH_4K_PICS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <DisableSpecificWarnings>4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
