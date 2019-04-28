@@ -78,13 +78,12 @@ EXTRA_DIST = \
 	$(DATA2)/tenbou.png $(DATA2)/tiles.png $(DATA2)/tiles_bk.png \
 	$(DATA2)/title.png $(DATA2)/splash.png $(DATA2)/titlback.png
 EXTRA_DIST += \
-	graphic.vcxproj graphic.vcxproj.filters \
-	graphic_2x.vcxproj graphic_2x.vcxproj.filters
+	graphic.vcxproj graphic.vcxproj.filters
 if WITH_WINAPI
-libmihajong_graphic_la_SOURCES += graphic.rc graphic_2x.rc
+libmihajong_graphic_la_SOURCES += graphic.rc
 EXTRA_DIST += filenum.cpp filenum.h keycode.h
 else
-EXTRA_DIST += graphic.rc graphic_2x.rc
+EXTRA_DIST += graphic.rc
 libmihajong_graphic_la_SOURCES += filenum.cpp filenum.h keycode.h
 endif
 
