@@ -12,6 +12,12 @@
 #undef None
 #endif
 
+#ifdef _WIN32
+#define BGMDIR "bgm\\"
+#else /* _WIN32 */
+#define BGMDIR "bgm/"
+#endif /* _WIN32 */
+
 namespace {
 	enum bgmMode {None, Vorbis, Midi,};
 	std::vector<bgmMode> BGM_Mode;
@@ -21,8 +27,12 @@ namespace {
 void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 	if (BGM_Mode.size() <= static_cast<std::size_t>(ID)) BGM_Mode.resize(static_cast<std::size_t>(ID) + 1, None);
 	CodeConv::tostringstream o;
-	std::string oggfile = std::string("bgm\\") + std::string(filename) + std::string(".ogg");
-	std::string midifile = std::string("bgm\\") + std::string(filename) + std::string(".mid");
+	std::string oggfile = std::string(BGMDIR) + std::string(filename) + std::string(".ogg");
+	std::string midifile = std::string(BGMDIR) + std::string(filename) + std::string(".mid");
+#ifdef PKGDATADIR
+	oggfile = std::string(PKGDATADIR) + std::string("/") + oggfile;
+	midifile = std::string(PKGDATADIR) + std::string("/") + midifile;
+#endif /* PKGDATADIR */
 	if (exist(oggfile.c_str())) {
 		if (LoadVorbis(ID, oggfile.c_str(), looped ? 1 : 0) == 0) {
 			o << _T("BGMファイル [") << CodeConv::EnsureTStr(filename) << _T(".ogg] の読み込みを完了しました。");
