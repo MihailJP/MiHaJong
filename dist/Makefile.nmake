@@ -1,14 +1,14 @@
-OBJPATH=..\$(IntDir)
 ZIP=zip
+OBJPATH=..\\$(IntDir)
 ZIPNAME=mihajong
 TMPPATH=$(OBJPATH)$(ZIPNAME)\\
 ARCHIVENAME=$(ZIPNAME).zip
 ARCHIVE=$(OBJPATH)$(ARCHIVENAME)
-DOCPATH=..\doc\\
-DATAPATH=..\data\\
+DOCPATH=..\\doc\\
+DATAPATH=..\\data\\
 ARCHIVE_CONTENT=$(TMPPATH)astro.bin $(TMPPATH)GuruGuruSMF4.dll $(TMPPATH)graphic.bin $(TMPPATH)mjcore.bin $(TMPPATH)mjcoregb.bin $(TMPPATH)socket.bin $(TMPPATH)sound.bin \
 	$(TMPPATH)mihajong.exe $(TMPPATH)mihasanm.exe $(TMPPATH)mihassnm.exe $(TMPPATH)mihaysnm.exe $(TMPPATH)mihagbmj.exe \
-	$(TMPPATH)readme.txt $(TMPPATH)manual.css \
+	$(TMPPATH)readme.txt $(TMPPATH)manual.css $(TMPPATH)config.exe \
 	$(TMPPATH)history.html $(TMPPATH)license.html $(TMPPATH)playing.html $(TMPPATH)readme.html $(TMPPATH)rulesyms.html $(TMPPATH)script.html $(TMPPATH)addyaku.html \
 	$(TMPPATH)ai\default.lua $(TMPPATH)gbai\default.lua $(TMPPATH)haifu\haifu.css $(TMPPATH)haifu\haifu.dtd $(TMPPATH)haifu\haifu.xsd $(TMPPATH)haifu\haifu.xsl
 
@@ -121,6 +121,9 @@ $(TMPPATH)mihaysnm.exe: $(OBJPATH)mihaysnm.exe
 	- mkdir $(TMPPATH)
 	copy $** $@
 $(TMPPATH)mihagbmj.exe: $(OBJPATH)mihagbmj.exe
+	- mkdir $(TMPPATH)
+	copy $** $@
+$(TMPPATH)config.exe: $(OBJPATH)config.exe
 	- mkdir $(TMPPATH)
 	copy $** $@
 
