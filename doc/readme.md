@@ -80,12 +80,12 @@ MihailJPの開発環境
 ------------------
 - Windows環境
   - OS：Windows 10 Home 64bit
-  - 物理メモリ：12GB
-  - CPU：Intel Core i7 860 (hyper-threading disabled)
+  - 物理メモリ：16GB
+  - CPU：AMD Ryzen 5 3600
   - GPU：GeForce GTX 950
     - Heterogeneous triple-monitor desktop consisting of Full-HD, SXGA and SXGA
-  - 開発環境：Visual Studio Community 2017
-  - 画像編集ツール：GIMP 2.8
+  - 開発環境：Visual Studio Community 2019
+  - 画像編集ツール：GIMP 2.10
   - テキストエディタ：Notepad++
   - Gitクライアント：GitHub Desktop、Git Bash
 - Linux環境
@@ -100,6 +100,7 @@ MihailJPの開発環境
 
 ビルドに別途必要なもの
 ----------------------
+- Direct X 9 SDK (Windowsのみ: 環境変数 `DXSDK_DIR` にパスを設定してください)
 - [liblua](http://www.lua.org/download.html) (Visual C++の場合はスタティックリンクします)
 - [Ruby 処理系](http://www.ruby-lang.org/ja/downloads/)
 - [Python 処理系](http://www.python.jp/download/)
