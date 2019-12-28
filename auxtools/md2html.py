@@ -6,8 +6,9 @@ import codecs
 import sys
 import re
 
-sys.stdin = codecs.getreader('utf-8')(sys.stdin)
-sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
+if sys.version_info.major < 3:
+    sys.stdin = codecs.getreader('utf-8')(sys.stdin)
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
 mdText = sys.stdin.read()
 
 print("<!DOCTYPE html>")
