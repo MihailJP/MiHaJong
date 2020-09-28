@@ -71,7 +71,7 @@ begin:
 		while (true) {
 			//chatrecv GameStat, GameEnv
 			mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);
-			if (ServerReceived == EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag) {
+			if (ServerReceived == (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag - 1)) {
 				break;
 			}
 			threadYield();
@@ -79,7 +79,7 @@ begin:
 		// 受信失敗の時
 		if (ReceivedMsg == 1023) {
 			for (int i = 0; i < Players; i++) {
-				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == ServerReceived) &&
+				if ((EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == (ServerReceived + 1)) &&
 					(!gameStat->Player[i].ConnectionLost))
 					proc_abrupt_disconnect(gameStat, i);
 			}
@@ -215,18 +215,20 @@ void RemoteNaki::thread_server() {
 	bool Received[3] = {false, false, false,};
 	int ReceivedMsg; volatile int ServerReceived = 0;
 	for (int i = 0; i < 3; i++)
-		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 1) &&
-			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 1) &&
-			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 1) &&
-			((!gameStat->chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 1))))
+		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 2) &&
+			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 2) &&
+			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 2) &&
+			(gameStat->chkGameType(SanmaT) || (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 2))))
 			Received[i] = true;
+	if (gameStat->chkGameType(SanmaT))
+		Received[2] = true;
 	while (true) {
 		//chatrecv GameStat, GameEnv
 		mihajong_socket::server::receive(&ServerReceived, &ReceivedMsg);
 		if (ServerReceived) {
 			for (int i = 0; i < Players; i++) {
 				for (int j = 0; j < 3; j++) {
-					if ((ServerReceived == (j + 1)) && (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == (j + 1))) {
+					if ((ServerReceived == (j + 1)) && (EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag == (j + 2))) {
 						checkremotenaki(i, ReceivedMsg);
 						Received[j] = true;
 					}
@@ -349,9 +351,9 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 	mihajong_socket::server::getPlayerNames(playerName[0], playerName[1], playerName[2], playerName[3], 256);
 	for (int i = 0; i < 4; ++i)
 		EnvTable::Instantiate()->PlayerDat[i].PlayerName = playerName[i];
-	if (numOfClients >= 2) EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag = 1;
-	if (numOfClients >= 3) EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag = 1;
-	if (numOfClients >= 4) EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag = 1;
+	if (numOfClients >= 2) EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag = 2;
+	if (numOfClients >= 3) EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag = 3;
+	if (numOfClients >= 4) EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag = 4;
 	mihajong_socket::server::releaseobj();
 }
 
