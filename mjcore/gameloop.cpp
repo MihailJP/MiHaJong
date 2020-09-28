@@ -135,6 +135,9 @@ void startgame(GameTypeID gameType) {
 		sound::util::bgmplay(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
 	start:
+		EnvTable::Instantiate()->GameMode = EnvTable::Unavailable;
+		for (int i = 0; i < Players; ++i)
+			EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
 		std::string serverAddr;
 		const unsigned short gamePort =
 			gameStat->chkGameType(Sanma) ? 50010 :
