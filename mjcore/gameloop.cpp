@@ -193,5 +193,10 @@ void startgame(GameTypeID gameType) {
 		} while (!endFlag);
 		// 半荘終了時
 		gameResult(gameStat, OrigTurn, OrigHonba);
+		if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone) {
+			// 一度閉じてやり直す
+			mihajong_socket::bye();
+			mihajong_socket::init();
+		}
 	}
 }
