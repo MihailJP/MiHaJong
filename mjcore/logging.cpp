@@ -17,7 +17,7 @@ namespace logger {
 
 	int initLogger() {
 		HMODULE lg = nullptr;
-		lg = LoadLibrary(_T("logger.dll"));
+		lg = LoadLibrary(_T("logger.bin"));
 		if (lg == nullptr) return (-1);
 		mihajong_socket::logger::setLoggerLib(lg);
 		sound::logger::setLoggerLib(lg);
