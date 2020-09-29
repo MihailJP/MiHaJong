@@ -49,6 +49,8 @@ EndType doTableTurn(GameTable* const gameStat) {
 	if (RoundEndType != Continuing)
 		return RoundEndType;
 	threadSleep(80);
+	/* リアクションを問い合わせる */
+	askReaction(gameStat);
 	/* 栄和の処理 */
 	RoundEndType = ronhuproc(gameStat); // 栄和の処理
 	if (RoundEndType != Continuing) return RoundEndType;

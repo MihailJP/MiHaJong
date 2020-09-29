@@ -16,5 +16,6 @@ enum FuuroType : unsigned { /* 副露処理の種類 */
 
 bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTileNum& DiscardTileIndex, FuuroType Mode);
 void checkpao(GameTable* const gameStat);
+void askReaction(GameTable* const gameStat);
 EndType ronhuproc(GameTable* const gameStat);
 bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex);

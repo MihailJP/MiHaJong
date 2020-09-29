@@ -625,9 +625,8 @@ namespace {
 	}
 }
 
-/* 栄和のときの処理 */
-EndType ronhuproc(GameTable* const gameStat) {
-	EndType RoundEndType = Continuing;
+/* リアクションを問い合わせる */
+void askReaction(GameTable* const gameStat) {
 	info(_T("リアクションを問い合わせます。"));
 	/* 栄和や鳴き仕掛けをするかどうか問い合わせる */
 	for (int pl = 0; pl < Players; pl++) {
@@ -703,6 +702,11 @@ EndType ronhuproc(GameTable* const gameStat) {
 		gameStat->Player[i].Tsumohai().tile = xTile;
 	}
 #endif /* GUOBIAO */
+}
+
+/* 栄和のときの処理 */
+EndType ronhuproc(GameTable* const gameStat) {
+	EndType RoundEndType = Continuing;
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
