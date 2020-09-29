@@ -4,6 +4,7 @@
 #include <type_traits>
 #endif
 #include <cstdint>
+#include <functional>
 #include "mjexport.h"
 #include "gametbl.h"
 #include "../common/machihai.h"
@@ -34,7 +35,8 @@ namespace MoveTile {
 void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, int tileIndex);
 void enqueue(PlayerID targetPlayer, int from, int to);
 std::pair<int, int> dequeue(PlayerID targetPlayer);
-void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve);
+void for_each(const std::function<void(std::pair<int, int>)> & f, PlayerID targetPlayer, bool preserve);
+void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve = false);
 }
 #endif
 

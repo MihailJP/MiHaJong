@@ -39,8 +39,9 @@ void RemoteDahai::startthread(RemoteDahai* inst) {
 	inst->thread();
 }
 void RemoteDahai::thread () {
-begin:
 	int ReceivedMsg;
+	int lipaiFrom = 0;
+begin:
 	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
 		volatile int ClientReceived = 0;
 		while (true) {
@@ -111,10 +112,10 @@ begin:
 	{
 		using namespace mihajong_socket::protocol;
 		if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
-			MoveTile::moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			lipaiFrom = ReceivedMsg - Lipai_From;
 			goto begin;
 		} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
-			MoveTile::moveTile(gameStat, gameStat->CurrentPlayer.Active, false, ReceivedMsg - Lipai_From);
+			MoveTile::enqueue(gameStat->CurrentPlayer.Active, lipaiFrom, ReceivedMsg - Lipai_From);
 			goto begin;
 		} else if (ReceivedMsg == Lipai_Reset) {
 			lipai(gameStat, gameStat->CurrentPlayer.Active);
@@ -164,6 +165,7 @@ void RemoteNaki::startthread(RemoteNaki* inst) {
 }
 void RemoteNaki::thread_client() {
 	int ReceivedMsg; volatile int ClientReceived = 0;
+	int moveFrom = 0;
 	for (int tmp = 0; tmp < ACTUAL_PLAYERS; tmp++) {
 begin:
 		while (true) {
@@ -175,10 +177,10 @@ begin:
 		if (tmp != gameStat->PlayerID) {
 			using namespace mihajong_socket::protocol;
 			if ((ReceivedMsg >= Lipai_From) && (ReceivedMsg < (Lipai_From + NumOfTilesInHand))) {
-				MoveTile::moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				moveFrom = ReceivedMsg - Lipai_From;
 				goto begin;
 			} else if ((ReceivedMsg >= Lipai_To) && (ReceivedMsg < (Lipai_To + NumOfTilesInHand))) {
-				MoveTile::moveTile(gameStat, tmp, false, ReceivedMsg - Lipai_From);
+				MoveTile::enqueue(tmp, moveFrom, ReceivedMsg - Lipai_From);
 				goto begin;
 			} else if (ReceivedMsg == Lipai_Reset) {
 				lipai(gameStat, tmp);
@@ -241,14 +243,10 @@ void RemoteNaki::thread_server() {
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
-		try {
-			std::pair<int, int> indices;
-			while (true) {
-				indices = MoveTile::dequeue(i);
-				mihajong_socket::server::send(Lipai_From + indices.first);
-				mihajong_socket::server::send(Lipai_To + indices.second);
-			}
-		} catch (std::runtime_error&) {}
+		MoveTile::for_each([](std::pair<int, int>& indices) {
+			mihajong_socket::server::send(Lipai_From + indices.first);
+			mihajong_socket::server::send(Lipai_To + indices.second);
+		}, i, true);
 		if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
 		else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
 		else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);

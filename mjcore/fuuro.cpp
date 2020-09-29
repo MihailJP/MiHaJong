@@ -568,6 +568,11 @@ namespace {
 		} else {
 			Subscene(tblSubsceneNone);
 		}
+		if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			MoveTile::for_each([](std::pair<int, int> p) {
+				mihajong_socket::client::send(mihajong_socket::protocol::Lipai_From + p.first);
+				mihajong_socket::client::send(mihajong_socket::protocol::Lipai_To + p.second);
+			}, gameStat->CurrentPlayer.Passive, true);
 		switch (static_cast<NakiTypeID>(result)) {
 		case nakiRon:
 			debug(_T("プレイヤーからの応答：ロン"));
@@ -646,7 +651,6 @@ void askReaction(GameTable* const gameStat) {
 				GameTable* sandbox = makesandBox(gameStat, gameStat->CurrentPlayer.Passive);
 				/* 処理 */
 				aiscript::compfuuro(sandbox);
-				MoveTile::apply(gameStat, i, EnvTable::Instantiate()->GameMode == EnvTable::Server);
 				for (PlayerID j = 0; j < Players; j++) {
 					if (!gameStat->Player[j].DeclarationFlag.Ron) gameStat->Player[j].DeclarationFlag.Ron = sandbox->Player[j].DeclarationFlag.Ron;
 					if (!gameStat->Player[j].DeclarationFlag.Kan) gameStat->Player[j].DeclarationFlag.Kan = sandbox->Player[j].DeclarationFlag.Kan;
@@ -678,6 +682,9 @@ void askReaction(GameTable* const gameStat) {
 			o << (i ? _T(" ") : _T("")) << static_cast<int>(gameStat->Player[i].DeclarationFlag.Chi);
 		o << _T("]"); trace(o.str().c_str());
 	}
+	/* 並べ替えを適用 */
+	for (PlayerID i = 0; i < Players; i++)
+		MoveTile::apply(gameStat, i);
 	/* 和了り放棄の時は宣言を無効にする */
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].AgariHouki) {

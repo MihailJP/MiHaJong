@@ -102,6 +102,10 @@ namespace MoveTile {
 static std::array<std::queue<std::pair<int, int> >, Players> moveTileQueue;
 
 void enqueue(PlayerID targetPlayer, int from, int to) {
+	{ CodeConv::tostringstream o;
+		o.str(_T("")); o << _T("牌の移動予約 プレイヤー [") << static_cast<int>(targetPlayer)
+			<< _T("] from[") << from << _T("] to [") << to << _T("]"); debug(o.str());
+	}
 	if ((from < 0) || (from >= NumOfTilesInHand))
 		throw std::out_of_range("'from' out of range");
 	if ((to < 0) || (to >= NumOfTilesInHand))
@@ -117,15 +121,14 @@ std::pair<int, int> dequeue(PlayerID targetPlayer) {
 	return val;
 }
 
-void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve) {
+void for_each(const std::function<void(std::pair<int, int>)>& f, PlayerID targetPlayer, bool preserve) {
 	std::queue<std::pair<int, int> > tmpQueue;
 	try {
 		std::pair<int, int> indices;
-		while (true) {
+		while (!moveTileQueue.empty()) {
 			indices = dequeue(targetPlayer);
 			tmpQueue.push(indices);
-			moveTile(gameStat, targetPlayer, false, indices.first);
-			moveTile(gameStat, targetPlayer, true, indices.second);
+			f(indices);
 		}
 	} catch (std::runtime_error&) {}
 	if (preserve) {
@@ -135,6 +138,13 @@ void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve) {
 			enqueue(targetPlayer, indices.first, indices.second);
 		}
 	}
+}
+
+void apply(GameTable* const gameStat, PlayerID targetPlayer, bool preserve) {
+	for_each([gameStat, targetPlayer](std::pair<int, int> indices) {
+		moveTile(gameStat, targetPlayer, false, indices.first);
+		moveTile(gameStat, targetPlayer, true, indices.second);
+	}, targetPlayer, preserve);
 }
 
 /* 手動理牌処理 */
