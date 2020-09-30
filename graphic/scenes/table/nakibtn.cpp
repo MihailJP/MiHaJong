@@ -398,6 +398,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			break;
 		}
 	} else if (this->getButtonSet() == btnSetNormal) {
+		const auto tilesInHand = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		switch (this->getCursor()) {
 		case btnPass:
 			ui::UIEvent->set(naki::nakiNone);
@@ -409,7 +410,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			ui::UIEvent->set(naki::nakiKan);
 			break;
 		case btnPon:
-			if (caller->countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
+			if (tilesInHand[GameStatus::gameStat()->CurrentDiscard.tile] == 2) {
+				ui::UIEvent->set(naki::nakiPon);
+			} else if (caller->countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
 				setMode(DiscardTileNum::MeldSel, btnPon,
 					[](int i, GameTable* tmpStat) -> bool {
 						return tmpStat->statOfMine().Hand[i].tile != tmpStat->CurrentDiscard.tile;
@@ -423,7 +426,6 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		case btnChii:
 			assert(GameStatus::gameStat()->CurrentDiscard.isNumber());
 			{
-				const auto tilesInHand = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 				const auto chiiable = [&tilesInHand](TileCode p, TileCode q) {
 					if (Tile(p).getSuit() != Tile(q).getSuit())
 						return false;
