@@ -165,15 +165,17 @@ void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, in
 		logHand(_T("移動前の手牌"), gameStat, targetPlayer);
 
 		/* ここから移動作業 */
-		Tile tmpTile = gameStat->Player[targetPlayer].Hand[tileIndex]; // 退避用
+		/* index     == 移動前の位置 */
+		/* tileIndex == 移動後の位置 */
+		Tile tmpTile = gameStat->Player[targetPlayer].Hand[index]; // 退避用
 		if (tileIndex < index) { // 前に移動
-			for (int i = tileIndex; i > index; --i)
+			for (int i = index; i > tileIndex; --i)
 				gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[i - 1];
 		} else if (tileIndex > index) { // 後ろに移動
-			for (int i = tileIndex; i < index; ++i)
+			for (int i = index; i < tileIndex; ++i)
 				gameStat->Player[targetPlayer].Hand[i] = gameStat->Player[targetPlayer].Hand[i + 1];
 		}
-		gameStat->Player[targetPlayer].Hand[index] = tmpTile;
+		gameStat->Player[targetPlayer].Hand[tileIndex] = tmpTile;
 		index = tileIndex;
 
 		/* 手牌データをデバッグログに出力：アフター */
