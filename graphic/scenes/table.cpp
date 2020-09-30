@@ -665,7 +665,7 @@ void GameTableScreen::FinishTileChoice() {
 			for (int i = 0; i < TsumohaiIndex; ++i)
 				if ((i == tehaiReconst->getFirstChosenTile()) || (i == tehaiReconst->getTileCursor()))
 					utils::moveTile(GameStatus::gameStat()->PlayerID, i, 0);
-			if (chosenTile == GameStatus::gameStat()->CurrentDiscard) {
+			if (chosenTile.tile == GameStatus::gameStat()->CurrentDiscard.tile) {
 				tehaiReconst->setFirstChosenTile();
 				ui::UIEvent->set(naki::nakiPon); // ポンの場合
 			} else { // チーの場合
