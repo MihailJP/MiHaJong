@@ -144,8 +144,8 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::Scree
 	hWnd = CreateWindowEx(
 		ExStyle, myWindowClassName, WindowCaption, Style,
 #ifdef WITH_DIRECTX
-		ScreenMode::scrModeBorderless ? WindowRect.left : CW_USEDEFAULT,
-		ScreenMode::scrModeBorderless ? WindowRect.top : CW_USEDEFAULT,
+		scrMode == ScreenMode::scrModeBorderless ? WindowRect.left : CW_USEDEFAULT,
+		scrMode == ScreenMode::scrModeBorderless ? WindowRect.top : CW_USEDEFAULT,
 #else
 		scrMode == ScreenMode::scrModeBorderless ? WindowRect.left : ScreenMode::scrModeFullscreen ? 0 : CW_USEDEFAULT,
 		scrMode == ScreenMode::scrModeBorderless ? WindowRect.top : ScreenMode::scrModeFullscreen ? 0 : CW_USEDEFAULT,
