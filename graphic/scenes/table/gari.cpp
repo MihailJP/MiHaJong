@@ -30,7 +30,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 				TileTexture->NewTile(i, Tile(flowerParam[i].tileCode),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				GariPosV(),
-				UpsideDown, Obverse);
+				TileDirection::upsideDown, TileSide::obverse);
 			else
 				TileTexture->DelTile(i);
 		break;
@@ -40,7 +40,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 				TileTexture->NewTile(i + 8, Tile(flowerParam[i].tileCode),
 				GariPosV(),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
-				Clockwise, Obverse);
+				TileDirection::clockwise, TileSide::obverse);
 			else
 				TileTexture->DelTile(i + 8);
 		break;
@@ -50,7 +50,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 				TileTexture->NewTile(23 - i, Tile(flowerParam[i].tileCode),
 				TableSize - GariPosV(),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
-				Withershins, Obverse);
+				TileDirection::withershins, TileSide::obverse);
 			else
 				TileTexture->DelTile(23 - i);
 		break;
@@ -60,7 +60,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 				TileTexture->NewTile(i + 24, Tile(flowerParam[i].tileCode),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				TableSize - GariPosV(),
-				Portrait, Obverse);
+				TileDirection::portrait, TileSide::obverse);
 			else
 				TileTexture->DelTile(i + 24);
 		break;
@@ -81,7 +81,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 				TileTexture->NewTile(i, Tile(NorthWind),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				GariPosV(),
-				UpsideDown, Obverse);
+				TileDirection::upsideDown, TileSide::obverse);
 			else
 				TileTexture->DelTile(i);
 		break;
@@ -91,7 +91,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 				TileTexture->NewTile(i + 4, Tile(NorthWind),
 				GariPosV(),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
-				Clockwise, Obverse);
+				TileDirection::clockwise, TileSide::obverse);
 			else
 				TileTexture->DelTile(i + 4);
 		break;
@@ -101,7 +101,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 				TileTexture->NewTile(11 - i, Tile(NorthWind),
 				TableSize - GariPosV(),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
-				Withershins, Obverse);
+				TileDirection::withershins, TileSide::obverse);
 			else
 				TileTexture->DelTile(11 - i);
 		break;
@@ -111,7 +111,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 				TileTexture->NewTile(i + 12, Tile(NorthWind),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				TableSize - GariPosV(),
-				Portrait, Obverse);
+				TileDirection::portrait, TileSide::obverse);
 			else
 				TileTexture->DelTile(i + 12);
 		break;

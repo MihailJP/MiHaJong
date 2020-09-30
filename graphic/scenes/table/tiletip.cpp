@@ -52,7 +52,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), Normal),
 						TipX + myTextRenderer->strWidthByPix(o.str()) + 20 + i * (ShowTile::VertTileWidth + 2),
 						TipY + (ShowTile::VertTileHeight / 2) - 6,
-						Portrait, Obverse,
+						TileDirection::portrait, TileSide::obverse,
 						(machiInfo.Machihai[j].MachihaiCount > 0) ? 0xffffffff : 0xff7f7f7f);
 					++i;
 				}
@@ -69,7 +69,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 				myTileRenderer->NewTile(tileID, Tile(tileCode),
 					TipX + myTextRenderer->strWidthByPix(tipText) + 20 + tileID * (ShowTile::VertTileWidth + 2),
 					TipY + (ShowTile::VertTileHeight / 2) - 6,
-					Portrait, Obverse, 0xffffffff);
+					TileDirection::portrait, TileSide::obverse, 0xffffffff);
 			};
 			auto chkCursor = [this](ButtonReconst::ButtonID buttonID) -> bool {
 				return (caller->buttonReconst->isEnabled(buttonID) &&

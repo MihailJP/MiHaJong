@@ -34,7 +34,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			Clockwise, UpsideDown, Withershins);
+			TileDirection::clockwise, TileDirection::upsideDown, TileDirection::withershins);
 	case sLeft:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 31 - i - IDOffset;},
@@ -56,7 +56,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			Portrait, Clockwise, UpsideDown);
+			TileDirection::portrait, TileDirection::clockwise, TileDirection::upsideDown);
 		break;
 	case sRight:
 		return std::make_tuple(
@@ -79,7 +79,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			UpsideDown, Withershins, Portrait);
+			TileDirection::upsideDown, TileDirection::withershins, TileDirection::portrait);
 		break;
 	case sSelf:
 		return std::make_tuple(
@@ -102,7 +102,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			Withershins, Portrait, Clockwise);
+			TileDirection::withershins, TileDirection::portrait, TileDirection::clockwise);
 		break;
 	default:
 		throw InvalidArgument("牌の方向に異常なものが指定されました");

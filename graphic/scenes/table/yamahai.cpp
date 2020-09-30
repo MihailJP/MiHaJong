@@ -79,10 +79,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			TileTexture->DelTile(i); TileTexture->DelTile(i + 1);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile(      i    , gameStat->Deck[k + 1], DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
-				DeckPosV,                 UpsideDown, Reverse);
+				DeckPosV,                 TileDirection::upsideDown, TileSide::reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile(      i + 1, gameStat->Deck[k    ], DeckPosH + ShowTile::VertTileWidth * (i / 2 - 1),
-				DeckPosV - TileThickness, UpsideDown, dora ? Obverse : Reverse);
+				DeckPosV - TileThickness, TileDirection::upsideDown, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
 	case sLeft:
@@ -93,10 +93,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			TileTexture->DelTile(i + 36); TileTexture->DelTile(i + 37);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile( 36 + i    , gameStat->Deck[k + 1], DeckPosV,
-				DeckPosH                 + ShowTile::VertTileWidth * (i / 2), Clockwise, Reverse);
+				DeckPosH                 + ShowTile::VertTileWidth * (i / 2), TileDirection::clockwise, TileSide::reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile( 36 + i + 1, gameStat->Deck[k    ], DeckPosV,
-				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), Clockwise, dora ? Obverse : Reverse);
+				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), TileDirection::clockwise, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
 	case sRight:
@@ -107,10 +107,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			TileTexture->DelTile(i + 72); TileTexture->DelTile(i + 73);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile( 72 + i    , gameStat->Deck[k + 1], TableSize - DeckPosV,
-				DeckPosH                 + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, Reverse);
+				DeckPosH                 + ShowTile::VertTileWidth * (i / 2 - 1), TileDirection::withershins, TileSide::reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile( 72 + i + 1, gameStat->Deck[k    ], TableSize - DeckPosV,
-				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), Withershins, dora ? Obverse : Reverse);
+				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), TileDirection::withershins, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
 	case sSelf:
@@ -121,10 +121,10 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 			TileTexture->DelTile(i + 108); TileTexture->DelTile(i + 109);
 			if ((gameStat->TilePointer <= k + 1) && (!getRinshanFlag2(tileNum)))
 				TileTexture->NewTile(108 + i    , gameStat->Deck[k + 1], DeckPosH + ShowTile::VertTileWidth * (i / 2),
-				TableSize - DeckPosV,                 Portrait, Reverse);
+				TableSize - DeckPosV,                 TileDirection::portrait, TileSide::reverse);
 			if ((gameStat->TilePointer <= k)     && (!getRinshanFlag1(tileNum)))
 				TileTexture->NewTile(108 + i + 1, gameStat->Deck[k    ], DeckPosH + ShowTile::VertTileWidth * (i / 2),
-				TableSize - DeckPosV - TileThickness, Portrait, dora ? Obverse : Reverse);
+				TableSize - DeckPosV - TileThickness, TileDirection::portrait, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
 	}

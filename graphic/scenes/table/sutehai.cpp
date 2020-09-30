@@ -17,7 +17,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				UpsideDown, Obverse,
+				TileDirection::upsideDown, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		case sLeft: /* 上家 */
@@ -25,7 +25,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
-				Clockwise, Obverse,
+				TileDirection::clockwise, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		case sRight: /* 下家 */
@@ -33,7 +33,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
-				Withershins, Obverse,
+				TileDirection::withershins, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		case sSelf: /* 自分 */
@@ -41,7 +41,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_portrait(const GameTabl
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) * (shiftPos ? 1 : 0),
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				Portrait, Obverse,
+				TileDirection::portrait, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		}
@@ -58,7 +58,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
-				Clockwise, Obverse,
+				TileDirection::clockwise, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		case sLeft: /* 上家 */
@@ -66,7 +66,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosV - ShowTile::HoriTileWidth * tilePosRow,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
-				Portrait, Obverse,
+				TileDirection::portrait, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		case sRight: /* 下家 */
@@ -74,7 +74,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
 				TableSize - DiscardPosH() - ShowTile::VertTileWidth * (tilePosCol++) - (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
-				UpsideDown, Obverse,
+				TileDirection::upsideDown, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		case sSelf: /* 自分 */
@@ -82,7 +82,7 @@ void GameTableScreen::SutehaiReconst::ReconstructSutehai_rotated(const GameTable
 				gameStat->Player[targetPlayer].Discard[tileID + 1].tcode,
 				DiscardPosH() + ShowTile::VertTileWidth * (tilePosCol++) + (ShowTile::HoriTileWidth - ShowTile::VertTileWidth) / 2,
 				TableSize - DiscardPosV + ShowTile::HoriTileWidth * tilePosRow,
-				Withershins, Obverse,
+				TileDirection::withershins, TileSide::obverse,
 				gameStat->Player[targetPlayer].Discard[tileID + 1].isDiscardThrough ? 0xffcccccc : 0xffffffff);
 			break;
 		}

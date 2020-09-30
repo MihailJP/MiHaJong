@@ -235,7 +235,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 				default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 			}
 		},
-		Withershins, Portrait, Clockwise);
+		TileDirection::withershins, TileDirection::portrait, TileDirection::clockwise);
 }
 void TableSubsceneAgariScreenProto::AgariNaki::Reconstruct(const GameTable* gameStat) {
 	const PlayerID targetPlayer = gameStat->CurrentPlayer.Agari;
@@ -314,7 +314,7 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 			const ArgbColor color = (Zeit >= 0.325) ? 0xffffffff : ((255 - static_cast<int>((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
 			tileObj->NewTile(tileIndex,
 				(gameStat->DoraPointer <= i) ? gameStat->Deck[i] : Tile(BackSide),
-				xPos() + ShowTile::VertTileWidth * tileIndex, yPos(), Portrait, Obverse, color);
+				xPos() + ShowTile::VertTileWidth * tileIndex, yPos(), TileDirection::portrait, TileSide::obverse, color);
 		}
 	}
 }

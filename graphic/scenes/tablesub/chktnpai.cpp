@@ -29,7 +29,7 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 			if (machiInfo[player].Machihai[k].MachihaiFlag) // 待ち牌になっている場合
 				tileRenderer->NewTile(player * 9 + tile, Tile(k),
 				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile),
-				y + 20, Portrait, Obverse), ++tile; // その牌を表示
+				y + 20, TileDirection::portrait, TileSide::obverse), ++tile; // その牌を表示
 		}
 		if (machiInfo[player].FuritenFlag)
 			txtRenderer->NewText(player, _T("(フリテン)"), x - 90, y + 40);
