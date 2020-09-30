@@ -22,7 +22,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 #endif
 	MSG msg; HWND hwnd;
-	unsigned width, height, monitor; ScreenMode::ScreenMode scrMode;
+	unsigned width, height, monitor; Screen_Mode::ScreenMode scrMode;
 
 	/* ウィンドウ設定情報を先行読み込み */
 	getWindowSize(&width, &height, &scrMode, &monitor);
@@ -59,7 +59,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 int main(int argc, char** argv) {
 	Window hwnd;
-	unsigned width, height, monitor; ScreenMode::ScreenMode scrMode;
+	unsigned width, height, monitor; Screen_Mode::ScreenMode scrMode;
 
 	/* ウィンドウ設定情報を先行読み込み */
 	getWindowSize(&width, &height, &scrMode, &monitor);

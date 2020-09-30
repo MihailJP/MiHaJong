@@ -56,7 +56,7 @@ public:
 	void save();
 public:
 	CodeConv::tstring playerName(); void playerName(const CodeConv::tstring&);
-	ScreenMode::ScreenMode scrMode(); void scrMode(ScreenMode::ScreenMode);
+	Screen_Mode::ScreenMode scrMode(); void scrMode(Screen_Mode::ScreenMode);
 	bool blackTile(); void blackTile(bool);
 	unsigned int bgmVolume(); void bgmVolume(unsigned int);
 	unsigned int soundVolume(); void soundVolume(unsigned int);

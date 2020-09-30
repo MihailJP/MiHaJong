@@ -35,17 +35,17 @@ private:
 	static LRESULT keyev(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam); // ウィンドウプロシージャ
 	void initWindowClass(HINSTANCE hThisInst, LPCTSTR icon); // ウィンドウクラスの初期化
-	void initWindow(HINSTANCE hThisInst, int nWinMode, ScreenMode::ScreenMode scrMode, unsigned monitor); // ウィンドウの生成
+	void initWindow(HINSTANCE hThisInst, int nWinMode, Screen_Mode::ScreenMode scrMode, unsigned monitor); // ウィンドウの生成
 #else /*_WIN32*/
-	void initWindow(void* hThisInst, int nWinMode, ScreenMode::ScreenMode scrMode, unsigned monitor); // ウィンドウの生成
+	void initWindow(void* hThisInst, int nWinMode, Screen_Mode::ScreenMode scrMode, unsigned monitor); // ウィンドウの生成
 public:
 	static bool WinProc(MainWindow* mainWindow); // ウィンドウプロシージャ
 #endif /*_WIN32*/
 public:
 #ifdef _WIN32
-	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor);
+	MainWindow(HINSTANCE hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, Screen_Mode::ScreenMode scrMode, unsigned monitor);
 #else /*_WIN32*/
-	MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor);
+	MainWindow(void* hThisInst, int nWinMode, LPCTSTR icon, unsigned width, unsigned height, Screen_Mode::ScreenMode scrMode, unsigned monitor);
 #endif /*_WIN32*/
 	MainWindow(const MainWindow&) = delete; // Delete unexpected copy constructor
 	MainWindow& operator= (const MainWindow&) = delete; // Delete unexpected assign operator

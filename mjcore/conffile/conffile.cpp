@@ -137,21 +137,21 @@ void ConfigFile::playerName(const CodeConv::tstring& val) {
 }
 
 /* フルスクリーン/ウィンドウ設定 */
-ScreenMode::ScreenMode ConfigFile::scrMode() {
-	using namespace ScreenMode;
-	return configMap[_T("preferences")][_T("screen")] == _T("borderless") ? scrModeBorderless
-		: configMap[_T("preferences")][_T("screen")] == _T("fullscreen") ? scrModeFullscreen : scrModeWindowed;
+Screen_Mode::ScreenMode ConfigFile::scrMode() {
+	using namespace Screen_Mode;
+	return configMap[_T("preferences")][_T("screen")] == _T("borderless") ? ScreenMode::borderless
+		: configMap[_T("preferences")][_T("screen")] == _T("fullscreen") ? ScreenMode::fullscreen : ScreenMode::windowed;
 }
-void ConfigFile::scrMode(ScreenMode::ScreenMode val) {
-	using namespace ScreenMode;
+void ConfigFile::scrMode(Screen_Mode::ScreenMode val) {
+	using namespace Screen_Mode;
 	switch (val) {
-	case scrModeBorderless:
+	case ScreenMode::borderless:
 		configMap[_T("preferences")][_T("screen")] = _T("borderless");
 		break;
-	case scrModeFullscreen:
+	case ScreenMode::fullscreen:
 		configMap[_T("preferences")][_T("screen")] = _T("fullscreen");
 		break;
-	case scrModeWindowed:
+	case ScreenMode::windowed:
 		configMap[_T("preferences")][_T("screen")] = _T("windowed");
 		break;
 	}
@@ -216,7 +216,7 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 
 unsigned int ConfigFile::screenResolutionX() {
 #ifdef _WIN32
-	if (scrMode() == ScreenMode::scrModeBorderless) {
+	if (scrMode() == Screen_Mode::ScreenMode::borderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
 		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
@@ -250,7 +250,7 @@ unsigned int ConfigFile::screenResolutionX() {
 }
 unsigned int ConfigFile::screenResolutionY() {
 #ifdef _WIN32
-	if (scrMode() == ScreenMode::scrModeBorderless) {
+	if (scrMode() == Screen_Mode::ScreenMode::borderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
 		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);

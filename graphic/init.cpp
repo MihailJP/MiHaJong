@@ -30,9 +30,9 @@ ULONG_PTR gdiplusToken;
 #endif
 
 #ifdef _WIN32
-EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor)
+EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hwndPtr, unsigned width, unsigned height, Screen_Mode::ScreenMode scrMode, unsigned monitor)
 #else /*_WIN32*/
-EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor)
+EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr, unsigned width, unsigned height, Screen_Mode::ScreenMode scrMode, unsigned monitor)
 #endif /*_WIN32*/
 {
 	/* ウィンドウの初期化 */
