@@ -549,6 +549,7 @@ void checkpao(GameTable* const gameStat) {
 
 namespace {
 	void playerfuuro(GameTable* gameStat) {
+		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		PlayerTable* const playerStat = &(gameStat->statOfMine());
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
