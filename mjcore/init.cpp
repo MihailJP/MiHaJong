@@ -177,6 +177,8 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	sound::util::soundload(sound::IDs::voxSijiarichi, SOUNDDIR "kyuushu.wav", false);
 	sound::util::soundload(sound::IDs::voxRonFurikomi, SOUNDDIR "agari2.wav", false);
 
+	/* 音量設定を読み込み */
+	sound::util::setvolume();
 }
 
 MJCORE void testInit() {

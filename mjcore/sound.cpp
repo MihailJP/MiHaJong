@@ -103,6 +103,11 @@ void sound::util::bgmplay(unsigned ID) {
 /* 音量設定を反映 */
 void sound::util::setvolume() {
 	using namespace sound;
+	{
+		CodeConv::tostringstream o;
+		o << _T("BGM音量 [") << RuleData::confFile.bgmVolume() << _T("] 音声ファイル音量 [" << RuleData::confFile.soundVolume() << _T("]"));
+		info(o.str().c_str());
+	}
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
 		if (BGM_Mode[i] != None)
 			SetVolume(i, static_cast<double>(RuleData::confFile.bgmVolume()) / 100.0);
