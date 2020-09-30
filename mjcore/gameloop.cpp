@@ -121,7 +121,7 @@ DWORD titlescreen() {
 #else /*_WIN32*/
 uint32_t titlescreen() {
 #endif /*_WIN32*/
-	mihajong_graphic::Transit(mihajong_graphic::sceneTitle);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::title);
 	return mihajong_graphic::ui::WaitUI();
 }
 
@@ -164,7 +164,7 @@ void startgame(GameTypeID gameType) {
 				goto start; // 接続失敗の時は戻る
 			break;
 		case 4:
-			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
+			mihajong_graphic::Transit(mihajong_graphic::SceneID::config);
 			mihajong_graphic::ui::WaitUI();
 			goto start;
 		case 5:

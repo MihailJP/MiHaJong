@@ -137,7 +137,7 @@ void gameResult(GameTable* gameStat, int origTurn, int origHonba) {
 	mihajong_graphic::GameStatus::updateGameStat(gameStat); // 反映させる
 	calcScore(gameStat);
 	/*  */
-	mihajong_graphic::Transit(mihajong_graphic::sceneResult);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::result);
 	haifu::haifusave(gameStat); // 牌譜を保存する
 	(void)mihajong_graphic::ui::WaitUI(); // 入力待ち
 }

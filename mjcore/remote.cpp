@@ -310,7 +310,7 @@ void remotenaki (GameTable* const gameStat) {
 namespace RemoteConnection {
 
 void startServer(std::string& serverAddr, unsigned short gamePort) {
-	mihajong_graphic::Transit(mihajong_graphic::sceneServerWaiting);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::serverWaiting);
 
 	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
 	char* RuleConfPtr[RULE_LINES];
@@ -328,16 +328,16 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 		numOfClients = mihajong_socket::server::chkCurrentConnection();
 		if (numOfClients != numOfClientsPrev) {
 			if (ACTUAL_PLAYERS == 3) {
-				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of3);
-				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of3);
-				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of3);
-				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::oneOfThree);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::twoOfThree);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::threeOfThree);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::none);
 			} else {
-				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of4);
-				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of4);
-				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of4);
-				else if (numOfClients == 4) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene4of4);
-				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::oneOfFour);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::twoOfFour);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::threeOfFour);
+				else if (numOfClients == 4) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::fourOfFour);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::none);
 			}
 			numOfClientsPrev = numOfClients;
 		}
@@ -357,21 +357,21 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 
 void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort) {
 	auto tmpAddr(RuleData::confFile.serverAddress());
-	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::clientWaiting);
 	serverAddr = CodeConv::toANSI(tmpAddr);
 	EnvTable::Instantiate()->GameMode = EnvTable::Client;
 
 	const CodeConv::tstring Nomen(RuleData::confFile.playerName());
 
-	mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneConnecting);
+	mihajong_graphic::Subscene(mihajong_graphic::ClientWaitingSubsceneID::connecting);
 	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), gamePort, ACTUAL_PLAYERS);
 
 	while (true) {
 		if (mihajong_socket::client::isConnectionSucceded()) {
-			mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneWaiting);
+			mihajong_graphic::Subscene(mihajong_graphic::ClientWaitingSubsceneID::waiting);
 			break;
 		} else if (mihajong_socket::client::isConnectionFailed()) {
-			mihajong_graphic::Transit(mihajong_graphic::sceneWaitingError);
+			mihajong_graphic::Transit(mihajong_graphic::SceneID::waitingError);
 			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
 			threadSleep(1500);
 			return;

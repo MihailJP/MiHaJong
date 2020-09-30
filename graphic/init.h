@@ -26,16 +26,16 @@ EXPORT BOOL InitWindow(HINSTANCE hInstance, int nCmdShow, LPCTSTR icon, HWND* hw
 	unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor);
 EXPORT void RefreshWindow();
 EXPORT void WaitForWindowInit();
-EXPORT BOOL Transit(sceneID scene);
-EXPORT BOOL Subscene(unsigned int subsceneID);
+EXPORT BOOL Transit(SceneID scene);
+EXPORT BOOL Subscene(SubSceneID subsceneID);
 EXPORT void CleanupWindow();
 #else /*_WIN32*/
 EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwndPtr,
 	unsigned width, unsigned height, ScreenMode::ScreenMode scrMode, unsigned monitor);
 EXPORT void RefreshWindow();
 EXPORT void WaitForWindowInit();
-EXPORT bool Transit(sceneID scene);
-EXPORT bool Subscene(unsigned int subsceneID);
+EXPORT bool Transit(SceneID scene);
+EXPORT bool Subscene(SubSceneID subsceneID);
 EXPORT void CleanupWindow();
 EXPORT bool Event();
 #endif /*_WIN32*/

@@ -211,7 +211,7 @@ void ScreenManipulator::Render() {
 	return;
 }
 
-void ScreenManipulator::transit(sceneID scene) {
+void ScreenManipulator::transit(SceneID scene) {
 	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 #if !defined(_WIN32) || !defined(WITH_DIRECTX)
 #ifdef _WIN32
@@ -224,34 +224,34 @@ void ScreenManipulator::transit(sceneID scene) {
 #endif
 	redrawFlag = false;
 	delete myScene; myScene = nullptr;
-	if ((scene != sceneNull) && (!myFPSIndicator))
+	if ((scene != SceneID::null) && (!myFPSIndicator))
 		myFPSIndicator = new FPSIndicator(this);
 	switch (scene) {
-	case sceneNull:
+	case SceneID::null:
 		delete myFPSIndicator, myFPSIndicator = nullptr;
 		break;
-	case sceneSplash:
+	case SceneID::splash:
 		myScene = new SplashScreen(this); redrawFlag = true;
 		break;
-	case sceneTitle:
+	case SceneID::title:
 		myScene = new TitleScreen(this); redrawFlag = true;
 		break;
-	case sceneConfig:
+	case SceneID::config:
 		myScene = new RuleConfigScene(this); redrawFlag = true;
 		break;
-	case sceneServerWaiting:
+	case SceneID::serverWaiting:
 		myScene = new ServerWait(this); redrawFlag = true;
 		break;
-	case sceneClientWaiting:
+	case SceneID::clientWaiting:
 		myScene = new ClientWait(this); redrawFlag = true;
 		break;
-	case sceneWaitingError:
+	case SceneID::waitingError:
 		myScene = new ConnectionWaitFailed(this); redrawFlag = true;
 		break;
-	case sceneGameTable:
+	case SceneID::gameTable:
 		myScene = new GameTableScreen(this); redrawFlag = true;
 		break;
-	case sceneResult:
+	case SceneID::result:
 		myScene = new ResultScreen(this); redrawFlag = true;
 		break;
 	default:
@@ -265,7 +265,7 @@ void ScreenManipulator::transit(sceneID scene) {
 #endif /* WITH_DIRECTX */
 }
 
-void ScreenManipulator::subscene(unsigned int subsceneID) {
+void ScreenManipulator::subscene(SubSceneID subsceneID) {
 #ifdef __linux__
 	std::unique_lock<std::recursive_mutex> lock(CS_SceneAccess);
 #endif /* __linux__ */

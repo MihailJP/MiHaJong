@@ -7,6 +7,7 @@
 #include "tablesub/tblsubs.h"
 #include "../text.h"
 #include <mutex>
+#include "scene_id.h"
 
 namespace mihajong_graphic {
 
@@ -27,7 +28,7 @@ protected:
 protected:
 	TableSubscene* mySubScene; // サブシーンオブジェクト
 	std::recursive_mutex subSceneCS; // サブシーン切り替え用クリティカルセクション
-	void SetSubscene(unsigned int scene_ID); // サブシーン切り替え
+	void SetSubscene(SubSceneID scene_ID) override; // サブシーン切り替え
 protected: /**** 山牌 ****/
 	class YamahaiReconst;
 	YamahaiReconst* yamahaiReconst;

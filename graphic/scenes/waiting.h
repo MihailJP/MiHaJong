@@ -37,7 +37,7 @@ public:
 #else /*_WIN32*/
 	void KeyboardInput(const XEvent* od);
 #endif /*_WIN32*/
-	void SetSubscene(unsigned int scene_ID);
+	void SetSubscene(SubSceneID scene_ID) override;
 };
 
 class ClientWait : public ConnectionWaitingProto {
@@ -50,7 +50,7 @@ public:
 	ClientWait& operator= (const ClientWait&) = delete; // Delete unexpected assign operator
 	~ClientWait();
 	void Render();
-	void SetSubscene(unsigned int scene_ID);
+	void SetSubscene(SubSceneID scene_ID) override;
 };
 
 class ConnectionWaitFailed : public ConnectionWaitingProto {

@@ -285,7 +285,7 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 }
 
 MJCORE void cleanup() {
-	mihajong_graphic::Transit(mihajong_graphic::sceneNull);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::null);
 	info(_T("グラフィックDLLの後始末をしました。"));
 	sound::Cleanup();
 	info(_T("サウンドDLLを解放しました。"));

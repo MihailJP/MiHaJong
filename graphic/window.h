@@ -51,8 +51,8 @@ public:
 	MainWindow& operator= (const MainWindow&) = delete; // Delete unexpected assign operator
 	~MainWindow();
 	void Render();
-	void transit(sceneID scene);
-	void subscene(unsigned int subsceneID);
+	void transit(SceneID scene);
+	void subscene(SubSceneID subsceneID);
 #ifdef _WIN32
 	HWND gethwnd() {return hWnd;}
 #else /*_WIN32*/

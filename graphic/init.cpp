@@ -76,7 +76,7 @@ EXPORT void WaitForWindowInit() {
 }
 
 #ifdef _WIN32
-EXPORT BOOL Transit(sceneID scene) try {
+EXPORT BOOL Transit(SceneID scene) try {
 	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->transit(scene);
 	return TRUE;
@@ -86,7 +86,7 @@ catch (const GraphicModuleError& e) {
 	return FALSE;
 }
 
-EXPORT BOOL Subscene(unsigned int subsceneID) try {
+EXPORT BOOL Subscene(SubSceneID subsceneID) try {
 	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->subscene(subsceneID);
 	return TRUE;
@@ -96,7 +96,7 @@ catch (const GraphicModuleError& e) {
 	return FALSE;
 }
 #else /*_WIN32*/
-EXPORT bool Transit(sceneID scene) try {
+EXPORT bool Transit(SceneID scene) try {
 	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->transit(scene);
 	return true;
@@ -105,7 +105,7 @@ catch (const GraphicModuleError& e) {
 	return false;
 }
 
-EXPORT bool Subscene(unsigned int subsceneID) try {
+EXPORT bool Subscene(SubSceneID subsceneID) try {
 	if (!myMainWindow) throw UninitializedObject("ウィンドウが初期化されていません");
 	myMainWindow->subscene(subsceneID);
 	return true;

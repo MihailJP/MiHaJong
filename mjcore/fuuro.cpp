@@ -198,7 +198,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = Normal;
 		gameStat->TianHuFlag = false;
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::North);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
@@ -225,7 +225,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id] = Tile();
 		gameStat->TianHuFlag = false;
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Flower);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
@@ -264,7 +264,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* ポンを宣言する */
 		sound::Play(sound::IDs::voxPon);
 		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Pon);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		/* 喰い替えの判定に使う変数を設定 */
 #ifndef GUOBIAO
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
@@ -308,7 +308,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* チーを宣言 */
 		sound::Play(sound::IDs::voxChi);
 		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Chii);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 #ifndef GUOBIAO
 		/* 喰い替え判定用の変数を指定 */
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
@@ -348,7 +348,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->TianHuFlag = false;
 		sound::Play(sound::IDs::voxKan);
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Kan);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
@@ -489,7 +489,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	/* 事後処理 */
 	for (PlayerID i = 0; i < Players; ++i)
 		mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
-	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // 発声表示から戻る
+	mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none); // 発声表示から戻る
 	/* 再描画 */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 鳴きが成立したので、一発のフラグを降ろす */
@@ -555,9 +555,9 @@ namespace {
 		using namespace mihajong_graphic::naki;
 		if (gameStat->KangFlag.chankanFlag != chankanNone) {
 			threadSleep(500);
-			Subscene(tblSubscenePlayerChankan);
+			Subscene(TableSubsceneID::playerChankan);
 		} else {
-			Subscene(tblSubscenePlayerNaki);
+			Subscene(TableSubsceneID::playerNaki);
 		}
 #ifdef _WIN32
 		DWORD result = ui::WaitUI();
@@ -565,9 +565,9 @@ namespace {
 		uint32_t result = ui::WaitUI();
 #endif /*_WIN32*/
 		if (gameStat->KangFlag.chankanFlag != chankanNone) {
-			Subscene(tblSubsceneCallChankanPre);
+			Subscene(TableSubsceneID::callChankanPre);
 		} else {
-			Subscene(tblSubsceneNone);
+			Subscene(TableSubsceneID::none);
 		}
 		if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
 			MoveTile::for_each([](std::pair<int, int> p) {
@@ -833,9 +833,9 @@ EndType ronhuproc(GameTable* const gameStat) {
 				sound::Play(sound::IDs::voxRon);
 			/* 画面更新して戻る */
 			if (gameStat->KangFlag.chankanFlag != chankanNone) {
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallChankan); // 発声表示処理
+				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callChankan); // 発声表示処理
 			} else {
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 			}
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			break;

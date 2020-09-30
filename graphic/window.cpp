@@ -281,12 +281,12 @@ void MainWindow::Render() { // ウィンドウの再描画
 	return;
 }
 
-void MainWindow::transit(sceneID scene) { // シーン切り替え
+void MainWindow::transit(SceneID scene) { // シーン切り替え
 	if (myScreenManipulator)
 		myScreenManipulator->transit(scene);
 }
 
-void MainWindow::subscene(unsigned int subsceneID) { // サブシーン切り替え
+void MainWindow::subscene(SubSceneID subsceneID) { // サブシーン切り替え
 	if (myScreenManipulator)
 		myScreenManipulator->subscene(subsceneID);
 }

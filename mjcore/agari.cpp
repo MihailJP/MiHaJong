@@ -390,14 +390,14 @@ namespace {
 			penalty = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 			if (isSomeoneDobon(gameStat)) {
 				calcDobonDelta(gameStat, AgariPlayerPriority, penalty);
-				endround::transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValDobon, 3000);
+				endround::transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValDobon, 3000);
 			}
 		} else if (std::regex_match(penaConf, matchDat, std::regex("chip(\\d+)"))) { // チップで精算
 			if (RuleData::chkRuleApplied("chip")) {
 				penalty = atoi(matchDat[1].str().c_str()); // ルール設定文字列から整数を抽出
 				if (isSomeoneDobon(gameStat)) {
 					calcDobonDelta(gameStat, AgariPlayerPriority, penalty);
-					endround::transfer::transferChip(gameStat, mihajong_graphic::tblSubsceneCallValDobon, 1500);
+					endround::transfer::transferChip(gameStat, mihajong_graphic::TableSubsceneID::callValDobon, 1500);
 				}
 			}
 		}
@@ -546,7 +546,7 @@ namespace {
 		}
 	}
 
-	void chipTransfer(GameTable* gameStat, unsigned subscene, int ChipAmount) {
+	void chipTransfer(GameTable* gameStat, mihajong_graphic::TableSubsceneID subscene, int ChipAmount) {
 		if ((ChipAmount <= 0) || (!RuleData::chkRuleApplied("chip"))) return;
 		endround::transfer::resetDelta();
 		const std::string limithand_bonus(RuleData::chkRule("limithand_bonus"));
@@ -609,10 +609,10 @@ namespace {
 		mihajong_graphic::YakuResult::setYakuStat(yakuInfo, static_cast<LargeNum>(*agariPointArray), ChipAmount);
 		tmpUraFlag = gameStat->statOfAgari().MenzenFlag && gameStat->statOfAgari().RichiFlag.RichiFlag && (!RuleData::chkRule("uradora", "no"));
 		if (tmpUraFlag)
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgariUradora);
+			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::agariUradora);
 		else
 #endif /* GUOBIAO */
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAgari);
+			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::agari);
 		(void)mihajong_graphic::ui::WaitUI();
 		if (EnvTable::Instantiate()->WatchModeFlag)
 			mihajong_graphic::ui::CheckIfDemoTerminated();
@@ -651,7 +651,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 
 #ifndef GUOBIAO
 	if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice")) { // めくっていく処理
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneAlice); // 表示
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::alice); // 表示
 		while (gameStat->DoraPointer > AlicePointer) {
 			gameStat->DoraPointer -= 2;
 			sound::Play(sound::IDs::sndMekuri);
@@ -681,7 +681,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	gameStat->statOfAgari().YakitoriFlag = false; // 焼き鳥フラグを下ろす
 	/*if (gameStat->statOfAgari().MenzenFlag && RuleData::chkRuleApplied("alice"))
 		gameStat->DoraPointer = AlicePointer;*/
-	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValAgariten, 1500);
+	transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValAgariten, 1500);
 	
 #ifndef GUOBIAO
 	if ((gameStat->Honba > 0) && RuleData::chkRuleApplied("tsumiboh_rate")) {
@@ -707,18 +707,18 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 				}
 			}
 		}
-		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValTsumibou, 1500);
+		transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValTsumibou, 1500);
 	}
 	
 	if (gameStat->Deposit) { // 供託点棒が場にある場合で、条件を満たしているなら
 		if ((!RuleData::chkRule("getting_deposit", "riichidori")) || gameStat->statOfAgari().RichiFlag.RichiFlag) {
 			transfer::resetDelta();
 			transfer::addDelta(gameStat->CurrentPlayer.Agari, gameStat->Deposit * 1000);
-			transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValKyoutaku, 1500);
+			transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValKyoutaku, 1500);
 		}
 	}
 	
-	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValChip, ChipAmount);
+	chipTransfer(gameStat, mihajong_graphic::TableSubsceneID::callValChip, ChipAmount);
 	
 	ChipAmount = 0;
 	if ((yakuInfo.CoreSemiMangan + yakuInfo.BonusSemiMangan) >= 8) { // 役満祝儀
@@ -731,7 +731,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 		else if (std::regex_match(limithand_bonus, vals, std::regex("chip_(\\d+)_each")))
 			ChipAmount = std::atoi(vals[1].str().c_str());
 	}
-	chipTransfer(gameStat, mihajong_graphic::tblSubsceneCallValYakuman, ChipAmount);
+	chipTransfer(gameStat, mihajong_graphic::TableSubsceneID::callValYakuman, ChipAmount);
 
 	/* 四馬路が北家の放銃だった場合 */
 	if (!gameStat->chkGameType(SanmaT)) {
@@ -741,7 +741,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 				for (PlayerID i = 0; i < Players; ++i)
 					transfer::addDelta(i, 1000);
 				transfer::addDelta(gameStat->CurrentPlayer.Agari, -3000);
-				transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValKitamakura, 1500);
+				transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValKitamakura, 1500);
 			}
 		}
 	}
@@ -756,7 +756,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 #ifdef GUOBIAO
 	/* 中国ルールでの処理。基本的にアガリ放棄で続行する */
 	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::Chonbo);
-	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
+	mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade);
 	sound::Play(sound::IDs::sndCuohu);
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	if (EnvTable::Instantiate()->WatchModeFlag)
@@ -803,7 +803,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 			ResultDesc += _T("(喰い替え)"); // 喰い替えをしたとき
 		sound::Play(sound::IDs::sndPage);
 	}
-	mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChonbo);
+	mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::chonbo);
 	mihajong_graphic::ui::WaitUIWithTimeout(5000);
 	if (EnvTable::Instantiate()->WatchModeFlag)
 		mihajong_graphic::ui::CheckIfDemoTerminated();

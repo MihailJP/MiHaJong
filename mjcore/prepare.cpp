@@ -512,8 +512,8 @@ namespace {
 			break;
 		}
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
-		mihajong_graphic::Transit(mihajong_graphic::sceneGameTable);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneBeginning);
+		mihajong_graphic::Transit(mihajong_graphic::SceneID::gameTable);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::beginning);
 	}
 	void tileshuffle(GameTable* const gameStat) {
 		shuffle(gameStat); unsigned tmpNumberOfTiles;
@@ -595,14 +595,14 @@ namespace {
 			gameStat->Player[player].Hand[handIndex] = gameStat->Deck[gameStat->TilePointer];
 			++gameStat->TilePointer;
 			if ((i == (gameStat->chkGameType(AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneHonba);
+				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::honba);
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
 				sound::Play(sound::IDs::sndTsumo);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat); skippableWait(250);
 			}
 		}
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
 		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 4 : 5); i++) { // １枚ずつを１回、親のチョンチョン
 			unsigned handIndex = i / (gameStat->chkGameType(AllSanma) ? 3 : 4) + 12;
 			PlayerID player;

@@ -25,13 +25,13 @@
 namespace {
 	DiscardTileNum playerdahai(const GameTable* gameStat) { // プレイヤーの打牌
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubscenePlayerDahai);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::playerDahai);
 #ifdef _WIN32
 		DWORD result = mihajong_graphic::ui::WaitUI();
 #else /*_WIN32*/
 		uint32_t result = mihajong_graphic::ui::WaitUI();
 #endif /*_WIN32*/
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
 		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
 
 		uint8_t dahaiStreamCode = 0x00;
@@ -164,7 +164,7 @@ namespace { /* 内部処理分割用 */
 			mihajong_graphic::calltext::RonQualified : //天和の時はロンと言う慣わし
 			mihajong_graphic::calltext::Tsumo
 			);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		gameStat->statOfAgari().HandStat = handExposed;
 		if (gameStat->TianHuFlag) sound::Play(sound::IDs::voxRon);
 		else sound::Play(sound::IDs::voxTsumo);
@@ -179,7 +179,7 @@ namespace { /* 内部処理分割用 */
 			chkdaopaiability(gameStat, gameStat->CurrentPlayer.Active) &&
 			gameStat->statOfActive().FirstDrawFlag) {
 				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kyuushu);
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 				gameStat->statOfActive().HandStat = handExposed;
 				sound::Play(sound::IDs::voxKyuushu);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -266,7 +266,7 @@ namespace { /* 内部処理分割用 */
 		/* 立直を宣言する */
 		if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag))
@@ -278,7 +278,7 @@ namespace { /* 内部処理分割用 */
 		}
 		if (DiscardTileIndex.type == DiscardTileNum::Riichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Riichi);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall); // 発声表示処理
+			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 			sound::Play(sound::IDs::voxRichi);
 			if (!(gameStat->Player[0].RichiFlag.OpenFlag || gameStat->Player[1].RichiFlag.OpenFlag ||
 				gameStat->Player[2].RichiFlag.OpenFlag || gameStat->Player[3].RichiFlag.OpenFlag)) {
@@ -324,7 +324,7 @@ namespace { /* 内部処理分割用 */
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
 		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone); // 発声文字列を消去
+			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none); // 発声文字列を消去
 			gameStat->statOfActive().RichiFlag.RichiFlag =
 				gameStat->statOfActive().RichiFlag.IppatsuFlag = true;
 			gameStat->statOfActive().RichiFlag.DoubleFlag =

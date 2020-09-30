@@ -77,8 +77,8 @@ public:
 	void preloadTextures();
 	void disposeTextures();
 #endif /*WITH_DIRECTX*/
-	void transit(sceneID scene);
-	void subscene(unsigned int subsceneID);
+	void transit(SceneID scene);
+	void subscene(SubSceneID subsceneID);
 };
 
 }
