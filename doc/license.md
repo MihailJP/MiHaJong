@@ -235,7 +235,7 @@ Luaインタプリタについて
 -----------------------
 　AIの思考ルーチンに、Luaスクリプトのインタプリタを使用しています。ライセンスは次の通りです。
 
-> Copyright (C) 1994-2012 Lua.org, PUC-Rio.
+> Copyright (C) 1994-2020 Lua.org, PUC-Rio.
 >
 > Permission is hereby granted, free of charge, to any person obtaining a
 > copy of this software and associated documentation files (the
@@ -256,7 +256,7 @@ Luaインタプリタについて
 > TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-参照：[http://www.lua.org/manual/5.2/readme.html#license](http://www.lua.org/manual/5.2/readme.html#license)
+参照：[http://www.lua.org/manual/5.4/readme.html#license](http://www.lua.org/manual/5.4/readme.html#license)
 
 
 libogg/libvorbisについて

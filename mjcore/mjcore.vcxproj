@@ -114,7 +114,7 @@
       <MapFileName>
       </MapFileName>
       <MapExports>false</MapExports>
-      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua53_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua54_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -147,7 +147,7 @@
       <MapFileName>
       </MapFileName>
       <MapExports>false</MapExports>
-      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua53_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DbgHelp.lib;Shlwapi.lib;imagehlp.lib;.\lua\lua54_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -178,7 +178,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua53_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua54_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
@@ -206,7 +206,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua53_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Shlwapi.lib;imagehlp.lib;.\lua\lua54_$(Platform).lib;$(TargetDir)astro.lib;$(TargetDir)socket.lib;$(TargetDir)sound.lib;$(TargetDir)graphic.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0411</Culture>
