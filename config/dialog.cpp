@@ -129,10 +129,10 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	dynamic_cast<TextBox*>(controls[IDC_EDIT2])->set(confFile.playerName());
 	dynamic_cast<Slider*>(controls[IDC_SLIDER1])->set(confFile.bgmVolume() / 5);
 	dynamic_cast<Slider*>(controls[IDC_SLIDER2])->set(confFile.soundVolume() / 5);
-	if (confFile.screenResolution() == ConfigFile::screenInvalid)
-		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(ConfigFile::screenXGA);
+	if (confFile.screenResolution() == ConfigFile::ScreenConfig::invalid)
+		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(static_cast<int>(ConfigFile::ScreenConfig::xga));
 	else
-		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(confFile.screenResolution());
+		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(static_cast<int>(confFile.screenResolution()));
 	if (!confFile.serverAddress().empty())
 		dynamic_cast<TextBox*>(controls[IDC_EDIT3])->set(confFile.serverAddress());
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
@@ -168,7 +168,7 @@ void ConfigDialog::okButtonPressed() {
 	confFile.bgmVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER1])->get() * 5);
 	confFile.soundVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER2])->get() * 5);
 	confFile.screenResolution(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->get()));
-	confFile.monitorNumber(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->get() + 1));
+	confFile.monitorNumber(dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->get() + 1);
 	confFile.serverAddress(dynamic_cast<TextBox*>(controls[IDC_EDIT3])->get());
 
 	confFile.save();
