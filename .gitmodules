@@ -1,8 +1,8 @@
 [submodule "sound/libogg"]
 	path = sound/libogg
-	url = https://git.xiph.org/ogg.git
+	url = https://github.com/xiph/ogg.git
 	ignore = dirty
 [submodule "sound/libvorbis"]
 	path = sound/libvorbis
-	url = https://git.xiph.org/vorbis.git
+	url = https://github.com/xiph/vorbis.git
 	ignore = dirty

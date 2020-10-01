@@ -263,7 +263,7 @@ libogg/libvorbisについて
 ------------------------
 　サウンド再生ルーチンに、libogg/libvorbisのコードを使用しています。ライセンスは次の通りです。
 
-### libogg (libogg_static.lib) ###
+### libogg (libogg.lib) ###
 
 > Copyright (c) 2002, Xiph.org Foundation
 >
@@ -297,7 +297,7 @@ libogg/libvorbisについて
 
 ### libvorbis (libvorbis_static.lib、libvorbisfile_static.lib) ###
 
-> Copyright (c) 2002-2008 Xiph.org Foundation
+> Copyright (c) 2002-2020 Xiph.org Foundation
 >
 > Redistribution and use in source and binary forms, with or without
 > modification, are permitted provided that the following conditions

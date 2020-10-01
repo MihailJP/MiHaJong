@@ -113,7 +113,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mihastsm", "mihajong\mihast
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libogg", "libogg", "{D2C06A46-BBE9-4FF1-A617-25CF5B2780FC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libogg_static", "sound\libogg\win32\VS2015\libogg_static.vcxproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libogg", "sound\libogg\win32\VS2015\libogg.vcxproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libvorbis", "libvorbis", "{719719CE-89DD-4DE1-96C9-26711A126330}"
 EndProject
