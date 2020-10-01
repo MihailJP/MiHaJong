@@ -63,7 +63,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		MachihaiInfo machiInfo = utils::chkFuriten(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		if ((GameStatus::gameStat()->gameType & RichiMJ) && (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten))
 			tipText = _T("[振聴]");
-		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
+		if (caller->buttonReconst->getButtonSet() == ButtonSet::normal) {
 			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;
 			auto render = [this, &tipText] (unsigned tileID, TileCode tileCode) -> void {
 				myTileRenderer->NewTile(tileID, Tile(tileCode),
@@ -71,7 +71,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 					TipY + (ShowTile::VertTileHeight / 2) - 6,
 					TileDirection::portrait, TileSide::obverse, 0xffffffff);
 			};
-			auto chkCursor = [this](ButtonReconst::ButtonID buttonID) -> bool {
+			auto chkCursor = [this](ButtonID buttonID) -> bool {
 				return (caller->buttonReconst->isEnabled(buttonID) &&
 					(caller->buttonReconst->getCursor() == buttonID));
 			};

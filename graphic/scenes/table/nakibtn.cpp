@@ -26,7 +26,7 @@ template <typename T> T scaleToWindow(T val) {
 }
 
 constexpr GameTableScreen::ButtonReconst::BtnData
-	GameTableScreen::ButtonReconst::buttonDat[2][GameTableScreen::ButtonReconst::btnMAXIMUM] = {
+GameTableScreen::ButtonReconst::buttonDat[2][btnMAXIMUM] = {
 		{
 			{_T(""),         5 + 117 * 0, Geometry::BaseSize - 40, 0xff666666},
 			{_T(""),         5 + 117 * 1, Geometry::BaseSize - 40, 0xff666666},
@@ -46,27 +46,27 @@ constexpr GameTableScreen::ButtonReconst::BtnData
 		},
 };
 
-GameTableScreen::ButtonReconst::ButtonSet GameTableScreen::ButtonReconst::getButtonSet() {
+ButtonSet GameTableScreen::ButtonReconst::getButtonSet() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return currentButtonSet;
 }
-std::bitset<GameTableScreen::ButtonReconst::btnMAXIMUM> GameTableScreen::ButtonReconst::areEnabled() {
+GameTableScreen::ButtonReconst::ButtonFlags GameTableScreen::ButtonReconst::areEnabled() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return buttonEnabled;
 }
 bool GameTableScreen::ButtonReconst::isEnabled(ButtonID buttonID) {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
-	return (buttonID >= 0) && (buttonID < btnMAXIMUM) && buttonEnabled[buttonID];
+	return (static_cast<int>(buttonID) >= 0) && (static_cast<int>(buttonID) < btnMAXIMUM) && buttonEnabled[buttonID];
 }
 bool GameTableScreen::ButtonReconst::isSunkenButtonExists() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return sunkenButton != NoSunkenButton;
 }
-int GameTableScreen::ButtonReconst::getSunkenButtonID() {
+ButtonID GameTableScreen::ButtonReconst::getSunkenButtonID() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return sunkenButton;
 }
-void GameTableScreen::ButtonReconst::setSunkenButton(int buttonID) {
+void GameTableScreen::ButtonReconst::setSunkenButton(ButtonID buttonID) {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	sunkenButton = buttonID;
 }
@@ -74,21 +74,21 @@ bool GameTableScreen::ButtonReconst::isCursorEnabled() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return cursor != CursorDisabled;
 }
-int GameTableScreen::ButtonReconst::getCursor() {
+ButtonID GameTableScreen::ButtonReconst::getCursor() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	return cursor;
 }
-void GameTableScreen::ButtonReconst::setCursor(int cursorPos) {
+void GameTableScreen::ButtonReconst::setCursor(ButtonID cursorPos) {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	cursor = cursorPos;
 }
-int GameTableScreen::ButtonReconst::incCursor() {
+ButtonID GameTableScreen::ButtonReconst::incCursor() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
-	return ++cursor;
+	return static_cast<ButtonID>(++(*reinterpret_cast<int*>(&cursor)));
 }
-int GameTableScreen::ButtonReconst::decCursor() {
+ButtonID GameTableScreen::ButtonReconst::decCursor() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
-	return --cursor;
+	return static_cast<ButtonID>(--(*reinterpret_cast<int*>(&cursor)));
 }
 
 void GameTableScreen::ButtonReconst::Render() {
@@ -101,17 +101,17 @@ void GameTableScreen::ButtonReconst::Render() {
 #endif /*_WIN32*/
 	if (cursor != CursorDisabled) {
 #include "color.h"
-		Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][cursor].color;
+		Color btnColor; btnColor.rgbaAsOneValue = getButtonData(currentButtonSet, cursor).color;
 		const double Zeit = static_cast<double>(myTimer.currTime() % 9000000ULL);
 		btnColor.rgbaAsStruct.r = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.r) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		btnColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		btnColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
-		buttons->setButton(cursor,
+		buttons->setButton(static_cast<int>(cursor),
 			(sunkenButton == cursor) ? ButtonStat::sunken : (buttonEnabled[cursor] ? ButtonStat::raised : ButtonStat::clear),
-			scaleToWindow(buttonDat[currentButtonSet][cursor].x),
-			scaleToWindow(buttonDat[currentButtonSet][cursor].y),
+			scaleToWindow(getButtonData(currentButtonSet, cursor).x),
+			scaleToWindow(getButtonData(currentButtonSet, cursor).y),
 			scaleToWindow(117u), scaleToWindow(36u),
-			btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][cursor].label);
+			btnColor.rgbaAsOneValue, getButtonData(currentButtonSet, cursor).label);
 	}
 	buttons->Render();
 	buttons->Render();
@@ -121,21 +121,21 @@ void GameTableScreen::ButtonReconst::Render() {
 void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 #include "color.h"
-	Color btnColor; btnColor.rgbaAsOneValue = buttonDat[currentButtonSet][buttonID].color;
+	Color btnColor; btnColor.rgbaAsOneValue = getButtonData(currentButtonSet, buttonID).color;
 	/*if (!buttonEnabled[buttonID]) { // 暗転処理
 		btnColor.rgbaAsStruct.r /= 3;
 		btnColor.rgbaAsStruct.g /= 3;
 		btnColor.rgbaAsStruct.b /= 3;
 	}*/
-	buttons->setButton(buttonID,
+	buttons->setButton(static_cast<int>(buttonID),
 		(sunkenButton == buttonID) ? ButtonStat::sunken : (buttonEnabled[buttonID] ? ButtonStat::raised : ButtonStat::clear),
-		scaleToWindow(buttonDat[currentButtonSet][buttonID].x),
-		scaleToWindow(buttonDat[currentButtonSet][buttonID].y),
+		scaleToWindow(getButtonData(currentButtonSet, buttonID).x),
+		scaleToWindow(getButtonData(currentButtonSet, buttonID).y),
 		scaleToWindow(117u), scaleToWindow(36u),
-		btnColor.rgbaAsOneValue, buttonDat[currentButtonSet][buttonID].label);
-	caller->setRegion(buttonID + ButtonRegionNum,
-		buttonDat[currentButtonSet][buttonID].x      , buttonDat[currentButtonSet][buttonID].y,
-		buttonDat[currentButtonSet][buttonID].x + 117, buttonDat[currentButtonSet][buttonID].y + 36);
+		btnColor.rgbaAsOneValue, getButtonData(currentButtonSet, buttonID).label);
+	caller->setRegion(static_cast<int>(buttonID) + ButtonRegionNum,
+		getButtonData(currentButtonSet, buttonID).x      , getButtonData(currentButtonSet, buttonID).y,
+		getButtonData(currentButtonSet, buttonID).x + 117, getButtonData(currentButtonSet, buttonID).y + 36);
 }
 void GameTableScreen::ButtonReconst::reconstruct() {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
@@ -165,13 +165,13 @@ void GameTableScreen::ButtonReconst::disable(ButtonID buttonID) {
 }
 void GameTableScreen::ButtonReconst::enable(const std::bitset<btnMAXIMUM>& flagset) {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
-	buttonEnabled = flagset;
+	buttonEnabled = reinterpret_cast<const ButtonFlags&>(flagset);
 	reconstruct();
 }
 
 void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
-	currentButtonSet = btnSetTsumo; buttonEnabled.reset(); // 状態をリセット
+	currentButtonSet = ButtonSet::tsumo; buttonEnabled.reset(); // 状態をリセット
 	const GameTable* const gameStat = GameStatus::retrGameStat();
 	auto tilesMoreThan = [gameStat](int tiles) {
 		return (gameStat->TilePointer + tiles) < (gameStat->RinshanPointer - gameStat->DeadTiles - 1);
@@ -185,20 +185,20 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		(playerStat->MenzenFlag || (!rules::chkRule("riichi_shibari", "no"))) && // 門前であるか、リーチ縛りルールである
 		(!playerStat->RichiFlag.RichiFlag) && // まだリーチしていない
 		(tilesMoreThan((gameStat->gameType & AllSanma) ? 2 : 3))) { // 残りツモ牌が十分あるなら
-			buttonEnabled[btnRiichi] = true; // リーチボタンを有効に
+			buttonEnabled[ButtonID::riichi] = true; // リーチボタンを有効に
 			if ((!rules::chkRule("open_riichi", "no")) && playerStat->MenzenFlag) // オープンリーチありの場合で門前の場合
-				buttonEnabled[btnOpenRiichi] = true; // ボタンを有効に
+				buttonEnabled[ButtonID::openRiichi] = true; // ボタンを有効に
 	}
 
 	const bool DaoPaiAbilityFlag = (gameStat->gameType & RichiMJ) && utils::chkdaopaiability(gameStat, ActivePlayer);
 	if ((gameStat->gameType & RichiMJ) && (DaoPaiAbilityFlag) && (playerStat->FirstDrawFlag))
-		buttonEnabled[btnKyuushu] = true; // 九種九牌ボタン
+		buttonEnabled[ButtonID::kyuushu] = true; // 九種九牌ボタン
 
 	const bool ShisanBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisanBuDa(gameStat, ActivePlayer);
 	const bool ShisiBuDa = (gameStat->gameType & RichiMJ) && utils::chkShisiBuDa(gameStat, ActivePlayer);
 	if (((shanten <= -1) && (playerStat->Tsumohai())) || // 和了になっているか
 		ShisanBuDa || ShisiBuDa) // 十三不塔の場合（十三不塔なしの場合この変数はfalseになる）
-		buttonEnabled[btnTsumo] = true; // 和了ボタン
+		buttonEnabled[ButtonID::tsumo] = true; // 和了ボタン
 
 	const Int8ByTile TileCount = utils::countTilesInHand(gameStat, ActivePlayer);
 	const int kanLim = (gameStat->gameType & GuobiaoMJ) ? 16 : rules::chkRule("fifth_kong", "no") ? 4 : 5;
@@ -223,7 +223,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	} ();
 	if ((KanFlag && (playerStat->Tsumohai()) &&
 		(!playerStat->RichiFlag.RichiFlag)) || utils::chkAnkanAbility(gameStat, ActivePlayer))
-		buttonEnabled[btnKan] = true;
+		buttonEnabled[ButtonID::kan] = true;
 
 	const TileCode flowerTile = (gameStat->gameType & SanmaX) ? NorthWind : Flower;
 	const bool Flowerabilityflag = [gameStat, playerStat]() -> bool {
@@ -236,14 +236,14 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		(playerStat->Tsumohai()) &&
 		(TileCount[flowerTile] >= 1) &&
 		((!playerStat->RichiFlag.RichiFlag) || Flowerabilityflag))
-		buttonEnabled[btnFlower] = true;
+		buttonEnabled[ButtonID::flower] = true;
 
 	reconstruct();
 }
 
 void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
-	currentButtonSet = btnSetNormal; buttonEnabled.reset(); // 状態をリセット
+	currentButtonSet = ButtonSet::normal; buttonEnabled.reset(); // 状態をリセット
 	GameTable* const gameStat = new GameTable;
 	memcpy(gameStat, GameStatus::retrGameStat(), sizeof (GameTable));
 	auto tilesMoreThan = [gameStat](int tiles) {
@@ -264,18 +264,18 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		goto end; // 残りの判定をスキップ
 
 	if (shanten < 0) // 出た牌が当たり牌
-		buttonEnabled[btnRon] = true; // 和了ボタン（フリテンの場合なども点灯）
+		buttonEnabled[ButtonID::ron] = true; // 和了ボタン（フリテンの場合なども点灯）
 
 	if ((!playerStat->RichiFlag.RichiFlag) && tilesMoreThan(0)) { // リーチしてなくて河底でないとき……
 		const Int8ByTile TileCount = utils::countTilesInHand(gameStat, PassivePlayer);
 		const int kanLim = (gameStat->gameType & GuobiaoMJ) ? 16 : rules::chkRule("fifth_kong", "no") ? 4 : 5;
 
 		if (TileCount[gameStat->CurrentDiscard.tile] >= 2)
-			buttonEnabled[btnPon] = true; // ポン
+			buttonEnabled[ButtonID::pon] = true; // ポン
 		if ((TileCount[gameStat->CurrentDiscard.tile] >= 3) && // 出てきた牌を暗刻で持っていて
 			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
 			(gameStat->KangNum < kanLim)) // 限度以内の場合
-			buttonEnabled[btnKan] = true; // カン
+			buttonEnabled[ButtonID::kan] = true; // カン
 
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
 		if ((gameStat->gameType & (Yonma | GuobiaoMJ)) && // 四麻である
@@ -284,21 +284,21 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= 1) &&
 					(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃
-						buttonEnabled[btnChii] = true;
+						buttonEnabled[ButtonID::chii] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= 2) &&
 					(TileCount[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 1] >= 1)) { // 嵌張吃
-						buttonEnabled[btnChii] = true;
+						buttonEnabled[ButtonID::chii] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= 3) &&
 					(TileCount[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount[gameStat->CurrentDiscard.tile - 1] >= 1)) { // 上吃
-						buttonEnabled[btnChii] = true;
+						buttonEnabled[ButtonID::chii] = true;
 				}
 		}
 	}
 
 	if (buttonEnabled.any()) // 何らかのボタンが点灯していたら無視するボタンも点灯する
-		buttonEnabled[btnPass] = true;
+		buttonEnabled[ButtonID::pass] = true;
 
 end:
 	delete gameStat;
@@ -309,9 +309,9 @@ end:
 GameTableScreen::ButtonReconst::ButtonReconst(GameTableScreen* parent) {
 	caller = parent;
 	cursor = CursorDisabled; sunkenButton = NoSunkenButton;
-	currentButtonSet = btnSetNormal;
+	currentButtonSet = ButtonSet::normal;
 	buttons = new ButtonPic(caller->caller->getDevice());
-	ChangeButtonSet(btnSetNormal);
+	ChangeButtonSet(ButtonSet::normal);
 };
 
 GameTableScreen::ButtonReconst::~ButtonReconst() {
@@ -324,7 +324,7 @@ void GameTableScreen::ButtonReconst::setMode(DiscardTileNum::discardType mode, B
 	caller->tileSelectMode = mode;
 	this->setSunkenButton(button);
 	for (int i = 0; i < btnMAXIMUM; ++i)
-		if (i != button)
+		if (i != static_cast<int>(button))
 			this->disable(static_cast<ButtonID>(i));
 	this->reconstruct();
 	caller->tehaiReconst->enable();
@@ -342,27 +342,27 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 	sound::Play(sound::IDs::sndButton);
 	if (!this->isEnabled(static_cast<ButtonID>(this->getCursor()))) {
 		sound::Play(sound::IDs::sndCuohu);
-	} else if (this->getButtonSet() == btnSetTsumo) {
+	} else if (this->getButtonSet() == ButtonSet::tsumo) {
 		auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {
 			tmpStat->statOfActive().Hand[i].tile = NoTile;
 			Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
 			return (shanten > 0);
 		};
 		switch (this->getCursor()) {
-		case btnTsumo:
+		case ButtonID::tsumo:
 			caller->CallTsumoAgari();
 			break;
-		case btnKyuushu:
+		case ButtonID::kyuushu:
 			caller->CallKyuushuKyuuhai();
 			break;
-		case btnRiichi: // 立直
-			setMode(DiscardTileNum::Riichi, btnRiichi, isTenpaiTile);
+		case ButtonID::riichi: // 立直
+			setMode(DiscardTileNum::Riichi, ButtonID::riichi, isTenpaiTile);
 			break;
-		case btnOpenRiichi: // オープン立直
-			setMode(DiscardTileNum::OpenRiichi, btnOpenRiichi, isTenpaiTile);
+		case ButtonID::openRiichi: // オープン立直
+			setMode(DiscardTileNum::OpenRiichi, ButtonID::openRiichi, isTenpaiTile);
 			break;
-		case btnKan: // カン
-			setMode(DiscardTileNum::Ankan, btnKan,
+		case ButtonID::kan: // カン
+			setMode(DiscardTileNum::Ankan, ButtonID::kan,
 				[](int i, GameTable* tmpStat) -> bool {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
@@ -382,8 +382,8 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					return flag;
 				});
 			break;
-		case btnFlower: // 花牌
-			setMode(DiscardTileNum::Flower, btnFlower,
+		case ButtonID::flower: // 花牌
+			setMode(DiscardTileNum::Flower, ButtonID::flower,
 				[](int i, GameTable* tmpStat) -> bool {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
@@ -397,23 +397,23 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			sound::Play(sound::IDs::sndCuohu);
 			break;
 		}
-	} else if (this->getButtonSet() == btnSetNormal) {
+	} else if (this->getButtonSet() == ButtonSet::normal) {
 		const auto tilesInHand = utils::countTilesInHand(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 		switch (this->getCursor()) {
-		case btnPass:
+		case ButtonID::pass:
 			ui::UIEvent->set(naki::nakiNone);
 			break;
-		case btnRon:
+		case ButtonID::ron:
 			ui::UIEvent->set(naki::nakiRon);
 			break;
-		case btnKan:
+		case ButtonID::kan:
 			ui::UIEvent->set(naki::nakiKan);
 			break;
-		case btnPon:
+		case ButtonID::pon:
 			if (tilesInHand[GameStatus::gameStat()->CurrentDiscard.tile] == 2) {
 				ui::UIEvent->set(naki::nakiPon);
 			} else if (caller->countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
-				setMode(DiscardTileNum::MeldSel, btnPon,
+				setMode(DiscardTileNum::MeldSel, ButtonID::pon,
 					[](int i, GameTable* tmpStat) -> bool {
 						return tmpStat->statOfMine().Hand[i].tile != tmpStat->CurrentDiscard.tile;
 					});
@@ -423,7 +423,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 				ui::UIEvent->set(naki::nakiPon);
 			}
 			break;
-		case btnChii:
+		case ButtonID::chii:
 			assert(GameStatus::gameStat()->CurrentDiscard.isNumber());
 			{
 				const auto chiiable = [&tilesInHand](TileCode p, TileCode q) {
@@ -436,7 +436,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					else                                               return false;
 				};
 				if (caller->countTiles(chiiable) > 2) {
-					setMode(DiscardTileNum::MeldSel, btnChii,
+					setMode(DiscardTileNum::MeldSel, ButtonID::chii,
 						[chiiable](int i, GameTable* tmpStat) -> bool {
 						return !chiiable(tmpStat->statOfMine().Hand[i].tile, tmpStat->CurrentDiscard.tile);
 					});

@@ -184,11 +184,11 @@ void GameTableScreen::RenderSideBar() {
 
 void GameTableScreen::checkTimeout() {
 	if ((mySubScene) && (mySubScene->timeout() <= 0) && (buttonReconst->areEnabled().any() || tehaiReconst->isCursorEnabled() || buttonReconst->isCursorEnabled())) { /* タイムアウトの処理 */
-		const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
+		const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonSet::normal) && buttonReconst->areEnabled().any();
 		tehaiReconst->setFirstChosenTile(); // 鳴き選択を取り消し
 		if (isNakiSel) { // 鳴き選択中の時
 			ui::UIEvent->set(naki::nakiNone); // 牌の番号を設定
-		} else if (buttonReconst->getButtonSet() == ButtonReconst::btnSetTsumo) {
+		} else if (buttonReconst->getButtonSet() == ButtonSet::tsumo) {
 			if (GameStatus::gameStat()->Player[GameStatus::gameStat()->PlayerID].Tsumohai())
 				ui::UIEvent->set(NumOfTilesInHand - 1); // ツモ切り
 			else ui::UIEvent->set(0); // 鳴いた直後の場合
@@ -233,7 +233,7 @@ void GameTableScreen::Render() {
 
 void GameTableScreen::SetSubscene(SubSceneID scene_ID) {
 	std::unique_lock<std::recursive_mutex> lock(subSceneCS);
-	buttonReconst->ChangeButtonSet(GameTableScreen::ButtonReconst::btnSetNormal);
+	buttonReconst->ChangeButtonSet(ButtonSet::normal);
 	tehaiReconst->enable();
 	tileSelectMode = 0;
 	delete mySubScene; tehaiReconst->setTileCursor();
@@ -344,7 +344,7 @@ void GameTableScreen::SetSubscene(SubSceneID scene_ID) {
 		else if (checkBoxes[ChkBoxAutoDiscard]->isChecked() && // 自動ツモ切り
 			buttonReconst->areEnabled().none())
 			ui::UIEvent->set(NumOfTilesInHand - 1);
-		else if ((buttonReconst->isEnabled(buttonReconst->btnTsumo)) &&
+		else if ((buttonReconst->isEnabled(ButtonID::tsumo)) &&
 			(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
 			CallTsumoAgari();
 		else // 自摸番が来たら音を鳴らす
@@ -360,14 +360,14 @@ void GameTableScreen::SetSubscene(SubSceneID scene_ID) {
 	setNakiButton:
 		// カーソルとボタンの設定
 		buttonReconst->btnSetForNaki();
-		buttonReconst->setCursor(buttonReconst->isEnabled(GameTableScreen::ButtonReconst::btnRon) ? GameTableScreen::ButtonReconst::btnRon : GameTableScreen::ButtonReconst::btnPass);
+		buttonReconst->setCursor(buttonReconst->isEnabled(ButtonID::ron) ? ButtonID::ron : ButtonID::pass);
 		buttonReconst->reconstruct();
 		if (buttonReconst->areEnabled().none()) // 該当する牌がないならスルー
 			ui::UIEvent->set(naki::nakiNone);
-		else if ((!(buttonReconst->isEnabled(buttonReconst->btnRon))) && /* ButtonReconst::btnRon だと何故かエラーになる */
+		else if ((!(buttonReconst->isEnabled(ButtonID::ron))) &&
 			(checkBoxes[ChkBoxAutoPass]->isChecked())) // オートパス
 			ui::UIEvent->set(naki::nakiNone);
-		else if ((buttonReconst->isEnabled(buttonReconst->btnRon)) &&
+		else if ((buttonReconst->isEnabled(ButtonID::ron)) &&
 			(checkBoxes[ChkBoxAutoAgari]->isChecked())) // オート和了
 			ui::UIEvent->set(naki::nakiRon);
 		else // 音を鳴らす
@@ -396,7 +396,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	const bool keyDown = od->type == KeyPress;
 #endif /*_WIN32*/
 
-	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonSet::normal) && buttonReconst->areEnabled().any();
 	auto cursorMoved = [&]() -> void {
 		sound::Play(sound::IDs::sndCursor);
 		tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
@@ -432,7 +432,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	case DIK_DOWN: case DIK_J: case DIK_S: // ボタン選択モードに切り替え
 		if (keyDown && (tehaiReconst->isCursorEnabled())) {
 			tehaiReconst->setTileCursor();
-			buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
+			buttonReconst->setCursor(btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
@@ -445,7 +445,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 			cursorMoved();
 		}
 		else if (keyDown && (buttonReconst->isCursorEnabled())) {
-			if (buttonReconst->decCursor() < 0) buttonReconst->setCursor(ButtonReconst::btnMAXIMUM - 1);
+			if (static_cast<int>(buttonReconst->decCursor()) < 0) buttonReconst->setCursor(btnMAXIMUM - 1);
 			cursorMoved();
 		}
 		break;
@@ -457,7 +457,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 			cursorMoved();
 		}
 		if (keyDown && (buttonReconst->isCursorEnabled())) {
-			if (buttonReconst->incCursor() >= ButtonReconst::btnMAXIMUM) buttonReconst->setCursor(0);
+			if (static_cast<int>(buttonReconst->incCursor()) >= btnMAXIMUM) buttonReconst->setCursor(0);
 			cursorMoved();
 		}
 		break;
@@ -498,7 +498,7 @@ void GameTableScreen::KeyboardInput(const XEvent* od) {
 	case DIK_ESCAPE: case DIK_X:
 		if (keyDown && isNakiSel && (buttonReconst->isCursorEnabled())) {
 			tehaiReconst->setFirstChosenTile(); // 鳴き選択を取り消し
-			buttonReconst->setCursor(ButtonReconst::btnPass);
+			buttonReconst->setCursor(ButtonID::pass);
 			buttonReconst->ButtonPressed();
 		}
 		break;
@@ -512,7 +512,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 #endif /*_WIN32*/
 {
 	TableProtoScene::MouseInput(od, X, Y);
-	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) && buttonReconst->areEnabled().any();
+	const bool isNakiSel = (buttonReconst->getButtonSet() == ButtonSet::normal) && buttonReconst->areEnabled().any();
 	const int scaledX = static_cast<int>(static_cast<float>(X) / Geometry::WindowScale());
 	const int scaledY = static_cast<int>(static_cast<float>(Y) / Geometry::WindowScale());
 	const int region = whichRegion(scaledX, scaledY);
@@ -521,7 +521,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 		isCursorEnabled && ((!isNakiSel) || (tileSelectMode == DiscardTileNum::MeldSel)) &&
 		(GameStatus::gameStat()->statOfMine().Hand[region]);
 	const bool isButton = (region >= ButtonReconst::ButtonRegionNum) &&
-		(region < ButtonReconst::ButtonRegionNum + ButtonReconst::btnMAXIMUM) &&
+		(region < ButtonReconst::ButtonRegionNum + btnMAXIMUM) &&
 		isCursorEnabled;
 #ifdef _WIN32
 	switch (od->dwOfs)
@@ -541,7 +541,7 @@ void GameTableScreen::MouseInput(const XEvent* od, int X, int Y)
 			tehaiReconst->Reconstruct(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
 			buttonReconst->reconstruct();
 			tileTipReconst->reconstruct();
-		} else if ((region != (ButtonReconst::ButtonRegionNum + buttonReconst->getCursor())) && (isButton)) {
+		} else if ((region != (ButtonReconst::ButtonRegionNum + static_cast<int>(buttonReconst->getCursor()))) && (isButton)) {
 			tehaiReconst->setTileCursor();
 			buttonReconst->setCursor(region - ButtonReconst::ButtonRegionNum);
 			sound::Play(sound::IDs::sndCursor);
@@ -627,7 +627,7 @@ void GameTableScreen::FinishTileChoice() {
 				if (chosenTile.tile == GameStatus::gameStat()->CurrentDiscard.tile) { // ポン選択
 					if (countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
 						tehaiReconst->setFirstChosenTile(tehaiReconst->getTileCursor());
-						buttonReconst->setMode(DiscardTileNum::MeldSel, ButtonReconst::btnPon,
+						buttonReconst->setMode(DiscardTileNum::MeldSel, ButtonID::pon,
 							[](int i, GameTable* tmpStat) -> bool {
 							return tmpStat->statOfMine().Hand[i].tile != tmpStat->CurrentDiscard.tile;
 						});
@@ -653,7 +653,7 @@ void GameTableScreen::FinishTileChoice() {
 					};
 					if (countTiles(validTile) > 1) {
 						tehaiReconst->setFirstChosenTile(tehaiReconst->getTileCursor());
-						buttonReconst->setMode(DiscardTileNum::MeldSel, ButtonReconst::btnChii,
+						buttonReconst->setMode(DiscardTileNum::MeldSel, ButtonID::chii,
 							[validTile](int i, GameTable* tmpStat) -> bool {
 								return !validTile(tmpStat->statOfMine().Hand[i].tile, tmpStat->CurrentDiscard.tile);
 							});
