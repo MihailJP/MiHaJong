@@ -42,7 +42,7 @@ void RemoteDahai::thread () {
 	int ReceivedMsg;
 	int lipaiFrom = 0;
 begin:
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+	if (EnvTable::Instantiate()->GameMode == ClientType::client) {
 		volatile int ClientReceived = 0;
 		while (true) {
 			//chatrecv GameStat, GameEnv
@@ -67,7 +67,7 @@ begin:
 			(!gameStat->statOfActive().ConnectionLost))
 			proc_abrupt_disconnect(gameStat, gameStat->CurrentPlayer.Active);
 	}
-	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+	else if (EnvTable::Instantiate()->GameMode == ClientType::server) {
 		volatile int ServerReceived = 0;
 		while (true) {
 			//chatrecv GameStat, GameEnv
@@ -258,9 +258,9 @@ void RemoteNaki::thread_server() {
 	}
 }
 void RemoteNaki::thread() {
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+	if (EnvTable::Instantiate()->GameMode == ClientType::client)
 		thread_client();
-	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+	else if (EnvTable::Instantiate()->GameMode == ClientType::server)
 		thread_server();
 	for (int i = 0; i < Players; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron) // ロンしたら自摸牌位置にロン牌を設定(実装上の都合)
@@ -316,7 +316,7 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 	char* RuleConfPtr[RULE_LINES];
 	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
 
-	EnvTable::Instantiate()->GameMode = EnvTable::Server;
+	EnvTable::Instantiate()->GameMode = ClientType::server;
 	serverAddr = "";
 	RuleData::exportRule(RuleConfPtr);
 
@@ -359,7 +359,7 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 	auto tmpAddr(RuleData::confFile.serverAddress());
 	mihajong_graphic::Transit(mihajong_graphic::SceneID::clientWaiting);
 	serverAddr = CodeConv::toANSI(tmpAddr);
-	EnvTable::Instantiate()->GameMode = EnvTable::Client;
+	EnvTable::Instantiate()->GameMode = ClientType::client;
 
 	const CodeConv::tstring Nomen(RuleData::confFile.playerName());
 
@@ -372,7 +372,7 @@ void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short
 			break;
 		} else if (mihajong_socket::client::isConnectionFailed()) {
 			mihajong_graphic::Transit(mihajong_graphic::SceneID::waitingError);
-			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			EnvTable::Instantiate()->GameMode = ClientType::standalone;
 			threadSleep(1500);
 			return;
 		}

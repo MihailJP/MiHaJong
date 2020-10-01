@@ -52,9 +52,9 @@ namespace {
 		else if (discardTile.type == DiscardTileNum::OpenRiichi)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_ORiichi_Offset + discardTile.id;
 
-		if      (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+		if      (EnvTable::Instantiate()->GameMode == ClientType::server)
 			mihajong_socket::server::send(dahaiStreamCode);
-		else if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+		else if (EnvTable::Instantiate()->GameMode == ClientType::client)
 			mihajong_socket::client::send(dahaiStreamCode);
 
 		return discardTile;
@@ -83,7 +83,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 			debug(_T("アガリ放棄か回線切断したプレイヤーのツモ番です。"));
 			DiscardTileIndex.type = DiscardTileNum::Normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
-	} else if ((EnvTable::Instantiate()->GameMode == EnvTable::Client) ||
+	} else if ((EnvTable::Instantiate()->GameMode == ClientType::client) ||
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag > 0)) {
 			/* ネット対戦時の処理 */
 			debug(_T("リモートプレイヤーのツモ番です。"));
@@ -91,7 +91,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 	} else {
 		debug(_T("AIのツモ番です。"));
 		DiscardTileIndex = aiscript::compdahai(sandbox);
-		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+		if (EnvTable::Instantiate()->GameMode == ClientType::server) {
 			assert((DiscardTileIndex.type == DiscardTileNum::Kyuushu) ||
 				(DiscardTileIndex.type == DiscardTileNum::Agari) ||
 				((DiscardTileIndex.id >= 0) && (DiscardTileIndex.id < NumOfTilesInHand)));

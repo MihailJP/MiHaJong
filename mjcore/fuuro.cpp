@@ -569,7 +569,7 @@ namespace {
 		} else {
 			Subscene(TableSubsceneID::none);
 		}
-		if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+		if (EnvTable::Instantiate()->GameMode == ClientType::client)
 			MoveTile::for_each([](std::pair<int, int> p) {
 				mihajong_socket::client::send(mihajong_socket::protocol::Lipai_From + p.first);
 				mihajong_socket::client::send(mihajong_socket::protocol::Lipai_To + p.second);
@@ -579,42 +579,42 @@ namespace {
 			debug(_T("プレイヤーからの応答：ロン"));
 			playerStat->DeclarationFlag.Ron = true;
 			playerStat->Tsumohai() = gameStat->CurrentDiscard;
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ron);
 			break;
 		case nakiKan:
 			debug(_T("プレイヤーからの応答：カン"));
 			playerStat->DeclarationFlag.Kan = true;
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Kan);
 			break;
 		case nakiPon:
 			debug(_T("プレイヤーからの応答：ポン"));
 			playerStat->DeclarationFlag.Pon = true;
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Pon);
 			break;
 		case nakiChiLower:
 			debug(_T("プレイヤーからの応答：チー(小さい側)"));
 			playerStat->DeclarationFlag.Chi = chiiLower;
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Lower);
 			break;
 		case nakiChiMiddle:
 			debug(_T("プレイヤーからの応答：チー(嵌塔子)"));
 			playerStat->DeclarationFlag.Chi = chiiMiddle;
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Middle);
 			break;
 		case nakiChiUpper:
 			debug(_T("プレイヤーからの応答：チー(大きい側)"));
 			playerStat->DeclarationFlag.Chi = chiiUpper;
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Upper);
 			break;
 		case nakiNone:
 			debug(_T("プレイヤーからの応答：通し"));
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
 			break;
 		default:
@@ -624,7 +624,7 @@ namespace {
 					result << _T(']');
 				error(o.str().c_str());
 			}
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
 			break;
 		}
@@ -660,12 +660,12 @@ void askReaction(GameTable* const gameStat) {
 				}
 			}
 		} else if (i == gameStat->PlayerID) {
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Ignore);
 		}
 	}
 	/* 通信対戦時の処理 */
-	if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone)
+	if (EnvTable::Instantiate()->GameMode != ClientType::standalone)
 		RemoteAction::remotenaki(gameStat);
 	{
 		CodeConv::tostringstream o;

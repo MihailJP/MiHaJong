@@ -184,7 +184,7 @@ inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 青�
 #endif /* GUOBIAO */
 
 inline void shuffletiles(GameTable* const gameStat, UInt8ByTile& tilepos, unsigned int tiles) { // 洗牌する
-	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
+	if (EnvTable::Instantiate()->GameMode != ClientType::client) {
 		for (unsigned int i = 0; i < tiles; ++i) { // 洗牌する
 			unsigned int tmppos = i + RndNum::rnd(tiles - i);
 			Tile tmptile = gameStat->Deck[tmppos];
@@ -257,11 +257,11 @@ void SeatShuffler::shuffleSeat () {
 	std::vector<PlayerID> TmpPosition;
 	for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++) TmpPosition.push_back(i);
 	// 場決め
-	if (EnvTable::Instantiate()->GameMode != EnvTable::Client) {
+	if (EnvTable::Instantiate()->GameMode != ClientType::client) {
 		// 場決め処理
 		RndNum::shuffle(TmpPosition);
 		// サーバーであれば結果を送信
-		if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+		if (EnvTable::Instantiate()->GameMode == ClientType::server)
 			for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
 				mihajong_socket::server::send(TmpPosition[i]);
 	} else {
@@ -282,7 +282,7 @@ void SeatShuffler::shuffleSeat () {
 
 	// リモートとしてマーク
 	/*PlayerID tmpPlayer = TmpPosition[ClientNumber];
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+	if (EnvTable::Instantiate()->GameMode == ClientType::client)
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; i++)
 			EnvTable::Instantiate()->PlayerDat[TmpPosition[i]].RemotePlayerFlag =
 			(i != tmpPlayer) ? 1 : 0;*/
@@ -350,10 +350,10 @@ namespace {
 			aiscript::initcall(makesandBox(gameStat, i), i);
 	}
 	void statsync(GameTable* const gameStat, std::uint8_t serverMsg, std::function<bool (GameTable* const, int)> f) {
-		if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+		if (EnvTable::Instantiate()->GameMode == ClientType::server) {
 			mihajong_socket::server::send(serverMsg);
 		}
-		else if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+		else if (EnvTable::Instantiate()->GameMode == ClientType::client) {
 			volatile int ClientReceived = 0;
 			int ReceivedMsg = 1023;
 			while (true) {
@@ -645,7 +645,7 @@ void tableinit(GameTable* const gameStat) {
 			if (ReceivedMsg == mihajong_socket::protocol::Server_StartRound_Signature) {
 				return true;
 			} else if (ReceivedMsg == 1023) { // 回線が切れてたら
-				EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+				EnvTable::Instantiate()->GameMode = ClientType::standalone;
 				for (int i = 0; i < Players; ++i)
 					EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
 				return true;

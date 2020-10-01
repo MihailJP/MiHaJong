@@ -137,7 +137,7 @@ void startgame(GameTypeID gameType) {
 		sound::util::bgmplay(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
 	start:
-		EnvTable::Instantiate()->GameMode = EnvTable::Unavailable;
+		EnvTable::Instantiate()->GameMode = ClientType::unavailable;
 		for (int i = 0; i < Players; ++i)
 			EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
 		std::string serverAddr;
@@ -147,7 +147,7 @@ void startgame(GameTypeID gameType) {
 			gameStat->chkGameType(SanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // タイトル画面
 		case 1:
-			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			EnvTable::Instantiate()->GameMode = ClientType::standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
 				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::confFile.playerName());
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
@@ -160,7 +160,7 @@ void startgame(GameTypeID gameType) {
 			break;
 		case 3:
 			RemoteConnection::startClient(serverAddr, ClientNumber, gamePort);
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Standalone)
+			if (EnvTable::Instantiate()->GameMode == ClientType::standalone)
 				goto start; // 接続失敗の時は戻る
 			break;
 		case 4:
@@ -170,7 +170,7 @@ void startgame(GameTypeID gameType) {
 		case 5:
 			return;
 		case 99: // デモ画面
-			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			EnvTable::Instantiate()->GameMode = ClientType::standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName = _T("[a]COM1");
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM2");
 			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM3");
@@ -198,7 +198,7 @@ void startgame(GameTypeID gameType) {
 		} while (!endFlag);
 		// 半荘終了時
 		gameResult(gameStat, OrigTurn, OrigHonba);
-		if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone) {
+		if (EnvTable::Instantiate()->GameMode != ClientType::standalone) {
 			// 一度閉じてやり直す
 			mihajong_socket::bye();
 			mihajong_socket::init();
