@@ -171,7 +171,7 @@ void RuleConfigScene::BtnEvent_OK_Up() {
 		}
 		buttonDown = -1;
 		for (unsigned i = 0; i < numberOfButtons(); i++)
-			myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
+			myButtonPic->setButton(i, (i == buttonCursor) ? ButtonStat::raised : ButtonStat::clear);
 	}
 }
 

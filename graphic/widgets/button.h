@@ -11,9 +11,9 @@
 
 namespace mihajong_graphic {
 
+enum class ButtonStat {absent, clear, raised, sunken,};
 class ButtonPic {
 public:
-	enum ButtonStat {absent, clear, raised, sunken,};
 	explicit ButtonPic(DevicePtr device);
 	ButtonPic(const ButtonPic&) = delete; // Delete unexpected copy constructor
 	ButtonPic& operator= (const ButtonPic&) = delete; // Delete unexpected assign operator

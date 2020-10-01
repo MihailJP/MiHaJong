@@ -107,7 +107,7 @@ void GameTableScreen::ButtonReconst::Render() {
 		btnColor.rgbaAsStruct.g = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.g) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		btnColor.rgbaAsStruct.b = static_cast<unsigned>(static_cast<double>(btnColor.rgbaAsStruct.b) * (sin(Zeit / 450000.0 * M_PI) / 4.0 + 0.75));
 		buttons->setButton(cursor,
-			(sunkenButton == cursor) ? ButtonPic::sunken : (buttonEnabled[cursor] ? ButtonPic::raised : ButtonPic::clear),
+			(sunkenButton == cursor) ? ButtonStat::sunken : (buttonEnabled[cursor] ? ButtonStat::raised : ButtonStat::clear),
 			scaleToWindow(buttonDat[currentButtonSet][cursor].x),
 			scaleToWindow(buttonDat[currentButtonSet][cursor].y),
 			scaleToWindow(117u), scaleToWindow(36u),
@@ -128,7 +128,7 @@ void GameTableScreen::ButtonReconst::reconstruct(ButtonID buttonID) {
 		btnColor.rgbaAsStruct.b /= 3;
 	}*/
 	buttons->setButton(buttonID,
-		(sunkenButton == buttonID) ? ButtonPic::sunken : (buttonEnabled[buttonID] ? ButtonPic::raised : ButtonPic::clear),
+		(sunkenButton == buttonID) ? ButtonStat::sunken : (buttonEnabled[buttonID] ? ButtonStat::raised : ButtonStat::clear),
 		scaleToWindow(buttonDat[currentButtonSet][buttonID].x),
 		scaleToWindow(buttonDat[currentButtonSet][buttonID].y),
 		scaleToWindow(117u), scaleToWindow(36u),
