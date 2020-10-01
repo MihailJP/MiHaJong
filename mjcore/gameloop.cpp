@@ -41,32 +41,32 @@ EndType doTableTurn(GameTable* const gameStat) {
 	/* 摸打の処理 */
 	DiscardTileNum DiscardTileIndex = getdahai(gameStat);
 	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
-		return Disconnect;
+		return EndType::disconnect;
 	/* ウェイトを入れる */
 	threadYield();
 	threadYield();
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
-	if (RoundEndType != Continuing)
+	if (RoundEndType != EndType::continuing)
 		return RoundEndType;
 	threadSleep(80);
 	/* リアクションを問い合わせる */
 	askReaction(gameStat);
 	/* 栄和の処理 */
 	RoundEndType = ronhuproc(gameStat); // 栄和の処理
-	if (RoundEndType != Continuing) return RoundEndType;
+	if (RoundEndType != EndType::continuing) return RoundEndType;
 	threadYield();
 	/* 途中流局の判定 */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
-	if (round_abort_type != Continuing) return round_abort_type;
+	if (round_abort_type != EndType::continuing) return round_abort_type;
 	/* 捨牌をポン、または大明槓する場合の処理 */
 	if (executeFuuro(gameStat, DiscardTileIndex))
-		return Continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
+		return EndType::continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 	/* ウェイトを入れる */
 	threadSleep(100);
 	/* 次のプレイヤーが牌を自摸る */
 	tsumoproc(gameStat);
 	// 打牌へ戻る
-	return Continuing;
+	return EndType::continuing;
 }
 
 /* 半荘の進行 */
@@ -90,22 +90,22 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	info(_T("配牌を完了しました。"));
 	gameStat->TurnRound = 1; // 配牌が終わったら1巡目
 	/* 摸打ループ */
-	volatile EndType roundEndType = Continuing;
+	volatile EndType roundEndType = EndType::continuing;
 	do {
 		do {
 			roundEndType = doTableTurn(gameStat);
-		} while ((roundEndType == DrawRinshan) || (roundEndType == Continuing));
+		} while ((roundEndType == EndType::drawRinshan) || (roundEndType == EndType::continuing));
 		OrigHonba = gameStat->Honba; OrigTurn = gameStat->GameRound;
 		endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
 #ifdef GUOBIAO
-		if (roundEndType == Chonbo) {
-			roundEndType = Continuing;
+		if (roundEndType == EndType::chonbo) {
+			roundEndType = EndType::continuing;
 			tsumoproc(gameStat);
 		}
 #endif /* GUOBIAO */
 	}
 #ifdef GUOBIAO
-	while ((roundEndType == Chonbo) || (roundEndType == Continuing));
+	while ((roundEndType == EndType::chonbo) || (roundEndType == EndType::continuing));
 #else /* GUOBIAO */
 	while (false);
 #endif /* GUOBIAO */

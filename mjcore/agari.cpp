@@ -317,14 +317,14 @@ namespace {
 		// 縛りを満たさないか、振聴のとき
 #ifdef GUOBIAO
 		if (yakuInfo.CoreHan < 8) // 中国ルールは和了に8点以上必要
-			RoundEndType = Chonbo;
+			RoundEndType = EndType::chonbo;
 #else /* GUOBIAO */
 		if (((yakuInfo.CoreHan <= (gameStat->ShibariFlag ? 1 : 0)) && (yakuInfo.CoreSemiMangan <= 0)) || // 縛りを満たしていないか、
 			(!gameStat->TsumoAgariFlag && ( // 「ロンの時で
 			machiInfo.FuritenFlag || // フリテンか
 			gameStat->statOfAgari().DoujunFuriten)) || // 同順フリテンの時」、もしくは
 			(RuleData::chkRule("riichi_shibari", "yes") && (!gameStat->statOfAgari().RichiFlag.RichiFlag))) // リーチ縛りを満たしていないならば
-			RoundEndType = Chonbo; // チョンボにする
+			RoundEndType = EndType::chonbo; // チョンボにする
 #endif /* GUOBIAO */
 	}
 
@@ -333,7 +333,7 @@ namespace {
 		if (RuleData::chkRule("furiten_riichi", "no") && // フリテン立直無しで
 			gameStat->statOfAgari().RichiFlag.RichiFlag && // 立直していて
 			machiInfo.FuritenFlag) // フリテンだった場合
-			RoundEndType = Chonbo; // チョンボにする
+			RoundEndType = EndType::chonbo; // チョンボにする
 #endif /* GUOBIAO */
 	}
 
@@ -352,7 +352,7 @@ namespace {
 	enum OptionBool {oFalse, oTrue, oNull,};
 
 	OptionBool procSecondaryRon(GameTable* gameStat, EndType& RoundEndType, int& cnt) {
-		RoundEndType = Agari;
+		RoundEndType = EndType::agari;
 		gameStat->CurrentPlayer.Agari = (gameStat->CurrentPlayer.Agari + 1) % Players;
 		if (gameStat->CurrentPlayer.Agari == gameStat->CurrentPlayer.Furikomi) return oFalse; // 一周した時点で抜ける
 		if (gameStat->statOfAgari().DeclarationFlag.Ron) { // ロンしていれば
@@ -442,19 +442,19 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		/**************/
 		/* 和了成立時 */
 		/**************/
-		if (RoundEndType == Agari) {
+		if (RoundEndType == EndType::agari) {
 			tmpagariflag = true;
 			if (gameStat->statOfAgari().AgariHouki || (EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Agari].RemotePlayerFlag == -1))
-				RoundEndType = Chonbo; // 和了り放棄時の処理→誤ロン・誤ツモとして罰符とする
+				RoundEndType = EndType::chonbo; // 和了り放棄時の処理→誤ロン・誤ツモとして罰符とする
 		}
-		if (RoundEndType == Agari) {
+		if (RoundEndType == EndType::agari) {
 			yaku::YAKUSTAT yakuInfo = yaku::yakuCalculator::countyaku(gameStat, gameStat->CurrentPlayer.Agari);
 			endround_agariproc(gameStat, ResultDesc, AgariPlayerPriority, origDoraPointer, yakuInfo, tmpUraFlag, tmpAliceFlag, OyaAgari);
 		}
 		/**************/
 		/* 錯和発生時 */
 		/**************/
-		if (RoundEndType == Chonbo)
+		if (RoundEndType == EndType::chonbo)
 			endround_chonboproc(gameStat, ResultDesc);
 
 		if (gameStat->TsumoAgariFlag) return false; /* ツモ和了りの時は終了 */
@@ -465,7 +465,7 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
 		return true;
 	});
-	RoundEndType = tmpagariflag ? Agari : Chonbo;
+	RoundEndType = tmpagariflag ? EndType::agari : EndType::chonbo;
 	/* 連荘判定用のプレイヤー番号設定 */
 #ifndef GUOBIAO
 	if (RuleData::chkRule("simultaneous_mahjong", "renchan_if_dealer_mahjong"))

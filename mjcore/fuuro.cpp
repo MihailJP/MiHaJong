@@ -377,7 +377,7 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 					else gameStat->KangFlag.chankanFlag = chankanRegular;
 					*RoundEndType = ronhuproc(gameStat);
 					if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = chankanNone;
-					if (*RoundEndType == TripleRon) return true;
+					if (*RoundEndType == EndType::tripleRon) return true;
 					if (RonPlayers(gameStat) > 0) {
 						info(_T("搶槓が宣言されました。ループから出ます。"));
 						return true;
@@ -423,12 +423,12 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 			if (gameStat->KangNum >= 4) {
 				debug(_T("5個目の槓なので直ちに流局とし、ループから出ます。"));
-				*RoundEndType = Uukaikan; return true;
+				*RoundEndType = EndType::uukaikan; return true;
 			}
 		}
 #endif /* GUOBIAO */
 		if (gameStat->TilePointer >= (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) {
-			*RoundEndType = Ryuukyoku; return true; /* 荒牌なら終了 */
+			*RoundEndType = EndType::ryuukyoku; return true; /* 荒牌なら終了 */
 		}
 		/* 嶺上牌を自摸る */
 		gameStat->Player[kangPlayer].Tsumohai() = gameStat->Deck[gameStat->RinshanPointer];
@@ -714,7 +714,7 @@ void askReaction(GameTable* const gameStat) {
 
 /* 栄和のときの処理 */
 EndType ronhuproc(GameTable* const gameStat) {
-	EndType RoundEndType = Continuing;
+	EndType RoundEndType = EndType::continuing;
 	/* ロンしようとする人を表示(頭ハネで蹴られるような人も含む) */
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Ron) {
@@ -768,7 +768,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		PlayerID pl = RelativePositionOf(gameStat->CurrentPlayer.Active, static_cast<seatRelative>(i + 1));
 		if (gameStat->Player[pl].DeclarationFlag.Ron) {
 			/* 栄和したことを変数に記録 */
-			RoundEndType = Agari; gameStat->TsumoAgariFlag = false;
+			RoundEndType = EndType::agari; gameStat->TsumoAgariFlag = false;
 			gameStat->CurrentPlayer.Furikomi = gameStat->CurrentPlayer.Active;
 			gameStat->CurrentPlayer.Agari = pl;
 			/* 八連荘の判定に使う変数 */
@@ -819,7 +819,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active)))) {
 					trace(_T("縛りを満たさないか振聴です。次の処理をチョンボ用に切り替えます。"));
 #endif /* GUOBIAO */
-					RoundEndType = Chonbo; // チョンボにする
+					RoundEndType = EndType::chonbo; // チョンボにする
 			}
 			// ロンをしたことを表示
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::RonQualified);
@@ -859,13 +859,13 @@ EndType ronhuproc(GameTable* const gameStat) {
 	if (gameStat->chkGameType(AllSanma)) {
 		// 二家和の判定
 		if ((RonPlayers(gameStat) >= 2) && RuleData::chkRule("multiple_mahjong", "aborted"))
-			return TripleRon;
+			return EndType::tripleRon;
 	} else {
 		// 三家和の判定
 		if ((RonPlayers(gameStat) >= 3) &&
 			(RuleData::chkRule("multiple_mahjong", "single_mahjong_with_draw") ||
 			RuleData::chkRule("multiple_mahjong", "dual_mahjong_with_draw")))
-			return TripleRon;
+			return EndType::tripleRon;
 	}
 #endif /* GUOBIAO */
 	return RoundEndType;
@@ -874,7 +874,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) {
 	/* 捨牌をポン、または大明槓する場合の処理 */
 	/* 同じ牌は４枚しかないので、ポンと明槓は同時に起こることがない */
-	unsigned declCount = 0; EndType roundEndType = Continuing;
+	unsigned declCount = 0; EndType roundEndType = EndType::continuing;
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DeclarationFlag.Pon) ++declCount;
 		if (gameStat->Player[i].DeclarationFlag.Kan) ++declCount;

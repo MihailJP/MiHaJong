@@ -1,18 +1,18 @@
 ﻿#pragma once
 
 /* 局終了コード */
-enum EndType : int { // 局の終了理由
-	DrawRinshan = -2,// 嶺上を引く処理に戻る
-	Continuing,      // 継続中
-	Ryuukyoku,       // 普通の流局
-	Agari,           // 誰かの和了
-	Chonbo,          // 錯和で終了
-	KyuushuKyuuhai,  // 九種九牌
-	Suukaikan,       // 四開槓
-	TripleRon,       // 三家和
-	SuufonRenda,     // 四風連打
-	SuuchaRiichi,    // 四人立直
-	NagashiMangan,   // 流し満貫
-	Disconnect,      // 通信途絶(ネットワーク対戦時のみ)
-	Uukaikan,        // 五回目の槓で流局した場合(誰かが四槓子聴牌の場合のみ)
+enum class EndType : int { // 局の終了理由
+	drawRinshan = -2,// 嶺上を引く処理に戻る
+	continuing,      // 継続中
+	ryuukyoku,       // 普通の流局
+	agari,           // 誰かの和了
+	chonbo,          // 錯和で終了
+	kyuushuKyuuhai,  // 九種九牌
+	suukaikan,       // 四開槓
+	tripleRon,       // 三家和
+	suufonRenda,     // 四風連打
+	suuchaRiichi,    // 四人立直
+	nagashiMangan,   // 流し満貫
+	disconnect,      // 通信途絶(ネットワーク対戦時のみ)
+	uukaikan,        // 五回目の槓で流局した場合(誰かが四槓子聴牌の場合のみ)
 };

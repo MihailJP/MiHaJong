@@ -528,10 +528,10 @@ void haifu::tools::hfwriter::hfWriteHead(const GameTable* const gameStat,
 #ifndef GUOBIAO
 		XhaifuBuffer << _T("\t\t\t<dora>") << std::endl <<
 			XhaifuP.dora.str() << _T("\t\t\t</dora>") << std::endl;
-		if ((RoundEndType == Agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
+		if ((RoundEndType == EndType::agari)&&(tmpUraFlag)&&(RuleData::chkRuleApplied("uradora")))
 			XhaifuBuffer << _T("\t\t\t<uradora>") << std::endl <<
 			XhaifuP.uraDora.str() << _T("\t\t\t</uradora>") << std::endl;
-		if ((RoundEndType == Agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
+		if ((RoundEndType == EndType::agari)&&(tmpAliceFlag)&&(RuleData::chkRuleApplied("alice")))
 			XhaifuBuffer << _T("\t\t\t<alice>") << std::endl <<
 			XhaifuP.aliceDoraMax.str() << _T("\t\t\t</alice>") << std::endl;
 #endif /* GUOBIAO */
@@ -545,7 +545,7 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if (gameStat->Player[player].Hand[i].tile) {
 			if (i == NumOfTilesInHand - 1) {
-				if ((RoundEndType == Ryuukyoku)||(RoundEndType == Agari)||(RoundEndType == Chonbo)) {
+				if ((RoundEndType == EndType::ryuukyoku)||(RoundEndType == EndType::agari)||(RoundEndType == EndType::chonbo)) {
 					if (gameStat->TsumoAgariFlag) {
 						XhaifuBufferBody << _T("\t\t\t\t</hand>") << std::endl;
 						XhaifuBufferBody << _T("\t\t\t\t<finishing-tile finish-type=\"tsumo\">") << std::endl;
@@ -779,7 +779,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 			XhaifuBuffer << _T(" comment=\"") << tmpStr << _T("\"");
 	}
 #endif /* GUOBIAO */
-	if (RoundEndType == Agari) { // 役リスト
+	if (RoundEndType == EndType::agari) { // 役リスト
 		const yaku::YAKUSTAT& yakuData(yaku::yakuCalculator::countyaku(gameStat, player));
 		mihajong_structs::YakuListType yakuList;
 		yakuData.yakuList(&yakuList, true);

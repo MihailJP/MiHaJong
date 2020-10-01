@@ -131,7 +131,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 
 namespace { /* 内部処理分割用 */
 	EndType procDahaiSubAgari(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex) { /* 自摸和の処理 */
-		EndType RoundEndType = Continuing;
+		EndType RoundEndType = EndType::continuing;
 		haifu::haifurectsumo(gameStat); // 牌譜に記録
 		/* 八連荘判定用の変数 */
 #ifndef GUOBIAO
@@ -153,10 +153,10 @@ namespace { /* 内部処理分割用 */
 			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
 			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
 			((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active))))
-			RoundEndType = Chonbo; /* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
+			RoundEndType = EndType::chonbo; /* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 		else
 #endif /* GUOBIAO */
-			RoundEndType = Agari; /* 縛りを満たすなら和了りとして成立 */
+			RoundEndType = EndType::agari; /* 縛りを満たすなら和了りとして成立 */
 		gameStat->TsumoAgariFlag = true;
 		gameStat->CurrentPlayer.Agari = gameStat->CurrentPlayer.Active;
 		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active,
@@ -183,11 +183,11 @@ namespace { /* 内部処理分割用 */
 				gameStat->statOfActive().HandStat = handExposed;
 				sound::Play(sound::IDs::voxKyuushu);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
-				return KyuushuKyuuhai;
+				return EndType::kyuushuKyuuhai;
 		} else {
 #endif /* GUOBIAO */
 			warn(_T("九種九牌はできません。ツモ切りとみなします。"));
-			return Continuing;
+			return EndType::continuing;
 #ifndef GUOBIAO
 		}
 #endif /* GUOBIAO */
@@ -206,16 +206,16 @@ namespace { /* 内部処理分割用 */
 					抜き北をロンできるルール */
 				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroNorth))
 					return RoundEndType;
-				else return DrawRinshan;
+				else return EndType::drawRinshan;
 			} else {
 				/* 花牌を抜いたときの処理 */
 				/* このゲームは七搶一がないので花牌でロンされることは無い */
 				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroFlower))
 					return RoundEndType;
-				else return DrawRinshan;
+				else return EndType::drawRinshan;
 			}
 		}
-		return Continuing;
+		return EndType::continuing;
 	}
 	EndType procDahaiSubKan(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 暗槓・加槓するときの処理 */
 #ifdef GUOBIAO
@@ -239,10 +239,10 @@ namespace { /* 内部処理分割用 */
 							(DiscardTileIndex.type == DiscardTileNum::Ankan) ?
 							FuuroAnkan : FuuroKakan))
 							return roundEndType;
-						else return DrawRinshan;
+						else return EndType::drawRinshan;
 				}
 		}
-		return Continuing;
+		return EndType::continuing;
 	}
 	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 立直をするときの処理 */
 #ifdef GUOBIAO
@@ -362,7 +362,7 @@ namespace { /* 内部処理分割用 */
 }
 
 EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
-	EndType RoundEndType = Continuing;
+	EndType RoundEndType = EndType::continuing;
 	{
 		CodeConv::tostringstream o;
 		o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) <<
@@ -376,12 +376,12 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	/* 自摸和の処理 */
 	if (DiscardTileIndex.type == DiscardTileNum::Agari) {
 		RoundEndType = procDahaiSubAgari(gameStat, DiscardTileIndex);
-		if (RoundEndType != Continuing) return RoundEndType;
+		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	/* 九種九牌が宣言された場合 */
 	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
 		RoundEndType = procDahaiSubKyuushu(gameStat, DiscardTileIndex);
-		if (RoundEndType != Continuing) return RoundEndType;
+		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	/* 打牌を牌譜に記録する */
 	if ((DiscardTileIndex.type == DiscardTileNum::Normal) ||
@@ -391,12 +391,12 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	/* 花牌を抜いた場合の処理 */
 	if (!gameStat->chkGameType(SanmaS)) {
 		RoundEndType = procDahaiSubFlower(gameStat, DiscardTileIndex);
-		if (RoundEndType != Continuing) return RoundEndType;
+		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	/* 暗槓・加槓するときの処理 */
 	{
 		RoundEndType = procDahaiSubKan(gameStat, DiscardTileIndex);
-		if (RoundEndType != Continuing) return RoundEndType;
+		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	gameStat->KangFlag.kangFlag = false; // 嶺上開花のフラグを降ろす
 	gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
@@ -414,7 +414,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 #endif /* GUOBIAO */
 	/* 事後処理 */
 	procDahaiSubPost(gameStat, DiscardTileIndex);
-	return Continuing;
+	return EndType::continuing;
 }
 
 void tsumoproc(GameTable* const gameStat) {
