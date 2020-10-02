@@ -1,13 +1,13 @@
 MiHaJong AI用スクリプト説明
 ===========================
-Copyright (c) 2008-2013, 2019 MihailJP
+Copyright (c) 2008-2013, 2019-2020 MihailJP
 
 
 はじめに
 --------
 　MiHaJongでは、バージョン1.7より、AIの思考ルーチンをLuaスクリプトで書くことができます。
 この文書では、MiHaJong用に追加された要素を説明しています。
-Lua言語の基本的なことは、別途[Lua言語のリファレンスマニュアル](http://milkpot.sakura.ne.jp/lua/lua52_manual_ja.html)などをご覧ください。
+Lua言語の基本的なことは、別途[Lua言語のリファレンスマニュアル](http://milkpot.sakura.ne.jp/lua/lua54_manual_ja.html)などをご覧ください。
 
 
 AIスクリプトファイルの置き場所

@@ -1,6 +1,6 @@
 MiHaJong: Japanese Mahjong with a lot of local rules implemented
 ================================================================
-Copyright (c) 2008-2013, 2019 MihailJP
+Copyright (c) 2008-2013, 2019-2020 MihailJP
 
 
 はじめに
@@ -63,6 +63,13 @@ MiHaJongでは、基本的に2006年版のルールに準拠していますが�
 * [Wikipedia: 中国麻雀](http://ja.wikipedia.org/wiki/%E4%B8%AD%E5%9B%BD%E9%BA%BB%E9%9B%80)
 * [東方キャラによる中国麻将の紹介ページ（仮）](http://www.green.dti.ne.jp/maisan/c_mahjong/)
 * [中国式麻将（中国式麻雀） ルールと戦略](http://www.flowstones.com/mj/Cmj/China-index.html)
+
+
+瀬戸内三麻について
+------------------
+　MiHaJong 2.3.0 より、瀬戸内三麻版の実行ファイル・コアDLLを同梱しています。
+
+　瀬戸内三麻とは萬子ではなく索子の２～８がない三人打ちルールで、瀬戸内地域のローカルルールとされています。
 
 
 何かあったら
