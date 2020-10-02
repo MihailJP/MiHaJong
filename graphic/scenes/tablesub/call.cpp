@@ -45,7 +45,7 @@ TableSubsceneCallZoomProto::~TableSubsceneCallZoomProto() {
 
 /* 表示処理 */
 void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
-	if (callType == calltext::None) return;
+	if (callType == calltext::CallType::none) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	constexpr int animationLength = 250000;
 	const float scale = (curr >= animationLength) ? 1.0f : pow(static_cast<float>(animationLength - static_cast<signed>(curr)) / 2.5e5f + 1.0f, 2);
@@ -55,8 +55,8 @@ void TableSubsceneCallZoomProto::ShowCallMsg(PlayerID player, calltext::CallType
 		<< 24 | 0x00ffffff;
 	const TransformMatrix matrix(getMatrix(static_cast<float>(x), static_cast<float>(y), scale, scale));
 	const RECT rect = {
-		0  , 96 * (callType    ),
-		384, 96 * (callType + 1),
+		0  , 96 * (static_cast<int>(callType)    ),
+		384, 96 * (static_cast<int>(callType) + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48, &matrix);
 }
@@ -87,7 +87,7 @@ TableSubsceneCallFadeProto::~TableSubsceneCallFadeProto() {
 
 /* 表示処理 */
 void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
-	if (callType == calltext::None) return;
+	if (callType == calltext::CallType::none) return;
 	const std::uint64_t curr = myTimer.elapsed();
 	constexpr int animationLength = 250000;
 	const ArgbColor col = static_cast<uint32_t>(
@@ -95,8 +95,8 @@ void TableSubsceneCallFadeProto::ShowCallMsg(PlayerID player, calltext::CallType
 		static_cast<int>(pow(static_cast<float>(curr * 255) / animationLength / 16.0f, 2)))
 		<< 24 | 0x00ffffff;
 	const RECT rect = {
-		0  , 96 * (callType    ),
-		384, 96 * (callType + 1),
+		0  , 96 * (static_cast<int>(callType)    ),
+		384, 96 * (static_cast<int>(callType) + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, col, &rect, 192, 48);
 }
@@ -127,10 +127,10 @@ TableSubsceneCallCutProto::~TableSubsceneCallCutProto() {
 
 /* 表示処理 */
 void TableSubsceneCallCutProto::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
-	if (callType == calltext::None) return;
+	if (callType == calltext::CallType::none) return;
 	const RECT rect = {
-		0  , 96 * (callType    ),
-		384, 96 * (callType + 1),
+		0  , 96 * (static_cast<int>(callType)    ),
+		384, 96 * (static_cast<int>(callType) + 1),
 	};
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(tCall, x, y, 384, 96, 0xffffffff, &rect, 192, 48);
 }
@@ -161,7 +161,7 @@ TableSubsceneCallChankanPre::~TableSubsceneCallChankanPre() {
 
 /* 表示処理 */
 void TableSubsceneCallChankanPre::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
-	if ((callType != calltext::Ron) && (callType != calltext::RonQualified))
+	if ((callType != calltext::CallType::ron) && (callType != calltext::CallType::ronQualified))
 		TableSubsceneCallCutProto::ShowCallMsg(player, callType, x, y);
 }
 
@@ -183,7 +183,7 @@ TableSubsceneCallChankanRon::~TableSubsceneCallChankanRon() {
 
 /* 表示処理 */
 void TableSubsceneCallChankanRon::ShowCallMsg(PlayerID player, calltext::CallType callType, int x, int y) {
-	if ((callType == calltext::Ron) || (callType == calltext::RonQualified))
+	if ((callType == calltext::CallType::ron) || (callType == calltext::CallType::ronQualified))
 		zoomCall->ShowCallMsg(player, callType, x, y);
 	else
 		cutCall->ShowCallMsg(player, callType, x, y);

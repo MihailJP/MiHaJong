@@ -197,7 +197,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = Normal;
 		gameStat->TianHuFlag = false;
-		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::North);
+		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::CallType::north);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PlayerID i = 0; i < Players; i++)
@@ -224,7 +224,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		}
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id] = Tile();
 		gameStat->TianHuFlag = false;
-		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Flower);
+		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::CallType::flower);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PlayerID i = 0; i < Players; i++)
@@ -263,7 +263,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		lipai(gameStat, kangPlayer);
 		/* ポンを宣言する */
 		sound::Play(sound::IDs::voxPon);
-		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Pon);
+		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::CallType::pon);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		/* 喰い替えの判定に使う変数を設定 */
 #ifndef GUOBIAO
@@ -307,7 +307,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
 		sound::Play(sound::IDs::voxChi);
-		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::Chii);
+		mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Passive, mihajong_graphic::calltext::CallType::chii);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 #ifndef GUOBIAO
 		/* 喰い替え判定用の変数を指定 */
@@ -347,7 +347,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
 		gameStat->TianHuFlag = false;
 		sound::Play(sound::IDs::voxKan);
-		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::Kan);
+		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::CallType::kan);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 		lipai(gameStat, kangPlayer);
 		for (PlayerID i = 0; i < Players; i++)
@@ -488,7 +488,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
 	for (PlayerID i = 0; i < Players; ++i)
-		mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
+		mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::CallType::none); /* 発声文字列を消去 */
 	mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none); // 発声表示から戻る
 	/* 再描画 */
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -724,7 +724,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				debug(o.str().c_str());
 			}
 			// 優先権のないロンも表示されるようにする
-			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::Ron);
+			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::CallType::ron);
 			gameStat->Player[i].HandStat = handExposed;
 		}
 	}
@@ -757,7 +757,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 				debug(o.str().c_str());
 				mihajong_graphic::calltext::setCall(
 					RelativePositionOf(gameStat->CurrentPlayer.Active, static_cast<seatRelative>(i + 1)),
-					mihajong_graphic::calltext::RonQualified);
+					mihajong_graphic::calltext::CallType::ronQualified);
 			}
 			++roncount;
 		}
@@ -822,7 +822,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 					RoundEndType = EndType::chonbo; // チョンボにする
 			}
 			// ロンをしたことを表示
-			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::RonQualified);
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::CallType::ronQualified);
 			gameStat->statOfAgari().HandStat = handExposed;
 			/* 和了り牌を設定 */
 			gameStat->statOfAgari().Tsumohai() = gameStat->CurrentDiscard;

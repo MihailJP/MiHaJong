@@ -78,12 +78,12 @@ namespace { // 内部処理に使う関数
 					/* 和了り放棄とする設定 */
 					logKuikae(gameStat, false);
 					for (unsigned i = 0; i < 2; ++i) {
-						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kuikae);
+						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::kuikae);
 						mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
-						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
+						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::agariHouki);
 						mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 					}
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::none);
 					mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
@@ -91,7 +91,7 @@ namespace { // 内部処理に使う関数
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
 					/* 直ちに錯和とする設定 */
 					logKuikae(gameStat, true);
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Chonbo);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::chonbo);
 					mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 					/* 局を打ち切り、満貫罰符の支払いに進む */
 					return true;
@@ -117,14 +117,14 @@ namespace { // 内部処理に使う関数
 			sound::Play(sound::IDs::sndCuohu);
 			for (unsigned i = 0; i < 2; ++i) {
 				if (tmptilecnt > (NumOfTilesInHand - 1))
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Tahai);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::tahai);
 				else
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Shouhai);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::shouhai);
 				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
-				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
+				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::agariHouki);
 				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 			}
-			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::none);
 			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			gameStat->statOfActive().AgariHouki = true;
@@ -194,7 +194,7 @@ namespace {
 			mihajong_graphic::ui::WaitUIWithTimeout(3000);
 		}
 		for (PlayerID i = 0; i < Players; ++i)
-			calltext::setCall(i, calltext::None);
+			calltext::setCall(i, calltext::CallType::none);
 		sound::Play(sound::IDs::sndPingju);
 		sound::util::bgmplay(bgmNum);
 		Subscene(TableSubsceneID::ryuukyoku);
@@ -257,11 +257,11 @@ namespace {
 	void showRenchanFlag(GameTable* gameStat, bool RenchanFlag) {
 		using namespace mihajong_graphic::calltext;
 		for (PlayerID cnt = 0; cnt < Players; ++cnt)
-			setCall(cnt, None);
+			setCall(cnt, CallType::none);
 		if (RenchanFlag)
-			setCall(gameStat->GameRound % Players, Renchan);
+			setCall(gameStat->GameRound % Players, CallType::renchan);
 		else
-			setCall(gameStat->GameRound % Players, Oyanagare);
+			setCall(gameStat->GameRound % Players, CallType::oyanagare);
 		sound::Play(sound::IDs::sndPage);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade);
 		return;
@@ -468,7 +468,7 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			CodeConv::tstring ResultDesc(_T(""));
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (isNagashiMangan(gameStat, cnt)) {
-					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::NagashiMangan);
+					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::CallType::nagashiMangan);
 					if (!ResultDesc.empty()) ResultDesc += _T("、");
 					switch (gameStat->playerwind(cnt)) {
 						case sEast:  ResultDesc += _T("東家"); break;

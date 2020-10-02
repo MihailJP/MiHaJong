@@ -5,35 +5,31 @@
 #include "gametbl.h"
 #endif
 
-#ifdef None
-#undef None // [Workaround]何故かLinuxだと定義されてる？？
-#endif
-
 namespace mihajong_graphic {
 namespace calltext {
 
-enum CallType {
-	None = -1,
-	Chii,
-	Pon,
-	Kan,
-	Riichi,
-	Ron,
-	RonQualified,
-	Tsumo,
-	Flower,
-	North,
-	Tenpai,
-	Noten,
-	Kyuushu,
-	Tahai,
-	Shouhai,
-	Kuikae,
-	AgariHouki,
-	Chonbo,
-	NagashiMangan,
-	Renchan,
-	Oyanagare,
+enum class CallType {
+	none = -1,
+	chii,
+	pon,
+	kan,
+	riichi,
+	ron,
+	ronQualified,
+	tsumo,
+	flower,
+	north,
+	tenpai,
+	noten,
+	kyuushu,
+	tahai,
+	shouhai,
+	kuikae,
+	agariHouki,
+	chonbo,
+	nagashiMangan,
+	renchan,
+	oyanagare,
 };
 
 EXPORT CallType getCall(PlayerID playerID);

@@ -755,14 +755,14 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring& ResultDesc) {
 #ifdef GUOBIAO
 	/* 中国ルールでの処理。基本的にアガリ放棄で続行する */
-	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::Chonbo);
+	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::CallType::chonbo);
 	mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade);
 	sound::Play(sound::IDs::sndCuohu);
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	if (EnvTable::Instantiate()->WatchModeFlag)
 		mihajong_graphic::ui::CheckIfDemoTerminated();
 	gameStat->statOfAgari().AgariHouki = true;
-	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::None);
+	mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::CallType::none);
 #else /* GUOBIAO */
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {

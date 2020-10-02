@@ -40,13 +40,13 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 
 void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
 	if ((GameStatus::gameStat()->gameType & RichiMJ) && rules::chkRule("furiten_riichi", "no") && GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag && machiInfo[player].FuritenFlag)
-		ShowCallMsg(player, calltext::Chonbo, x, y - 40); // フリテン立直がチョンボになる場合
+		ShowCallMsg(player, calltext::CallType::chonbo, x, y - 40); // フリテン立直がチョンボになる場合
 	if (tenpaiflag[player]) // 聴牌
-		ShowCallMsg(player, calltext::Tenpai, x, y - 40);
+		ShowCallMsg(player, calltext::CallType::tenpai, x, y - 40);
 	else if (GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag)
-		ShowCallMsg(player, calltext::Chonbo, x, y); // ノーテンリーチしてた場合は錯和と表示
+		ShowCallMsg(player, calltext::CallType::chonbo, x, y); // ノーテンリーチしてた場合は錯和と表示
 	else if (GameStatus::gameStat()->Player[player].Hand[0]) // 配牌をもらっていない場合は除外
-		ShowCallMsg(player, calltext::Noten, x, y); // 不聴
+		ShowCallMsg(player, calltext::CallType::noten, x, y); // 不聴
 }
 
 void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {

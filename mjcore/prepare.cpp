@@ -459,7 +459,7 @@ namespace {
 			tmpStatus = roundName(gameStat->GameRound, gameStat);
 		}
 		for (PlayerID i = 0; i < Players; ++i)
-			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::None); /* 発声文字列を消去 */
+			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::CallType::none); /* 発声文字列を消去 */
 		EnvTable* env = EnvTable::Instantiate();
 		if (gameStat->LoopRound % 2 == 0) {
 			switch (gameStat->GameRound / Players) {
