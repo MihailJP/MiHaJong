@@ -14,6 +14,7 @@ namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
 
+enum class AgariStyle {mine, furikomi, others,};
 class TableSubsceneAgariScreenProto : public TableSubscene {
 protected:
 	static constexpr unsigned yakuWndWidth  = 720u;
@@ -24,7 +25,6 @@ protected:
 	static constexpr int handPosY = BaseY + 56;
 	static constexpr double yakuInterval = 0.75;
 	static constexpr double yakuAnimStartSecond = 2.0;
-	enum AgariStyle {agariMine, agariFurikomi, agariOthers,};
 	static AgariStyle getAgariStyle();
 	static ArgbColor baseColor();
 protected:

@@ -47,33 +47,33 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 #endif
 }
 
-TableSubsceneAgariScreenProto::AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
+AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
 	const GameTable* const gameStat = GameStatus::gameStat();
 	if (gameStat->CurrentPlayer.Agari == gameStat->PlayerID) {
-		return agariMine;
+		return AgariStyle::mine;
 	} else {
 		if (utils::isPaoAgari(gameStat, gameStat->CurrentPlayer.Agari)) {
 			if (utils::isPao(gameStat, gameStat->CurrentPlayer.Agari, gameStat->PlayerID))
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else if (gameStat->CurrentPlayer.Furikomi == gameStat->PlayerID)
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else
-				return agariOthers;
+				return AgariStyle::others;
 		} else {
 			if (gameStat->TsumoAgariFlag)
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else if (gameStat->CurrentPlayer.Furikomi == gameStat->PlayerID)
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else
-				return agariOthers;
+				return AgariStyle::others;
 		}
 	}
 }
 ArgbColor TableSubsceneAgariScreenProto::baseColor() {
 	switch (getAgariStyle()) {
-		case agariMine:     return 0xffffdf00;
-		case agariFurikomi: return 0xffff7f7f;
-		case agariOthers:   return 0xffffffff;
+		case AgariStyle::mine:     return 0xffffdf00;
+		case AgariStyle::furikomi: return 0xffff7f7f;
+		case AgariStyle::others:   return 0xffffffff;
 		default:            return 0x00000000;
 	}
 }
@@ -97,21 +97,21 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		if (bgmFlag) {
 			if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 24 : 2000)) {
 				switch (getAgariStyle()) {
-					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
-					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
-					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
+					case AgariStyle::mine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
+					case AgariStyle::furikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
+					case AgariStyle::others:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
 				}
 			} else if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 64 : 8000)) {
 				switch (getAgariStyle()) {
-					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
-					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
-					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther2); break;
+					case AgariStyle::mine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
+					case AgariStyle::furikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
+					case AgariStyle::others:   sound::util::bgmplay(sound::IDs::musAgariOther2); break;
 				}
 			} else {
 				switch (getAgariStyle()) {
-					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf3); break;
-					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi3); break;
-					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther3); break;
+					case AgariStyle::mine:     sound::util::bgmplay(sound::IDs::musAgariSelf3); break;
+					case AgariStyle::furikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi3); break;
+					case AgariStyle::others:   sound::util::bgmplay(sound::IDs::musAgariOther3); break;
 				}
 			}
 			bgmFlag = false;
