@@ -276,7 +276,7 @@ void mihajong_socket::Sock::disconnect () { // 接続を切る
 
 mihajong_socket::Sock::network_thread::network_thread(Sock* caller) {
 	myCaller = caller;
-	errtype = errNone; errcode = 0;
+	errtype = ErrorType::none; errcode = 0;
 	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting = false;
 	terminate_time = 0;
 	listenerSock = nullptr;
@@ -294,21 +294,21 @@ void mihajong_socket::Sock::network_thread::thread(network_thread* inst) { // �
 void mihajong_socket::Sock::network_thread::chkError () { // エラーをチェックし、もしエラーだったら例外を投げる
 	CodeConv::tostringstream o;
 	switch (errtype) {
-	case errNone: // エラーなし
+	case ErrorType::none: // エラーなし
 		break;
-	case errListen: // listen失敗
+	case ErrorType::listen: // listen失敗
 		o << _T("listen時のエラーです。エラーコード [") << errcode << _T(']'); error(o.str().c_str());
 		throw listen_failure(errcode);
-	case errAccept: // accept失敗
+	case ErrorType::accept: // accept失敗
 		o << _T("接続受け入れ時のエラーです。エラーコード [") << errcode << _T(']'); error(o.str().c_str());
 		throw accept_failure(errcode);
-	case errConnection: // 接続失敗
+	case ErrorType::connection: // 接続失敗
 		o << _T("接続時のエラーです。エラーコード [") << errcode << _T(']'); error(o.str().c_str());
 		throw connection_failure(errcode);
-	case errRecv: // 受信失敗
+	case ErrorType::receive: // 受信失敗
 		o << _T("受信時のエラーです。エラーコード [") << errcode << _T(']'); error(o.str().c_str());
 		throw recv_error(errcode);
-	case errSend: // 送信失敗
+	case ErrorType::send: // 送信失敗
 		o << _T("送信時のエラーです。エラーコード [") << errcode << _T(']'); error(o.str().c_str());
 		throw send_error(errcode);
 	default: // ほかのエラー
@@ -347,7 +347,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 		case WSAEWOULDBLOCK:
 			break; // データがない場合
 		default: // エラー処理
-			errtype = errRecv; errcode = err; terminated = true; connected = false;
+			errtype = ErrorType::receive; errcode = err; terminated = true; connected = false;
 			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
@@ -356,7 +356,7 @@ int mihajong_socket::Sock::network_thread::reader() { // 受信処理
 		case EINPROGRESS:
 			break; // データがない場合
 		default: // エラー処理
-			errtype = errRecv; errcode = errno; terminated = true; connected = false;
+			errtype = ErrorType::receive; errcode = errno; terminated = true; connected = false;
 			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
@@ -399,7 +399,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 		case WSAEWOULDBLOCK:
 			break; // このエラーは無視する
 		default:
-			errtype = errSend; errcode = err; terminated = true; connected = false;
+			errtype = ErrorType::send; errcode = err; terminated = true; connected = false;
 			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
@@ -410,7 +410,7 @@ int mihajong_socket::Sock::network_thread::writer() { // 送信処理
 		case EINPROGRESS:
 			break; // このエラーは無視する
 		default:
-			errtype = errSend; errcode = errno; terminated = true; connected = false;
+			errtype = ErrorType::send; errcode = errno; terminated = true; connected = false;
 			delete[] buf, buf = nullptr;
 			return -static_cast<int>(errtype);
 		}
@@ -535,7 +535,7 @@ void mihajong_socket::Sock::network_thread::terminate () { // 切断する
 	wait_until_sent(); // 送信が完了するまで待つ
 	myThread.join(); // スレッドが終了するまで待つ
 	terminated = send_ended = sender_closed = receive_ended = receiver_closed = connected = connecting =  false; // フラグの後始末
-	terminate_time = 0; errtype = errNone; errcode = 0;
+	terminate_time = 0; errtype = ErrorType::none; errcode = 0;
 }
 
 // -------------------------------------------------------------------------
@@ -558,11 +558,11 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を�
 			if (errcode == WSAEISCONN) {
 				break; // 正常に接続完了したとみなす
 			} else if ((errcode != WSAEWOULDBLOCK) && (errcode != WSAEALREADY)) {
-				errtype = errConnection; return -static_cast<int>(errtype);
+				errtype = ErrorType::connection; return -static_cast<int>(errtype);
 			} else if (difftime(time(nullptr), startTime) >= 20) {
 				/* connect()はタイムアウトしてくれないので自力のタイムアウト */
 				errcode = WSAETIMEDOUT; // 10060 Connection timed out
-				errtype = errConnection; return -static_cast<int>(errtype);
+				errtype = ErrorType::connection; return -static_cast<int>(errtype);
 			}
 		} else break;
 #else /* _WIN32 */
@@ -571,11 +571,11 @@ int mihajong_socket::Sock::client_thread::establishConnection() { // 接続を�
 			if (errcode == EISCONN) {
 				break; // 正常に接続完了したとみなす
 			} else if ((errcode != EINPROGRESS) && (errcode != EALREADY)) {
-				errtype = errConnection; return -static_cast<int>(errtype);
+				errtype = ErrorType::connection; return -static_cast<int>(errtype);
 			} else if (difftime(time(nullptr), startTime) >= 20) {
 				/* connect()はタイムアウトしてくれないので自力のタイムアウト */
 				errcode = ETIMEDOUT; // 10060 Connection timed out
-				errtype = errConnection; return -static_cast<int>(errtype);
+				errtype = ErrorType::connection; return -static_cast<int>(errtype);
 			}
 		} else break;
 #endif /* _WIN32 */
@@ -595,13 +595,13 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 #ifdef _WIN32
 	u_long arg = 1; ioctlsocket(*listenerSock, FIONBIO, &arg); // non-blocking モードに設定
 	if (::listen(*listenerSock, SOMAXCONN) == SOCKET_ERROR) { // 待機
-		errtype = errListen; errcode = WSAGetLastError(); return -static_cast<int>(errtype);
+		errtype = ErrorType::listen; errcode = WSAGetLastError(); return -static_cast<int>(errtype);
 	}
 #else /* _WIN32 */
 	int socketFlag = fcntl(*listenerSock, F_GETFL, 0);
 	fcntl(*listenerSock, F_SETFL, socketFlag | O_NONBLOCK); // non-blocking モードに設定
 	if (::listen(*listenerSock, SOMAXCONN) == -1) { // 待機
-		errtype = errListen; errcode = errno; return -static_cast<int>(errtype);
+		errtype = ErrorType::listen; errcode = errno; return -static_cast<int>(errtype);
 	}
 #endif /* _WIN32 */
 	while (true) {
@@ -610,7 +610,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 		if (*mySock == INVALID_SOCKET) { // ソケットの作成に失敗場合
 			errcode = WSAGetLastError();
 			if (errcode != WSAEWOULDBLOCK) {
-				errtype = errAccept;
+				errtype = ErrorType::accept;
 				closesocket(*listenerSock);
 				return -static_cast<int>(errtype);
 			}
@@ -620,7 +620,7 @@ int mihajong_socket::Sock::server_thread::establishConnection() { // 接続を�
 		if (*mySock == -1) { // ソケットの作成に失敗場合
 			errcode = errno;
 			if ((errcode != EWOULDBLOCK) && (errcode != EAGAIN)) {
-				errtype = errAccept;
+				errtype = ErrorType::accept;
 				close(*listenerSock);
 				return -static_cast<int>(errtype);
 			}

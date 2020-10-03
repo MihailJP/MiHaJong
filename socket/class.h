@@ -62,6 +62,7 @@ public:
 	void disconnect (); // 接続を切る
 };
 
+enum class ErrorType {none, listen, accept, connection, receive, send};
 class Sock::network_thread { // スレッド(スーパークラス)
 public:
 	explicit network_thread(Sock* caller);
@@ -80,11 +81,10 @@ public:
 	CodeConv::tstring readline (); // 1行読み込み
 protected:
 	Sock* myCaller;
-	enum errorType {errNone, errListen, errAccept, errConnection, errRecv, errSend};
 	static const unsigned int bufsize = 65536;
 	SocketDescriptor* mySock; // ソケット(ポインタ)
 	SocketDescriptor* listenerSock; // ソケット(ポインタ)
-	errorType errtype; // エラーの種類
+	ErrorType errtype; // エラーの種類
 	int errcode; // エラーコード
 	volatile bool connecting; // 接続中かのフラグ[ワーカースレッドから書き込み]
 	volatile bool connected; // 接続済みかのフラグ[ワーカースレッドから書き込み]
