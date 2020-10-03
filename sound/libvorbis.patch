@@ -1,5 +1,5 @@
 diff --git a/win32/VS2010/libvorbis/libvorbis_static.vcxproj b/win32/VS2010/libvorbis/libvorbis_static.vcxproj
-index 18a1b151..1c25a742 100644
+index 18a1b151..ae38f57e 100644
 --- a/win32/VS2010/libvorbis/libvorbis_static.vcxproj
 +++ b/win32/VS2010/libvorbis/libvorbis_static.vcxproj
 @@ -26,20 +26,24 @@
@@ -27,8 +27,26 @@ index 18a1b151..1c25a742 100644
      <CharacterSet>Unicode</CharacterSet>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+@@ -123,7 +127,7 @@
+       <StringPooling>true</StringPooling>
+       <ExceptionHandling>
+       </ExceptionHandling>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <BufferSecurityCheck>false</BufferSecurityCheck>
+       <PrecompiledHeader>
+       </PrecompiledHeader>
+@@ -148,7 +152,7 @@
+       <StringPooling>true</StringPooling>
+       <ExceptionHandling>
+       </ExceptionHandling>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <BufferSecurityCheck>false</BufferSecurityCheck>
+       <PrecompiledHeader>
+       </PrecompiledHeader>
 diff --git a/win32/VS2010/libvorbisfile/libvorbisfile_static.vcxproj b/win32/VS2010/libvorbisfile/libvorbisfile_static.vcxproj
-index c78f2884..fda31338 100644
+index c78f2884..18d8361f 100644
 --- a/win32/VS2010/libvorbisfile/libvorbisfile_static.vcxproj
 +++ b/win32/VS2010/libvorbisfile/libvorbisfile_static.vcxproj
 @@ -27,18 +27,22 @@
@@ -54,3 +72,21 @@ index c78f2884..fda31338 100644
      <CharacterSet>Unicode</CharacterSet>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+@@ -119,7 +123,7 @@
+     <ClCompile>
+       <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBVORBISFILE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <PrecompiledHeader>
+       </PrecompiledHeader>
+       <WarningLevel>Level3</WarningLevel>
+@@ -137,7 +141,7 @@
+     <ClCompile>
+       <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\libogg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBVORBISFILE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <PrecompiledHeader>
+       </PrecompiledHeader>
+       <WarningLevel>Level3</WarningLevel>
