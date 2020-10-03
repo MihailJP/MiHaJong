@@ -6,14 +6,14 @@
 
 using namespace std; using namespace CodeConv;
 
-enum LogLevel {Trace, Debug, Info, Warn, Error, Fatal, Off};
+enum class LogLevel {trace, debug, info, warn, error, fatal, off};
 
 class LogMsg {
 private:
 	LogLevel logLevel;
 	tstring messageTxt;
 	_timeb issueTime;
-	LogMsg() : logLevel(Off) { memset(&issueTime, 0, sizeof issueTime); }
+	LogMsg() : logLevel(LogLevel::off) { memset(&issueTime, 0, sizeof issueTime); }
 protected:
 	LogMsg( LogLevel ll, const tstring& txt ) {
 		this->logLevel = ll;
@@ -42,17 +42,17 @@ public:
 		o << _T(".") << setw(3) << setfill(_T('0')) << this->issueTime.millitm;
 		// ログレベル
 		switch (this->logLevel) {
-		case Trace:
+		case LogLevel::trace:
 			o << _T(" TRACE "); break;
-		case Debug:
+		case LogLevel::debug:
 			o << _T(" DEBUG "); break;
-		case Info:
+		case LogLevel::info:
 			o << _T(" INFO  "); break;
-		case Warn:
+		case LogLevel::warn:
 			o << _T(" WARN  "); break;
-		case Error:
+		case LogLevel::error:
 			o << _T(" ERROR "); break;
-		case Fatal:
+		case LogLevel::fatal:
 			o << _T(" FATAL "); break;
 		default:
 			o << _T(" ????? "); break;
@@ -64,33 +64,33 @@ public:
 };
 class TraceMsg : public LogMsg {
 public:
-	TraceMsg( const tstring& txt ) : LogMsg(Trace, txt) {}
-	TraceMsg( LPCTSTR txt ) : LogMsg(Trace, txt) {}
+	TraceMsg( const tstring& txt ) : LogMsg(LogLevel::trace, txt) {}
+	TraceMsg( LPCTSTR txt ) : LogMsg(LogLevel::trace, txt) {}
 };
 class DebugMsg : public LogMsg {
 public:
-	DebugMsg( const tstring& txt ) : LogMsg(Debug, txt) {}
-	DebugMsg( LPCTSTR txt ) : LogMsg(Debug, txt) {}
+	DebugMsg( const tstring& txt ) : LogMsg(LogLevel::debug, txt) {}
+	DebugMsg( LPCTSTR txt ) : LogMsg(LogLevel::debug, txt) {}
 };
 class InfoMsg : public LogMsg {
 public:
-	InfoMsg( const tstring& txt ) : LogMsg(Info, txt) {}
-	InfoMsg( LPCTSTR txt ) : LogMsg(Info, txt) {}
+	InfoMsg( const tstring& txt ) : LogMsg(LogLevel::info, txt) {}
+	InfoMsg( LPCTSTR txt ) : LogMsg(LogLevel::info, txt) {}
 };
 class WarnMsg : public LogMsg {
 public:
-	WarnMsg( const tstring& txt ) : LogMsg(Warn, txt) {}
-	WarnMsg( LPCTSTR txt ) : LogMsg(Warn, txt) {}
+	WarnMsg( const tstring& txt ) : LogMsg(LogLevel::warn, txt) {}
+	WarnMsg( LPCTSTR txt ) : LogMsg(LogLevel::warn, txt) {}
 };
 class ErrorMsg : public LogMsg {
 public:
-	ErrorMsg( const tstring& txt ) : LogMsg(Error, txt) {}
-	ErrorMsg( LPCTSTR txt ) : LogMsg(Error, txt) {}
+	ErrorMsg( const tstring& txt ) : LogMsg(LogLevel::error, txt) {}
+	ErrorMsg( LPCTSTR txt ) : LogMsg(LogLevel::error, txt) {}
 };
 class FatalMsg : public LogMsg {
 public:
-	FatalMsg( const tstring& txt ) : LogMsg(Fatal, txt) {}
-	FatalMsg( LPCTSTR txt ) : LogMsg(Fatal, txt) {}
+	FatalMsg( const tstring& txt ) : LogMsg(LogLevel::fatal, txt) {}
+	FatalMsg( LPCTSTR txt ) : LogMsg(LogLevel::fatal, txt) {}
 };
 
 class Logger {
