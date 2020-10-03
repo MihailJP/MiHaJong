@@ -186,7 +186,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 	delete nameText;
 }
 
-TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
+ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
 	return static_cast<ScoreMode>((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
@@ -251,12 +251,12 @@ int TableProtoScene::ScoreBoard::getScoreSign() {
 }
 
 std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scoreInfo(ScoreMode scoreMode) {
-	if (scoreMode == scoreChip) {
+	if (scoreMode == ScoreMode::chip) {
 		const int& chipAmount = GameStatus::gameStat()->Player[playerID()].playerChip;
 		return std::make_tuple(abs(chipAmount), 0, 0, (chipAmount > 0) ? 1 : (chipAmount < 0) ? -1 : 0);
 	} else {
 		const LargeNum playerScoreDiff = GameStatus::gameStat()->Player[playerID()].PlayerScore - GameStatus::gameStat()->statOfMine().PlayerScore;
-		const LargeNum* const score = (scoreMode == scoreDiff) ?
+		const LargeNum* const score = (scoreMode == ScoreMode::diff) ?
 			&playerScoreDiff :
 			&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
 		constexpr int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
@@ -298,13 +298,13 @@ void TableProtoScene::ScoreBoard::renderScore() {
 
 	std::tie(digits, unitcode, decimalPos, sign) = scoreInfo(scoreMode);
 	switch (scoreMode) {
-	case scorePoints:
+	case ScoreMode::points:
 		if (utils::isAboveBase(GameStatus::gameStat(), playerID()))
 			color = ledColorRed; // 浮いていれば赤
 		else
 			color = ledColorGreen; // 沈みは緑
 		break;
-	case scoreDiff: case scoreChip:
+	case ScoreMode::diff: case ScoreMode::chip:
 		if      (sign ==  1) color = ledColorRed;
 		else if (sign == -1) color = ledColorGreen;
 		else                 color = ledColorOrange;
@@ -313,7 +313,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		color = ledColorGreen; // 一応
 	}
 
-	if ((scoreMode != scoreDiff) || (playerID() != GameStatus::gameStat()->PlayerID)) {
+	if ((scoreMode != ScoreMode::diff) || (playerID() != GameStatus::gameStat()->PlayerID)) {
 		if (sign == 1)
 			renderNumeral(ScorePosX - NumCharWidth    , ScorePosY, digitPlus         , color);
 		else if (sign == -1)
@@ -325,7 +325,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		renderNumeral(    ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
 		if (unitcode != 0)
 			renderNumeral(ScorePosX + NumCharWidth * decimalPos, ScorePosY, digitDecimal, color);
-		if ((GameStatus::gameStat()->gameType & RichiMJ) && (scoreMode != scoreChip))
+		if ((GameStatus::gameStat()->gameType & RichiMJ) && (scoreMode != ScoreMode::chip))
 			renderScoreUnit(unitcode, color);
 	}
 }
@@ -345,7 +345,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 	const CodeConv::tstring pName(utils::getName(playerID()));
 	const unsigned tmpWidth = nameText->strWidthByCols(pName);
 	nameText->NewText(0,
-		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : pName),
+		(getScoreMode() == ScoreMode::diff) ? _T("点差表示") : ((getScoreMode() == ScoreMode::chip) ? _T("チップ表示") : pName),
 		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / static_cast<float>(tmpWidth)) : 1.0f) * wScale);
 	nameText->Render();
 }

@@ -39,6 +39,7 @@ public:
 #endif /*_WIN32*/
 };
 
+enum class ScoreMode {points, diff, chip};
 class TableProtoScene::ScoreBoard {
 private:
 	Timer myTimer;
@@ -53,7 +54,6 @@ private:
 	static const ArgbColor ledColorRed = 0xffff0000, // 昔ながらの3色LED風の色
 		ledColorOrange = 0xffff9900,
 		ledColorGreen = 0xffccff00;
-	enum ScoreMode {scorePoints, scoreDiff, scoreChip};
 	ScoreMode getScoreMode();
 private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
