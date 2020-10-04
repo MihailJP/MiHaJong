@@ -212,9 +212,9 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 				else if (TileCount[i] == 1) {
 					for (int j = 1; j <= playerStat->MeldPointer; ++j)
 						if ((playerStat->Meld[j].tile == i) &&
-							((playerStat->Meld[j].mstat == meldTripletExposedLeft) ||
-							(playerStat->Meld[j].mstat == meldTripletExposedCenter) ||
-							(playerStat->Meld[j].mstat == meldTripletExposedRight)))
+							((playerStat->Meld[j].mstat == MeldStat::tripletExposedLeft) ||
+							(playerStat->Meld[j].mstat == MeldStat::tripletExposedCenter) ||
+							(playerStat->Meld[j].mstat == MeldStat::tripletExposedRight)))
 							return true;
 				}
 			}
@@ -374,9 +374,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					if (TileCount[playerStat.Hand[i].tile] == 1) {
 						for (int j = 1; j <= playerStat.MeldPointer; ++j)
 							if ((playerStat.Meld[j].tile == playerStat.Hand[i].tile) &&
-								((playerStat.Meld[j].mstat == meldTripletExposedLeft) ||
-								(playerStat.Meld[j].mstat == meldTripletExposedCenter) ||
-								(playerStat.Meld[j].mstat == meldTripletExposedRight)))
+								((playerStat.Meld[j].mstat == MeldStat::tripletExposedLeft) ||
+								(playerStat.Meld[j].mstat == MeldStat::tripletExposedCenter) ||
+								(playerStat.Meld[j].mstat == MeldStat::tripletExposedRight)))
 								flag = false;
 					}
 					return flag;

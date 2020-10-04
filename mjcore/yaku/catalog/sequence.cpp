@@ -293,7 +293,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				case BambooOne: case BambooNine:
 					++*yaojiu; break;
 				case CharacterSeven: case CircleSeven: case BambooSeven:
-					if ((i > 0) && (analysis->MianziDat[i].mstat < meldTripletConcealed))
+					if ((i > 0) && (analysis->MianziDat[i].mstat < MeldStat::tripletConcealed))
 						++*yaojiu;
 					break;
 				}
@@ -1113,7 +1113,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
 			for (int i = 1; i < SizeOfMeldBuffer; i++)
-				if (analysis->MianziDat[i].mstat == meldSequenceExposedMiddle) ++count;
+				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedMiddle) ++count;
 			return count;
 		};
 	if (RuleData::chkRuleApplied("chii_sankan"))
@@ -1137,9 +1137,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			int count = 0;
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
-					if ((analysis->MianziDat[i].mstat == meldSequenceExposedLower) &&
+					if ((analysis->MianziDat[i].mstat == MeldStat::sequenceExposedLower) &&
 						(analysis->MianziDat[i].tile == TileSuitStep + 7)) ++count;
-					if ((analysis->MianziDat[i].mstat == meldSequenceExposedUpper) &&
+					if ((analysis->MianziDat[i].mstat == MeldStat::sequenceExposedUpper) &&
 						(analysis->MianziDat[i].tile == TileSuitStep + 1)) ++count;
 				}
 			}
@@ -1165,7 +1165,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
-				if (analysis->MianziDat[i].mstat == meldSequenceExposedLower) {
+				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedLower) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
 						if (analysis->MianziDat[i].tile == TileSuitStep + 7) --count;
@@ -1194,7 +1194,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
-				if (analysis->MianziDat[i].mstat == meldSequenceExposedUpper) {
+				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedUpper) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
 						if (analysis->MianziDat[i].tile == TileSuitStep + 1) --count;

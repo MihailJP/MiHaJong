@@ -135,19 +135,19 @@ void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID p
 	// 鳴き面子を数える
 	for (int i = 1; i < gameStat->Player[playerID].MeldPointer; i++) {
 		switch (gameStat->Player[playerID].Meld[i].mstat) {
-		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
-		case meldSequenceExposedUpper:
+		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle:
+		case MeldStat::sequenceExposedUpper:
 			// 順子の時
 			tileCount[gameStat->Player[playerID].Meld[i].tile]++;
 			tileCount[gameStat->Player[playerID].Meld[i].tile + 1]++;
 			tileCount[gameStat->Player[playerID].Meld[i].tile + 2]++;
 			break;
-		case meldQuadExposedLeft: case meldQuadAddedLeft:
-		case meldQuadExposedCenter: case meldQuadAddedCenter:
-		case meldQuadExposedRight: case meldQuadAddedRight:
-		case meldQuadConcealed: // 暗槓も数えてあげましょう……
-		case meldTripletExposedLeft: case meldTripletExposedCenter:
-		case meldTripletExposedRight:
+		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
+		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
+		case MeldStat::quadExposedRight: case MeldStat::quadAddedRight:
+		case MeldStat::quadConcealed: // 暗槓も数えてあげましょう……
+		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
+		case MeldStat::tripletExposedRight:
 			// 刻子の時(槓子も含む)
 			tileCount[gameStat->Player[playerID].Meld[i].tile] += 3;
 			break;

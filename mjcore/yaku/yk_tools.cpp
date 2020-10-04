@@ -8,7 +8,7 @@ bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf 
 	if ((countForMentsu[tile] >= 1)&&
 		(countForMentsu[tile+1] >= 1)&&
 		(countForMentsu[tile+2] >= 1)) {
-			MianziDat[*ProcessedMelds].mstat = meldSequenceConcealed;
+			MianziDat[*ProcessedMelds].mstat = MeldStat::sequenceConcealed;
 			MianziDat[(*ProcessedMelds)++].tile = tile;
 			--countForMentsu[tile]; --countForMentsu[tile+1];
 			--countForMentsu[tile+2];
@@ -22,7 +22,7 @@ void yaku::mentsuParser::makementsu_koutsu(Int8ByTile& countForMentsu, MeldBuf M
 	int* const ProcessedMelds, TileCode tile)
 { /* 刻子の処理 */
 	if (countForMentsu[tile] >= 3) {
-		MianziDat[*ProcessedMelds].mstat = meldTripletConcealed;
+		MianziDat[*ProcessedMelds].mstat = MeldStat::tripletConcealed;
 		MianziDat[(*ProcessedMelds)++].tile = tile;
 		countForMentsu[tile] -= 3;
 	}
@@ -131,13 +131,13 @@ Int8ByTile yaku::countingFacility::countByMelds(
 /* 刻子の数を数える */
 Int8ByTile yaku::countingFacility::countKez(const MeldBuf MianziDat, uint8_t* const Kezi) { /* 刻子の数を数える */
 	trace(_T("刻子・槓子の種類を調べます。"));
-	return countByMelds(MianziDat, Kezi, [](MeldStat x){return x >= meldTripletConcealed;});
+	return countByMelds(MianziDat, Kezi, [](MeldStat x){return x >= MeldStat::tripletConcealed;});
 }
 
 /* 暗刻子の数を数える */
 Int8ByTile yaku::countingFacility::countAnKez(const MeldBuf MianziDat, uint8_t* const Kezi) { /* 暗刻子の数を数える */
 	trace(_T("暗刻子・暗槓子の種類を調べます。"));
-	return countByMelds(MianziDat, Kezi, [](MeldStat x){return ((x == meldTripletConcealed)||(x == meldQuadConcealed));});
+	return countByMelds(MianziDat, Kezi, [](MeldStat x){return ((x == MeldStat::tripletConcealed)||(x == MeldStat::quadConcealed));});
 }
 
 /* 対子・刻子・槓子の数を数える */
@@ -153,13 +153,13 @@ Int8ByTile yaku::countingFacility::countDuiz(const MeldBuf MianziDat) { /* 対�
 /* 順子の数を数える */
 Int8ByTile yaku::countingFacility::countShunz(const MeldBuf MianziDat, uint8_t* const Shunzi) { /* 順子の数を数える */
 	trace(_T("順子の種類を調べます。"));
-	return countByMelds(MianziDat, Shunzi, [](MeldStat x){return x < meldTripletConcealed;});
+	return countByMelds(MianziDat, Shunzi, [](MeldStat x){return x < MeldStat::tripletConcealed;});
 }
 
 /* 暗順子の数を数える */
 Int8ByTile yaku::countingFacility::countAnShunz(const MeldBuf MianziDat, uint8_t* const Shunzi) { /* 暗順子の数を数える */
 	trace(_T("暗順子の種類を調べます。"));
-	return countByMelds(MianziDat, Shunzi, [](MeldStat x){return x == meldSequenceConcealed;});
+	return countByMelds(MianziDat, Shunzi, [](MeldStat x){return x == MeldStat::sequenceConcealed;});
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,19 +167,19 @@ Int8ByTile yaku::countingFacility::countAnShunz(const MeldBuf MianziDat, uint8_t
 /* 槓子の数を数える */
 Int8ByTile yaku::countingFacility::countKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* 槓子の数を数える */
 	trace(_T("槓子の種類を調べます。"));
-	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x >= meldQuadConcealed;});
+	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x >= MeldStat::quadConcealed;});
 }
 
 /* 暗槓子の数を数える */
 Int8ByTile yaku::countingFacility::countAnKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* 暗槓子の数を数える */
 	trace(_T("暗槓子の種類を調べます。"));
-	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x == meldQuadConcealed;});
+	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x == MeldStat::quadConcealed;});
 }
 
 /* 加槓の数を数える */
 Int8ByTile yaku::countingFacility::countKaKangz(const MeldBuf MianziDat, uint8_t* const Kangzi) { /* 加槓の数を数える */
 	trace(_T("加槓の種類を調べます。"));
-	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x >= meldQuadAddedLeft;});
+	return countByMelds(MianziDat, Kangzi, [](MeldStat x){return x >= MeldStat::quadAddedLeft;});
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -223,12 +223,12 @@ int yaku::countingFacility::countMentzNumerals(const MeldBuf MianziDat) { /* 数
 				Cifr += (MianziDat[0].tile % TileSuitStep) * 2;
 			} else { // 面子
 				switch (MianziDat[i].mstat) {
-				case meldSequenceConcealed: case meldSequenceExposedLower:
-				case meldSequenceExposedMiddle: case meldSequenceExposedUpper:
+				case MeldStat::sequenceConcealed: case MeldStat::sequenceExposedLower:
+				case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper:
 					Cifr += (((MianziDat[i].tile % TileSuitStep)+1) * 3); // 順子
 					break;
-				case meldTripletConcealed: case meldTripletExposedLeft:
-				case meldTripletExposedCenter: case meldTripletExposedRight:
+				case MeldStat::tripletConcealed: case MeldStat::tripletExposedLeft:
+				case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight:
 					Cifr += ((MianziDat[i].tile % TileSuitStep) * 3); // 刻子
 					break;
 				default:

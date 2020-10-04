@@ -242,10 +242,10 @@ void TableSubsceneAgariScreenProto::AgariNaki::Reconstruct(const GameTable* game
 	unsigned posOffset[5] = {0,};
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i) {
 		switch (gameStat->Player[targetPlayer].Meld[i].mstat) {
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 3 + ShowTile::HoriTileWidth;
 			break;
-		case meldQuadConcealed:
+		case MeldStat::quadConcealed:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 4;
 			break;
 		default:

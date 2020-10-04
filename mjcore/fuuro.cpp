@@ -108,7 +108,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	switch (Mode) {
 	case FuuroType::ankan: /* 暗槓 */
 		++gameStat->Player[kangPlayer].MeldPointer;
-		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadConcealed;
+		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::quadConcealed;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if (gameStat->Player[kangPlayer].Hand[i].tile == gameStat->CurrentDiscard.tile) {
@@ -132,14 +132,14 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			if (gameStat->Player[kangPlayer].Meld[i].tile == gameStat->CurrentDiscard.tile) {
 				bool ProcessFlag = false;
 				switch (gameStat->Player[kangPlayer].Meld[i].mstat) {
-				case meldTripletExposedLeft:
-					gameStat->Player[kangPlayer].Meld[i].mstat = meldQuadAddedLeft;
+				case MeldStat::tripletExposedLeft:
+					gameStat->Player[kangPlayer].Meld[i].mstat = MeldStat::quadAddedLeft;
 					ProcessFlag = true; break;
-				case meldTripletExposedCenter:
-					gameStat->Player[kangPlayer].Meld[i].mstat = meldQuadAddedCenter;
+				case MeldStat::tripletExposedCenter:
+					gameStat->Player[kangPlayer].Meld[i].mstat = MeldStat::quadAddedCenter;
 					ProcessFlag = true; break;
-				case meldTripletExposedRight:
-					gameStat->Player[kangPlayer].Meld[i].mstat = meldQuadAddedRight;
+				case MeldStat::tripletExposedRight:
+					gameStat->Player[kangPlayer].Meld[i].mstat = MeldStat::quadAddedRight;
 					ProcessFlag = true; break;
 				}
 				if (ProcessFlag) {
@@ -180,11 +180,11 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 槓子として晒す */
 		++gameStat->Player[kangPlayer].MeldPointer;
 		if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == SeatRelative::left)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadExposedLeft;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::quadExposedLeft;
 		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == SeatRelative::opposite)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadExposedCenter;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::quadExposedCenter;
 		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == SeatRelative::right)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadExposedRight;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::quadExposedRight;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].red[0] = gameStat->CurrentDiscard.red;
 		/* 理牌する */
@@ -252,11 +252,11 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 明刻として晒す */
 		++gameStat->Player[kangPlayer].MeldPointer;
 		if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == SeatRelative::left)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldTripletExposedLeft;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::tripletExposedLeft;
 		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == SeatRelative::opposite)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldTripletExposedCenter;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::tripletExposedCenter;
 		else if (playerRelative(gameStat->CurrentPlayer.Active, kangPlayer) == SeatRelative::right)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldTripletExposedRight;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::tripletExposedRight;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].red[0] = gameStat->CurrentDiscard.red;
 		/* 理牌する */
@@ -296,11 +296,11 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 順子を晒す */
 		++gameStat->Player[kangPlayer].MeldPointer;
 		if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::lower)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedLower;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::sequenceExposedLower;
 		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::middle)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedMiddle;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::sequenceExposedMiddle;
 		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::upper)
-			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedUpper;
+			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::sequenceExposedUpper;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile =
 			static_cast<TileCode>(gameStat->CurrentDiscard.tile + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi));
 		/* 自動理牌 */
@@ -514,9 +514,9 @@ void checkpao(GameTable* const gameStat) {
 			++WindPons; break;
 		}
 		switch (playerStat->Meld[i].mstat) {
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
-		case meldQuadAddedLeft:   case meldQuadAddedCenter:   case meldQuadAddedRight:
-		case meldQuadConcealed:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight:
+		case MeldStat::quadAddedLeft:   case MeldStat::quadAddedCenter:   case MeldStat::quadAddedRight:
+		case MeldStat::quadConcealed:
 			++NumOfKangs; break;
 		}
 	}

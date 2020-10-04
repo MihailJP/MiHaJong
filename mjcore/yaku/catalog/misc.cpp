@@ -82,9 +82,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int count = 0;
 				for (int i = 1; i < SizeOfMeldBuffer; i++)
-					if ((analysis->MianziDat[i].mstat != meldSequenceConcealed) &&
-						(analysis->MianziDat[i].mstat != meldTripletConcealed) &&
-						(analysis->MianziDat[i].mstat != meldQuadConcealed)) ++count;
+					if ((analysis->MianziDat[i].mstat != MeldStat::sequenceConcealed) &&
+						(analysis->MianziDat[i].mstat != MeldStat::tripletConcealed) &&
+						(analysis->MianziDat[i].mstat != MeldStat::quadConcealed)) ++count;
 				return (count == SizeOfMeldBuffer - 1);
 			};
 #ifndef GUOBIAO
@@ -732,14 +732,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				// 鳴き面子も計算 槓子は無視
 				for (int i = 1; i < SizeOfMeldBuffer; i++) {
 					switch (analysis->MianziDat[i].mstat) {
-					case meldSequenceExposedLower: case meldSequenceExposedMiddle:
-					case meldSequenceExposedUpper:
+					case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle:
+					case MeldStat::sequenceExposedUpper:
 						++tiles[analysis->MianziDat[i].tile];
 						++tiles[analysis->MianziDat[i].tile + 1];
 						++tiles[analysis->MianziDat[i].tile + 2];
 						break;
-					case meldTripletExposedLeft: case meldTripletExposedCenter:
-					case meldTripletExposedRight:
+					case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
+					case MeldStat::tripletExposedRight:
 						tiles[analysis->MianziDat[i].tile] += 3;
 						break;
 					}

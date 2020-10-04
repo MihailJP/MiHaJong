@@ -693,11 +693,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		const auto newyrdrm =
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->PlayerStat->MeldPointer >= 3)
-					return ((analysis->PlayerStat->Meld[1].mstat > meldTripletConcealed) &&
+					return ((analysis->PlayerStat->Meld[1].mstat > MeldStat::tripletConcealed) &&
 						(analysis->PlayerStat->Meld[1].tile == BambooThree) &&
-						(analysis->PlayerStat->Meld[2].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat->Meld[2].mstat > MeldStat::tripletConcealed) &&
 						(analysis->PlayerStat->Meld[2].tile == BambooOne) &&
-						(analysis->PlayerStat->Meld[3].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat->Meld[3].mstat > MeldStat::tripletConcealed) &&
 						(analysis->PlayerStat->Meld[3].tile == CircleEight));
 				else return false;
 			};

@@ -112,7 +112,7 @@ void GameTableScreen::NakihaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	unsigned posOffset[5] = {0,};
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i) {
 		switch (gameStat->Player[targetPlayer].Meld[i].mstat) {
-		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+		case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 2;
 			break;
 		default:

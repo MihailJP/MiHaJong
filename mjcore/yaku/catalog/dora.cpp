@@ -102,7 +102,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			}
 			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {
 				const auto k = &analysis->PlayerStat->Meld[i];
-				for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
+				for (int j = 0; j < (k->mstat >= MeldStat::quadConcealed ? 4 : 3); j++) {
 					if (analysis->PlayerStat->Meld[i].red[j] == AkaDora) ++red;
 				}
 			}

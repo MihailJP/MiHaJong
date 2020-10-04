@@ -152,22 +152,22 @@ static_assert(std::is_standard_layout<DiscardTile>::value, "DiscardTile is not s
 
 constexpr unsigned int SizeOfMeldBuffer = 5;
 constexpr unsigned int MeldTypeStep = 1000;
-enum MeldStat : uint8_t {
-	meldSequenceConcealed,      // 手の内の順子
-	meldSequenceExposedLower,   // 小さい方をチー
-	meldSequenceExposedMiddle,  // 嵌張をチー
-	meldSequenceExposedUpper,   // 大きい方をチー
-	meldTripletConcealed,       // 暗刻
-	meldTripletExposedLeft,     // 上家からポン
-	meldTripletExposedCenter,   // 対面からポン
-	meldTripletExposedRight,    // 下家からポン
-	meldQuadConcealed,          // 暗槓
-	meldQuadExposedLeft,        // 上家から明槓
-	meldQuadExposedCenter,      // 対面から明槓
-	meldQuadExposedRight,       // 下家から明槓
-	meldQuadAddedLeft,          // 上家からポンの後カン
-	meldQuadAddedCenter,        // 対面からポンの後カン
-	meldQuadAddedRight,         // 下家からポンの後カン
+enum class MeldStat : uint8_t {
+	sequenceConcealed,      // 手の内の順子
+	sequenceExposedLower,   // 小さい方をチー
+	sequenceExposedMiddle,  // 嵌張をチー
+	sequenceExposedUpper,   // 大きい方をチー
+	tripletConcealed,       // 暗刻
+	tripletExposedLeft,     // 上家からポン
+	tripletExposedCenter,   // 対面からポン
+	tripletExposedRight,    // 下家からポン
+	quadConcealed,          // 暗槓
+	quadExposedLeft,        // 上家から明槓
+	quadExposedCenter,      // 対面から明槓
+	quadExposedRight,       // 下家から明槓
+	quadAddedLeft,          // 上家からポンの後カン
+	quadAddedCenter,        // 対面からポンの後カン
+	quadAddedRight,         // 下家からポンの後カン
 };
 struct MeldCode {
 	TileCode tile;

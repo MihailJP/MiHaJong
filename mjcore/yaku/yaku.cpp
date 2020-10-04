@@ -141,17 +141,17 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	/* 面子加符 */
 	for (int i = 1; i < SizeOfMeldBuffer; i++) {
 		switch (analysis->MianziDat[i].mstat) {
-		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight:
+		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 4 : 2; /* 明刻子 */
 			break;
-		case meldTripletConcealed:
+		case MeldStat::tripletConcealed:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 8 : 4; /* 暗刻子 */
 			break;
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
-		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight:
+		case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 16 : 8; /* 明槓子 */
 			break;
-		case meldQuadConcealed:
+		case MeldStat::quadConcealed:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 32 : 16; /* 暗槓子 */
 			break;
 		}
@@ -169,8 +169,8 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = MachiType::tanki; // 単騎待ち
 	for (int i = 1; i < SizeOfMeldBuffer; i++) { // 待ちの種類を調べる……
 		switch (analysis->MianziDat[i].mstat) {
-		case meldSequenceConcealed: case meldSequenceExposedLower:
-		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* 順子 */
+		case MeldStat::sequenceConcealed: case MeldStat::sequenceExposedLower:
+		case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: /* 順子 */
 			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = MachiType::kanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
 				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = MachiType::penchan; // 辺張待ち
@@ -277,19 +277,19 @@ void yaku::yakuCalculator::countDora
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
-		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // 順子
+		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: // 順子
 			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[k->tile + 1] +
 				gameStat->DoraFlag.Omote[k->tile + 2];
 			if (uradoraEnabled)
 				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[k->tile + 1] +
 				gameStat->DoraFlag.Ura[k->tile + 2];
 			break;
-		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight: // 刻子
+		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight: // 刻子
 			omote += gameStat->DoraFlag.Omote[k->tile] * 3;
 			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 3;
 			break;
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight: // 槓子
-		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: case meldQuadConcealed:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight: // 槓子
+		case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight: case MeldStat::quadConcealed:
 			omote += gameStat->DoraFlag.Omote[k->tile] * 4;
 			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 4;
 			break;
@@ -306,7 +306,7 @@ void yaku::yakuCalculator::countDora
 	}
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
-		for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
+		for (int j = 0; j < (k->mstat >= MeldStat::quadConcealed ? 4 : 3); j++) {
 			switch (gameStat->Player[targetPlayer].Meld[i].red[j]) {
 				case AkaDora: ++red; break;
 				case AoDora: ++blue; break;

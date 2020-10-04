@@ -212,9 +212,9 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 		if (gameStat->Player[i].MeldPointer == 0) continue;
 		for (int j = 1; j <= gameStat->Player[i].MeldPointer; j++) {
 			switch (gameStat->Player[i].Meld[j].mstat) {
-			case meldSequenceExposedLower:
-			case meldSequenceExposedMiddle:
-			case meldSequenceExposedUpper:
+			case MeldStat::sequenceExposedLower:
+			case MeldStat::sequenceExposedMiddle:
+			case MeldStat::sequenceExposedUpper:
 				// 明順子(チー)
 				// まず、正しいコードになっているかを確認する(デバッグ時)
 				assert(gameStat->Player[i].Meld[j].tile % TileSuitStep <= 7);
@@ -226,13 +226,13 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 					seenTiles[gameStat->Player[i].Meld[j].tile]++;
 				// ここまで
 				break;
-			case meldTripletExposedLeft:
-			case meldTripletExposedCenter:
-			case meldTripletExposedRight:
+			case MeldStat::tripletExposedLeft:
+			case MeldStat::tripletExposedCenter:
+			case MeldStat::tripletExposedRight:
 				// 明刻子(ポン)
 				seenTiles[gameStat->Player[i].Meld[j].tile] += 3;
 				break;
-			case meldQuadConcealed:
+			case MeldStat::quadConcealed:
 				// 暗槓
 #ifdef GUOBIAO
 				break;
@@ -240,9 +240,9 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 				if (RuleData::chkRule("ankan_conceal", "closed")) break; // 暗槓非開示ルールだったらカウントしない
 				/* FALLTHRU */
 #endif /* GUOBIAO */
-			case meldQuadExposedLeft:   case meldQuadAddedLeft:
-			case meldQuadExposedCenter: case meldQuadAddedCenter:
-			case meldQuadExposedRight:  case meldQuadAddedRight:
+			case MeldStat::quadExposedLeft:   case MeldStat::quadAddedLeft:
+			case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
+			case MeldStat::quadExposedRight:  case MeldStat::quadAddedRight:
 				// 明槓
 				seenTiles[gameStat->Player[i].Meld[j].tile] += 4;
 				break;
@@ -293,8 +293,8 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 	// 赤ドラのみ数えるときは便宜のため、鳴き面子も数える
 	for (int i = 1; i < gameStat->Player[playerID].MeldPointer; i++) {
 		switch (gameStat->Player[playerID].Meld[i].mstat) {
-		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
-		case meldSequenceExposedUpper:
+		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle:
+		case MeldStat::sequenceExposedUpper:
 			// 順子の時
 			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
@@ -303,16 +303,16 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 			if (gameStat->Player[playerID].Meld[i].red[2] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile + 2]++;
 			break;
-		case meldQuadExposedLeft: case meldQuadAddedLeft:
-		case meldQuadExposedCenter: case meldQuadAddedCenter:
-		case meldQuadExposedRight: case meldQuadAddedRight:
-		case meldQuadConcealed: // 暗槓も数えてあげましょう……
+		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
+		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
+		case MeldStat::quadExposedRight: case MeldStat::quadAddedRight:
+		case MeldStat::quadConcealed: // 暗槓も数えてあげましょう……
 			// 槓子の時
 			if (gameStat->Player[playerID].Meld[i].red[3] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			/* FALLTHRU */
-		case meldTripletExposedLeft: case meldTripletExposedCenter:
-		case meldTripletExposedRight:
+		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
+		case MeldStat::tripletExposedRight:
 			// 刻子の時(槓子も含む)
 			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
@@ -414,7 +414,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 			if (RuleData::chkRuleApplied("kakan_furiten")) { // 加槓の牌をフリテンとみなすルールなら
 				for (int j = 1; j <= tmpGameStat.Player[targetPlayer].MeldPointer; j++) {
 					switch (tmpGameStat.Player[targetPlayer].Meld[j].mstat) {
-					case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: // 加槓で、なおかつ
+					case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight: // 加槓で、なおかつ
 						if (tmpGameStat.Player[targetPlayer].Meld[j].tile == i) // 同じ種類の捨て牌が見つかったら
 							machihaiInfo.FuritenFlag = true; // フリテンと判断します
 						break;
@@ -627,7 +627,7 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 		tmpGameStat.Player[targetPlayer].Meld[++ tmpGameStat.Player[targetPlayer].MeldPointer].tile =
 			gameStat->Player[targetPlayer].Tsumohai().tile; /* ツモった牌を */
 		tmpGameStat.Player[targetPlayer].Meld[tmpGameStat.Player[targetPlayer].MeldPointer].mstat =
-			meldQuadConcealed; /* 暗槓したとみなす */
+			MeldStat::quadConcealed; /* 暗槓したとみなす */
 		MachihaiInfo machiInfo_After = chkFuriten(&tmpGameStat, targetPlayer);
 
 		/* 待ち牌は一致するか？ */

@@ -610,17 +610,17 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	XhaifuBufferBody << _T("\t\t\t\t<sequence>") << std::endl;
 	Tile meldTile[3];
 	switch (meld.mstat) {
-	case meldSequenceExposedLower:
+	case MeldStat::sequenceExposedLower:
 		meldTile[0] = Tile(meld.tile, meld.red[0]);
 		meldTile[1] = Tile(TileCode(meld.tile + 1), meld.red[1]);
 		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
-	case meldSequenceExposedMiddle:
+	case MeldStat::sequenceExposedMiddle:
 		meldTile[1] = Tile(meld.tile, meld.red[0]);
 		meldTile[0] = Tile(TileCode(meld.tile + 1), meld.red[1]);
 		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
 		break;
-	case meldSequenceExposedUpper:
+	case MeldStat::sequenceExposedUpper:
 		meldTile[1] = Tile(meld.tile, meld.red[0]);
 		meldTile[2] = Tile(TileCode(meld.tile + 1), meld.red[1]);
 		meldTile[0] = Tile(TileCode(meld.tile + 2), meld.red[2]);
@@ -639,9 +639,9 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID player, MeldCode meld) {
 	const Tile meldTile(meld.tile, meld.red[0]);
 	XhaifuBufferBody << _T("\t\t\t\t\t");
-	if ((meld.mstat == meldQuadAddedLeft) ||
-		(meld.mstat == meldQuadAddedCenter) ||
-		(meld.mstat == meldQuadAddedRight))
+	if ((meld.mstat == MeldStat::quadAddedLeft) ||
+		(meld.mstat == MeldStat::quadAddedCenter) ||
+		(meld.mstat == MeldStat::quadAddedRight))
 			recordTile_Inline(meldTile, meld.red[3]);
 	else recordTile_Inline(meldTile, true);
 	XhaifuBufferBody << std::endl;
@@ -649,41 +649,41 @@ inline void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon1(PlayerID
 void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player, MeldCode meld) {
 	int tiles = 0, interrupt = 0; CodeConv::tstring meldDirection;
 	switch (meld.mstat) {
-	case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
+	case MeldStat::tripletExposedLeft: case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
 		meldDirection = _T(" meld-direction=\"left\"");
 		interrupt = 1; break;
-	case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
+	case MeldStat::tripletExposedCenter: case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
 		meldDirection = _T(" meld-direction=\"opposite\"");
 		interrupt = 2; break;
-	case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
+	case MeldStat::tripletExposedRight: case MeldStat::quadExposedRight: case MeldStat::quadAddedRight:
 		meldDirection = _T(" meld-direction=\"right\"");
 		interrupt = 8; break;
-	case meldQuadConcealed:
+	case MeldStat::quadConcealed:
 		interrupt = 7; break;
 	}
 	switch (meld.mstat) {
-	case meldTripletExposedLeft: case meldTripletExposedCenter:
-	case meldTripletExposedRight:
+	case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
+	case MeldStat::tripletExposedRight:
 		tiles = 3;
 		XhaifuBufferBody << _T("\t\t\t\t<triplet") << meldDirection << _T('>') << std::endl;
 		break;
-	case meldQuadExposedLeft: case meldQuadExposedCenter:
-	case meldQuadExposedRight:
+	case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter:
+	case MeldStat::quadExposedRight:
 		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed") << meldDirection << _T(" added=\"false\">") << std::endl;
 		goto quad_4tiles;
-	case meldQuadConcealed:
+	case MeldStat::quadConcealed:
 		XhaifuBufferBody << _T("\t\t\t\t<quad-concealed>") << std::endl;
 		goto quad_4tiles;
 	quad_4tiles:
 		tiles = 4;
 		break;
-	case meldQuadAddedLeft: case meldQuadAddedCenter:
-	case meldQuadAddedRight:
+	case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter:
+	case MeldStat::quadAddedRight:
 		tiles = 3;
 		XhaifuBufferBody << _T("\t\t\t\t<quad-exposed") << meldDirection << _T(" added=\"true\">") << std::endl;
 		break;
 	}
-	for (int i = (meld.mstat == meldQuadConcealed ? 0 : 1); i < tiles; i++) {
+	for (int i = (meld.mstat == MeldStat::quadConcealed ? 0 : 1); i < tiles; i++) {
 		if (i == interrupt) hfPon1(player, meld);
 		const Tile meldTile(meld.tile, meld.red[i]);
 		XhaifuBufferBody << _T("\t\t\t\t\t");
@@ -692,15 +692,15 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 	}
 	if (interrupt == 8) hfPon1(player, meld);
 	switch (meld.mstat) {
-	case meldTripletExposedLeft: case meldTripletExposedCenter:
-	case meldTripletExposedRight:
+	case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
+	case MeldStat::tripletExposedRight:
 		XhaifuBufferBody << _T("\t\t\t\t</triplet>") << std::endl;
 		break;
-	case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
-	case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+	case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight:
+	case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight:
 		XhaifuBufferBody << _T("\t\t\t\t</quad-exposed>") << std::endl;
 		break;
-	case meldQuadConcealed:
+	case MeldStat::quadConcealed:
 		XhaifuBufferBody << _T("\t\t\t\t</quad-concealed>") << std::endl;
 		break;
 	}
@@ -709,14 +709,14 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfPon(PlayerID player,
 void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* const gameStat, PlayerID player) {
 	for (int i = 1; i <= gameStat->Player[player].MeldPointer; i++) {
 		switch (gameStat->Player[player].Meld[i].mstat) {
-		case meldSequenceExposedLower: case meldSequenceExposedMiddle:
-		case meldSequenceExposedUpper:
+		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle:
+		case MeldStat::sequenceExposedUpper:
 			MeldWriter::hfChii(player, gameStat->Player[player].Meld[i]);
 			break;
-		case meldTripletExposedLeft: case meldQuadExposedLeft: case meldQuadAddedLeft:
-		case meldTripletExposedCenter: case meldQuadExposedCenter: case meldQuadAddedCenter:
-		case meldTripletExposedRight: case meldQuadExposedRight: case meldQuadAddedRight:
-		case meldQuadConcealed:
+		case MeldStat::tripletExposedLeft: case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
+		case MeldStat::tripletExposedCenter: case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
+		case MeldStat::tripletExposedRight: case MeldStat::quadExposedRight: case MeldStat::quadAddedRight:
+		case MeldStat::quadConcealed:
 			MeldWriter::hfPon(player, gameStat->Player[player].Meld[i]);
 			break;
 		}

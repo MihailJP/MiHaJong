@@ -268,7 +268,7 @@ int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
 		lua_pushinteger(L, i); lua_newtable(L);
 		TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Meld[i].tile));
 		lua_newtable(L);
-		for (int k = 0; k < (gameStat->Player[player].Meld[i].mstat >= meldQuadConcealed ? 4 : 3); k++)
+		for (int k = 0; k < (gameStat->Player[player].Meld[i].mstat >= MeldStat::quadConcealed ? 4 : 3); k++)
 			TableAdd(L, k + 1, static_cast<lua_Integer>(gameStat->Player[player].Meld[i].red[k]));
 		lua_setfield(L, -2, "red");
 		TableAdd(L, "type", static_cast<lua_Integer>(gameStat->Player[player].Meld[i].mstat));

@@ -83,26 +83,26 @@ inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 	lua_newtable(L); // MeldType
 	lua_newtable(L); // Sequence
-	TableAdd(L, "Lower", static_cast<lua_Integer>(meldSequenceExposedLower));
-	TableAdd(L, "Middle", static_cast<lua_Integer>(meldSequenceExposedMiddle));
-	TableAdd(L, "Upper", static_cast<lua_Integer>(meldSequenceExposedUpper));
+	TableAdd(L, "Lower", static_cast<lua_Integer>(MeldStat::sequenceExposedLower));
+	TableAdd(L, "Middle", static_cast<lua_Integer>(MeldStat::sequenceExposedMiddle));
+	TableAdd(L, "Upper", static_cast<lua_Integer>(MeldStat::sequenceExposedUpper));
 	lockTable(L); lua_setfield(L, -2, "Sequence");
 	lua_newtable(L); // Triplet
-	TableAdd(L, "Kamicha", static_cast<lua_Integer>(meldTripletExposedLeft));
-	TableAdd(L, "Toimen", static_cast<lua_Integer>(meldTripletExposedCenter));
-	TableAdd(L, "Shimocha", static_cast<lua_Integer>(meldTripletExposedRight));
+	TableAdd(L, "Kamicha", static_cast<lua_Integer>(MeldStat::tripletExposedLeft));
+	TableAdd(L, "Toimen", static_cast<lua_Integer>(MeldStat::tripletExposedCenter));
+	TableAdd(L, "Shimocha", static_cast<lua_Integer>(MeldStat::tripletExposedRight));
 	lockTable(L); lua_setfield(L, -2, "Triplet");
 	lua_newtable(L); // Quad
-	TableAdd(L, "Concealed", static_cast<lua_Integer>(meldQuadConcealed));
+	TableAdd(L, "Concealed", static_cast<lua_Integer>(MeldStat::quadConcealed));
 	lua_newtable(L); // Exposed
-	TableAdd(L, "Kamicha", static_cast<lua_Integer>(meldQuadExposedLeft));
-	TableAdd(L, "Toimen", static_cast<lua_Integer>(meldQuadExposedCenter));
-	TableAdd(L, "Shimocha", static_cast<lua_Integer>(meldQuadExposedRight));
+	TableAdd(L, "Kamicha", static_cast<lua_Integer>(MeldStat::quadExposedLeft));
+	TableAdd(L, "Toimen", static_cast<lua_Integer>(MeldStat::quadExposedCenter));
+	TableAdd(L, "Shimocha", static_cast<lua_Integer>(MeldStat::quadExposedRight));
 	lockTable(L); lua_setfield(L, -2, "Exposed");
 	lua_newtable(L); // Added
-	TableAdd(L, "Kamicha", static_cast<lua_Integer>(meldQuadAddedLeft));
-	TableAdd(L, "Toimen", static_cast<lua_Integer>(meldQuadAddedCenter));
-	TableAdd(L, "Shimocha", static_cast<lua_Integer>(meldQuadAddedRight));
+	TableAdd(L, "Kamicha", static_cast<lua_Integer>(MeldStat::quadAddedLeft));
+	TableAdd(L, "Toimen", static_cast<lua_Integer>(MeldStat::quadAddedCenter));
+	TableAdd(L, "Shimocha", static_cast<lua_Integer>(MeldStat::quadAddedRight));
 	lockTable(L); lua_setfield(L, -2, "Added");
 	lockTable(L); lua_setfield(L, -2, "Quad");
 	lockTable(L); lua_setfield(L, -2, "MeldType");
