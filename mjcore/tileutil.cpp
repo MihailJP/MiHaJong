@@ -401,7 +401,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	for (TileCode i = CharacterOne; i < Flower; i = static_cast<TileCode>(static_cast<int>(i) + 1)) {
 		if (static_cast<int>(i) % TileSuitStep == 0) continue; // ない牌だったら戻る
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
-		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll) == -1) { // 待ちになっていたら
+		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenType::all) == -1) { // 待ちになっていたら
 			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // フラグをセットしましょう
 			machihaiInfo.MachihaiTotal += // カウントを加算しましょう
 				(machihaiInfo.Machihai[i].MachihaiCount =
@@ -453,7 +453,7 @@ void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 		/* まずは、ある牌をツモったと仮定します */
 		gameStat->Player[targetPlayer].Tsumohai().tile = static_cast<TileCode>(i);
 		/* もしそれが和了になっていたら、フラグをセットしましょう */
-		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll) == -1)
+		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenType::all) == -1)
 			gameStat->OpenRichiWait[i] = true;
 		/* これをすべての牌について試行しましょう */
 	}
@@ -594,7 +594,7 @@ namespace chkAnkanAbilityTools { // chkAnkanAbility関数用の処理
 			１１１３４４４東東東発＊＊ ←発を取ろうとすると
 			+①++１++-２-++-２-+×     … ６(二向聴)
 		*/
-		Shanten shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, shantenAll);
+		Shanten shanten = ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenType::all);
 		if (shanten == 1) {
 			o.str(_T("")); o << _T("ツモ牌 [") << std::setw(2) << std::setfill(_T('0')) <<
 				static_cast<int>(gameStat->Player[targetPlayer].Tsumohai().tile) <<
@@ -724,7 +724,7 @@ void calcdoukasen(GameTable* const gameStat) {
 
 /* 聴牌かどうか調べる */
 bool isTenpai(const GameTable* const gameStat, PlayerID targetPlayer) {
-	Shanten shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, shantenAll);
+	Shanten shanten = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenType::all);
 	if (gameStat->Player[targetPlayer].AgariHouki) shanten = 1; // アガリ放棄なら強制不聴
 	if (EnvTable::Instantiate()->PlayerDat[targetPlayer].RemotePlayerFlag == -1)
 		return false;

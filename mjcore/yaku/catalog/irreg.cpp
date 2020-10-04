@@ -6,9 +6,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	const auto isQiDui =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 #ifdef GUOBIAO
-			return analysis->shanten[shantenPairs] == -1;
+			return analysis->shanten[ShantenType::pairs] == -1;
 #else /* GUOBIAO */
-			return ((analysis->shanten[shantenPairs] == -1)&&(analysis->shanten[shantenRegular] >= 0));
+			return ((analysis->shanten[ShantenType::pairs] == -1)&&(analysis->shanten[ShantenType::regular] >= 0));
 #endif /* GUOBIAO */
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -240,7 +240,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		_T("十三不塔"), _T("五門斎"),
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (analysis->shanten[shantenOrphans] == -1);
+			return (analysis->shanten[ShantenType::orphans] == -1);
 		}
 	));
 #ifndef GUOBIAO
@@ -249,7 +249,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("国士無双十三面"), 2_yakumanM,
 			_T("国士無双"), _T("十三不塔"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return ((analysis->shanten[shantenOrphans] == -1) && // 国士無双になっていて、
+				return ((analysis->shanten[ShantenType::orphans] == -1) && // 国士無双になっていて、
 					(!analysis->MachiInfo.FuritenFlag) && // フリテンではなくて、
 					((analysis->MachiInfo.MachiMen == 13)||(analysis->GameStat->TianHuFlag))); // 13面待ちか天和になっている
 			}
@@ -266,7 +266,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("全不靠"),
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenStellar] == -1);
+				return (analysis->shanten[ShantenType::stellar] == -1);
 			}
 		));
 #ifndef GUOBIAO
@@ -275,7 +275,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("南北戦争"), get_yaku_han("civil_war"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenCivilWar] == -1);
+				return (analysis->shanten[ShantenType::civilWar] == -1);
 			}
 		));
 	/* 東北新幹線グリーン車 */
@@ -283,7 +283,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("東北新幹線グリーン車"), get_yaku_han("tohoku_shinkansen_green"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenTohokuGreen] == -1);
+				return (analysis->shanten[ShantenType::tohokuGreen] == -1);
 			}
 		));
 	/* 惑星直列 */
@@ -292,7 +292,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("惑星直列"), get_yaku_han("syzygy"),
 			_T("清一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenSyzygy] == -1);
+				return (analysis->shanten[ShantenType::syzygy] == -1);
 			}
 		));
 	/* 全不靠 */
@@ -306,7 +306,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("全不靠"), get_yaku_han("quanbukao"),
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenQuanbukao] == -1);
+				return (analysis->shanten[ShantenType::quanbukao] == -1);
 			}
 		));
 #ifndef GUOBIAO
@@ -316,7 +316,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("セブンアップ"), get_yaku_han("sevenup"),
 			_T("混一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenSevenup] == -1);
+				return (analysis->shanten[ShantenType::sevenup] == -1);
 			}
 		));
 	/* 組合龍 */
@@ -329,7 +329,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("組合龍"), get_yaku_han("zuhelong"),
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenZuhelong] == -1);
+				return (analysis->shanten[ShantenType::zuhelong] == -1);
 			}
 		));
 #ifndef GUOBIAO
@@ -338,7 +338,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("仁和寺"), get_yaku_han("ninnaji"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (analysis->shanten[shantenNinnaji] == -1);
+				return (analysis->shanten[ShantenType::ninnaji] == -1);
 			}
 		));
 #endif /* GUOBIAO */

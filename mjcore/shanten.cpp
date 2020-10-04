@@ -45,27 +45,27 @@ MJCORE Shanten ShantenAnalyzer::calcShanten(const GameTable* const gameStat, Pla
 
 	/* mode別分岐 */
 	switch (mode) {
-	case shantenRegular:
+	case ShantenType::regular:
 		return calcShantenRegular(gameStat, playerID, tileCount);
-	case shantenPairs:
+	case ShantenType::pairs:
 		return calcShantenChiitoi(gameStat, playerID, tileCount);
-	case shantenOrphans:
+	case ShantenType::orphans:
 		return calcShantenKokushi(gameStat, playerID, tileCount);
-	case shantenStellar:
+	case ShantenType::stellar:
 		return calcShantenStellar(gameStat, playerID, tileCount, true);
-	case shantenCivilWar:
+	case ShantenType::civilWar:
 		return calcShantenCivilWar(gameStat, playerID, tileCount);
-	case shantenTohokuGreen:
+	case ShantenType::tohokuGreen:
 		return calcShantenTohokuGreen(gameStat, playerID, tileCount);
-	case shantenSyzygy:
+	case ShantenType::syzygy:
 		return calcShantenSyzygy(gameStat, playerID, tileCount);
-	case shantenQuanbukao:
+	case ShantenType::quanbukao:
 		return calcShantenStellar(gameStat, playerID, tileCount, false);
-	case shantenSevenup:
+	case ShantenType::sevenup:
 		return calcShantenSevenup(gameStat, playerID, tileCount);
-	case shantenZuhelong:
+	case ShantenType::zuhelong:
 		return calcShantenZuhelong(gameStat, playerID, tileCount);
-	case shantenNinnaji:
+	case ShantenType::ninnaji:
 		return calcShantenNinnaji(gameStat, playerID, tileCount);
 	default:
 		/* 全部求めて一番和了に近いやつを返す */

@@ -6,11 +6,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	const auto chktiles = // 面子手・七対子兼用の判定関数オブジェクト
 		[](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetKez, int numOfKez,
 		const TileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
-			if (analysis->shanten[shantenRegular] == -1)
+			if (analysis->shanten[ShantenType::regular] == -1)
 				return (yaku::countingFacility::countSpecMentzWithDup
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
 					== SizeOfMeldBuffer - (noDui ? 1 : 0));
-			else if (analysis->shanten[shantenPairs] == -1)
+			else if (analysis->shanten[ShantenType::pairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NumOfTilesInHand / 2);
 			else return false;
@@ -18,11 +18,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	const auto chktiles_nodup = // 面子手・七対子兼用の判定関数オブジェクト
 		[](const MENTSU_ANALYSIS* const analysis, const TileCode* const targetKez, int numOfKez,
 		const TileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
-			if (analysis->shanten[shantenRegular] == -1)
+			if (analysis->shanten[ShantenType::regular] == -1)
 				return (yaku::countingFacility::countSpecMentz
 					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
 					== SizeOfMeldBuffer - (noDui ? 1 : 0));
-			else if (analysis->shanten[shantenPairs] == -1)
+			else if (analysis->shanten[ShantenType::pairs] == -1)
 				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
 					== NumOfTilesInHand / 2);
 			else return false;
@@ -257,9 +257,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("混一色"),
 			[chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->shanten[shantenRegular] == -1) && (analysis->KeziCount[RedDragon] >= 1))
+				if ((analysis->shanten[ShantenType::regular] == -1) && (analysis->KeziCount[RedDragon] >= 1))
 					yakuFlag = true;
-				else if ((analysis->shanten[shantenPairs] == -1) && (analysis->TileCount[RedDragon] >= 2))
+				else if ((analysis->shanten[ShantenType::pairs] == -1) && (analysis->TileCount[RedDragon] >= 2))
 					yakuFlag = true;
 				constexpr TileCode kezi[] = {
 					CircleFive, CircleOne, CircleThree, CircleSix,
@@ -303,7 +303,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("反緑一色"), get_yaku_han("reverse_green"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
+				if (analysis->shanten[ShantenType::regular] == -1) {
 					constexpr TileCode kezi[] = {
 						BambooSeven,
 						BambooTwo, BambooFour, BambooSix, BambooEight,
@@ -323,7 +323,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("反緑一色輪"), get_yaku_han("reverse_ryuuiisohrin"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
+				if (analysis->shanten[ShantenType::regular] == -1) {
 					constexpr TileCode kezi[] = {
 						BambooSeven,
 						BambooTwo, BambooFour, BambooSix, BambooEight,
@@ -360,7 +360,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("青洞門"), get_yaku_han("ao_no_domon"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
+				if (analysis->shanten[ShantenType::regular] == -1) {
 					constexpr TileCode kezi[] = {
 						EastWind, SouthWind, WestWind, NorthWind,
 						CircleTwo, CircleFour, CircleEight,
@@ -1102,9 +1102,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("黒衣騎士"), get_yaku_han("blackjack"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1)
+				if (analysis->shanten[ShantenType::regular] == -1)
 					return yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 21;
-				else if (analysis->shanten[shantenPairs] == -1)
+				else if (analysis->shanten[ShantenType::pairs] == -1)
 					return yaku::countingFacility::countTileNumerals(analysis->TileCount) == 21;
 				else return false;
 			}

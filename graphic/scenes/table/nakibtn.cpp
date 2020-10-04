@@ -178,7 +178,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 	};
 	const PlayerID ActivePlayer = gameStat->CurrentPlayer.Active;
 	const PlayerTable* const playerStat = &(gameStat->Player[ActivePlayer]);
-	const Shanten shanten = utils::calcShanten(gameStat, ActivePlayer, shantenAll);
+	const Shanten shanten = utils::calcShanten(gameStat, ActivePlayer, ShantenType::all);
 	if (utils::isRichiReqSatisfied(gameStat, ActivePlayer) && // 点棒要件を満たしている（点棒が足りている）
 		(shanten <= 0) && // テンパイしている
 		(gameStat->gameType & RichiMJ) && // 日麻である
@@ -253,14 +253,14 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	const PlayerID PassivePlayer = gameStat->CurrentPlayer.Passive;
 	PlayerTable* const playerStat = &(gameStat->Player[PassivePlayer]);
 	playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
-	const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, shantenAll);
+	const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, ShantenType::all);
 	playerStat->Tsumohai().tile = NoTile;
 
 	if (gameStat->CurrentDiscard.isFlower()) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
 	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
 		(gameStat->gameType & RichiMJ) && // 中国ルール以外で
-		(utils::calcShanten(gameStat, PassivePlayer, shantenOrphans) >= 0)) // 国士聴牌でない場合は
+		(utils::calcShanten(gameStat, PassivePlayer, ShantenType::orphans) >= 0)) // 国士聴牌でない場合は
 		goto end; // 残りの判定をスキップ
 
 	if (shanten < 0) // 出た牌が当たり牌
@@ -345,7 +345,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 	} else if (this->getButtonSet() == ButtonSet::tsumo) {
 		auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {
 			tmpStat->statOfActive().Hand[i].tile = NoTile;
-			Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, shantenAll);
+			Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenType::all);
 			return (shanten > 0);
 		};
 		switch (this->getCursor()) {

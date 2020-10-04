@@ -33,7 +33,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		tmpGameStat.statOfMine().Tsumohai() = Tile();
 		/*  */
 		CodeConv::tostringstream o;
-		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::shantenAll);
+		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::ShantenType::all);
 		if (shanten > 0) { // 不聴の時は向聴表示
 			o << static_cast<int>(shanten) << _T("向聴");
 		} else {

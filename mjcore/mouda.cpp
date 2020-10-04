@@ -407,7 +407,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		procDahaiSubRiichi(gameStat, DiscardTileIndex);
 	/* 戻牌天和フラグ */
 	if ((gameStat->statOfActive().renpaiTenhohStat == 0) &&
-		(ShantenAnalyzer::calcShanten(gameStat, gameStat->CurrentPlayer.Active, shantenAll) == -1))
+		(ShantenAnalyzer::calcShanten(gameStat, gameStat->CurrentPlayer.Active, ShantenType::all) == -1))
 		gameStat->statOfActive().renpaiTenhohStat = 1;
 	else if (gameStat->statOfActive().renpaiTenhohStat == 1)
 		gameStat->statOfActive().renpaiTenhohStat = -1;

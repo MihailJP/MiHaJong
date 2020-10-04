@@ -13,6 +13,7 @@
 #include "../tileutil.h"
 #include "../shanten.h"
 #include <thread>
+#include <array>
 
 class yaku::yakuCalculator {
 public:
@@ -40,9 +41,18 @@ private:
 		shanpon, // 双ポン
 		tanki    // 単騎
 	};
+	struct ShantenData : public std::array<Shanten, SHANTEN_PAGES> {
+		constexpr Shanten operator[] (ShantenType s) const { return std::array<Shanten, SHANTEN_PAGES>::operator[](static_cast<std::size_t>(s)); }
+		reference operator[] (ShantenType s) { return std::array<Shanten, SHANTEN_PAGES>::operator[](static_cast<std::size_t>(s)); }
+		constexpr Shanten operator[] (std::size_t s) const { return std::array<Shanten, SHANTEN_PAGES>::operator[](s); }
+		reference operator[] (std::size_t s) { return std::array<Shanten, SHANTEN_PAGES>::operator[](s); }
+		ShantenData() = default;
+		ShantenData(const ShantenData&) = default;
+		ShantenData& operator = (const ShantenData&) = default;
+	};
 	struct MENTSU_ANALYSIS { // 面子解析結果
 		PlayerID player;
-		Shanten shanten[SHANTEN_PAGES];
+		ShantenData shanten;
 		MeldBuf MianziDat; // 面子パース結果
 		uint8_t BasePoint; // 符
 		MachiType Machi; // 待ちの種類
@@ -209,9 +219,9 @@ private:
 	static void calculateScore(yaku::YAKUSTAT* const yStat);
 
 	static void analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-		Shanten* const shanten, YAKUSTAT* const yakuInfo);
+		const ShantenData shanten, YAKUSTAT* const yakuInfo);
 	static void analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-		Shanten* const shanten, YAKUSTAT* const yakuInfo);
+		const ShantenData shanten, YAKUSTAT* const yakuInfo);
 
 	static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
 		YAKUSTAT* const result, PlayerID targetPlayer);

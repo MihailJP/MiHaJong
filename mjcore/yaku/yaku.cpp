@@ -563,7 +563,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 /* 計算ルーチン */
 void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis) {
 	/* 面子解析処理 */
-	if (analysis->shanten[shantenRegular] == -1) {
+	if (analysis->shanten[ShantenType::regular] == -1) {
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
@@ -581,19 +581,19 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
 	} else {
 #ifndef GUOBIAO
-		if (analysis->shanten[shantenPairs] == -1) { // 七対子
+		if (analysis->shanten[ShantenType::pairs] == -1) { // 七対子
 			if (RuleData::chkRule("seven_pairs", "1han_50fu")) analysis->BasePoint = 50; // 1翻50符
 			else analysis->BasePoint = 25; // 2翻25符
 		}
-		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
-		else if ((analysis->shanten[shantenQuanbukao] == -1)&&(analysis->shanten[shantenStellar] > -1)) {
+		else if (analysis->shanten[ShantenType::orphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
+		else if ((analysis->shanten[ShantenType::quanbukao] == -1)&&(analysis->shanten[ShantenType::stellar] > -1)) {
 			if (RuleData::chkRule("quanbukao", "3han_30fu"))
 				analysis->BasePoint = 30;
 			else if (RuleData::chkRule("quanbukao", "3han_40fu") || RuleData::chkRule("quanbukao", "4han_40fu"))
 				analysis->BasePoint = 40;
 		} else
 #endif /* GUOBIAO */
-		if (analysis->shanten[shantenZuhelong] == -1) { // 組合龍
+		if (analysis->shanten[ShantenType::zuhelong] == -1) { // 組合龍
 			mentsuParser::makementsu(gameStat, analysis->player, *pMode, nullptr, analysis->MianziDat);
 			calcbasepoints(gameStat, analysis); // 符を計算する
 		}
@@ -665,12 +665,12 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 
 /* 引数の準備とか */
 void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-	Shanten* const shanten, YAKUSTAT* const yakuInfo)
+	const ShantenData shanten, YAKUSTAT* const yakuInfo)
 {
 	// 変数を用意
 	MENTSU_ANALYSIS analysis;
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
-	memcpy(analysis.shanten, shanten, sizeof(Shanten[SHANTEN_PAGES]));
+	analysis.shanten = shanten;
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
@@ -689,12 +689,12 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	memcpy(yakuInfo, &result, sizeof(YAKUSTAT));
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-	Shanten* const shanten, YAKUSTAT* const yakuInfo)
+	const ShantenData shanten, YAKUSTAT* const yakuInfo)
 {
 	// 変数を用意
 	MENTSU_ANALYSIS analysis;
 	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
-	memcpy(analysis.shanten, shanten, sizeof(Shanten[SHANTEN_PAGES]));
+	analysis.shanten = shanten;
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
@@ -736,11 +736,11 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	// 初期化
 	YAKUSTAT yakuInfo;
 	// シャンテン数をチェック
-	Shanten shanten[SHANTEN_PAGES];
+	ShantenData shanten;
 	for (int i = 0; i < SHANTEN_PAGES; i++)
 		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, static_cast<ShantenType>(i));
 	// 和了ってるか判定(和了ってなかった場合十三不塔か判定する)
-	if (shanten[shantenAll] > -1) {
+	if (shanten[ShantenType::all] > -1) {
 #ifndef GUOBIAO
 		/* 十三不塔 */
 		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // 鳴きがなくて一巡目の時だけ判定する
@@ -811,7 +811,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		return yakuInfo;
 	}
 	// 和了っているなら
-	if (shanten[shantenRegular] == -1) // 一般形の和了
+	if (shanten[ShantenType::regular] == -1) // 一般形の和了
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	else // 七対子、国士無双、その他特殊な和了
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);

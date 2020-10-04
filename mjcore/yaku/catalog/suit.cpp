@@ -237,7 +237,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* 百万石 */
 	const auto chiffre =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
-			return (analysis->shanten[shantenRegular] == -1) ?
+			return (analysis->shanten[ShantenType::regular] == -1) ?
 				yaku::countingFacility::countMentzNumerals(analysis->MianziDat) :
 				yaku::countingFacility::countTileNumerals(analysis->TileCount);
 		};
@@ -326,13 +326,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			*/
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				if (analysis->shanten[shantenRegular] == -1) {
+				if (analysis->shanten[ShantenType::regular] == -1) {
 					int yakuFlagCount = 0;
 					constexpr TileCode targetKezi[] = {CharacterOne, CharacterNine,};
 					constexpr TileCode targetShunzi[] = {CharacterOne, CharacterSeven,};
 					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, 2, targetShunzi, 2, false) == 0)
 						yakuFlag = true;
-				} else if (analysis->shanten[shantenPairs] == -1) {
+				} else if (analysis->shanten[ShantenType::pairs] == -1) {
 					int yakuFlagCount = 0;
 					constexpr TileCode targetDuizi[] = {CharacterOne, CharacterNine,};
 					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi, 2) == 0)
@@ -429,14 +429,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("翻満乃歩手地"), get_yaku_han("honmanopotechi"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int PinMian = 0;
-				if (analysis->shanten[shantenRegular] == -1) {
+				if (analysis->shanten[ShantenType::regular] == -1) {
 					for (int i = 0; i < SizeOfMeldBuffer; i++)
 						if ((analysis->MianziDat[i].tile / TileSuitStep) == (TileSuitCircles / TileSuitStep))
 							++PinMian;
 					return (isshoku(analysis, false) &&
 						(PinMian == SizeOfMeldBuffer - 1) &&
 						(analysis->DuiziCount[GreenDragon] >= 1));
-				} else if (analysis->shanten[shantenPairs] == -1) {
+				} else if (analysis->shanten[ShantenType::pairs] == -1) {
 					for (int i = static_cast<int>(CircleOne); i <= static_cast<int>(CircleNine); i++)
 						PinMian += analysis->TileCount[i];
 					return (isshoku(analysis, false) &&
@@ -453,11 +453,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	const auto chueiimen =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool flag[TileSuitHonors / TileSuitStep] = {false};
-			if (analysis->shanten[shantenRegular] == -1) {
+			if (analysis->shanten[ShantenType::regular] == -1) {
 				for (int k = 0; k < SizeOfMeldBuffer; k++)
 					if (Tile(analysis->MianziDat[k].tile).isNumber())
 						flag[analysis->MianziDat[k].tile / TileSuitStep] = true;
-			} else if (analysis->shanten[shantenPairs] == -1) {
+			} else if (analysis->shanten[ShantenType::pairs] == -1) {
 				for (int k = 1; k < TileSuitHonors; k++)
 					if (analysis->TileCount[k] > 0) flag[k / TileSuitStep] = true;
 			}
@@ -496,7 +496,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("絶一門"),
 			[chueiimen2](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (chueiimen2(analysis) &&
-					(analysis->shanten[shantenRegular] == -1) &&
+					(analysis->shanten[ShantenType::regular] == -1) &&
 					((analysis->MianziDat[1].tile / TileSuitStep) ==
 					(analysis->MianziDat[2].tile / TileSuitStep)) &&
 					((analysis->MianziDat[2].tile / TileSuitStep) ==
@@ -515,11 +515,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			bool yakuFlag = true;
 			{
 				TileCode tc;
-				if (analysis->shanten[shantenRegular] == -1)
-				for (unsigned int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
+				if (analysis->shanten[ShantenType::regular] == -1)
+				for (unsigned int i = 0; i < ((analysis->shanten[ShantenType::regular] == -1) ?
 					SizeOfMeldBuffer : NumOfTilesInHand); i++) {
-						if (analysis->shanten[shantenRegular] == -1) tc = analysis->MianziDat[i].tile;
-						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;
+						if (analysis->shanten[ShantenType::regular] == -1) tc = analysis->MianziDat[i].tile;
+						else if (analysis->shanten[ShantenType::pairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;
 						if (Tile(tc).isNumber()) ++mnzCount[tc / TileSuitStep];
 						else switch (tc) {
 						case EastWind: case SouthWind: case WestWind: case NorthWind:
@@ -565,7 +565,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				for (int i = 0; i < SizeOfMeldBuffer; i++)
 					if (Tile(analysis->MianziDat[i].tile).isHonor())
 						return false;
-				return ((analysis->shanten[shantenRegular] == -1) &&
+				return ((analysis->shanten[ShantenType::regular] == -1) &&
 					(yaku::countingFacility::countMentzNumerals(analysis->MianziDat) < 20));
 			}
 		));
@@ -577,7 +577,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				for (int i = 0; i < SizeOfMeldBuffer; i++)
 					if (Tile(analysis->MianziDat[i].tile).isHonor())
 						return false;
-				return ((analysis->shanten[shantenRegular] == -1) &&
+				return ((analysis->shanten[ShantenType::regular] == -1) &&
 					(yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 20));
 			}
 		));

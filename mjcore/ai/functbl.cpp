@@ -307,18 +307,18 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 /* 鳴きの種別コード */
 inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	lua_newtable(L); // AgariType
-	TableAdd(L, "All", static_cast<lua_Integer>(shantenAll));
-	TableAdd(L, "Regular", static_cast<lua_Integer>(shantenRegular));
-	TableAdd(L, "Pairs", static_cast<lua_Integer>(shantenPairs));
-	TableAdd(L, "Orphans", static_cast<lua_Integer>(shantenOrphans));
-	TableAdd(L, "Stellar", static_cast<lua_Integer>(shantenStellar));
-	TableAdd(L, "CivilWar", static_cast<lua_Integer>(shantenCivilWar));
-	TableAdd(L, "TohokuGreen", static_cast<lua_Integer>(shantenTohokuGreen));
-	TableAdd(L, "Syzygy", static_cast<lua_Integer>(shantenSyzygy));
-	TableAdd(L, "Quanbukao", static_cast<lua_Integer>(shantenQuanbukao));
-	TableAdd(L, "SevenUp", static_cast<lua_Integer>(shantenSevenup));
-	TableAdd(L, "ZuheLong", static_cast<lua_Integer>(shantenZuhelong));
-	TableAdd(L, "Ninnaji", static_cast<lua_Integer>(shantenNinnaji));
+	TableAdd(L, "All", static_cast<lua_Integer>(ShantenType::all));
+	TableAdd(L, "Regular", static_cast<lua_Integer>(ShantenType::regular));
+	TableAdd(L, "Pairs", static_cast<lua_Integer>(ShantenType::pairs));
+	TableAdd(L, "Orphans", static_cast<lua_Integer>(ShantenType::orphans));
+	TableAdd(L, "Stellar", static_cast<lua_Integer>(ShantenType::stellar));
+	TableAdd(L, "CivilWar", static_cast<lua_Integer>(ShantenType::civilWar));
+	TableAdd(L, "TohokuGreen", static_cast<lua_Integer>(ShantenType::tohokuGreen));
+	TableAdd(L, "Syzygy", static_cast<lua_Integer>(ShantenType::syzygy));
+	TableAdd(L, "Quanbukao", static_cast<lua_Integer>(ShantenType::quanbukao));
+	TableAdd(L, "SevenUp", static_cast<lua_Integer>(ShantenType::sevenup));
+	TableAdd(L, "ZuheLong", static_cast<lua_Integer>(ShantenType::zuhelong));
+	TableAdd(L, "Ninnaji", static_cast<lua_Integer>(ShantenType::ninnaji));
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 

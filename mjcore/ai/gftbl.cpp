@@ -348,7 +348,7 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
 	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
-	ShantenType type = shantenAll;
+	ShantenType type = ShantenType::all;
 	if ((n >= 3) && (lua_isnumber(L, 3))) type = static_cast<ShantenType>(lua_tointeger(L, 3));
 	Shanten s = ShantenAnalyzer::calcShanten(&tmpGameStat, player, type);
 	if (s == ShantenImpossible) lua_pushnil(L);

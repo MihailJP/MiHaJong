@@ -95,7 +95,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 
 /* 一色の判定 */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
-	if (analysis->shanten[shantenAll] >= 0) return false; // 足切り要件：和了ってない
+	if (analysis->shanten[ShantenType::all] >= 0) return false; // 足切り要件：和了ってない
 	constexpr TileCode Tiles[][9] = {
 		{
 			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
@@ -115,14 +115,14 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 	for (unsigned k = 0; k < 4; k++) {
 		for (unsigned i = 0; i < 9; i++) {
 			if (Tiles[k][i] != NoTile) {
-				if (analysis->shanten[shantenRegular] == -1)
+				if (analysis->shanten[ShantenType::regular] == -1)
 					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];
 			}
 		}
 	}
-	if (analysis->shanten[shantenRegular] == -1) {
+	if (analysis->shanten[ShantenType::regular] == -1) {
 		assert(count[0] + count[1] + count[2] + count[3] == SizeOfMeldBuffer);
 	} else {
 		assert(count[0] + count[1] + count[2] + count[3] == NumOfTilesInHand);
