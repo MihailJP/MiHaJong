@@ -19,13 +19,13 @@
 #endif /* _WIN32 */
 
 namespace {
-	enum bgmMode {None, Vorbis, Midi,};
-	std::vector<bgmMode> BGM_Mode;
+	enum class BgmMode {none, vorbis, midi,};
+	std::vector<BgmMode> BGM_Mode;
 }
 
 /* BGM読み込み */
 void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
-	if (BGM_Mode.size() <= static_cast<std::size_t>(ID)) BGM_Mode.resize(static_cast<std::size_t>(ID) + 1, None);
+	if (BGM_Mode.size() <= static_cast<std::size_t>(ID)) BGM_Mode.resize(static_cast<std::size_t>(ID) + 1, BgmMode::none);
 	CodeConv::tostringstream o;
 	std::string oggfile = std::string(BGMDIR) + std::string(filename) + std::string(".ogg");
 	std::string midifile = std::string(BGMDIR) + std::string(filename) + std::string(".mid");
@@ -37,7 +37,7 @@ void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 		if (LoadVorbis(ID, oggfile.c_str(), looped ? 1 : 0) == 0) {
 			o << _T("BGMファイル [") << CodeConv::EnsureTStr(filename) << _T(".ogg] の読み込みを完了しました。");
 			info(o.str().c_str());
-			BGM_Mode[ID] = Vorbis;
+			BGM_Mode[ID] = BgmMode::vorbis;
 		} else {
 			o << _T("BGMファイル [") << CodeConv::EnsureTStr(filename) << _T(".ogg] の読み込みに失敗しました。");
 			warn(o.str().c_str());
@@ -48,7 +48,7 @@ void sound::util::bgmload(unsigned ID, const char* filename, bool looped) {
 		if (LoadMidi(ID, midifile.c_str(), looped ? 1 : 0) == 0) {
 			o << _T("BGMファイル [") << CodeConv::EnsureTStr(filename) << _T(".mid] を読み込みました。");
 			info(o.str().c_str());
-			BGM_Mode[ID] = Midi;
+			BGM_Mode[ID] = BgmMode::midi;
 		} else {
 			o << _T("BGMファイル [") << CodeConv::EnsureTStr(filename) << _T(".mid] の読み込みに失敗しました。");
 			warn(o.str().c_str());
@@ -80,7 +80,7 @@ void sound::util::bgmstop() {
 	if (EnvTable::Instantiate()->WatchModeFlag) return; // デモ画面では無視
 	info(_T("BGM再生を停止します。"));
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
-		if (BGM_Mode[i] != None)
+		if (BGM_Mode[i] != BgmMode::none)
 			Stop(i);
 	return;
 }
@@ -109,7 +109,7 @@ void sound::util::setvolume() {
 		info(o.str().c_str());
 	}
 	for (unsigned i = IDs::BgmStart; i <= IDs::BgmEnd; i++)
-		if (BGM_Mode[i] != None)
+		if (BGM_Mode[i] != BgmMode::none)
 			SetVolume(i, static_cast<double>(RuleData::confFile.bgmVolume()) / 100.0);
 	for (unsigned i = IDs::SndStart; i <= IDs::SndEnd; i++)
 		SetVolume(i, static_cast<double>(RuleData::confFile.soundVolume()) / 100.0);
