@@ -30,19 +30,19 @@ namespace {
 PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode) {
 	PlayerID fuuroPlayer;
 	switch (Mode) {
-	case FuuroChii:
+	case FuuroType::chii:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		haifu::haifurecchi(gameStat); // 牌譜に記録
 		break;
-	case FuuroPon:
+	case FuuroType::pon:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		haifu::haifurecpon(gameStat); // 牌譜に記録
 		break;
-	case FuuroFlower:
+	case FuuroType::flower:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 #ifndef GUOBIAO
 		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
@@ -50,13 +50,13 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		haifu::haifurecflower(gameStat, DiscardTileIndex); // 牌譜に記録
 		break;
 #ifndef GUOBIAO
-	case FuuroNorth:
+	case FuuroType::north:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		gameStat->KangFlag.kangFlag = 1; // 嶺上開花のフラグを立てる
 		haifu::haifurecnorth(gameStat, DiscardTileIndex); // 牌譜に記録
 		break;
 #endif /* GUOBIAO */
-	case FuuroDaiminkan:
+	case FuuroType::daiminkan:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
 		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
@@ -77,12 +77,12 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 			gameStat->Player[fuuroPlayer].kansanjunFlag = true; /* 槓三巡のフラグ */
 #endif /* GUOBIAO */
 		break;
-	case FuuroAnkan:
+	case FuuroType::ankan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
 			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
 		/* FALLTHRU */
-	case FuuroKakan:
+	case FuuroType::kakan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		haifu::haifurecankan(gameStat, DiscardTileIndex); // 暗槓を仮に牌譜に記録
@@ -106,7 +106,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex, FuuroType Mode, PlayerID kangPlayer) {
 	unsigned nakiCount = 0;
 	switch (Mode) {
-	case FuuroAnkan: /* 暗槓 */
+	case FuuroType::ankan: /* 暗槓 */
 		++gameStat->Player[kangPlayer].MeldPointer;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldQuadConcealed;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile = gameStat->CurrentDiscard.tile;
@@ -127,7 +127,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			error(o.str().c_str());
 		}
 		break;
-	case FuuroKakan: /* 加槓 */
+	case FuuroType::kakan: /* 加槓 */
 		for (unsigned i = 1; i <= (gameStat->Player[kangPlayer].MeldPointer); i++) {
 			if (gameStat->Player[kangPlayer].Meld[i].tile == gameStat->CurrentDiscard.tile) {
 				bool ProcessFlag = false;
@@ -157,7 +157,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			error(o.str().c_str());
 		}
 		break;
-	case FuuroDaiminkan: /* 大明槓 */
+	case FuuroType::daiminkan: /* 大明槓 */
 		for (int i = 0; i < NumOfTilesInHand; i++) {
 			if ((gameStat->Player[kangPlayer].Hand[i].tile == gameStat->CurrentDiscard.tile) && (nakiCount < 3)) {
 				// 鳴いた牌を純手牌から消去
@@ -191,7 +191,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		lipai(gameStat, kangPlayer);
 		break;
 #ifndef GUOBIAO
-	case FuuroNorth: /* 三麻抜きドラ */
+	case FuuroType::north: /* 三麻抜きドラ */
 		sound::Play(sound::IDs::voxFlower);
 		++(gameStat->Player[kangPlayer].NorthFlag);
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
@@ -204,7 +204,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			gameStat->Player[i].FirstDrawFlag = false;
 		break;
 #endif /* GUOBIAO */
-	case FuuroFlower: /* 花牌 */
+	case FuuroType::flower: /* 花牌 */
 		sound::Play(sound::IDs::voxFlower);
 		switch (gameStat->CurrentDiscard.tile) {
 			case Spring:        gameStat->Player[kangPlayer].FlowerFlag.Spring = true; break;
@@ -230,7 +230,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		for (PlayerID i = 0; i < Players; i++)
 			gameStat->Player[i].FirstDrawFlag = false;
 		break;
-	case FuuroPon: /* ポン */
+	case FuuroType::pon: /* ポン */
 		/* ポンした対子を消去 */
 		nakiCount = 0;
 		for (int i = 0; i < NumOfTilesInHand; i++) {
@@ -273,7 +273,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		checkpao(gameStat);
 #endif /* GUOBIAO */
 		break;
-	case FuuroChii: /* チー */
+	case FuuroType::chii: /* チー */
 		/* チーする牌を設定 */
 		gameStat->Player[kangPlayer].Tsumohai() = gameStat->CurrentDiscard;
 		/* 純手牌から鳴いた塔子を除去 */
@@ -326,14 +326,14 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	default:
 		{
 			CodeConv::tostringstream o;
-			o << _T("モードが正しくありません [") << Mode << _T("]");
+			o << _T("モードが正しくありません [") << static_cast<int>(Mode) << _T("]");
 			error(o.str().c_str());
 		}
 	}
 
 	/* 暗槓・加槓を実行する */
 	nakiCount = 0;
-	if ((Mode == FuuroChii) || (Mode == FuuroPon) || (Mode == FuuroDaiminkan)) {
+	if ((Mode == FuuroType::chii) || (Mode == FuuroType::pon) || (Mode == FuuroType::daiminkan)) {
 		/* 鳴いた捨牌を河で非表示にする */
 		PlayerTable* const activePlDat = &(gameStat->statOfActive());
 		DiscardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
@@ -344,7 +344,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			tmpSutehaiVar->dstat = discardRiichiTaken;
 	}
 	/* カンを宣言、天和や地和のフラグが立っていれば降ろす */
-	if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
+	if ((Mode == FuuroType::ankan) || (Mode == FuuroType::kakan) || (Mode == FuuroType::daiminkan)) {
 		gameStat->TianHuFlag = false;
 		sound::Play(sound::IDs::voxKan);
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::CallType::kan);
@@ -357,7 +357,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 
 /* 槍槓の判定 */
 bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mode) {
-	if ((Mode != FuuroDaiminkan) && (Mode != FuuroPon) && (Mode != FuuroChii)) {
+	if ((Mode != FuuroType::daiminkan) && (Mode != FuuroType::pon) && (Mode != FuuroType::chii)) {
 		/* 国士無双に限り、暗槓を搶槓可能 */
 		/* 断幺牌の暗槓は搶槓しようがないんですが、面倒なので区別せず処理
 		   暗槓非開示設定の時は何を暗槓したか分からないので処理をスキップ*/
@@ -365,18 +365,18 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 		/* 搶槓の際の注意事項。元々のポンが自分の捨牌のものの場合
 		   振聴となるので搶槓はできません */
 #ifdef GUOBIAO
-		if (Mode == FuuroKakan) {
+		if (Mode == FuuroType::kakan) {
 #else /* GUOBIAO */
-		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroNorth)) {
-			if ((Mode == FuuroKakan) || (Mode == FuuroNorth) ||
+		if ((Mode == FuuroType::ankan) || (Mode == FuuroType::kakan) || (Mode == FuuroType::north)) {
+			if ((Mode == FuuroType::kakan) || (Mode == FuuroType::north) ||
 				(RuleData::chkRule("ankan_conceal", "open") && RuleData::chkRule("ankan_chankan", "yes"))) {
 #endif /* GUOBIAO */
 					debug(_T("搶槓の判定をします。"));
-					if (Mode == FuuroAnkan) gameStat->KangFlag.chankanFlag = chankanOfAnkan;
-					else if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = chankanOfNorth;
+					if (Mode == FuuroType::ankan) gameStat->KangFlag.chankanFlag = chankanOfAnkan;
+					else if (Mode == FuuroType::north) gameStat->KangFlag.chankanFlag = chankanOfNorth;
 					else gameStat->KangFlag.chankanFlag = chankanRegular;
 					*RoundEndType = ronhuproc(gameStat);
-					if (Mode == FuuroNorth) gameStat->KangFlag.chankanFlag = chankanNone;
+					if (Mode == FuuroType::north) gameStat->KangFlag.chankanFlag = chankanNone;
 					if (*RoundEndType == EndType::tripleRon) return true;
 					if (RonPlayers(gameStat) > 0) {
 						info(_T("搶槓が宣言されました。ループから出ます。"));
@@ -390,15 +390,15 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 		/* 搶槓の判定 ここまで */
 		debug(_T("副露に成功しました。"));
 		switch (Mode) {
-			case FuuroAnkan: case FuuroKakan:
+			case FuuroType::ankan: case FuuroType::kakan:
 				haifu::haifureckanproc(gameStat); // 搶槓が無い場合、牌譜に記録
 				break;
-			case FuuroNorth:
+			case FuuroType::north:
 				haifu::haifurecnorthproc(gameStat);
 				break;
 		}
 	}
-	if (Mode == FuuroDaiminkan) {
+	if (Mode == FuuroType::daiminkan) {
 		/* バグ防止の為 */
 		for (PlayerID i = 0; i < Players; i++) {
 			gameStat->Player[i].Hand[TsumohaiIndex] = Tile();
@@ -416,11 +416,11 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 
 /* 嶺上の処理 */
 bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mode, PlayerID kangPlayer) {
-	if ((Mode != FuuroPon) && (Mode != FuuroChii)) {
+	if ((Mode != FuuroType::pon) && (Mode != FuuroType::chii)) {
 		/* 四槓子の聴牌者がいて、５回目の槓があると流局とするルールの場合
 		   その条件を判定する*/
 #ifndef GUOBIAO
-		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
+		if ((Mode == FuuroType::ankan) || (Mode == FuuroType::kakan) || (Mode == FuuroType::daiminkan)) {
 			if (gameStat->KangNum >= 4) {
 				debug(_T("5個目の槓なので直ちに流局とし、ループから出ます。"));
 				*RoundEndType = EndType::uukaikan; return true;
@@ -437,7 +437,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 		if (gameStat->tilesLeft() < 10)
 			sound::Play(sound::IDs::sndCountdown);
 #ifndef GUOBIAO
-		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
+		if ((Mode == FuuroType::ankan) || (Mode == FuuroType::kakan) || (Mode == FuuroType::daiminkan)) {
 			/* 槓ドラをめくる */
 			if (RuleData::chkRuleApplied("kandora")) {
 				gameStat->DoraPointer -= 2;
@@ -451,7 +451,7 @@ bool ProcRinshan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mod
 			checkpao(gameStat);
 		}
 		/* 槓子をカウントする(四開槓の判定のため) */
-		if ((Mode == FuuroAnkan) || (Mode == FuuroKakan) || (Mode == FuuroDaiminkan)) {
+		if ((Mode == FuuroType::ankan) || (Mode == FuuroType::kakan) || (Mode == FuuroType::daiminkan)) {
 			++gameStat->Player[kangPlayer].NumberOfQuads;
 			++gameStat->KangNum;
 			CodeConv::tostringstream o;
@@ -476,7 +476,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	}
 	PlayerID fuuroPlayer = PrepareFuuro(gameStat, DiscardTileIndex, Mode);
 
-	if ((Mode != FuuroPon)&&(Mode != FuuroChii)&&(Mode != FuuroDaiminkan)) { /* カンする牌を設定 */
+	if ((Mode != FuuroType::pon)&&(Mode != FuuroType::chii)&&(Mode != FuuroType::daiminkan)) { /* カンする牌を設定 */
 		gameStat->CurrentDiscard = gameStat->Player[fuuroPlayer].Hand[DiscardTileIndex.id];
 	}
 
@@ -886,14 +886,14 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 		/* 捨牌をポンする場合 */
 		if (gameStat->Player[i].DeclarationFlag.Pon) {
 			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定
-			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroPon);
+			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroType::pon);
 			break;
 		}
 		/* 明槓の場合 */
 		const unsigned kanLim = (RuleData::chkRuleApplied("fifth_kong") ? 5 : 4);
 		if (gameStat->Player[i].DeclarationFlag.Kan && (gameStat->KangNum < kanLim)) {
 			gameStat->CurrentPlayer.Passive = i; // 鳴いたプレイヤーを設定
-			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroDaiminkan);
+			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroType::daiminkan);
 			break;
 		}
 	}
@@ -912,7 +912,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Active, SeatRelative::right); // 吃ができるのは上家の捨牌のみ
 			if (gameStat->playerwind(gameStat->CurrentPlayer.Passive) < gameStat->playerwind(gameStat->CurrentPlayer.Active))
 				++gameStat->TurnRound;
-			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroChii);
+			fuuroproc(gameStat, &roundEndType, DiscardTileIndex, FuuroType::chii);
 			gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
 			return true;
 		}

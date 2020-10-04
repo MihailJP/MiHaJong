@@ -204,13 +204,13 @@ namespace { /* 内部処理分割用 */
 				/* ガリ三麻ルールで北風牌を抜いたときの処理 */
 				/* このゲームではどんな手でも(国士や大四喜でなくてもいい)
 					抜き北をロンできるルール */
-				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroNorth))
+				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroType::north))
 					return RoundEndType;
 				else return EndType::drawRinshan;
 			} else {
 				/* 花牌を抜いたときの処理 */
 				/* このゲームは七搶一がないので花牌でロンされることは無い */
-				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroFlower))
+				if (fuuroproc(gameStat, &RoundEndType, DiscardTileIndex, FuuroType::flower))
 					return RoundEndType;
 				else return EndType::drawRinshan;
 			}
@@ -237,7 +237,7 @@ namespace { /* 内部処理分割用 */
 						EndType roundEndType;
 						if (fuuroproc(gameStat, &roundEndType, DiscardTileIndex,
 							(DiscardTileIndex.type == DiscardType::ankan) ?
-							FuuroAnkan : FuuroKakan))
+							FuuroType::ankan : FuuroType::kakan))
 							return roundEndType;
 						else return EndType::drawRinshan;
 				}
