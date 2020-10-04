@@ -100,12 +100,6 @@ public:
 				HAN(int8_t h, hanUnit u);
 				int8_t getHan() const;
 				hanUnit getUnit() const;
-#ifndef GUOBIAO
-				static const HAN
-					yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
-					yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman,
-					yv_triple_yakuman, yv_quad_yakuman;
-#endif /* GUOBIAO */
 			private:
 				int8_t han; // 数値
 #ifndef GUOBIAO
@@ -235,6 +229,11 @@ public:
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _fen(unsigned long long fen);
 yaku::yakuCalculator::Yaku::FixedHan operator"" _fenF(unsigned long long fen);
 #else /* GUOBIAO */
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _han(unsigned long long han);
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _mangan(unsigned long long han);
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _mangan(long double han);
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _yakuman(unsigned long long han);
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _yakuman(long double han);
 yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han);
 yaku::yakuCalculator::Yaku::KuisagariHan operator"" _hanK(unsigned long long han);
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanM(unsigned long long han);

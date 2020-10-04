@@ -113,11 +113,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
 				switch (analysis->TsumoHai->tile) { /* 何で和了ったかで分岐 */
 				case NorthWind: /* 北で和了るとダブル役満 */
-					return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman);
+					return yaku::yakuCalculator::Yaku::YAKU_HAN(2_yakuman);
 				case WhiteDragon: /* 白で和了るとトリプル役満 */
-					return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_triple_yakuman);
+					return yaku::yakuCalculator::Yaku::YAKU_HAN(3_yakuman);
 				default:
-					return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+					return yaku::yakuCalculator::Yaku::YAKU_HAN(1_yakuman);
 				}
 			}),
 			_T("混一色"),

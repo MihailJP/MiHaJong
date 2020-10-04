@@ -836,8 +836,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(analysis->TsumoHai->tile == CircleFive) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+					2_yakuman :
+					1_yakuman);
 			}),
 			_T("清一色"),
 			[chktiles_nodup](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -916,7 +916,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("合格祈願 "), yaku::yakuCalculator::Yaku::FixedHan(
 				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, Han),
-				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null),
+				0_han),
 				[i](const MENTSU_ANALYSIS* const analysis) -> bool {
 					unsigned tileCount = static_cast<unsigned>(analysis->TileCount[CircleFive]);
 					tileCount += 3 * (analysis->KeziCount[CircleFive] - analysis->AnKeziCount[CircleFive]);

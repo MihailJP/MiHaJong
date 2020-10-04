@@ -508,8 +508,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
 					const auto nowTime(DateTime::localTime());
 					if ((nowTime.month == DateTime::February) && (nowTime.day == 29))
-						return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman;
-					else return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman;
+						return 2_yakuman;
+					else return 1_yakuman;
 				}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				const auto nowTime(DateTime::localTime());

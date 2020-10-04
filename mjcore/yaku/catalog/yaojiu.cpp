@@ -23,10 +23,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return *analysis->MenzenFlag ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null) :
-					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
+					yaku::yakuCalculator::Yaku::YAKU_HAN(1_han,
+					0_han) :
+					yaku::yakuCalculator::Yaku::YAKU_HAN(0_han,
+					1_han);
 			}) :
 			(RuleData::chkRule("kuitan", "no") ? (yaku::yakuCalculator::Yaku::HANFUNC)1_hanM : // 喰い断なし
 			(yaku::yakuCalculator::Yaku::HANFUNC)1_hanF), // 喰い断あり

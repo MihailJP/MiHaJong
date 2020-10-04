@@ -88,7 +88,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(analysis->MianziDat[0].tile == NorthWind)) { /* 雀頭が北か？ */
 				LPCTSTR name = _T("北枕");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::YAKU_HAN(
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+					0_han,
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(-1));
 				yakuOrd.push_back(name);
 		}

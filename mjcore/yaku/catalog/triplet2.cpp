@@ -288,8 +288,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(analysis->KangziCount[EastWind] >= 1) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_3han :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han);
+					3_han :
+					2_han);
 			}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (((analysis->KangziCount[EastWind] == 0) && // 東刻子・西対子
@@ -568,8 +568,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(isshoku(analysis, false)) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+					2_yakuman :
+					1_yakuman);
 			}),
 			_T("対々和"),
 			[anysuit3](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -662,8 +662,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[chrisday](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(chrisday()) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+					2_yakuman :
+					1_yakuman);
 			}),
 			_T("対々和"),
 			chris
@@ -673,8 +673,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[chrisday](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(chrisday()) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_triple_yakuman :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman);
+					3_yakuman :
+					2_yakuman);
 			}),
 			_T("対々和"), _T("クリスマス"),
 			[chris](const MENTSU_ANALYSIS* const analysis) -> bool {

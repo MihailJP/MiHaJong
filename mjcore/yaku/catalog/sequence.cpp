@@ -147,9 +147,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
 					(*analysis->MenzenFlag) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_2han,
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null);
+					0_han :
+					2_han,
+					0_han);
 			}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yakuFlagCount = 0;

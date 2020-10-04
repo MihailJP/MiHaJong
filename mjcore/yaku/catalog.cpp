@@ -82,7 +82,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	else if (currcnf == "yakuman_unbound") return 1_yakumanD;
 	else if (currcnf == "-4han")
 		return yaku::yakuCalculator::Yaku::FixedHan(
-		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
+		1_han,
 #ifdef _MSC_VER
 		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(-5)
 #else
