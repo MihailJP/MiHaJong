@@ -4,8 +4,8 @@
 #include "class.h"
 #include "../tileutil.h"
 
-enum MeldCallID {
-	meldNone, meldRon, meldKan, meldPon, meldChiiLower, meldChiiMiddle, meldChiiUpper
+enum class MeldCallID {
+	none, ron, kan, pon, chiiLower, chiiMiddle, chiiUpper
 };
 
 class aiscript::table::functable {

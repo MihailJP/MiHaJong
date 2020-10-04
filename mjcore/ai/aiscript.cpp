@@ -228,13 +228,13 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 			warn(_T("1番目の返り値が数値ではありません。無視します。"));
 		} else {
 			switch (meldtype) {
-				case meldNone: break;
-				case meldRon: gameStat->statOfPassive().DeclarationFlag.Ron = true; break;
-				case meldKan: gameStat->statOfPassive().DeclarationFlag.Kan = true; break;
-				case meldPon: gameStat->statOfPassive().DeclarationFlag.Pon = true; break;
-				case meldChiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = chiiLower; break;
-				case meldChiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = chiiMiddle; break;
-				case meldChiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = chiiUpper; break;
+				case MeldCallID::none: break;
+				case MeldCallID::ron: gameStat->statOfPassive().DeclarationFlag.Ron = true; break;
+				case MeldCallID::kan: gameStat->statOfPassive().DeclarationFlag.Kan = true; break;
+				case MeldCallID::pon: gameStat->statOfPassive().DeclarationFlag.Pon = true; break;
+				case MeldCallID::chiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = chiiLower; break;
+				case MeldCallID::chiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = chiiMiddle; break;
+				case MeldCallID::chiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = chiiUpper; break;
 				default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
 			}
 		}

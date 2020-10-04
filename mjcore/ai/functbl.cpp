@@ -58,14 +58,14 @@ inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 /* 鳴きの種別コード */
 inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "None", static_cast<lua_Integer>(meldNone));
-	TableAdd(L, "Ron", static_cast<lua_Integer>(meldRon));
-	TableAdd(L, "Kan", static_cast<lua_Integer>(meldKan));
-	TableAdd(L, "Pon", static_cast<lua_Integer>(meldPon));
+	TableAdd(L, "None", static_cast<lua_Integer>(MeldCallID::none));
+	TableAdd(L, "Ron", static_cast<lua_Integer>(MeldCallID::ron));
+	TableAdd(L, "Kan", static_cast<lua_Integer>(MeldCallID::kan));
+	TableAdd(L, "Pon", static_cast<lua_Integer>(MeldCallID::pon));
 	lua_newtable(L);
-	TableAdd(L, "Lower", static_cast<lua_Integer>(meldChiiLower));
-	TableAdd(L, "Middle", static_cast<lua_Integer>(meldChiiMiddle));
-	TableAdd(L, "Upper", static_cast<lua_Integer>(meldChiiUpper));
+	TableAdd(L, "Lower", static_cast<lua_Integer>(MeldCallID::chiiLower));
+	TableAdd(L, "Middle", static_cast<lua_Integer>(MeldCallID::chiiMiddle));
+	TableAdd(L, "Upper", static_cast<lua_Integer>(MeldCallID::chiiUpper));
 	lockTable(L); lua_setfield(L, -2, "Chii");
 	lockTable(L); lua_setfield(L, -2, "Call");
 }
