@@ -214,7 +214,7 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 	CodeConv::tostringstream o;
 	o << _T("AIの副露判定に入ります。プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Passive) << _T("]");
 	info(o.str().c_str());
-	gameStat->statOfPassive().DeclarationFlag.Chi = chiiNone; // リセット
+	gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::none; // リセット
 	gameStat->statOfPassive().DeclarationFlag.Pon =
 		gameStat->statOfPassive().DeclarationFlag.Kan =
 		gameStat->statOfPassive().DeclarationFlag.Ron = false;
@@ -232,9 +232,9 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 				case MeldCallID::ron: gameStat->statOfPassive().DeclarationFlag.Ron = true; break;
 				case MeldCallID::kan: gameStat->statOfPassive().DeclarationFlag.Kan = true; break;
 				case MeldCallID::pon: gameStat->statOfPassive().DeclarationFlag.Pon = true; break;
-				case MeldCallID::chiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = chiiLower; break;
-				case MeldCallID::chiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = chiiMiddle; break;
-				case MeldCallID::chiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = chiiUpper; break;
+				case MeldCallID::chiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::lower; break;
+				case MeldCallID::chiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::middle; break;
+				case MeldCallID::chiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::upper; break;
 				default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
 			}
 		}

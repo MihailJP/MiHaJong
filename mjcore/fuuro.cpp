@@ -282,7 +282,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			for (int i = NumOfTilesInHand - 1; i < NumOfTilesInHand * 2 - 1; i++) {
 				for (unsigned j = 0; j < 3; j++) {
 					if ((!nakiCount[j]) && (gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].tile ==
-						(gameStat->CurrentDiscard.tile + j + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi))) {
+						(gameStat->CurrentDiscard.tile + j + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi)))) {
 							gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[j] = gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].red;
 							gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand] = Tile();
 							nakiCount[j] = true;
@@ -295,14 +295,14 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->Player[kangPlayer].MenzenFlag = false;
 		/* 順子を晒す */
 		++gameStat->Player[kangPlayer].MeldPointer;
-		if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == 1)
+		if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::lower)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedLower;
-		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == 2)
+		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::middle)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedMiddle;
-		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == 3)
+		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::upper)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = meldSequenceExposedUpper;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile =
-			static_cast<TileCode>(gameStat->CurrentDiscard.tile + 1 - gameStat->Player[kangPlayer].DeclarationFlag.Chi);
+			static_cast<TileCode>(gameStat->CurrentDiscard.tile + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi));
 		/* 自動理牌 */
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
@@ -314,9 +314,9 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
 			switch (gameStat->Player[kangPlayer].DeclarationFlag.Chi) {
-				case 1: gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile + 3); break;
-				case 2: gameStat->PreviousMeld.Stepped = NoTile; break;
-				case 3: gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile - 3); break;
+				case ChiiType::lower:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile + 3); break;
+				case ChiiType::middle: gameStat->PreviousMeld.Stepped = NoTile; break;
+				case ChiiType::upper:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile - 3); break;
 			}
 		} else {
 			gameStat->PreviousMeld.Stepped = NoTile;
@@ -596,19 +596,19 @@ namespace {
 			break;
 		case nakiChiLower:
 			debug(_T("プレイヤーからの応答：チー(小さい側)"));
-			playerStat->DeclarationFlag.Chi = chiiLower;
+			playerStat->DeclarationFlag.Chi = ChiiType::lower;
 			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Lower);
 			break;
 		case nakiChiMiddle:
 			debug(_T("プレイヤーからの応答：チー(嵌塔子)"));
-			playerStat->DeclarationFlag.Chi = chiiMiddle;
+			playerStat->DeclarationFlag.Chi = ChiiType::middle;
 			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Middle);
 			break;
 		case nakiChiUpper:
 			debug(_T("プレイヤーからの応答：チー(大きい側)"));
-			playerStat->DeclarationFlag.Chi = chiiUpper;
+			playerStat->DeclarationFlag.Chi = ChiiType::upper;
 			if (EnvTable::Instantiate()->GameMode == ClientType::client)
 				mihajong_socket::client::send(mihajong_socket::protocol::Naki_Chii_Upper);
 			break;
@@ -639,7 +639,7 @@ void askReaction(GameTable* const gameStat) {
 		gameStat->Player[pl].DeclarationFlag.Ron =
 			gameStat->Player[pl].DeclarationFlag.Pon =
 			gameStat->Player[pl].DeclarationFlag.Kan = false;
-		gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
+		gameStat->Player[pl].DeclarationFlag.Chi = ChiiType::none;
 	}
 	for (PlayerID i = 0; i < Players; i++) {
 		if (gameStat->CurrentPlayer.Active != i) {
@@ -656,7 +656,7 @@ void askReaction(GameTable* const gameStat) {
 					if (!gameStat->Player[j].DeclarationFlag.Ron) gameStat->Player[j].DeclarationFlag.Ron = sandbox->Player[j].DeclarationFlag.Ron;
 					if (!gameStat->Player[j].DeclarationFlag.Kan) gameStat->Player[j].DeclarationFlag.Kan = sandbox->Player[j].DeclarationFlag.Kan;
 					if (!gameStat->Player[j].DeclarationFlag.Pon) gameStat->Player[j].DeclarationFlag.Pon = sandbox->Player[j].DeclarationFlag.Pon;
-					if (gameStat->Player[j].DeclarationFlag.Chi == chiiNone) gameStat->Player[j].DeclarationFlag.Chi = sandbox->Player[j].DeclarationFlag.Chi;
+					if (gameStat->Player[j].DeclarationFlag.Chi == ChiiType::none) gameStat->Player[j].DeclarationFlag.Chi = sandbox->Player[j].DeclarationFlag.Chi;
 				}
 			}
 		} else if (i == gameStat->PlayerID) {
@@ -696,7 +696,7 @@ void askReaction(GameTable* const gameStat) {
 			}
 			gameStat->Player[i].DeclarationFlag.Ron = gameStat->Player[i].DeclarationFlag.Pon =
 				gameStat->Player[i].DeclarationFlag.Kan = false;
-			gameStat->Player[i].DeclarationFlag.Chi = chiiNone;
+			gameStat->Player[i].DeclarationFlag.Chi = ChiiType::none;
 		}
 	}
 	/* 当たり牌見逃しを同順フリテンにする処理 */
@@ -907,7 +907,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 	} else if (!gameStat->chkGameType(GameTypeID::allSanma)) {
 		/* 吃の処理 */
 		/* 三人打ちでは吃なし */
-		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, SeatRelative::right)].DeclarationFlag.Chi > 0) {
+		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, SeatRelative::right)].DeclarationFlag.Chi != ChiiType::none) {
 			/* ポンや槓の時はツモ順を飛ばしたとみなして数え、北家→東家をまたいだ場合は次の巡目として扱う */
 			gameStat->CurrentPlayer.Passive = RelativePositionOf(gameStat->CurrentPlayer.Active, SeatRelative::right); // 吃ができるのは上家の捨牌のみ
 			if (gameStat->playerwind(gameStat->CurrentPlayer.Passive) < gameStat->playerwind(gameStat->CurrentPlayer.Active))

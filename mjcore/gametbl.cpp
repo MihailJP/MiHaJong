@@ -60,7 +60,7 @@ void resetDeclarationFlag(GameTable* const gameStat) {
 		gameStat->Player[pl].DeclarationFlag.Ron =
 			gameStat->Player[pl].DeclarationFlag.Pon =
 			gameStat->Player[pl].DeclarationFlag.Kan = false;
-		gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
+		gameStat->Player[pl].DeclarationFlag.Chi = ChiiType::none;
 	}
 	return;
 }

@@ -197,13 +197,13 @@ begin:
 				gameStat->Player[tmp].DeclarationFlag.Kan = true;
 				break;
 			case Naki_Chii_Lower:
-				gameStat->Player[tmp].DeclarationFlag.Chi = chiiLower;
+				gameStat->Player[tmp].DeclarationFlag.Chi = ChiiType::lower;
 				break;
 			case Naki_Chii_Middle:
-				gameStat->Player[tmp].DeclarationFlag.Chi = chiiMiddle;
+				gameStat->Player[tmp].DeclarationFlag.Chi = ChiiType::middle;
 				break;
 			case Naki_Chii_Upper:
-				gameStat->Player[tmp].DeclarationFlag.Chi = chiiUpper;
+				gameStat->Player[tmp].DeclarationFlag.Chi = ChiiType::upper;
 				break;
 			case Naki_Remote_Disconnect:
 				if (!gameStat->Player[tmp].ConnectionLost)
@@ -250,9 +250,9 @@ void RemoteNaki::thread_server() {
 		if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
 		else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
 		else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);
-		else if (gameStat->Player[i].DeclarationFlag.Chi == 1) mihajong_socket::server::send(Naki_Chii_Lower);
-		else if (gameStat->Player[i].DeclarationFlag.Chi == 2) mihajong_socket::server::send(Naki_Chii_Middle);
-		else if (gameStat->Player[i].DeclarationFlag.Chi == 3) mihajong_socket::server::send(Naki_Chii_Upper);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == ChiiType::lower) mihajong_socket::server::send(Naki_Chii_Lower);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == ChiiType::middle) mihajong_socket::server::send(Naki_Chii_Middle);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == ChiiType::upper) mihajong_socket::server::send(Naki_Chii_Upper);
 		else if (gameStat->Player[i].ConnectionLost) mihajong_socket::server::send(Naki_Remote_Disconnect);
 		else mihajong_socket::server::send(Naki_Ignore);
 	}
@@ -286,13 +286,13 @@ void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 		gameStat->Player[player].DeclarationFlag.Kan = true;
 		break;
 	case Naki_Chii_Lower:
-		gameStat->Player[player].DeclarationFlag.Chi = chiiLower;
+		gameStat->Player[player].DeclarationFlag.Chi = ChiiType::lower;
 		break;
 	case Naki_Chii_Middle:
-		gameStat->Player[player].DeclarationFlag.Chi = chiiMiddle;
+		gameStat->Player[player].DeclarationFlag.Chi = ChiiType::middle;
 		break;
 	case Naki_Chii_Upper:
-		gameStat->Player[player].DeclarationFlag.Chi = chiiUpper;
+		gameStat->Player[player].DeclarationFlag.Chi = ChiiType::upper;
 		break;
 	}
 	return;

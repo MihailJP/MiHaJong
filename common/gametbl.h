@@ -223,8 +223,8 @@ static_assert(std::is_standard_layout<DoraStatBook>::value, "DoraStatBook is not
 
 // -------------------------------------------------------------------------
 
-enum ChiiType : int8_t {
-	chiiNone, chiiLower, chiiMiddle, chiiUpper,
+enum class ChiiType : int8_t {
+	none, lower, middle, upper,
 };
 struct DeclFlag {
 	bool Ron, Kan, Pon;
