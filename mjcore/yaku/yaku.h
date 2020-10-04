@@ -15,10 +15,11 @@
 #include <thread>
 
 class yaku::yakuCalculator {
-private:
+public:
 	enum hanUnit : uint8_t {Han, SemiMangan, Yakuman};
 	class Yaku;
 
+private:
 	class YakuCatalog { // 役の一覧 [singleton]
 		friend yaku::yakuCalculator;
 	private:
@@ -87,6 +88,7 @@ private:
 	static_assert(std::is_standard_layout<CalculatorParam>::value, "CalculatorParam is not standard layout");
 #endif
 
+public:
 	class Yaku {
 	public:
 		class YAKU_HAN {
@@ -151,16 +153,6 @@ private:
 			KuisagariHan (YAKU_HAN bHan);
 			KuisagariHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
-		static const FixedHan yval_none, yval_1han, yval_2han, yval_3han, yval_4han, yval_5han, yval_6han,
-			yval_mangan, yval_baiman, yval_yakuman, yval_double_yakuman,
-			yval_triple_yakuman, yval_quad_yakuman,
-			yval_1han_dependent, yval_2han_dependent, yval_4han_dependent, yval_yakuman_dependent;
-		static const MenzenHan yval_1han_menzen, yval_2han_menzen, yval_3han_menzen,
-			yval_4han_menzen, yval_5han_menzen, yval_6han_menzen,
-			yval_mangan_menzen, yval_baiman_menzen, yval_yakuman_menzen, yval_double_yakuman_menzen,
-			yval_1han_menzen_dependent, yval_2han_menzen_dependent, yval_yakuman_menzen_dependent;
-		static const KuisagariHan yval_1han_kuisagari, yval_2han_kuisagari, yval_3han_kuisagari,
-			yval_4han_kuisagari, yval_5han_kuisagari, yval_6han_kuisagari;
 #endif /* GUOBIAO */
 	private:
 		HANFUNC han;
@@ -204,6 +196,7 @@ private:
 			YAKUFUNC f);
 	};
 
+private:
 	class CalculatorThread {
 	public:
 		static void calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis);
@@ -244,3 +237,24 @@ public:
 	static bool chkShisiBuDa(const GameTable* const gameStat, PlayerID targetPlayer);
 	static bool checkShibari(const GameTable* const gameStat, const YAKUSTAT* const yakuStat);
 };
+
+#ifdef GUOBIAO
+#else /* GUOBIAO */
+yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han);
+yaku::yakuCalculator::Yaku::KuisagariHan operator"" _hanK(unsigned long long han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanM(unsigned long long han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _hanD(unsigned long long han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanMD(unsigned long long han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(unsigned long long han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(long double han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(unsigned long long han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(long double han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(unsigned long long han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(long double han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(unsigned long long han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(long double han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(unsigned long long han);
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(long double han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(unsigned long long han);
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(long double han);
+#endif /* GUOBIAO */

@@ -236,7 +236,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		_T("十三幺"), yaku::yakuCalculator::Yaku::yval_88,
 		_T("五門斉"), _T("門前清"), _T("単調将"),
 #else /* GUOBIAO */
-		_T("国士無双"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+		_T("国士無双"), 1_yakumanM,
 		_T("十三不塔"), _T("五門斎"),
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -246,7 +246,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("double_yakuman")) /* 国士13面待ち（ダブル役満） */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("国士無双十三面"), yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
+			_T("国士無双十三面"), 2_yakumanM,
 			_T("国士無双"), _T("十三不塔"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenOrphans] == -1) && // 国士無双になっていて、

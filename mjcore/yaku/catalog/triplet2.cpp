@@ -179,7 +179,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	/* 覇王鞭 */
 	if (RuleData::chkRule("haouben", "6han_bamboo_only"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("覇王鞭"), yaku::yakuCalculator::Yaku::yval_6han,
+			_T("覇王鞭"), 6_hanF,
 			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int k = 1; k <= 3; k++)
@@ -465,17 +465,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			};
 		if (RuleData::chkRule("seishun_kuinashi", "1han_menzen")) {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("青春に悔いなし"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
+				_T("青春に悔いなし"), 1_hanM,
 				seishunnikuinashi
 			));
 		} else if (RuleData::chkRule("seishun_kuinashi", "2han_kuisagari")){
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("青春に悔いなし"), yaku::yakuCalculator::Yaku::yval_2han_menzen,
+				_T("青春に悔いなし"), 2_hanM,
 				_T("青春に悔いあり"),
 				seishunnikuinashi
 			));
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("青春に悔いあり"), yaku::yakuCalculator::Yaku::yval_1han,
+				_T("青春に悔いあり"), 1_hanF,
 				seishunnikuinashi
 			));
 		}
@@ -630,7 +630,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			};
 		if (RuleData::chkRule("777", "yakuman"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("ビックボーナス"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("ビックボーナス"), 1_yakumanF,
 				_T("三色同刻"),
 				yaku777
 			));
@@ -702,11 +702,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				else return false;
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("一富士二鷹三茄子"), yaku::yakuCalculator::Yaku::yval_yakuman,
+			_T("一富士二鷹三茄子"), 1_yakumanF,
 			newyrdrm
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("純正一富士二鷹三茄子"), yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			_T("純正一富士二鷹三茄子"), 2_yakumanF,
 			_T("一富士二鷹三茄子"),
 			[newyrdrm, isnewyeardays](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return newyrdrm(analysis) && isnewyeardays();
@@ -716,14 +716,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	/* 武蔵丸 */
 	if (RuleData::chkRuleApplied("musashimaru")) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("武蔵丸"), yaku::yakuCalculator::Yaku::yval_yakuman,
+			_T("武蔵丸"), 1_yakumanF,
 			[anysuit3](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return anysuit3(analysis, 6, 3, 4, true) &&
 					(analysis->KeziCount[CircleOne] >= 1);
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("純正武蔵丸"), yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			_T("純正武蔵丸"), 2_yakumanF,
 			_T("武蔵丸"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->KeziCount[CircleSix] >= 1) &&

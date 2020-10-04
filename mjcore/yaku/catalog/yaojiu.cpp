@@ -28,8 +28,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han);
 			}) :
-			(RuleData::chkRule("kuitan", "no") ? (yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han_menzen : // 喰い断なし
-			(yaku::yakuCalculator::Yaku::HANFUNC)yaku::yakuCalculator::Yaku::yval_1han), // 喰い断あり
+			(RuleData::chkRule("kuitan", "no") ? (yaku::yakuCalculator::Yaku::HANFUNC)1_hanM : // 喰い断なし
+			(yaku::yakuCalculator::Yaku::HANFUNC)1_hanF), // 喰い断あり
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
@@ -44,7 +44,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 #ifdef GUOBIAO
 		_T("全帯幺"), yaku::yakuCalculator::Yaku::yval_4,
 #else /* GUOBIAO */
-		_T("混全帯幺九"), yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
+		_T("混全帯幺九"), 2_hanK,
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
@@ -55,7 +55,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("henchantaiyao"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("偏全帯幺九"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			_T("偏全帯幺九"), 3_hanK,
 			_T("混全帯幺九"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenRegular] == -1)
@@ -66,7 +66,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		));
 	/* 純チャン */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("純全帯幺九"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+		_T("純全帯幺九"), 3_hanK,
 		_T("混全帯幺九"),
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
@@ -76,7 +76,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	));
 	if (RuleData::chkRuleApplied("henchantaiyao"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("純偏全帯幺九"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			_T("純偏全帯幺九"), 3_hanK,
 			_T("純全帯幺九"), _T("偏全帯幺九"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenRegular] == -1)
@@ -109,7 +109,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("清幺九"), yaku::yakuCalculator::Yaku::yval_32,
 		_T("无字"), _T("双同刻"), _T("三同刻"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), PengPengHu, _T("全帯幺"),
 #else /* GUOBIAO */
-		_T("清老頭"), yaku::yakuCalculator::Yaku::yval_yakuman,
+		_T("清老頭"), 1_yakumanF,
 		_T("混全帯幺九"), _T("純全帯幺九"), _T("混老頭"), _T("対々和"),
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -124,7 +124,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 		_T("字一色"), yaku::yakuCalculator::Yaku::yval_64,
 		_T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), PengPengHu, _T("全帯幺"),
 #else /* GUOBIAO */
-		_T("字一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+		_T("字一色"), 1_yakumanF,
 		_T("混全帯幺九"), _T("純全帯幺九"), _T("混老頭"), _T("混一色"), _T("四字刻"), _T("対々和"), _T("茶一色"), _T("三元七対子"), _T("四喜七対子"), _T("紅白七対"),
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {

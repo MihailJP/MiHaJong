@@ -855,3 +855,58 @@ bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const Y
 	else return false; // 縛りを満たしていない場合
 #endif /* GUOBIAO */
 }
+
+#ifdef GUOBIAO
+#else /* GUOBIAO */
+yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::KuisagariHan operator"" _hanK(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanM(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _hanD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanMD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(long double han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(long double han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(long double han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(long double han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(long double han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(long double han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+}
+#endif /* GUOBIAO */

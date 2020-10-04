@@ -40,7 +40,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		_T("九蓮宝燈"), yaku::yakuCalculator::Yaku::yval_88,
 		_T("清一色"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), _T("无字"),
 #else /* GUOBIAO */
-		_T("九蓮宝燈"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+		_T("九蓮宝燈"), 1_yakumanM,
 		_T("清一色"), _T("九蓮花燈"),
 #endif /* GUOBIAO */
 		[chkHaishiki](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -50,7 +50,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 #ifndef GUOBIAO
 	if (RuleData::chkRuleApplied("double_yakuman"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("純正九蓮宝燈"), yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
+			_T("純正九蓮宝燈"), 2_yakumanM,
 			_T("九蓮宝燈"), _T("清一色"), _T("九蓮花燈"),
 			[chkHaishiki](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
@@ -253,7 +253,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("加賀百万石"), RuleData::chkRule("kaga_million", "double_yakuman_if_just_100") ?
-			yaku::yakuCalculator::Yaku::yval_yakuman : yaku::yakuCalculator::Yaku::yval_double_yakuman,
+			1_yakumanF : 2_yakumanF,
 			_T("清一色"),
 			[chiffre](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) == 100) &&
@@ -352,7 +352,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 #ifdef GUOBIAO
 		_T("混一色"), yaku::yakuCalculator::Yaku::yval_6,
 #else /* GUOBIAO */
-		_T("混一色"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+		_T("混一色"), 3_hanK,
 		_T("一気通貫全帯幺九"),
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
@@ -486,7 +486,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 #else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("chueiimen"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("絶一門"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
+			_T("絶一門"), 1_hanM,
 			RuleData::chkRule("chueiimen", "1han_nohonors") ? chueiimen1 : chueiimen2
 		));
 	/* 四面楚歌 */

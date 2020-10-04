@@ -45,7 +45,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #else /* GUOBIAO */
 		if (RuleData::chkRuleApplied("dragonless_all_green"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("茶一色"), _T("断紅和"), _T("混断紅"),
 				[allgrean](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] > 0);
@@ -53,19 +53,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			));
 		else if (GameStat.chkGameType(SanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("清一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"),
 				allgrean
 			));
 		else // 發なしでも良いルール
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"), _T("混断紅"), // 清一色は複合可
 				allgrean
 			));
 		if (RuleData::chkRule("dragonless_all_green", "double_yakuman")) // 發なしがダブル役満になるルール
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				GameStat.chkGameType(SanmaS) ? _T("清緑一色") : _T("緑一色"), yaku::yakuCalculator::Yaku::yval_double_yakuman,
+				GameStat.chkGameType(SanmaS) ? _T("清緑一色") : _T("緑一色"), 2_yakumanF,
 				_T("清一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"),
 				[allgrean](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] == 0);
@@ -91,7 +91,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		if (RuleData::chkRuleApplied("shiiaru_raotai")) {
 			if (!RuleData::chkRule("shiiaru_raotai", "1han_ron_only"))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-					_T("全倒鋪"), yaku::yakuCalculator::Yaku::yval_1han,
+					_T("全倒鋪"), 1_hanF,
 					[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
 						return chkHadakaTanki(analysis) && analysis->GameStat->TsumoAgariFlag;
 					}
@@ -101,7 +101,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #ifdef GUOBIAO
 				_T("全求人"), yaku::yakuCalculator::Yaku::yval_6,
 #else /* GUOBIAO */
-				_T("全求人"), yaku::yakuCalculator::Yaku::yval_1han,
+				_T("全求人"), 1_hanF,
 #endif /* GUOBIAO */
 				[chkHadakaTanki](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return chkHadakaTanki(analysis) && (!analysis->GameStat->TsumoAgariFlag);
@@ -191,12 +191,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			};
 		if (RuleData::chkRule("all_green_with_white", "2han"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("清二色"), yaku::yakuCalculator::Yaku::yval_2han,
+				_T("清二色"), 2_hanF,
 				allgreen_white
 			));
 		else if (RuleData::chkRule("all_green_with_white", "yakuman"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("白有り緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("白有り緑一色"), 1_yakumanF,
 				_T("混一色"),
 				allgreen_white
 			));
@@ -397,11 +397,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		if (RuleData::chkRule("no_red", "hon3han_chin6han") || RuleData::chkRule("no_red", "6han")) {
 			if (!GameStat.chkGameType(SanmaS))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-					_T("混断紅"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+					_T("混断紅"), 3_hanK,
 					hontanhon
 				));
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				GameStat.chkGameType(SanmaS) ? _T("清断紅") : _T("断紅和"), yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
+				GameStat.chkGameType(SanmaS) ? _T("清断紅") : _T("断紅和"), 6_hanK,
 				_T("混断紅"),
 				chintanhon
 			));

@@ -64,7 +64,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #ifdef GUOBIAO
 		_T("一般高"), yaku::yakuCalculator::Yaku::yval_1,
 #else /* GUOBIAO */
-		_T("一盃口"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
+		_T("一盃口"), 1_hanM,
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			int yakuFlagCount = 0;
@@ -180,7 +180,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		_T("三色三同順"), yaku::yakuCalculator::Yaku::yval_8,
 		_T("喜相逢"), _T("喜相逢x2"),
 #else /* GUOBIAO */
-		_T("三色同順"), yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
+		_T("三色同順"), 2_hanK,
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
@@ -259,7 +259,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		_T("清龍"), yaku::yakuCalculator::Yaku::yval_24,
 		_T("連六"), _T("連六x2"), _T("老少副"), _T("老少副x2"),
 #else /* GUOBIAO */
-		_T("一気通貫"), yaku::yakuCalculator::Yaku::yval_2han_kuisagari,
+		_T("一気通貫"), 2_hanK,
 #endif /* GUOBIAO */
 			[ikki_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag; ikki_tsuukan(analysis, &yakuFlag, nullptr);
@@ -301,7 +301,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		};
 	if (RuleData::chkRuleApplied("ittsuu_chanta")) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("一気通貫全帯幺九"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			_T("一気通貫全帯幺九"), 3_hanK,
 			_T("一気通貫"),
 			[ikki_tsuukan, ittsuu_chanta_counting](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yaojiu, zipai; bool yakuFlag = false;
@@ -311,7 +311,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("純一気通貫全帯幺九"), yaku::yakuCalculator::Yaku::yval_4han_kuisagari,
+			_T("純一気通貫全帯幺九"), 4_hanK,
 			_T("一気通貫"),
 			[ikki_tsuukan, ittsuu_chanta_counting](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yaojiu, zipai; bool yakuFlag = false;
@@ -495,23 +495,23 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			};
 		if (RuleData::chkRule("goldrush", "2han"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("ゴールドラッシュ"), yaku::yakuCalculator::Yaku::yval_2han,
+				_T("ゴールドラッシュ"), 2_hanF,
 				goldrush1
 			));
 		else if (RuleData::chkRule("goldrush", "2han_require_west"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("ゴールドラッシュ"), yaku::yakuCalculator::Yaku::yval_2han,
+				_T("ゴールドラッシュ"), 2_hanF,
 				goldrush2
 			));
 		else if (RuleData::chkRule("goldrush", "yakuman"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("ゴールドラッシュ"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("ゴールドラッシュ"), 1_yakumanF,
 				_T("一気通貫"), _T("混一色"),
 				goldrush1
 			));
 		else if (RuleData::chkRule("goldrush", "yakuman_require_west"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("ゴールドラッシュ"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("ゴールドラッシュ"), 1_yakumanF,
 				_T("一気通貫"), _T("混一色"),
 				goldrush2
 			));
@@ -996,7 +996,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* 三色通貫全帯幺九 */
 	if (RuleData::chkRuleApplied("hualong_chanta")) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("三色通貫全帯幺九"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+			_T("三色通貫全帯幺九"), 3_hanK,
 			_T("三色通貫"),
 			[sanshoku_tsuukan, ittsuu_chanta_counting](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yaojiu, zipai; bool yakuFlag = sanshoku_tsuukan(analysis);
@@ -1005,7 +1005,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("純三色通貫全帯幺九"), yaku::yakuCalculator::Yaku::yval_4han_kuisagari,
+			_T("純三色通貫全帯幺九"), 4_hanK,
 			_T("三色通貫"),
 			[sanshoku_tsuukan, ittsuu_chanta_counting](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yaojiu, zipai; bool yakuFlag = sanshoku_tsuukan(analysis);
