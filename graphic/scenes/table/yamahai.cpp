@@ -11,9 +11,9 @@ using utils::playerRelative;
 /* 山牌の表示 */
 void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer, PlayerID trueTargetPlayer) {
 	std::tuple<unsigned, unsigned, unsigned, unsigned> yamahaiAttr;
-	if (gameStat->gameType & GuobiaoMJ)
+	if (gameStat->chkGameType(GameTypeID::guobiaoMJ))
 		yamahaiAttr = std::make_tuple(1, 144, 18, 130);
-	else if (gameStat->gameType & AllSanma)
+	else if (gameStat->chkGameType(GameTypeID::allSanma))
 		yamahaiAttr = std::make_tuple(3, 108, 18, 102 - gameStat->ExtraRinshan);
 	else if (rules::chkRule("flower_tiles", "no"))
 		yamahaiAttr = std::make_tuple(0, 136, 17, 130);
@@ -65,7 +65,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
 	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (static_cast<int>(gameStat->playerwind(trueTargetPlayer)) % 2 == 1);
-	if (gameStat->chkGameType(GuobiaoMJ) && (gameStat->tilesLeft() == 0)) { // 中国ルールで最後の牌まで自摸った場合
+	if (gameStat->chkGameType(GameTypeID::guobiaoMJ) && (gameStat->tilesLeft() == 0)) { // 中国ルールで最後の牌まで自摸った場合
 		for (int i = 0; i < 144; ++i)
 			TileTexture->DelTile(i);
 		return;

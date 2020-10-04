@@ -187,7 +187,7 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 }
 
 ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return static_cast<ScoreMode>((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
+	return static_cast<ScoreMode>((myTimer.currTime() / 2000000) % ((GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -196,7 +196,7 @@ void TableProtoScene::ScoreBoard::Render() {
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
-	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))) {
+	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(GameTypeID::sanmaT) ? 3 : 4))) {
 		renderWind();
 		renderRank();
 		renderScore();
@@ -207,7 +207,7 @@ void TableProtoScene::ScoreBoard::Render() {
 void TableProtoScene::ScoreBoard::renderWind() {
 	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
 	const SeatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
-	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == SeatAbsolute::north)) return; // 四人三麻の時の抜け番は何も表示しないようにする
+	if (GameStatus::gameStat()->chkGameType(GameTypeID::sanma4) && (wind == SeatAbsolute::north)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	const RECT rect = {
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
@@ -235,7 +235,7 @@ void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
 	const ArgbColor color =
 		(rankList[playerID()] == 1) ? ledColorRed : // トップは赤
-		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
+		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(GameTypeID::sanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
 		ledColorGreen); // その他は緑で表示
 
 	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // その他は緑で表示
@@ -266,10 +266,10 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 		else                 sign =  0;
 		for (int i = DigitGroups - 1; i >= 0; --i) {
 			for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
-				if ((GameStatus::gameStat()->gameType & RichiMJ) && (i == 0) && (j == 4)) {
+				if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && (i == 0) && (j == 4)) {
 					return std::make_tuple(abs(score->digitGroup[0] / 100), 0, 0, sign);
 				}
-				else if ((GameStatus::gameStat()->gameType & GuobiaoMJ) && (i == 0) && (j == 2)) {
+				else if (GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) && (i == 0) && (j == 2)) {
 					return std::make_tuple(abs(score->digitGroup[0]), 0, 0, sign);
 				}
 				else if (score->digitGroup[i] / digit[j]) {
@@ -325,7 +325,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		renderNumeral(    ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
 		if (unitcode != 0)
 			renderNumeral(ScorePosX + NumCharWidth * decimalPos, ScorePosY, digitDecimal, color);
-		if ((GameStatus::gameStat()->gameType & RichiMJ) && (scoreMode != ScoreMode::chip))
+		if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && (scoreMode != ScoreMode::chip))
 			renderScoreUnit(unitcode, color);
 	}
 }

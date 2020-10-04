@@ -59,7 +59,7 @@ static LargeNum getCustomVal(unsigned playersAboveBase, unsigned rank) {
 LargeNum RankVal::getRankVal(const GameTable* gameStat, const std::string& ruletag, unsigned playersAboveBase, unsigned rank) const {
 	using namespace CodeConv;
 	const std::string ruleTagVal =
-		std::string(gameStat->chkGameType(SanmaT) ? "T:" : "Q:") + ruletag;
+		std::string(gameStat->chkGameType(GameTypeID::sanmaT) ? "T:" : "Q:") + ruletag;
 	if ((rankValueMap.find(ruleTagVal) == rankValueMap.end()) && (ruletag != "custom")) { /* Index error */
 		tstring msg =
 			tstring(_T("getRankVal: 対応していないルールタグです [")) +
@@ -75,12 +75,12 @@ LargeNum RankVal::getRankVal(const GameTable* gameStat, const std::string& rulet
 		warn(o.str().c_str());
 		return 0;
 	} else if (ruletag == "custom") {
-		const unsigned abvBase = (gameStat->chkGameType(SanmaT) && (playersAboveBase == 3)) ? 4 : playersAboveBase;
+		const unsigned abvBase = (gameStat->chkGameType(GameTypeID::sanmaT) && (playersAboveBase == 3)) ? 4 : playersAboveBase;
 		if (rank == 1) { /* トップの場合 */
 			return -(
 				getCustomVal(abvBase, 2) +
 				getCustomVal(abvBase, 3) +
-				(gameStat->chkGameType(SanmaT) ? static_cast<LargeNum>(0) : getCustomVal(abvBase, 4)));
+				(gameStat->chkGameType(GameTypeID::sanmaT) ? static_cast<LargeNum>(0) : getCustomVal(abvBase, 4)));
 		} else { /* トップ以外の場合 */
 			return getCustomVal(abvBase, rank);
 		}

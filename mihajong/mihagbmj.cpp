@@ -1,3 +1,3 @@
 #include "../common/gametype.h"
 
-extern const mihajong_structs::GameTypeID myGameType = mihajong_structs::GuobiaoMJ;
+extern const mihajong_structs::GameTypeID myGameType = mihajong_structs::GameTypeID::guobiaoMJ;

@@ -271,14 +271,14 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::getRuleDescription(LPTSTR const txt, unsign
 		}
 		else if (GameStat.chkGameType(static_cast<GameTypeID>((_ttoi(k[2].c_str()))))) {
 #ifdef _MSC_VER
-			if (GameStat.chkGameType(SanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
-			else if (GameStat.chkGameType(SanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
-			else if (GameStat.chkGameType(Yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));
+			if (GameStat.chkGameType(GameTypeID::sanmaS)) _tcscpy_s(txt, bufsize, _T("数牌三麻では設定できません"));
+			else if (GameStat.chkGameType(GameTypeID::sanmaX)) _tcscpy_s(txt, bufsize, _T("三人打ちでは設定できません"));
+			else if (GameStat.chkGameType(GameTypeID::yonma)) _tcscpy_s(txt, bufsize, _T("四人打ちでは設定できません"));
 			else _tcscpy_s(txt, bufsize, _T(""));
 #else
-			if (GameStat.chkGameType(SanmaS)) _tcsncpy(txt, _T("数牌三麻では設定できません"), bufsize);
-			else if (GameStat.chkGameType(SanmaX)) _tcsncpy(txt, _T("三人打ちでは設定できません"), bufsize);
-			else if (GameStat.chkGameType(Yonma)) _tcsncpy(txt, _T("四人打ちでは設定できません"), bufsize);
+			if (GameStat.chkGameType(GameTypeID::sanmaS)) _tcsncpy(txt, _T("数牌三麻では設定できません"), bufsize);
+			else if (GameStat.chkGameType(GameTypeID::sanmaX)) _tcsncpy(txt, _T("三人打ちでは設定できません"), bufsize);
+			else if (GameStat.chkGameType(GameTypeID::yonma)) _tcsncpy(txt, _T("四人打ちでは設定できません"), bufsize);
 			else _tcsncpy(txt, _T(""), bufsize);
 #endif
 			return;

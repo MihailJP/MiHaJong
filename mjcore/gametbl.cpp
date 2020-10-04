@@ -19,14 +19,14 @@ void calcWareme(GameTable* const gameStat) {
 #ifndef GUOBIAO
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
 				+gameStat->diceSum()-1) % 3;
 		} else {
 			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+gameStat->diceSum()-1) % 4;
 		}
 		if (RuleData::chkRule("dice_roll", "roll_twice")) { // 二度振り修正用
-			if (gameStat->chkGameType(AllSanma)) {
+			if (gameStat->chkGameType(GameTypeID::allSanma)) {
 				if (gameStat->diceSum() + gameStat->diceSum2() > 18)
 					gameStat->WaremePlayer = (gameStat->WaremePlayer + 24 - 1) % 3;
 			} else if (RuleData::chkRule("flower_tiles", "8tiles")) {
@@ -42,7 +42,7 @@ void calcWareme(GameTable* const gameStat) {
 					gameStat->WaremePlayer = (gameStat->WaremePlayer + 32 - 1) % 4;
 			}
 		}
-		if (gameStat->chkGameType(Sanma4))
+		if (gameStat->chkGameType(GameTypeID::sanma4))
 			gameStat->WaremePlayer = tobePlayed(gameStat, (24+gameStat->diceSum()-1) % 3);
 	}
 #endif /* GUOBIAO */
@@ -85,7 +85,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 #ifdef GUOBIAO
 	gameStat->DeadTiles = gameStat->ExtraRinshan = 0; // 王牌なんてあると思った？　残念！
 #else /* GUOBIAO */
-	if (gameStat->chkGameType(AllSanma)) {
+	if (gameStat->chkGameType(GameTypeID::allSanma)) {
 		gameStat->DeadTiles = 14; // 王牌の数
 		gameStat->ExtraRinshan = RuleData::chkRuleApplied("flower_tiles") ? 4 : 0;
 	} else {
@@ -116,7 +116,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 #ifdef GUOBIAO
 	gameStat->RinshanPointer = 143;
 #else /* GUOBIAO */
-	if (gameStat->chkGameType(AllSanma)) {
+	if (gameStat->chkGameType(GameTypeID::allSanma)) {
 		gameStat->RinshanPointer = 107;
 	} else {
 		if (RuleData::chkRule("flower_tiles", "no")) gameStat->RinshanPointer = 135;
@@ -222,23 +222,23 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	}
 
 	if (RuleData::chkRule("game_length", "east_south_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 6 : 7;
 	else if (RuleData::chkRule("game_length", "east_wind_game") ||
 		RuleData::chkRule("game_length", "east_only_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 2 : 3;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 2 : 3;
 	else if (RuleData::chkRule("game_length", "full_round_game") ||
 		RuleData::chkRule("game_length", "east_north_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 14 : 15;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 14 : 15;
 	else if (RuleData::chkRule("game_length", "single_round_game"))
 		gameStat->GameLength = 0;
 	else if (RuleData::chkRule("game_length", "twice_east_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 18 : 19;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 18 : 19;
 	else if (RuleData::chkRule("game_length", "east_south_west_game") ||
 		RuleData::chkRule("game_length", "east_west_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 10 : 11;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 10 : 11;
 	else {
 		error(_T("game_length異常値。半荘戦とみなします。"));
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 6 : 7;
 	}
 #endif /* GUOBIAO */
 	gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
@@ -335,7 +335,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->Dice[i].Direction = gameStat->Dice[i].Direction;
 	}
 	for (int i = 0; i < 6; i++) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
 				sandbox->Deck[102 - gameStat->ExtraRinshan - i * 2] =
 				gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2];

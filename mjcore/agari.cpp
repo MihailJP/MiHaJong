@@ -151,7 +151,7 @@ namespace {
 	void calcAgariPoints_Tsumo_Dealer( // 通常時：親のツモ
 		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
-		if (gameStat->chkGameType(Yonma) || (gameStat->chkGameType(Sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
+		if (gameStat->chkGameType(GameTypeID::yonma) || (gameStat->chkGameType(GameTypeID::sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
 			// 四麻式ルール
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
@@ -194,7 +194,7 @@ namespace {
 	void calcAgariPoints_Tsumo_NonDealer( // 通常時：子のツモ
 		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
-		if (gameStat->chkGameType(Yonma) || (gameStat->chkGameType(Sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
+		if (gameStat->chkGameType(GameTypeID::yonma) || (gameStat->chkGameType(GameTypeID::sanma4) && RuleData::chkRule("tsumo_payment", "same_as_yonma"))) {
 			// 四麻式ルール
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
@@ -734,7 +734,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	chipTransfer(gameStat, mihajong_graphic::TableSubsceneID::callValYakuman, ChipAmount);
 
 	/* 四馬路が北家の放銃だった場合 */
-	if (!gameStat->chkGameType(SanmaT)) {
+	if (!gameStat->chkGameType(GameTypeID::sanmaT)) {
 		if (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi) == SeatAbsolute::north) {
 			if (std::regex_search(yakuInfo.yakuNameList, std::basic_regex<TCHAR>(_T("(^|\\r?\\n)四馬路(\r?\n|$)")))) {
 				transfer::resetDelta();

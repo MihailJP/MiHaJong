@@ -142,12 +142,12 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 
 /* 卓の種別 */
 inline void aiscript::table::functable::gametype(lua_State* const L) {
-	if (GameStat.chkGameType(Yonma)) lua_pushstring(L, "yonma");
-	else if (GameStat.chkGameType(Sanma)) lua_pushstring(L, "sanma");
-	else if (GameStat.chkGameType(Sanma4)) lua_pushstring(L, "sanma_with_four_players");
-	else if (GameStat.chkGameType(SanmaS)) lua_pushstring(L, "sanma_without_honors");
-	else if (GameStat.chkGameType(SanmaSeto)) lua_pushstring(L, "sanma_setouchi");
-	else if (GameStat.chkGameType(GuobiaoMJ)) lua_pushstring(L, "guobiao");
+	if (GameStat.chkGameType(GameTypeID::yonma)) lua_pushstring(L, "yonma");
+	else if (GameStat.chkGameType(GameTypeID::sanma)) lua_pushstring(L, "sanma");
+	else if (GameStat.chkGameType(GameTypeID::sanma4)) lua_pushstring(L, "sanma_with_four_players");
+	else if (GameStat.chkGameType(GameTypeID::sanmaS)) lua_pushstring(L, "sanma_without_honors");
+	else if (GameStat.chkGameType(GameTypeID::sanmaSeto)) lua_pushstring(L, "sanma_setouchi");
+	else if (GameStat.chkGameType(GameTypeID::guobiaoMJ)) lua_pushstring(L, "guobiao");
 	else lua_pushnil(L);
 	lua_setfield(L, -2, "gametype");
 }

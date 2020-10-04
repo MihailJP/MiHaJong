@@ -336,7 +336,7 @@ void yaku::yakuCalculator::countDora
 	int omote = 0, flower = 0;
 #else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("flower_tiles")) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			north = gameStat->Player[targetPlayer].NorthFlag;
 			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
 			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];

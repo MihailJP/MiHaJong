@@ -142,9 +142,9 @@ void startgame(GameTypeID gameType) {
 			EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
 		std::string serverAddr;
 		const unsigned short gamePort =
-			gameStat->chkGameType(Sanma) ? 50010 :
-			gameStat->chkGameType(Sanma4) ? 50030 :
-			gameStat->chkGameType(SanmaS) ? 50060 : 50000;
+			gameStat->chkGameType(GameTypeID::sanma) ? 50010 :
+			gameStat->chkGameType(GameTypeID::sanma4) ? 50030 :
+			gameStat->chkGameType(GameTypeID::sanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // タイトル画面
 		case 1:
 			EnvTable::Instantiate()->GameMode = ClientType::standalone;

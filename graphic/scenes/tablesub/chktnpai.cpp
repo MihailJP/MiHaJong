@@ -39,7 +39,7 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 }
 
 void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
-	if ((GameStatus::gameStat()->gameType & RichiMJ) && rules::chkRule("furiten_riichi", "no") && GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag && machiInfo[player].FuritenFlag)
+	if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && rules::chkRule("furiten_riichi", "no") && GameStatus::gameStat()->Player[player].RichiFlag.RichiFlag && machiInfo[player].FuritenFlag)
 		ShowCallMsg(player, calltext::CallType::chonbo, x, y - 40); // フリテン立直がチョンボになる場合
 	if (tenpaiflag[player]) // 聴牌
 		ShowCallMsg(player, calltext::CallType::tenpai, x, y - 40);

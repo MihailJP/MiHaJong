@@ -856,7 +856,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 		haifu::haifurecfurikomi(gameStat);
 	}
 #ifndef GUOBIAO
-	if (gameStat->chkGameType(AllSanma)) {
+	if (gameStat->chkGameType(GameTypeID::allSanma)) {
 		// 二家和の判定
 		if ((RonPlayers(gameStat) >= 2) && RuleData::chkRule("multiple_mahjong", "aborted"))
 			return EndType::tripleRon;
@@ -904,7 +904,7 @@ bool executeFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTileIn
 			++gameStat->TurnRound;
 		gameStat->CurrentPlayer.Active = gameStat->CurrentPlayer.Passive;
 		return true;
-	} else if (!gameStat->chkGameType(AllSanma)) {
+	} else if (!gameStat->chkGameType(GameTypeID::allSanma)) {
 		/* 吃の処理 */
 		/* 三人打ちでは吃なし */
 		if (gameStat->Player[RelativePositionOf(gameStat->CurrentPlayer.Active, SeatRelative::right)].DeclarationFlag.Chi > 0) {

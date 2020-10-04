@@ -118,7 +118,7 @@ LargeNum BasePoint() {
 		for (int j = 0; j < exponent; ++j)
 			basePoint *= 10;
 		return basePoint;
-	} else if (GameStat.chkGameType(SanmaT)) {
+	} else if (GameStat.chkGameType(GameTypeID::sanmaT)) {
 		constexpr char rulestat[6][16] = {
 			"35000pts_oka15", "40000pts_oka0", "45000pts_oka-15", "50000pts_oka-30", "25000pts_oka45", "30000pts_oka30",
 		};

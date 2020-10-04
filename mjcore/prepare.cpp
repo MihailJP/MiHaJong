@@ -29,7 +29,7 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 		}
 	};
 	unsigned int p = 0; // 牌の位置ID
-	if (gameStat->chkGameType(SanmaX)) {
+	if (gameStat->chkGameType(GameTypeID::sanmaX)) {
 		settile(CharacterOne, p); // 萬子
 		settile(CharacterNine, p); // 萬子
 	} else {
@@ -38,14 +38,14 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 	}
 	for (unsigned int k = 1u; k <= 9u; ++k)
 		settile(static_cast<TileCode>(TileSuitCircles + k), p); // 筒子
-	if (gameStat->chkGameType(SanmaSeto)) {
+	if (gameStat->chkGameType(GameTypeID::sanmaSeto)) {
 		settile(BambooOne, p); // 索子
 		settile(BambooNine, p); // 索子
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
 			settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
 	}
-	if (!gameStat->chkGameType(SanmaS)) {
+	if (!gameStat->chkGameType(GameTypeID::sanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
 			settile(static_cast<TileCode>(TileSuitHonors + k), p); // 字牌
 #ifndef GUOBIAO
@@ -92,7 +92,7 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 		}
 	}
 	// 5のドラは特殊
-	if (gameStat->chkGameType(SanmaX)) { // 三麻
+	if (gameStat->chkGameType(GameTypeID::sanmaX)) { // 三麻
 		if (RuleData::chkRule("red_five", "2tiles")) {
 			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
 			gameStat->Deck[tilepos[BambooFive]].red = AkaDora;
@@ -213,7 +213,7 @@ inline void DoraAdding(GameTable* const gameStat) {
 }
 
 void initdora(GameTable* const gameStat) { // ドラの設定
-	if (gameStat->chkGameType(AllSanma))
+	if (gameStat->chkGameType(GameTypeID::allSanma))
 		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ドラ表示牌のポインタ
 	else gameStat->DoraPointer = 130; // ドラ表示牌のポインタ
 	if (RuleData::chkRuleApplied("nagatacho")) { // 永田町ルール
@@ -221,7 +221,7 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 		for (int i = 0; i <= (RuleData::chkRule("dice_roll", "roll_twice") ? 0 : 2); i += 2) {
 			unsigned int dice = gameStat->Dice[i + 0].Number + gameStat->Dice[i + 1].Number;
 			if (dice <= 8) { // 2〜8はその数牌がドラ　三麻では萬子がないので別処理
-				if (!gameStat->chkGameType(SanmaX))
+				if (!gameStat->chkGameType(GameTypeID::sanmaX))
 					nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
 				nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
 				nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
@@ -520,7 +520,7 @@ namespace {
 #ifdef GUOBIAO
 		tmpNumberOfTiles = 144;
 #else /* GUOBIAO */
-		if (gameStat->chkGameType(AllSanma))
+		if (gameStat->chkGameType(GameTypeID::allSanma))
 			tmpNumberOfTiles = 108;
 		else if (RuleData::chkRule("flower_tiles", "no"))
 			tmpNumberOfTiles = 136;
@@ -583,18 +583,18 @@ namespace {
 		return tmpDeadTiles != gameStat->DeadTiles;
 	}
 	void haipai(GameTable* const gameStat) { // 配牌
-		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 36 : 48); i++) { // ２幢ずつを３回
-			unsigned handIndex = i % 4 + (i / (gameStat->chkGameType(AllSanma) ? 12 : 16)) * 4;
+		for (int i = 0; i < (gameStat->chkGameType(GameTypeID::allSanma) ? 36 : 48); i++) { // ２幢ずつを３回
+			unsigned handIndex = i % 4 + (i / (gameStat->chkGameType(GameTypeID::allSanma) ? 12 : 16)) * 4;
 			PlayerID player;
-			if (gameStat->chkGameType(Sanma4))
+			if (gameStat->chkGameType(GameTypeID::sanma4))
 				player = ((i % 12 / 4) + gameStat->GameRound) % 4;
-			else if (gameStat->chkGameType(SanmaT))
+			else if (gameStat->chkGameType(GameTypeID::sanmaT))
 				player = ((i % 12 / 4) + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
 				player = ((i % 16 / 4) + gameStat->GameRound) % 4;
 			gameStat->Player[player].Hand[handIndex] = gameStat->Deck[gameStat->TilePointer];
 			++gameStat->TilePointer;
-			if ((i == (gameStat->chkGameType(AllSanma) ? 24 : 18)) && (gameStat->Honba > 0))
+			if ((i == (gameStat->chkGameType(GameTypeID::allSanma) ? 24 : 18)) && (gameStat->Honba > 0))
 				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::honba);
 			if (i % 4 == 3) {
 				calcdoukasen(gameStat);
@@ -603,12 +603,12 @@ namespace {
 			}
 		}
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
-		for (int i = 0; i < (gameStat->chkGameType(AllSanma) ? 4 : 5); i++) { // １枚ずつを１回、親のチョンチョン
-			unsigned handIndex = i / (gameStat->chkGameType(AllSanma) ? 3 : 4) + 12;
+		for (int i = 0; i < (gameStat->chkGameType(GameTypeID::allSanma) ? 4 : 5); i++) { // １枚ずつを１回、親のチョンチョン
+			unsigned handIndex = i / (gameStat->chkGameType(GameTypeID::allSanma) ? 3 : 4) + 12;
 			PlayerID player;
-			if (gameStat->chkGameType(Sanma4))
+			if (gameStat->chkGameType(GameTypeID::sanma4))
 				player = (i % 3 + gameStat->GameRound) % 4;
-			else if (gameStat->chkGameType(SanmaT))
+			else if (gameStat->chkGameType(GameTypeID::sanmaT))
 				player = (i + (gameStat->GameRound - (gameStat->GameRound / 4))) % 3;
 			else
 				player = (i + gameStat->GameRound) % 4;

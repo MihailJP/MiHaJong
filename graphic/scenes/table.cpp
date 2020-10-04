@@ -88,10 +88,10 @@ void GameTableScreen::ReconstructPlayer(const GameTable* gameStat, PlayerID deck
 }
 
 void GameTableScreen::Reconstruct(const GameTable* gameStat) {
-	if (gameStat->chkGameType(Yonma) || gameStat->chkGameType(GuobiaoMJ)) {
+	if (gameStat->chkGameType(GameTypeID::yonma) || gameStat->chkGameType(GameTypeID::guobiaoMJ)) {
 		for (PlayerID i = 0; i < 4; i++)
 			ReconstructPlayer(gameStat, i, i);
-	} else if (gameStat->chkGameType(Sanma4)) {
+	} else if (gameStat->chkGameType(GameTypeID::sanma4)) {
 		constexpr PlayerID tobePlayed[4][4] = {
 			{0, 1, 2, 3}, {3, 1, 2, 0}, {1, 3, 2, 0}, {1, 2, 3, 0},
 		};
@@ -123,7 +123,7 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 		o << CodeConv::EnsureTStr(std::wstring(Numeral + roundnum, Numeral + roundnum + 1));
 	}
 	o << _T("局 ");
-	if (!gameStat->chkGameType(GuobiaoMJ)) {
+	if (!gameStat->chkGameType(GameTypeID::guobiaoMJ)) {
 		if (gameStat->Honba >= 10) o << std::setw(2) << (gameStat->Honba) << _T("本場");
 		else if (gameStat->Honba > 0) o << CodeConv::EnsureTStr(std::wstring(FWDigit + gameStat->Honba, FWDigit + gameStat->Honba + 1)) << _T("本場");
 		else o << _T("平　場");
@@ -134,7 +134,7 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - gameStat->ExtraRinshan - gameStat->DeadTiles + 1;
 	if (tiles >= 100) o << _T("残--牌");
 	else o << _T("残") << std::setw(2) << tiles << _T("牌");
-	if (!gameStat->chkGameType(GuobiaoMJ)) {
+	if (!gameStat->chkGameType(GameTypeID::guobiaoMJ)) {
 		o << _T(" 供託");
 		if (gameStat->Deposit) o << std::setw(2) << gameStat->Deposit << _T("本");
 		else o << _T("なし");
@@ -254,18 +254,18 @@ void GameTableScreen::SetSubscene(SubSceneID scene_ID) {
 		break;
 	case TableSubsceneID::sifeng:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(),
-			(GameStatus::gameStat()->gameType & AllSanma) ? _T("三風連打") : _T("四風連打"));
+			GameStatus::gameStat()->chkGameType(GameTypeID::allSanma) ? _T("三風連打") : _T("四風連打"));
 		break;
 	case TableSubsceneID::tripleRon:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(),
-			(GameStatus::gameStat()->gameType & AllSanma) ? _T("二家和") : _T("三家和"));
+			GameStatus::gameStat()->chkGameType(GameTypeID::allSanma) ? _T("二家和") : _T("三家和"));
 		break;
 	case TableSubsceneID::sikang:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("四開槓"));
 		break;
 	case TableSubsceneID::fourRiichi:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(),
-			(GameStatus::gameStat()->gameType & AllSanma) ? _T("三家立直") : _T("四家立直"));
+			GameStatus::gameStat()->chkGameType(GameTypeID::allSanma) ? _T("三家立直") : _T("四家立直"));
 		break;
 	case TableSubsceneID::chonbo:
 		mySubScene = new TableSubsceneMsg(caller->getDevice(), _T("錯和"));

@@ -186,7 +186,7 @@ Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, Pla
 
 Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 国士無双に対する向聴数を求める。
-	if (gameStat->chkGameType(SanmaS)) return ShantenImpossible; // 数牌三麻では不可能
+	if (gameStat->chkGameType(GameTypeID::sanmaS)) return ShantenImpossible; // 数牌三麻では不可能
 
 	TileCode YaojiuPai[13] = {
 		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,

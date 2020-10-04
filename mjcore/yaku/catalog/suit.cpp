@@ -364,7 +364,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 
 #ifndef GUOBIAO
 	/* 三麻の萬子ホンイツ */
-	if ((RuleData::chkRuleApplied("characters_mahjong")) && GameStat.chkGameType(SanmaT))
+	if ((RuleData::chkRuleApplied("characters_mahjong")) && GameStat.chkGameType(GameTypeID::sanmaT))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("萬和"), get_yaku_han("characters_mahjong"),
 			_T("混一色"), _T("混老頭"),

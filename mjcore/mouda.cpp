@@ -200,7 +200,7 @@ namespace { /* 内部処理分割用 */
 		}
 		if (DiscardTileIndex.type == DiscardType::flower) {
 			EndType RoundEndType;
-			if (gameStat->chkGameType(SanmaX)) {
+			if (gameStat->chkGameType(GameTypeID::sanmaX)) {
 				/* ガリ三麻ルールで北風牌を抜いたときの処理 */
 				/* このゲームではどんな手でも(国士や大四喜でなくてもいい)
 					抜き北をロンできるルール */
@@ -379,7 +379,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	/* 九種九牌が宣言された場合 */
-	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardType::kyuushu)) {
+	if ((!gameStat->chkGameType(GameTypeID::sanmaS)) && (DiscardTileIndex.type == DiscardType::kyuushu)) {
 		RoundEndType = procDahaiSubKyuushu(gameStat, DiscardTileIndex);
 		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
@@ -389,7 +389,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		(DiscardTileIndex.type == DiscardType::openRiichi))
 		haifu::haifurecmota(gameStat, DiscardTileIndex);
 	/* 花牌を抜いた場合の処理 */
-	if (!gameStat->chkGameType(SanmaS)) {
+	if (!gameStat->chkGameType(GameTypeID::sanmaS)) {
 		RoundEndType = procDahaiSubFlower(gameStat, DiscardTileIndex);
 		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
@@ -420,10 +420,10 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 void tsumoproc(GameTable* const gameStat) {
 	/* 次のプレイヤーが牌を自摸る */
 	gameStat->TianHuFlag = false;
-	if (gameStat->chkGameType(SanmaT)) {
+	if (gameStat->chkGameType(GameTypeID::sanmaT)) {
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % ACTUAL_PLAYERS;
 	} else {
-		if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(gameStat->CurrentPlayer.Active) == SeatAbsolute::west)) /* 四人三麻の場合は北家をスキップ */
+		if (gameStat->chkGameType(GameTypeID::sanma4) && (gameStat->playerwind(gameStat->CurrentPlayer.Active) == SeatAbsolute::west)) /* 四人三麻の場合は北家をスキップ */
 			gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 		gameStat->CurrentPlayer.Active = (gameStat->CurrentPlayer.Active + 1) % Players;
 	}

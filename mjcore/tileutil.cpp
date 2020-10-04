@@ -22,7 +22,7 @@ PlayerID* tobePlayed(const GameTable* const gameStat) {
 		static_cast<PlayerID>((gameStat->GameRound + 1) % Players),
 		static_cast<PlayerID>((gameStat->GameRound + 2) % Players)
 	};
-	if (gameStat->chkGameType(Sanma4)) return tp;
+	if (gameStat->chkGameType(GameTypeID::sanma4)) return tp;
 	else return nullptr;
 }
 PlayerID tobePlayed(const GameTable* const gameStat, int id) {
@@ -255,7 +255,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 #ifndef GUOBIAO
 	// ドラ表示牌で見えてる枚数
 	for (int i = 0; i < 6; i++) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
 				seenTiles[gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2].tile]++;
 		} else {
@@ -478,8 +478,8 @@ MJCORE bool chkdaopaiability(const GameTable* const gameStat, PlayerID targetPla
 namespace setdora_tools {
 	TileCode getNextOf(const GameTable* const gameStat, TileCode tc) { // ネクスト牌
 		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) + 1);
-		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
-		else if ((gameStat->chkGameType(SanmaSeto))&&(ans == BambooTwo)) ans = BambooNine;
+		if ((gameStat->chkGameType(GameTypeID::sanmaX))&&(ans == CharacterTwo)) ans = CharacterNine;
+		else if ((gameStat->chkGameType(GameTypeID::sanmaSeto))&&(ans == BambooTwo)) ans = BambooNine;
 		else if (ans == static_cast<TileCode>(10)) ans = CharacterOne;
 		else if (ans == static_cast<TileCode>(20)) ans = CircleOne;
 		else if (ans == static_cast<TileCode>(30)) ans = BambooOne;
@@ -490,8 +490,8 @@ namespace setdora_tools {
 
 	TileCode getPrevOf(const GameTable* const gameStat, TileCode tc) { // 前の牌
 		TileCode ans = static_cast<TileCode>(static_cast<int>(tc) - 1);
-		if ((gameStat->chkGameType(SanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
-		else if ((gameStat->chkGameType(SanmaSeto))&&(ans == BambooEight)) ans = BambooOne;
+		if ((gameStat->chkGameType(GameTypeID::sanmaX))&&(ans == CharacterEight)) ans = CharacterOne;
+		else if ((gameStat->chkGameType(GameTypeID::sanmaSeto))&&(ans == BambooEight)) ans = BambooOne;
 		else if (ans == static_cast<TileCode>(0)) ans = CharacterNine;
 		else if (ans == static_cast<TileCode>(10)) ans = CircleNine;
 		else if (ans == static_cast<TileCode>(20)) ans = BambooNine;
@@ -528,7 +528,7 @@ void setdora(GameTable* const gameStat, int Mode) {
 		if (RuleData::chkRule("dora_indicator", "dora_around_indicator")) {
 			// 前の牌がドラ（超インフレ用）
 			if ((gameStat->Deck[gameStat->DoraPointer + Mode].tile >= 10) ||
-				(!gameStat->chkGameType(SanmaX)))
+				(!gameStat->chkGameType(GameTypeID::sanmaX)))
 					setdora_tools::addDora(gameStat,
 						setdora_tools::getPrevOf(gameStat, gameStat->Deck[gameStat->DoraPointer + Mode].tile),
 						Mode);
@@ -679,13 +679,13 @@ MJCORE bool chkAnkanAbility(const GameTable* const gameStat, PlayerID targetPlay
 void calcdoukasen(GameTable* const gameStat) {
 	/* 導火線の位置を計算する */
 	if (RuleData::chkRuleApplied("doukasen")) {
-		if (gameStat->chkGameType(Sanma4)) {
+		if (gameStat->chkGameType(GameTypeID::sanma4)) {
 			PlayerID* tmpDoukasen = new PlayerID(
 				((30 - ((gameStat->diceSum() - 1) * 36 * 2 + 
 				(gameStat->diceSum() + gameStat->diceSum2()) * 2 + gameStat->TilePointer - 1) / 36) + 30) % 3);
 			gameStat->DoukasenPlayer = tobePlayed(gameStat, *tmpDoukasen);
 			delete tmpDoukasen;
-		} else if (gameStat->chkGameType(SanmaT)) {
+		} else if (gameStat->chkGameType(GameTypeID::sanmaT)) {
 			gameStat->DoukasenPlayer =
 				((30 - ((gameStat->diceSum() - 1 +
 				(gameStat->GameRound - (gameStat->GameRound / 4))) * 36 * 2 +

@@ -24,27 +24,27 @@ void SystemScreen::clearWithGameTypeColor() {
 	// バッファクリア
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	switch (GameStatus::gameStat()->gameType) {
-	case Yonma:
+	case GameTypeID::yonma:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(0, 64, 0), 1.0f, 0);
 		break;
-	case Sanma:
+	case GameTypeID::sanma:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(0, 0, 64), 1.0f, 0);
 		break;
-	case Sanma4:
+	case GameTypeID::sanma4:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(0, 64, 64), 1.0f, 0);
 		break;
-	case SanmaS:
+	case GameTypeID::sanmaS:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(64, 0, 64), 1.0f, 0);
 		break;
-	case SanmaSeto:
+	case GameTypeID::sanmaSeto:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(64, 64, 64), 1.0f, 0);
 		break;
-	case GuobiaoMJ:
+	case GameTypeID::guobiaoMJ:
 		caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET,
 			D3DCOLOR_XRGB(64, 64, 0), 1.0f, 0);
 		break;
@@ -53,22 +53,22 @@ void SystemScreen::clearWithGameTypeColor() {
 	}
 #else
 	switch (GameStatus::gameStat()->gameType) {
-	case Yonma:
+	case GameTypeID::yonma:
 		glClearColor(0, .25, 0, 1);
 		break;
-	case Sanma:
+	case GameTypeID::sanma:
 		glClearColor(0, 0, .25, 1);
 		break;
-	case Sanma4:
+	case GameTypeID::sanma4:
 		glClearColor(0, .25, .25, 1);
 		break;
-	case SanmaS:
+	case GameTypeID::sanmaS:
 		glClearColor(.25, 0, .25, 1);
 		break;
-	case SanmaSeto:
+	case GameTypeID::sanmaSeto:
 		glClearColor(.25, .25, .25, 1);
 		break;
-	case GuobiaoMJ:
+	case GameTypeID::guobiaoMJ:
 		glClearColor(.25, .25, 0, 1);
 		break;
 	default:

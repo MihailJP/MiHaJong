@@ -70,7 +70,7 @@ static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout
 
 constexpr unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
-#define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
+#define ACTUAL_PLAYERS (GameStat.chkGameType(GameTypeID::sanmaT) ? 3 : 4)
 #endif
 constexpr unsigned int NumOfTilesInHand = 14;
 constexpr unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
@@ -352,7 +352,7 @@ struct GameTable { // 卓の情報を格納する
 	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (immutable) */
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
 
-	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
+	bool chkGameType(GameTypeID gameType) const {return (static_cast<int>(this->gameType) & static_cast<int>(gameType));}
 	uint8_t diceSum() { // サイコロの出目を取得
 		return Dice[0].Number + Dice[1].Number;
 	}
@@ -365,7 +365,7 @@ struct GameTable { // 卓の情報を格納する
 	}
 
 	SeatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
-		if (chkGameType(SanmaT))
+		if (chkGameType(GameTypeID::sanmaT))
 			return static_cast<SeatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
 		else return static_cast<SeatAbsolute>((player + 32 - currentRound) % 4);
 	}

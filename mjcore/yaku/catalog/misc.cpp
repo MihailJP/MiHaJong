@@ -51,7 +51,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] > 0);
 				}
 			));
-		else if (GameStat.chkGameType(SanmaS))
+		else if (GameStat.chkGameType(GameTypeID::sanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("清一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"),
@@ -65,7 +65,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			));
 		if (RuleData::chkRule("dragonless_all_green", "double_yakuman")) // 發なしがダブル役満になるルール
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				GameStat.chkGameType(SanmaS) ? _T("清緑一色") : _T("緑一色"), 2_yakumanF,
+				GameStat.chkGameType(GameTypeID::sanmaS) ? _T("清緑一色") : _T("緑一色"), 2_yakumanF,
 				_T("清一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"),
 				[allgrean](const MENTSU_ANALYSIS* const analysis) -> bool {
 					return allgrean(analysis) && (analysis->TileCount[GreenDragon] == 0);
@@ -211,7 +211,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 5, kezi, 1, true) &&
 					(analysis->MianziDat[0].tile == BambooFive);
 			};
-		if (GameStat.chkGameType(SanmaS))
+		if (GameStat.chkGameType(GameTypeID::sanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("緑一色輪"), get_yaku_han("ryuuiisohrin"),
 				_T("清一色"),
@@ -395,13 +395,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return chktiles(analysis, kezi, 8, kezi, 1, false);
 			};
 		if (RuleData::chkRule("no_red", "hon3han_chin6han") || RuleData::chkRule("no_red", "6han")) {
-			if (!GameStat.chkGameType(SanmaS))
+			if (!GameStat.chkGameType(GameTypeID::sanmaS))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 					_T("混断紅"), 3_hanK,
 					hontanhon
 				));
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				GameStat.chkGameType(SanmaS) ? _T("清断紅") : _T("断紅和"), 6_hanK,
+				GameStat.chkGameType(GameTypeID::sanmaS) ? _T("清断紅") : _T("断紅和"), 6_hanK,
 				_T("混断紅"),
 				chintanhon
 			));

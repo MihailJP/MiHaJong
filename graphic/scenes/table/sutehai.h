@@ -9,7 +9,7 @@ private:
 	ShowTile* TileTexture;
 	GameTableScreen* caller;
 private:
-	static const unsigned int DiscardLineLength() {return GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 7 : 6;}
+	static const unsigned int DiscardLineLength() {return GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) ? 7 : 6;}
 	static const unsigned int DiscardPosH() {return (TableSize - ShowTile::VertTileWidth * (DiscardLineLength() - 1)) / 2;}
 	static constexpr unsigned int DiscardPosV = (TableSize / 2) - 130;
 	void ReconstructSutehai_portrait(const GameTable* gameStat, PlayerID targetPlayer,

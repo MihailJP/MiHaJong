@@ -51,8 +51,8 @@ namespace { // 席替え後のプレイヤー番号対照
 
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskipX(PlayerID targetPlayer) {
-	if (GameStat.chkGameType(SanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
-	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == SeatAbsolute::north)) return; // 四人三麻で北家だったら帰る
+	if (GameStat.chkGameType(GameTypeID::sanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
+	if (GameStat.chkGameType(GameTypeID::sanma4) && (GameStat.playerwind(targetPlayer) == SeatAbsolute::north)) return; // 四人三麻で北家だったら帰る
 	checkCycle();
 #ifdef GUOBIAO
 	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(targetPlayer)] << _T("\" />") << std::endl;
@@ -139,12 +139,12 @@ void haifu::haifubufinit() {
 	CodeConv::tostringstream headerTxt; headerTxt.str(_T(""));
 	headerTxt << _T("MiHaJong ");
 	switch (GameStat.gameType) {
-		case SanmaSeto: headerTxt << _T("瀬戸内三麻"); break;
-		case SanmaS:    headerTxt << _T("数牌三麻"); break;
-		case Sanma4:    headerTxt << _T("四人三麻"); break;
-		case Sanma:     headerTxt << _T("三人打ち"); break;
-		case Yonma:     headerTxt << _T("四人打ち"); break;
-		case GuobiaoMJ: headerTxt << _T("国標麻将"); break;
+		case GameTypeID::sanmaSeto: headerTxt << _T("瀬戸内三麻"); break;
+		case GameTypeID::sanmaS:    headerTxt << _T("数牌三麻"); break;
+		case GameTypeID::sanma4:    headerTxt << _T("四人三麻"); break;
+		case GameTypeID::sanma:     headerTxt << _T("三人打ち"); break;
+		case GameTypeID::yonma:     headerTxt << _T("四人打ち"); break;
+		case GameTypeID::guobiaoMJ: headerTxt << _T("国標麻将"); break;
 	}
 	headerTxt << _T("牌譜データ Ver. ") << MIHAJONG_VER;
 
@@ -177,12 +177,12 @@ void haifu::haifubufinit() {
 		_T("\t\t<title>") << headerTxt.str() << _T("</title>") << std::endl;
 	tools::haifuRecTime(_T("time-began"));
 	XhaifuBuffer << _T("\t\t<ruleset system=\"") <<
-		(GameStat.chkGameType(Yonma) ? _T("richi") :
-		GameStat.chkGameType(Sanma) ? _T("sanma") :
-		GameStat.chkGameType(Sanma4) ? _T("sanma-4players") :
-		GameStat.chkGameType(SanmaS) ? _T("sanma-numerals") :
-		GameStat.chkGameType(SanmaSeto) ? _T("sanma-setouchi") :
-		GameStat.chkGameType(GuobiaoMJ) ? _T("guobiao") : _T(""))
+		(GameStat.chkGameType(GameTypeID::yonma) ? _T("richi") :
+		GameStat.chkGameType(GameTypeID::sanma) ? _T("sanma") :
+		GameStat.chkGameType(GameTypeID::sanma4) ? _T("sanma-4players") :
+		GameStat.chkGameType(GameTypeID::sanmaS) ? _T("sanma-numerals") :
+		GameStat.chkGameType(GameTypeID::sanmaSeto) ? _T("sanma-setouchi") :
+		GameStat.chkGameType(GameTypeID::guobiaoMJ) ? _T("guobiao") : _T(""))
 		<< _T("\">") << std::endl;
 	RuleData::forEachRule([&](std::string key, std::string val) -> void {
 		if (((val != "no") || (RuleData::getRuleItemTag(key, 0) != "no")) &&
@@ -389,7 +389,7 @@ void haifu::tools::checkCycle(bool reset) {
 		cycle = 1; turn = 0;
 		XhaifuBufferBody << _T("\t\t\t<cycle ord=\"1\">") << std::endl;
 	} else {
-		if ((++turn) >= (GameStat.chkGameType(AllSanma) ? 3 : 4)) {
+		if ((++turn) >= (GameStat.chkGameType(GameTypeID::allSanma) ? 3 : 4)) {
 			++cycle; turn = 0;
 			XhaifuBufferBody << _T("\t\t\t</cycle>") << std::endl <<
 				_T("\t\t\t<cycle ord=\"") << cycle << _T("\">") << std::endl;
@@ -812,7 +812,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 #else /* GUOBIAO */
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << static_cast<int>(k) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
-		if (gameStat->chkGameType(SanmaT))
+		if (gameStat->chkGameType(GameTypeID::sanmaT))
 			if (((OrigTurn % static_cast<int>(Players)) + i) >= ACTUAL_PLAYERS)
 				k = (k + 1) % Players;
 		// 副露面子を出力する
@@ -859,12 +859,12 @@ void haifu::haifusave(const GameTable* const gameStat) {
 	std::ostringstream filename1, filename2;
 	filename1 << configPath << "haifu/";
 	switch (gameStat->gameType) {
-		case Yonma: filename1 << "mihajong"; break;
-		case Sanma: filename1 << "mihasanm"; break;
-		case Sanma4: filename1 << "mihaysnm"; break;
-		case SanmaS: filename1 << "mihassnm"; break;
-		case SanmaSeto: filename1 << "mihastsm"; break;
-		case GuobiaoMJ: filename1 << "mihagbmj"; break;
+		case GameTypeID::yonma: filename1 << "mihajong"; break;
+		case GameTypeID::sanma: filename1 << "mihasanm"; break;
+		case GameTypeID::sanma4: filename1 << "mihaysnm"; break;
+		case GameTypeID::sanmaS: filename1 << "mihassnm"; break;
+		case GameTypeID::sanmaSeto: filename1 << "mihastsm"; break;
+		case GameTypeID::guobiaoMJ: filename1 << "mihagbmj"; break;
 	}
 	filename1 << "_" << MIHAJONG_MAJOR_VER << "_" <<
 		MIHAJONG_MINOR_VER << "_" << MIHAJONG_PATCH_VER;
