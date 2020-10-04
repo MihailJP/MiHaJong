@@ -14,7 +14,7 @@ void ShowNakihai::NakihaiAnkan(const GameTable* gameStat, PlayerID targetPlayer,
 	assert((meldID > 0) && (meldID <= gameStat->Player[targetPlayer].MeldPointer));
 	assert(tile->mstat == meldQuadConcealed);
 	const TileSide AnkanExpose =
-		((gameStat->chkGameType(GameTypeID::guobiaoMJ) || rules::chkRule("ankan_conceal", "closed")) && (gameStat->Player[targetPlayer].HandStat != handExposed)) ?
+		((gameStat->chkGameType(GameTypeID::guobiaoMJ) || rules::chkRule("ankan_conceal", "closed")) && (gameStat->Player[targetPlayer].HandStat != HandStatCode::exposed)) ?
 		TileSide::reverse : TileSide::obverse;
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert;
 	std::tie(num, x, y, std::ignore, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,

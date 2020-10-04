@@ -260,8 +260,8 @@ static_assert(std::is_standard_layout<Dice>::value, "Dice is not standard layout
 
 // -------------------------------------------------------------------------
 
-enum handStatCode : int8_t {
-	handUpright, handExposed, handHidden, handOpenRiichi,
+enum class HandStatCode : int8_t {
+	upright, exposed, hidden, openRiichi,
 };
 struct PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
@@ -272,7 +272,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 	uint8_t DiscardPointer;
 	uint8_t MeldPointer;
 	bool MenzenFlag; // 門前フラグ
-	handStatCode HandStat; // 手牌の状態（立てる・見せる・伏せる）
+	HandStatCode HandStat; // 手牌の状態（立てる・見せる・伏せる）
 	int8_t NumberOfQuads; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 	bool FirstDrawFlag; // １巡目である（地和、ダブル立直の判定に使う）
 	bool DoujunFuriten; // 同順振聴である

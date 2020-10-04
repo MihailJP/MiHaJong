@@ -83,7 +83,7 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	tableinit(gameStat);
 	/* 配牌終了時の処理 */
 	for (PlayerID i = 0; i < Players; i++) {
-		gameStat->Player[i].HandStat = handUpright;
+		gameStat->Player[i].HandStat = HandStatCode::upright;
 		lipai(gameStat, i);
 	}
 	gameStat->CurrentPlayer.Active = gameStat->GameRound % Players; // 最初に親から捨牌を行なう

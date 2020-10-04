@@ -165,7 +165,7 @@ namespace { /* 内部処理分割用 */
 			mihajong_graphic::calltext::CallType::tsumo
 			);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
-		gameStat->statOfAgari().HandStat = handExposed;
+		gameStat->statOfAgari().HandStat = HandStatCode::exposed;
 		if (gameStat->TianHuFlag) sound::Play(sound::IDs::voxRon);
 		else sound::Play(sound::IDs::voxTsumo);
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
@@ -180,7 +180,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->statOfActive().FirstDrawFlag) {
 				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::kyuushu);
 				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
-				gameStat->statOfActive().HandStat = handExposed;
+				gameStat->statOfActive().HandStat = HandStatCode::exposed;
 				sound::Play(sound::IDs::voxKyuushu);
 				mihajong_graphic::GameStatus::updateGameStat(gameStat);
 				return EndType::kyuushuKyuuhai;
@@ -273,7 +273,7 @@ namespace { /* 内部処理分割用 */
 				sound::util::bgmplay(sound::IDs::musOpenrichi);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			threadSleep(1000);
-			gameStat->statOfActive().HandStat = handOpenRiichi;
+			gameStat->statOfActive().HandStat = HandStatCode::openRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 		}
 		if (DiscardTileIndex.type == DiscardType::riichi) {

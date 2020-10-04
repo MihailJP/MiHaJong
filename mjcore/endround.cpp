@@ -207,11 +207,11 @@ namespace {
 			if (gameStat->chkGameType(GameTypeID::sanma4) && (gameStat->playerwind(i, OrigTurn) == SeatAbsolute::north))
 				continue; // 四人三麻の北家は無視
 			if (isTenpai(gameStat, i)) { // 聴牌の時
-				++TenpaiCnt; gameStat->Player[i].HandStat = handExposed;
+				++TenpaiCnt; gameStat->Player[i].HandStat = HandStatCode::exposed;
 			} else if (gameStat->Player[i].RichiFlag.RichiFlag) { // 錯和(不聴)リーチの時
-				gameStat->Player[i].HandStat = handExposed;
+				gameStat->Player[i].HandStat = HandStatCode::exposed;
 			} else { // 不聴の時は伏せる
-				gameStat->Player[i].HandStat = handHidden;
+				gameStat->Player[i].HandStat = HandStatCode::hidden;
 			}
 		}
 		CodeConv::tstring TenpaiCountTxt;

@@ -725,7 +725,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			}
 			// 優先権のないロンも表示されるようにする
 			mihajong_graphic::calltext::setCall(i, mihajong_graphic::calltext::CallType::ron);
-			gameStat->Player[i].HandStat = handExposed;
+			gameStat->Player[i].HandStat = HandStatCode::exposed;
 		}
 	}
 	/* 実際にロンできる人を表示 */
@@ -823,7 +823,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			}
 			// ロンをしたことを表示
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Agari, mihajong_graphic::calltext::CallType::ronQualified);
-			gameStat->statOfAgari().HandStat = handExposed;
+			gameStat->statOfAgari().HandStat = HandStatCode::exposed;
 			/* 和了り牌を設定 */
 			gameStat->statOfAgari().Tsumohai() = gameStat->CurrentDiscard;
 			/* 栄和のサウンドを鳴らす */

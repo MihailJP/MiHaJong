@@ -20,8 +20,8 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 	std::tie(x, y) = coordFunc(direction);
 	/* 手牌 */
 	TileSide tileStat =
-		(gameStat->Player[targetPlayer].HandStat == handUpright) ? TileSide::upright :
-		(gameStat->Player[targetPlayer].HandStat == handHidden) ? TileSide::reverse : TileSide::obverse;
+		(gameStat->Player[targetPlayer].HandStat == HandStatCode::upright) ? TileSide::upright :
+		(gameStat->Player[targetPlayer].HandStat == HandStatCode::hidden) ? TileSide::reverse : TileSide::obverse;
 	switch (direction) {
 	case SeatRelative::opposite: /* 対面の手牌 */
 		tilePos = 0;

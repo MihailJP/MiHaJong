@@ -155,7 +155,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 			gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 		}
 		gameStat->Player[pl].MenzenFlag = true; // 門前フラグ
-		gameStat->Player[pl].HandStat = handUpright; // 手牌の状態（立てる・見せる・伏せる）
+		gameStat->Player[pl].HandStat = HandStatCode::upright; // 手牌の状態（立てる・見せる・伏せる）
 		gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
 		for (int i = 0; i < SizeOfMeldBuffer; i++) {
 			// 鳴き面子を格納
