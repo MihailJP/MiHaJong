@@ -20,7 +20,6 @@
 #include "../../common/strcode.h"
 #include "../func.h"
 #include "../haifu.h"
-#include "yvalue.h"
 #include "../ruletbl.h"
 
 /* 翻を計算する */

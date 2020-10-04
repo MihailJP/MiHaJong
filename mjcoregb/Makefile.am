@@ -27,7 +27,7 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/lzma/Alloc.h ../mjcore/lzma/LzFind.h ../mjcore/lzma/LzHash.h ../mjcore/lzma/LzmaDec.h ../mjcore/lzma/LzmaLib.h \
 	../mjcore/lzma/RotateDefs.h ../mjcore/lzma/Sha256.h ../mjcore/lzma/Types.h \
 	../mjcore/reader/csv2arry.h ../mjcore/reader/ini2map.h ../mjcore/reader/readrsrc.h \
-	../mjcore/yaku/catalog.h ../mjcore/yaku/yaku.h ../mjcore/yaku/yvalue.h ../mjcore/yaku/ykclass.h ../mjcore/yaku/yk_tools.h
+	../mjcore/yaku/catalog.h ../mjcore/yaku/yaku.h ../mjcore/yaku/ykclass.h ../mjcore/yaku/yk_tools.h
 nodist_libmihagbmj_la_SOURCES = \
 	../mjcore/data/confitem_csv.cpp ../mjcore/data/confitem_ini.cpp ../mjcore/data/rankval_csv.cpp \
 	../mjcore/data/confitem_csv.h ../mjcore/data/confitem_ini.h ../mjcore/data/rankval_csv.h
