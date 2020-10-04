@@ -136,11 +136,7 @@ public:
 			FixedHan (YAKU_HAN bHan);
 			FixedHan (YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan);
 		};
-#ifdef GUOBIAO
-		static const FixedHan
-			yval_1, yval_2, yval_3, yval_4, yval_6, yval_8, yval_12, yval_16,
-			yval_24, yval_32, yval_48, yval_64, yval_88;
-#else /* GUOBIAO */
+#ifndef GUOBIAO
 		class MenzenHan : public HANFUNC {
 		public:
 			MenzenHan () : HANFUNC () {}
@@ -239,6 +235,7 @@ public:
 };
 
 #ifdef GUOBIAO
+yaku::yakuCalculator::Yaku::FixedHan operator"" _fenF(unsigned long long fen);
 #else /* GUOBIAO */
 yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han);
 yaku::yakuCalculator::Yaku::KuisagariHan operator"" _hanK(unsigned long long han);

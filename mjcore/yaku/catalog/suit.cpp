@@ -6,7 +6,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* チンイツ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("清一色"), yaku::yakuCalculator::Yaku::yval_24,
+		_T("清一色"), 24_fenF,
 		_T("混一色"), _T("无字"),
 #else /* GUOBIAO */
 		_T("清一色"), get_yaku_han("chiniisoh"),
@@ -37,7 +37,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("九蓮宝燈"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("九蓮宝燈"), 88_fenF,
 		_T("清一色"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), _T("无字"),
 #else /* GUOBIAO */
 		_T("九蓮宝燈"), 1_yakumanM,
@@ -67,7 +67,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 #ifdef GUOBIAO
 	/* 連七対 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("連七対"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("連七対"), 88_fenF,
 		_T("七対"), _T("清一色"), _T("門前清"), _T("単調将"),
 		[chkHaishiki](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return chkHaishiki(analysis, "022222220") ||
@@ -350,7 +350,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* ホンイツ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("混一色"), yaku::yakuCalculator::Yaku::yval_6,
+		_T("混一色"), 6_fenF,
 #else /* GUOBIAO */
 		_T("混一色"), 3_hanK,
 		_T("一気通貫全帯幺九"),
@@ -480,7 +480,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		};
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("缺一門"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("缺一門"), 1_fenF,
 		chueiimen1
 	));
 #else /* GUOBIAO */
@@ -535,7 +535,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 		};
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("五門斉"), yaku::yakuCalculator::Yaku::yval_6,
+		_T("五門斉"), 6_fenF,
 		uumenchii
 	));
 #else /* GUOBIAO */

@@ -13,7 +13,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("七対"), yaku::yakuCalculator::Yaku::yval_24,
+		_T("七対"), 24_fenF,
 		_T("門前清"), _T("単調将"),
 		_T("連六"), _T("連六x2"), _T("老少副"), _T("老少副x2"), _T("一般高"), _T("一般高x2"), _T("平和"),
 #else /* GUOBIAO */
@@ -233,7 +233,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 	/* 国士 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("十三幺"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("十三幺"), 88_fenF,
 		_T("五門斉"), _T("門前清"), _T("単調将"),
 #else /* GUOBIAO */
 		_T("国士無双"), 1_yakumanM,
@@ -259,7 +259,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("七星不靠"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("七星不靠"), 24_fenF,
 			_T("全不靠"), _T("五門斉"), _T("門前清"), _T("単調将"),
 #else /* GUOBIAO */
 			_T("七星無靠"), get_yaku_han("stellar_uushii"),
@@ -300,7 +300,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全不靠"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("全不靠"), 12_fenF,
 			_T("五門斉"), _T("門前清"), _T("単調将"), _T("七星不靠"),
 #else /* GUOBIAO */
 			_T("全不靠"), get_yaku_han("quanbukao"),
@@ -324,7 +324,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("組合龍"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("組合龍"), 12_fenF,
 #else /* GUOBIAO */
 			_T("組合龍"), get_yaku_han("zuhelong"),
 #endif /* GUOBIAO */

@@ -7,7 +7,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 四暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("四暗刻"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("四暗刻"), 64_fenF,
 		PengPengHu, _T("三暗刻"), _T("双暗刻"), _T("門前清"),
 #else /* GUOBIAO */
 		_T("四暗刻"), 1_yakumanM,
@@ -38,7 +38,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 三暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("三暗刻"), yaku::yakuCalculator::Yaku::yval_16,
+		_T("三暗刻"), 16_fenF,
 		_T("双暗刻"),
 #else /* GUOBIAO */
 		_T("三暗刻"), 2_hanF,
@@ -52,7 +52,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #ifdef GUOBIAO
 	/* 双暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双暗刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("双暗刻"), 2_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
 				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
@@ -112,7 +112,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		};
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("一色四節高"), yaku::yakuCalculator::Yaku::yval_48,
+		_T("一色四節高"), 48_fenF,
 		PengPengHu, _T("一色三節高"),
 		suurenkoh
 	));
@@ -162,7 +162,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("一色三節高"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("一色三節高"), 24_fenF,
 #else /* GUOBIAO */
 			_T("三連刻"), get_yaku_han("sanrenkoh"),
 			_T("小三連刻"),
@@ -217,7 +217,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* レアな方の三色 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("三同刻"), yaku::yakuCalculator::Yaku::yval_16,
+		_T("三同刻"), 16_fenF,
 		_T("双同刻"),
 #else /* GUOBIAO */
 		_T("三色同刻"), get_yaku_han("sanshoku_doukoh"),
@@ -285,7 +285,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 小三元 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("小三元"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("小三元"), 64_fenF,
 		_T("箭刻"), _T("双箭刻"),
 #else /* GUOBIAO */
 		_T("小三元"), 2_hanF,
@@ -298,7 +298,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 大三元 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("大三元"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("大三元"), 88_fenF,
 		_T("箭刻"), _T("双箭刻"),
 #else /* GUOBIAO */
 		_T("大三元"), 1_yakumanF,
@@ -322,7 +322,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 小四喜 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("小四風会"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("小四風会"), 64_fenF,
 		_T("三風刻"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"),
 #else /* GUOBIAO */
 		_T("小四喜"), 1_yakumanF,
@@ -365,7 +365,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 大四喜 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("大四風会"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("大四風会"), 88_fenF,
 		_T("圏風刻"), _T("門風刻"), _T("三風刻"), PengPengHu, _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"),
 #else /* GUOBIAO */
 		_T("大四喜"), (RuleData::chkRuleApplied("double_yakuman")) ?
@@ -402,7 +402,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 対々和 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		PengPengHu, yaku::yakuCalculator::Yaku::yval_6,
+		PengPengHu, 6_fenF,
 #else /* GUOBIAO */
 		_T("対々和"), 2_hanF,
 #endif /* GUOBIAO */
@@ -430,7 +430,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("圏風刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("圏風刻"), 2_fenF,
 #else /* GUOBIAO */
 		_T("役牌・場風"), 1_hanF,
 #endif /* GUOBIAO */
@@ -442,7 +442,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("門風刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("門風刻"), 2_fenF,
 #else /* GUOBIAO */
 		_T("役牌・自風"), 1_hanF,
 #endif /* GUOBIAO */
@@ -450,7 +450,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	));
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双箭刻"), yaku::yakuCalculator::Yaku::yval_6,
+		_T("双箭刻"), 6_fenF,
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return chkYakuhai(analysis)[WhiteDragon] +
 				chkYakuhai(analysis)[GreenDragon] +
@@ -458,7 +458,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("箭刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("箭刻"), 2_fenF,
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return chkYakuhai(analysis)[WhiteDragon] +
 				chkYakuhai(analysis)[GreenDragon] +
@@ -530,25 +530,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				(bakaze(analysis) ? 1 : 0) - (jikaze(analysis) ? 1 : 0);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("幺九刻"), 1_fenF,
 		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 1;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻x2"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("幺九刻x2"), 2_fenF,
 		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 2;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻x3"), yaku::yakuCalculator::Yaku::yval_3,
+		_T("幺九刻x3"), 3_fenF,
 		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 3;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻x4"), yaku::yakuCalculator::Yaku::yval_4,
+		_T("幺九刻x4"), 4_fenF,
 		[YaoJiuKe](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 4;
 		}
@@ -590,7 +590,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("三風刻"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("三風刻"), 12_fenF,
 #else /* GUOBIAO */
 			_T("三風刻"), get_yaku_han("three_winds"),
 #endif /* GUOBIAO */
@@ -868,7 +868,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("三色三節高"), yaku::yakuCalculator::Yaku::yval_8,
+			_T("三色三節高"), 8_fenF,
 #else /* GUOBIAO */
 			_T("三色連刻"), get_yaku_han("sanshoku_renkoh"),
 #endif /* GUOBIAO */
@@ -918,7 +918,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("双同刻"), yaku::yakuCalculator::Yaku::yval_2,
+			_T("双同刻"), 2_fenF,
 #else /* GUOBIAO */
 			_T("二同刻"), get_yaku_han("ryandoukoh"),
 #endif /* GUOBIAO */

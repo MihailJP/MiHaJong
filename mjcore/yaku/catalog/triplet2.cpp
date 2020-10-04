@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全双刻"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全双刻"), 24_fenF,
 			PengPengHu, _T("断幺"),
 #else /* GUOBIAO */
 			_T("偶数対々和"), get_yaku_han("even_toitoi"),

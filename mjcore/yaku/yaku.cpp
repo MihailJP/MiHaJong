@@ -857,6 +857,9 @@ bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const Y
 }
 
 #ifdef GUOBIAO
+yaku::yakuCalculator::Yaku::FixedHan operator"" _fenF(unsigned long long fen) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(fen)));
+}
 #else /* GUOBIAO */
 yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han) {
 	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));

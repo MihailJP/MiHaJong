@@ -16,7 +16,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	/* タンヤオ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("断幺"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("断幺"), 2_fenF,
 		_T("无字"),
 #else /* GUOBIAO */
 		_T("断幺九"), RuleData::chkRule("kuitan", "yes_but_unbound") ? /* 門前なら縛りを満たし、喰い断は縛りを満たさないルール */
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	/* チャンタ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("全帯幺"), yaku::yakuCalculator::Yaku::yval_4,
+		_T("全帯幺"), 4_fenF,
 #else /* GUOBIAO */
 		_T("混全帯幺九"), 2_hanK,
 #endif /* GUOBIAO */
@@ -89,7 +89,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	/* ホンロー */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("混幺九"), yaku::yakuCalculator::Yaku::yval_32,
+		_T("混幺九"), 32_fenF,
 		_T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), PengPengHu, _T("全帯幺"),
 #else /* GUOBIAO */
 		_T("混老頭"), get_yaku_han("honroutou"),
@@ -106,7 +106,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	/* チンロー */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("清幺九"), yaku::yakuCalculator::Yaku::yval_32,
+		_T("清幺九"), 32_fenF,
 		_T("无字"), _T("双同刻"), _T("三同刻"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), PengPengHu, _T("全帯幺"),
 #else /* GUOBIAO */
 		_T("清老頭"), 1_yakumanF,
@@ -121,7 +121,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 	/* ツーイーソー */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("字一色"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("字一色"), 64_fenF,
 		_T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"), PengPengHu, _T("全帯幺"),
 #else /* GUOBIAO */
 		_T("字一色"), 1_yakumanF,
@@ -150,7 +150,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 #ifdef GUOBIAO
 	/* 无字 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("无字"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("无字"), 1_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			if (analysis->shanten[shantenRegular] == -1)
 				return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, Honor_Major_Tiles()+6, 7, nullptr, 0, false) == 0);

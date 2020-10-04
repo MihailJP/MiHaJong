@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	/* 四槓子 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("四杠"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("四杠"), 88_fenF,
 		PengPengHu, _T("単調将"),
 #else /* GUOBIAO */
 		_T("四槓子"), get_yaku_han("suukantsu"),
@@ -94,7 +94,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 	/* 三槓子 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("三杠"), yaku::yakuCalculator::Yaku::yval_32,
+		_T("三杠"), 32_fenF,
 #else /* GUOBIAO */
 		_T("三槓子"), get_yaku_han("sankantsu"),
 #endif /* GUOBIAO */
@@ -105,28 +105,28 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 #ifdef GUOBIAO
 	/* 双暗杠 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双暗杠"), yaku::yakuCalculator::Yaku::yval_8,
+		_T("双暗杠"), 8_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi >= 2) && (analysis->TotalAnKangzi == 2);
 		}
 	));
 	/* 双明杠 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双明杠"), yaku::yakuCalculator::Yaku::yval_4,
+		_T("双明杠"), 4_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi == 2) && (analysis->TotalAnKangzi < 2);
 		}
 	));
 	/* 暗杠 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("暗杠"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("暗杠"), 2_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi >= 1) && (analysis->TotalAnKangzi == 1);
 		}
 	));
 	/* 明杠 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("明杠"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("明杠"), 1_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return (analysis->TotalKangzi == 1) && (analysis->TotalAnKangzi == 0);
 		}

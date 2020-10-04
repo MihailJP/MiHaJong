@@ -44,7 +44,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	/* 无番和 */
 	if (totalHan <= 0) {
 		LPCTSTR name = _T("无番和");
-		yakuHan[name] = yaku::yakuCalculator::Yaku::yval_8(analysis);
+		yakuHan[name] = 8_fenF(analysis);
 		yakuOrd.push_back(name);
 	}
 #else /* GUOBIAO */

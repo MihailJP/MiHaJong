@@ -39,7 +39,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			};
 #ifdef GUOBIAO
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("緑一色"), yaku::yakuCalculator::Yaku::yval_88,
+			_T("緑一色"), 88_fenF,
 			allgrean
 		));
 #else /* GUOBIAO */
@@ -99,7 +99,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-				_T("全求人"), yaku::yakuCalculator::Yaku::yval_6,
+				_T("全求人"), 6_fenF,
 #else /* GUOBIAO */
 				_T("全求人"), 1_hanF,
 #endif /* GUOBIAO */
@@ -138,7 +138,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("推不倒"), yaku::yakuCalculator::Yaku::yval_8,
+			_T("推不倒"), 8_fenF,
 			_T("缺一門"),
 #else /* GUOBIAO */
 			_T("推不倒"), get_yaku_han("toipuutao"),
@@ -470,19 +470,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			};
 		/* 四帰一 */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四帰一"), yaku::yakuCalculator::Yaku::yval_2,
+			_T("四帰一"), 2_fenF,
 			[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (suukuiyii(analysis) == 1);
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四帰一x2"), yaku::yakuCalculator::Yaku::yval_4,
+			_T("四帰一x2"), 4_fenF,
 			[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (suukuiyii(analysis) == 2);
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四帰一x3"), yaku::yakuCalculator::Yaku::yval_6,
+			_T("四帰一x3"), 6_fenF,
 			[suukuiyii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (suukuiyii(analysis) == 3);
 			}
@@ -965,7 +965,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					};
 #ifdef GUOBIAO
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-					_T("全帯五"), yaku::yakuCalculator::Yaku::yval_16, _T("断幺"), f));
+					_T("全帯五"), 16_fenF, _T("断幺"), f));
 #else /* GUOBIAO */
 				switch (i) {
 				case 4: case 5: case 6:
@@ -994,7 +994,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("小于五"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("小于五"), 12_fenF,
 			_T("无字"),
 #else /* GUOBIAO */
 			_T("小於五"), get_yaku_han("xiaoyuwu"),
@@ -1015,7 +1015,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("大于五"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("大于五"), 12_fenF,
 			_T("无字"),
 #else /* GUOBIAO */
 			_T("大於五"), get_yaku_han("dayuwu"),
@@ -1036,7 +1036,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全小"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全小"), 24_fenF,
 			_T("无字"), _T("小于五"),
 #else /* GUOBIAO */
 			_T("全小"), get_yaku_han("all_small"),
@@ -1057,7 +1057,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全中"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全中"), 24_fenF,
 			_T("无字"), _T("断幺"),
 #else /* GUOBIAO */
 			_T("全中"), get_yaku_han("all_middle"),
@@ -1078,7 +1078,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全大"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全大"), 24_fenF,
 			_T("无字"), _T("大于五"),
 #else /* GUOBIAO */
 			_T("全大"), get_yaku_han("all_large"),
