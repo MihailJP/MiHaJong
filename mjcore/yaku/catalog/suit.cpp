@@ -503,7 +503,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 					(analysis->MianziDat[3].tile / TileSuitStep)) &&
 					((analysis->MianziDat[3].tile / TileSuitStep) ==
 					(analysis->MianziDat[4].tile / TileSuitStep)) &&
-					(analysis->Machi == yaku::yakuCalculator::machiTanki)
+					(analysis->Machi == yaku::yakuCalculator::MachiType::tanki)
 					);
 			}
 		));

@@ -307,7 +307,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->KeziCount[BambooTwo] >= 1) &&
 					(analysis->TsumoHai->tile == BambooThree) &&
-					(analysis->Machi == yaku::yakuCalculator::machiTanki));
+					(analysis->Machi == yaku::yakuCalculator::MachiType::tanki));
 			}
 		));
 	/* 青函トンネル */
@@ -547,7 +547,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("ムスカ大佐"), get_yaku_han("colonel_muska"),
 			[anysuit3](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return anysuit3(analysis, 6, 4, 3, true) && (analysis->Machi == yaku::yakuCalculator::machiKanchan);
+				return anysuit3(analysis, 6, 4, 3, true) && (analysis->Machi == yaku::yakuCalculator::MachiType::kanchan);
 			}
 		));
 	/* 都の西北 */
@@ -957,7 +957,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[BambooNine] >= 1) &&
 					(analysis->KeziCount[BambooEight] >= 1) &&
 					(analysis->DuiziCount[RedDragon] >= 1) &&
-					(analysis->Machi == yaku::yakuCalculator::machiShanpon));
+					(analysis->Machi == yaku::yakuCalculator::MachiType::shanpon));
 			}
 		));
 	/* 西南戦争 */

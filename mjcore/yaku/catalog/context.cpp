@@ -776,7 +776,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 						return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 							(analysis->TsumoHai->tile == tc) && // 和了牌
 							(*analysis->TsumoAgariFlag) && (yakuFlag) && // フリテンツモ
-							(analysis->Machi == yaku::yakuCalculator::machiTanki)); // 単騎待ちである
+							(analysis->Machi == yaku::yakuCalculator::MachiType::tanki)); // 単騎待ちである
 					}
 				));
 			}
@@ -831,7 +831,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
 					(analysis->TsumoHai->tile == BambooThree) && // 和了牌が三索
-					(analysis->Machi == yaku::yakuCalculator::machiKanchan)); // 嵌張待ち
+					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan)); // 嵌張待ち
 			}
 		));
 #endif /* GUOBIAO */
@@ -904,7 +904,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		_T("坎張"), 1_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
-				(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // 嵌張待ちで
+				(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) && // 嵌張待ちで
 				(analysis->MachiInfo.MachiMen == 1)); // 1面待ち
 		}
 	));
@@ -913,7 +913,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		_T("辺張"), 1_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
-				(analysis->Machi == yaku::yakuCalculator::machiPenchan) && // 辺張待ちで
+				(analysis->Machi == yaku::yakuCalculator::MachiType::penchan) && // 辺張待ちで
 				(analysis->MachiInfo.MachiMen == 1)); // 1面待ち
 		}
 	));
@@ -922,7 +922,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		_T("単調将"), 1_fenF,
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
-				(analysis->Machi == yaku::yakuCalculator::machiTanki) && // 単騎待ちで
+				(analysis->Machi == yaku::yakuCalculator::MachiType::tanki) && // 単騎待ちで
 				(analysis->MachiInfo.MachiMen == 1)); // 1面待ち
 		}
 	));

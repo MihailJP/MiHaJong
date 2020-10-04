@@ -67,15 +67,15 @@ yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN::HAN cHan, YAKU_
 #ifdef GUOBIAO
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN() { han = 0; }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h) { han = h; }
-yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, hanUnit) { han = h; } // Compatibility
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, HanUnit) { han = h; } // Compatibility
 int8_t yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getHan() const {return this->han;}
-yaku::yakuCalculator::hanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return Han;} // Compatibility
+yaku::yakuCalculator::HanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return HanUnit::han;} // Compatibility
 #else /* GUOBIAO */
-yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN() { han = 0; unit = Han; }
-yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h) { han = h; unit = Han; }
-yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, hanUnit u) { han = h; unit = u; }
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN() { han = 0; unit = HanUnit::han; }
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h) { han = h; unit = HanUnit::han; }
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(int8_t h, HanUnit u) { han = h; unit = u; }
 int8_t yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getHan() const {return this->han;}
-yaku::yakuCalculator::hanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return this->unit;}
+yaku::yakuCalculator::HanUnit yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::getUnit() const {return this->unit;}
 #endif /* GUOBIAO */
 
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN() {coreHan = HAN(); bonusHan = HAN();}

@@ -50,9 +50,9 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 #else /* GUOBIAO */
 	/* カラス */
 	if (RuleData::chkRuleApplied("karasu")) {
-		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
-			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
-			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
+		if (((analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) ||
+			(analysis->Machi == yaku::yakuCalculator::MachiType::penchan) ||
+			(analysis->Machi == yaku::yakuCalculator::MachiType::tanki)) &&
 			(! analysis->PlayerStat->RichiFlag.RichiFlag) &&
 			(totalHan <= 0) && (totalSemiMangan == 0)) {
 				LPCTSTR name = _T("カラス");
@@ -62,9 +62,9 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	}
 	/* カラス立直 */
 	if (RuleData::chkRuleApplied("karasu_riichi")) {
-		if (((analysis->Machi == yaku::yakuCalculator::machiKanchan) ||
-			(analysis->Machi == yaku::yakuCalculator::machiPenchan) ||
-			(analysis->Machi == yaku::yakuCalculator::machiTanki)) &&
+		if (((analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) ||
+			(analysis->Machi == yaku::yakuCalculator::MachiType::penchan) ||
+			(analysis->Machi == yaku::yakuCalculator::MachiType::tanki)) &&
 			(analysis->PlayerStat->RichiFlag.RichiFlag) &&
 			(totalHan == 1) && (totalSemiMangan == 0)) {
 				LPCTSTR name = _T("カラス立直");

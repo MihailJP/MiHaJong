@@ -915,7 +915,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		for (int i = 1; i <= 4; ++i)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("合格祈願 "), yaku::yakuCalculator::Yaku::FixedHan(
-				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, Han),
+				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, HanUnit::han),
 				0_han),
 				[i](const MENTSU_ANALYSIS* const analysis) -> bool {
 					unsigned tileCount = static_cast<unsigned>(analysis->TileCount[CircleFive]);
@@ -1148,7 +1148,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					yakuNameList[i], get_yaku_han(ruleCodeList[i]),
 					[targetTile](const MENTSU_ANALYSIS* const analysis) -> bool {
 						return ((analysis->KangziCount[targetTile] >= 1) &&
-							(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
+							(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
 							(analysis->TotalKezi == 1) && (*analysis->MenzenFlag));
 					}
 				));
@@ -1161,7 +1161,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->KangziCount[EastWind] >= 1) &&
 					(analysis->KangziCount[NorthWind] >= 1) &&
-					(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
+					(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
 					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
 			}
 		));
@@ -1177,7 +1177,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 							(analysis->KangziCount[j + 8] >= 1))
 							yakuFlag = true;
 				return ((yakuFlag) &&
-					(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
+					(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
 					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
 			}
 		));

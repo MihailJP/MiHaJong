@@ -113,7 +113,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					analysis->AnKeziCount[GreenDragon] +
 					analysis->AnKeziCount[RedDragon]) >= 1) &&
 					(analysis->TsumoHai->tile == BambooFive) &&
-					(analysis->Machi == yaku::yakuCalculator::machiTanki);
+					(analysis->Machi == yaku::yakuCalculator::MachiType::tanki);
 			}
 		));
 	/* 松竹梅 */
@@ -314,7 +314,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("四暗刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
 					1 : 0) == 4) && // 四暗刻を
 					(analysis->TsumoHai->tile == CharacterOne); // 一萬で和了る
 			}
@@ -328,7 +328,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				return (analysis->KeziCount[WhiteDragon] >= 1) &&
 					(analysis->KeziCount[GreenDragon] >= 1) &&
 					(analysis->KeziCount[RedDragon] >= 1) &&
-					(analysis->Machi == yaku::yakuCalculator::machiPenchan);
+					(analysis->Machi == yaku::yakuCalculator::MachiType::penchan);
 			}
 		));
 	/* 激北 */
@@ -532,7 +532,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[CircleEight] >= 1) &&
 					(analysis->KeziCount[BambooEight] >= 1) &&
 					(analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) &&
+					((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) &&
 					(!*analysis->TsumoAgariFlag)) ? 1 : 0) >= 3);
 			}
 		));

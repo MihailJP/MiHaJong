@@ -329,7 +329,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				bool yakuFlag; int yakuCol = 0;
 				ikki_tsuukan(analysis, &yakuFlag, &yakuCol);
 				return (yakuFlag && // 一気通貫が成立していて
-					(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // 嵌張待ちで
+					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) && // 嵌張待ちで
 					(analysis->PlayerStat->Hand[TsumohaiIndex].tile == (yakuCol + 5)) // 和了牌が5
 					);
 			}
@@ -524,7 +524,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				bool yakuFlag; int yakuCol = 0;
 				ikki_tsuukan(analysis, &yakuFlag, &yakuCol);
 				return (yakuFlag && // 一気通貫が成立していて
-					(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // 嵌張待ちで
+					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) && // 嵌張待ちで
 					((analysis->TsumoHai->tile == yakuCol + 2) || // 2か
 					(analysis->TsumoHai->tile == yakuCol + 4) || // 4か
 					(analysis->TsumoHai->tile == yakuCol + 6)) // 6で和了
@@ -568,7 +568,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return (yakuFlag && // 一気通貫かつ一色で
 					(analysis->DuiziCount[RedDragon] >= 1) && // 中の雀頭
 					(analysis->KeziCount[BambooFive] >= 1) && // 五索の刻子
-					(analysis->Machi == yaku::yakuCalculator::machiShanpon) // シャンポン待ち
+					(analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) // シャンポン待ち
 					);
 			}
 		));
@@ -583,7 +583,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return (yakuFlag && // 一気通貫かつ一色で
 					(analysis->DuiziCount[BambooNine] >= 1) && // 九索の雀頭
 					(analysis->KeziCount[BambooFour] >= 1) && // 四索の刻子
-					(analysis->Machi == yaku::yakuCalculator::machiShanpon) // シャンポン待ち
+					(analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) // シャンポン待ち
 					);
 			}
 		));
@@ -988,7 +988,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			[sanshoku_tsuukan](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (sanshoku_tsuukan(analysis) && // 三色通貫で
 					(*analysis->MenzenFlag) && // 門前で
-					(analysis->Machi == yaku::yakuCalculator::machiTanki) && // 単騎待ちで
+					(analysis->Machi == yaku::yakuCalculator::MachiType::tanki) && // 単騎待ちで
 					(analysis->TsumoHai->tile != WhiteDragon) && // 白待ちでなく
 					(analysis->TsumoHai->tile != GreenDragon) ); // 發待ちでない
 			}

@@ -161,39 +161,39 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 #endif /* GUOBIAO */
 	/* 聴牌形加符 */
-	analysis->Machi = machiInvalid; // 初期化
+	analysis->Machi = MachiType::invalid; // 初期化
 #ifdef GUOBIAO
 	bool LiangMianFlag; // ダミー
 #endif /* GUOBIAO */
 	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Tsumohai().tile); // shorthand
-	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // 単騎待ち
+	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = MachiType::tanki; // 単騎待ち
 	for (int i = 1; i < SizeOfMeldBuffer; i++) { // 待ちの種類を調べる……
 		switch (analysis->MianziDat[i].mstat) {
 		case meldSequenceConcealed: case meldSequenceExposedLower:
 		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* 順子 */
-			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = machiKanchan;
+			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = MachiType::kanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = machiPenchan; // 辺張待ち
-				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
+				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = MachiType::penchan; // 辺張待ち
+				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
 			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 2)) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = machiPenchan; // 辺張待ち
-				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
+				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = MachiType::penchan; // 辺張待ち
+				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
 			break;
 		default: /* それ以外 */
-			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = machiShanpon; // 双ポン待ち
+			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = MachiType::shanpon; // 双ポン待ち
 			break;
 		}
 	}
 #ifndef GUOBIAO
 	/* 嵌張、辺張、単騎は＋２符「不利な待ちには２点付く」 */
 	switch (analysis->Machi) {
-	case machiKanchan: case machiPenchan: case machiTanki:
+	case MachiType::kanchan: case MachiType::penchan: case MachiType::tanki:
 		fu += 2; break;
 	}
 	/* 双ポン待ちでロンした場合の例外：明刻として扱うための減点 */
-	if ((analysis->Machi == machiShanpon)&&(!gameStat->TsumoAgariFlag))
+	if ((analysis->Machi == MachiType::shanpon)&&(!gameStat->TsumoAgariFlag))
 		fu -= isYaojiu(*tsumoTile) ? 4 : 2;
 
 	/* 平和が成立しうる場合 */
@@ -201,14 +201,14 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	if (NoTriplets && LiangMianFlag) {
 		if (gameStat->Player[analysis->player].MenzenFlag) {
 			/* 門前であれば、役として平和が成立する */
-			analysis->Machi = machiRyanmen; // 強制両面扱い
+			analysis->Machi = MachiType::ryanmen; // 強制両面扱い
 			if ((!(gameStat->TsumoAgariFlag) || (RuleData::chkRuleApplied("tsumo_pinfu")))) { // ツモピンありか、出和了の場合
 				analysis->isPinfu = true; fu = 20;
 			} else {
 				fu += 2; // ツモ符
 			}
 		} else {
-			analysis->Machi = machiRyanmen; // 強制両面扱い
+			analysis->Machi = MachiType::ryanmen; // 強制両面扱い
 			if (RuleData::chkRule("exposed_pinfu", "30fu")) {
 				fu = 30; /* 門前でなければ、３０符とする */
 			}
@@ -421,43 +421,43 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #else /* GUOBIAO */
 		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* 青点ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan:
+				case yaku::yakuCalculator::HanUnit::han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan:
 					switch (yakuHan[yName].coreHan.getHan()) {
 						case 2: totalHan += 5; break;   case 3: totalHan += 6; break;
 						case 4: totalHan += 8; break;   case 6: totalHan += 11; break;
 						case 8: totalHan += 13; break;  case 16: totalHan += 26; break;
 					}
 					break;
-				case yaku::yakuCalculator::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan:
+				case yaku::yakuCalculator::HanUnit::han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan:
 					switch (yakuHan[yName].bonusHan.getHan()) {
 						case 2: totalBonusHan += 5; break;   case 3: totalBonusHan += 6; break;
 						case 4: totalBonusHan += 8; break;   case 6: totalBonusHan += 11; break;
 						case 8: totalBonusHan += 13; break;  case 16: totalBonusHan += 26; break;
 					}
 					break;
-				case yaku::yakuCalculator::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 		} else { /* 通常の翻計算 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
+				case yaku::yakuCalculator::HanUnit::han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
+				case yaku::yakuCalculator::HanUnit::han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
@@ -471,8 +471,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		{ /* 単位が混在！ */
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が混在しています"));
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::HanUnit::han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 普通の役の時 */
 #endif /* GUOBIAO */
 #if defined(_MSC_VER)
@@ -510,8 +510,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #endif
 #ifndef GUOBIAO
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::semiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::HanUnit::semiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 満貫 */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
@@ -533,8 +533,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::HanUnit::yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 役満 */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
@@ -867,16 +867,16 @@ yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _han(unsigned long long han
 	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han));
 }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _mangan(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan);
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan);
 }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _mangan(long double han) {
-	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan);
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan);
 }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _yakuman(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman);
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman);
 }
 yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _yakuman(long double han) {
-	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman);
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman);
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han) {
 	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
@@ -894,39 +894,39 @@ yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanMD(unsigned long long han) 
 	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(long double han) {
-	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
 }
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
 }
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(long double han) {
-	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::SemiMangan));
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(long double han) {
-	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(long double han) {
-	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(long double han) {
-	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(unsigned long long han) {
-	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(long double han) {
-	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::Yakuman));
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
 }
 #endif /* GUOBIAO */

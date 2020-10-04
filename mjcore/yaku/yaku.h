@@ -16,7 +16,7 @@
 
 class yaku::yakuCalculator {
 public:
-	enum hanUnit : uint8_t {Han, SemiMangan, Yakuman};
+	enum class HanUnit : uint8_t {han, semiMangan, yakuman};
 	class Yaku;
 
 private:
@@ -32,13 +32,13 @@ private:
 		std::list<Yaku> catalog;
 	};
 
-	enum MachiType : uint8_t { // 街の種類
-		machiInvalid, // 無効
-		machiRyanmen, // 両面
-		machiKanchan, // 嵌張
-		machiPenchan, // 辺張
-		machiShanpon, // 双ポン
-		machiTanki    // 単騎
+	enum class MachiType : uint8_t { // 街の種類
+		invalid, // 無効
+		ryanmen, // 両面
+		kanchan, // 嵌張
+		penchan, // 辺張
+		shanpon, // 双ポン
+		tanki    // 単騎
 	};
 	struct MENTSU_ANALYSIS { // 面子解析結果
 		PlayerID player;
@@ -97,13 +97,13 @@ public:
 			public:
 				HAN();
 				HAN(int8_t h);
-				HAN(int8_t h, hanUnit u);
+				HAN(int8_t h, HanUnit u);
 				int8_t getHan() const;
-				hanUnit getUnit() const;
+				HanUnit getUnit() const;
 			private:
 				int8_t han; // 数値
 #ifndef GUOBIAO
-				hanUnit unit; // 単位
+				HanUnit unit; // 単位
 #endif /* GUOBIAO */
 			};
 			HAN coreHan; // 縛りを満たす翻
