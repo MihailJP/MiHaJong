@@ -1,6 +1,6 @@
 MiHaJong ライセンス
 ===================
-Copyright (c) 2008-2013, 2019 MihailJP
+Copyright (c) 2008-2013, 2019-2020 MihailJP
 
 
 ライセンスについて
@@ -9,7 +9,7 @@ Copyright (c) 2008-2013, 2019 MihailJP
 
 　ソフトウェア全体としては、MITライセンスで提供されるものとします。使用した素材などの利用条件は後述してあります。
 
-> Copyright (c) 2008-2013, 2019 MihailJP
+> Copyright (c) 2008-2013, 2019-2020 MihailJP
 > 
 > MIT License
 > 
@@ -235,7 +235,7 @@ Luaインタプリタについて
 -----------------------
 　AIの思考ルーチンに、Luaスクリプトのインタプリタを使用しています。ライセンスは次の通りです。
 
-> Copyright (C) 1994-2012 Lua.org, PUC-Rio.
+> Copyright (C) 1994-2020 Lua.org, PUC-Rio.
 >
 > Permission is hereby granted, free of charge, to any person obtaining a
 > copy of this software and associated documentation files (the
@@ -256,7 +256,7 @@ Luaインタプリタについて
 > TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-参照：[http://www.lua.org/manual/5.2/readme.html#license](http://www.lua.org/manual/5.2/readme.html#license)
+参照：[http://www.lua.org/manual/5.4/readme.html#license](http://www.lua.org/manual/5.4/readme.html#license)
 
 
 libogg/libvorbisについて

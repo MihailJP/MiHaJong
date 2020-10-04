@@ -45,7 +45,6 @@ bool aiscript::callFunc(const GameTable* const gameStat, PlayerID PlayerID, cons
 				break;
 			case LUA_ERRMEM: o << _T("メモリの割当に失敗しました。"); break;
 			case LUA_ERRERR: o << _T("メッセージハンドラ実行中のエラーです。"); break;
-			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
 			}
 			error(o.str().c_str());
 			if (std::string(function_name) == std::string(fncname_discard))
@@ -110,7 +109,6 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 			case LUA_ERRFILE: o << _T("ファイルが開けません。"); break;
 			case LUA_ERRSYNTAX: o << _T("構文が正しくありません。"); break;
 			case LUA_ERRMEM: o << _T("メモリの割当に失敗しました。"); break;
-			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
 		}
 		error(o.str().c_str());
 	} else {
@@ -129,7 +127,6 @@ void aiscript::readfile(aiscript::ScriptStates* const L, const char* const filen
 				break;
 			case LUA_ERRMEM: o << _T("メモリの割当に失敗しました。"); break;
 			case LUA_ERRERR: o << _T("メッセージハンドラ実行中のエラーです。"); break;
-			case LUA_ERRGCMM: o << _T("ガーベジコレクション実行中のエラーです。"); break;
 			}
 			error(o.str().c_str());
 		} else {
