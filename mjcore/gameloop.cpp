@@ -40,7 +40,7 @@ EndType doTableTurn(GameTable* const gameStat) {
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 摸打の処理 */
 	DiscardTileNum DiscardTileIndex = getdahai(gameStat);
-	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
+	if (DiscardTileIndex.type == DiscardType::disconnect)
 		return EndType::disconnect;
 	/* ウェイトを入れる */
 	threadYield();

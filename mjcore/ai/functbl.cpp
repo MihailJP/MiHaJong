@@ -44,14 +44,14 @@ void aiscript::table::functable::lockTable(lua_State* const L) { // テーブル
 /* 捨牌番号の付帯情報 */
 inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "Normal", static_cast<lua_Integer>(DiscardTileNum::Normal));
-	TableAdd(L, "Ankan", static_cast<lua_Integer>(DiscardTileNum::Ankan));
-	TableAdd(L, "Kakan", static_cast<lua_Integer>(DiscardTileNum::Kakan));
-	TableAdd(L, "Riichi", static_cast<lua_Integer>(DiscardTileNum::Riichi));
-	TableAdd(L, "Flower", static_cast<lua_Integer>(DiscardTileNum::Flower));
-	TableAdd(L, "OpenRiichi", static_cast<lua_Integer>(DiscardTileNum::OpenRiichi));
-	TableAdd(L, "Agari", static_cast<lua_Integer>(DiscardTileNum::Agari));
-	TableAdd(L, "Kyuushu", static_cast<lua_Integer>(DiscardTileNum::Kyuushu));
+	TableAdd(L, "Normal", static_cast<lua_Integer>(DiscardType::normal));
+	TableAdd(L, "Ankan", static_cast<lua_Integer>(DiscardType::ankan));
+	TableAdd(L, "Kakan", static_cast<lua_Integer>(DiscardType::kakan));
+	TableAdd(L, "Riichi", static_cast<lua_Integer>(DiscardType::riichi));
+	TableAdd(L, "Flower", static_cast<lua_Integer>(DiscardType::flower));
+	TableAdd(L, "OpenRiichi", static_cast<lua_Integer>(DiscardType::openRiichi));
+	TableAdd(L, "Agari", static_cast<lua_Integer>(DiscardType::agari));
+	TableAdd(L, "Kyuushu", static_cast<lua_Integer>(DiscardType::kyuushu));
 	lockTable(L); lua_setfield(L, -2, "DiscardType");
 }
 

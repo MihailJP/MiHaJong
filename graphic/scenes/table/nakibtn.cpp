@@ -319,7 +319,7 @@ GameTableScreen::ButtonReconst::~ButtonReconst() {
 }
 
 /* モード設定 */
-void GameTableScreen::ButtonReconst::setMode(DiscardTileNum::discardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) {
+void GameTableScreen::ButtonReconst::setMode(DiscardType mode, ButtonID button, std::function<bool(int, GameTable*)> f) {
 	std::unique_lock<std::recursive_mutex> lock(reconstructionCS);
 	caller->tileSelectMode = mode;
 	this->setSunkenButton(button);
@@ -356,13 +356,13 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			caller->CallKyuushuKyuuhai();
 			break;
 		case ButtonID::riichi: // 立直
-			setMode(DiscardTileNum::Riichi, ButtonID::riichi, isTenpaiTile);
+			setMode(DiscardType::riichi, ButtonID::riichi, isTenpaiTile);
 			break;
 		case ButtonID::openRiichi: // オープン立直
-			setMode(DiscardTileNum::OpenRiichi, ButtonID::openRiichi, isTenpaiTile);
+			setMode(DiscardType::openRiichi, ButtonID::openRiichi, isTenpaiTile);
 			break;
 		case ButtonID::kan: // カン
-			setMode(DiscardTileNum::Ankan, ButtonID::kan,
+			setMode(DiscardType::ankan, ButtonID::kan,
 				[](int i, GameTable* tmpStat) -> bool {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
@@ -383,7 +383,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 				});
 			break;
 		case ButtonID::flower: // 花牌
-			setMode(DiscardTileNum::Flower, ButtonID::flower,
+			setMode(DiscardType::flower, ButtonID::flower,
 				[](int i, GameTable* tmpStat) -> bool {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
@@ -413,7 +413,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			if (tilesInHand[GameStatus::gameStat()->CurrentDiscard.tile] == 2) {
 				ui::UIEvent->set(naki::nakiPon);
 			} else if (caller->countTiles([](TileCode p, TileCode q) {return p == q;}) > 1) {
-				setMode(DiscardTileNum::MeldSel, ButtonID::pon,
+				setMode(DiscardType::meldSel, ButtonID::pon,
 					[](int i, GameTable* tmpStat) -> bool {
 						return tmpStat->statOfMine().Hand[i].tile != tmpStat->CurrentDiscard.tile;
 					});
@@ -436,7 +436,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					else                                               return false;
 				};
 				if (caller->countTiles(chiiable) > 2) {
-					setMode(DiscardTileNum::MeldSel, ButtonID::chii,
+					setMode(DiscardType::meldSel, ButtonID::chii,
 						[chiiable](int i, GameTable* tmpStat) -> bool {
 						return !chiiable(tmpStat->statOfMine().Hand[i].tile, tmpStat->CurrentDiscard.tile);
 					});

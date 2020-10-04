@@ -8,6 +8,7 @@
 #include "../text.h"
 #include <mutex>
 #include "scene_id.h"
+#include "../../common/discard.h"
 
 namespace mihajong_graphic {
 
@@ -86,7 +87,7 @@ public:
 #endif /*_WIN32*/
 private:
 	void checkTimeout();
-	int tileSelectMode;
+	DiscardType tileSelectMode;
 	void FinishTileChoice();
 	void CallTsumoAgari();
 	void CallKyuushuKyuuhai();

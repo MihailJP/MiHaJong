@@ -35,21 +35,21 @@ namespace {
 		DiscardTileNum discardTile(DiscardTileNum::fromSingleInt(result));
 
 		uint8_t dahaiStreamCode = 0x00;
-		if (discardTile.type == DiscardTileNum::Agari)
+		if (discardTile.type == DiscardType::agari)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Tsumo;
-		else if (discardTile.type == DiscardTileNum::Kyuushu)
+		else if (discardTile.type == DiscardType::kyuushu)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Kyuushu;
-		else if (discardTile.type == DiscardTileNum::Normal)
+		else if (discardTile.type == DiscardType::normal)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Normal_Offset + discardTile.id;
-		else if (discardTile.type == DiscardTileNum::Ankan)
+		else if (discardTile.type == DiscardType::ankan)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Ankan_Offset + discardTile.id;
-		else if (discardTile.type == DiscardTileNum::Kakan)
+		else if (discardTile.type == DiscardType::kakan)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Kakan_Offset + discardTile.id;
-		else if (discardTile.type == DiscardTileNum::Riichi)
+		else if (discardTile.type == DiscardType::riichi)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Riichi_Offset + discardTile.id;
-		else if (discardTile.type == DiscardTileNum::Flower)
+		else if (discardTile.type == DiscardType::flower)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_Flower_Offset + discardTile.id;
-		else if (discardTile.type == DiscardTileNum::OpenRiichi)
+		else if (discardTile.type == DiscardType::openRiichi)
 			dahaiStreamCode = mihajong_socket::protocol::Dahai_Type_ORiichi_Offset + discardTile.id;
 
 		if      (EnvTable::Instantiate()->GameMode == ClientType::server)
@@ -69,7 +69,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 	if (gameStat->CurrentPlayer.Active == gameStat->PlayerID) {
 		if (gameStat->statOfActive().AgariHouki) {
 			debug(_T("プレイヤーのツモ番ですが残念ながらアガリ放棄です。"));
-			DiscardTileIndex.type = DiscardTileNum::Normal;
+			DiscardTileIndex.type = DiscardType::normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
 		} else if (EnvTable::Instantiate()->WatchModeFlag) {
 			DiscardTileIndex = aiscript::compdahai(sandbox);
@@ -81,7 +81,7 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag == -1) ||
 		gameStat->statOfActive().AgariHouki) {
 			debug(_T("アガリ放棄か回線切断したプレイヤーのツモ番です。"));
-			DiscardTileIndex.type = DiscardTileNum::Normal;
+			DiscardTileIndex.type = DiscardType::normal;
 			DiscardTileIndex.id = NumOfTilesInHand - 1;
 	} else if ((EnvTable::Instantiate()->GameMode == ClientType::client) ||
 		(EnvTable::Instantiate()->PlayerDat[gameStat->CurrentPlayer.Active].RemotePlayerFlag > 0)) {
@@ -92,32 +92,32 @@ DiscardTileNum getdahai(GameTable* const gameStat) {
 		debug(_T("AIのツモ番です。"));
 		DiscardTileIndex = aiscript::compdahai(sandbox);
 		if (EnvTable::Instantiate()->GameMode == ClientType::server) {
-			assert((DiscardTileIndex.type == DiscardTileNum::Kyuushu) ||
-				(DiscardTileIndex.type == DiscardTileNum::Agari) ||
+			assert((DiscardTileIndex.type == DiscardType::kyuushu) ||
+				(DiscardTileIndex.type == DiscardType::agari) ||
 				((DiscardTileIndex.id >= 0) && (DiscardTileIndex.id < NumOfTilesInHand)));
 			switch (DiscardTileIndex.type) {
-			case DiscardTileNum::Kyuushu:
+			case DiscardType::kyuushu:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Kyuushu);
 				break;
-			case DiscardTileNum::Agari:
+			case DiscardType::agari:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Tsumo);
 				break;
-			case DiscardTileNum::Normal:
+			case DiscardType::normal:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_Normal_Offset + DiscardTileIndex.id);
 				break;
-			case DiscardTileNum::Ankan:
+			case DiscardType::ankan:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_Ankan_Offset + DiscardTileIndex.id);
 				break;
-			case DiscardTileNum::Kakan:
+			case DiscardType::kakan:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_Kakan_Offset + DiscardTileIndex.id);
 				break;
-			case DiscardTileNum::Riichi:
+			case DiscardType::riichi:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_Riichi_Offset + DiscardTileIndex.id);
 				break;
-			case DiscardTileNum::OpenRiichi:
+			case DiscardType::openRiichi:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_ORiichi_Offset + DiscardTileIndex.id);
 				break;
-			case DiscardTileNum::Flower:
+			case DiscardType::flower:
 				mihajong_socket::server::send(mihajong_socket::protocol::Dahai_Type_Flower_Offset + DiscardTileIndex.id);
 				break;
 			default:
@@ -173,7 +173,7 @@ namespace { /* 内部処理分割用 */
 	}
 	EndType procDahaiSubKyuushu(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 九種九牌が宣言された場合 */
 #ifndef GUOBIAO
-		DiscardTileIndex.type = DiscardTileNum::Normal;
+		DiscardTileIndex.type = DiscardType::normal;
 		DiscardTileIndex.id = NumOfTilesInHand; // 九種流しができない時はツモ切りとみなす
 		if (RuleData::chkRuleApplied("nine_terminals") &&
 			chkdaopaiability(gameStat, gameStat->CurrentPlayer.Active) &&
@@ -193,12 +193,12 @@ namespace { /* 内部処理分割用 */
 #endif /* GUOBIAO */
 	}
 	EndType procDahaiSubFlower(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 花牌を抜いた場合の処理 */
-		if ((DiscardTileIndex.type == DiscardTileNum::Ankan) &&
+		if ((DiscardTileIndex.type == DiscardType::ankan) &&
 			(gameStat->statOfActive().Hand[DiscardTileIndex.id].isFlower())) {
-				DiscardTileIndex.type = DiscardTileNum::Flower;
+				DiscardTileIndex.type = DiscardType::flower;
 				info(_T("花牌の処理に移ります。打牌コードを補正しました。"));
 		}
-		if (DiscardTileIndex.type == DiscardTileNum::Flower) {
+		if (DiscardTileIndex.type == DiscardType::flower) {
 			EndType RoundEndType;
 			if (gameStat->chkGameType(SanmaX)) {
 				/* ガリ三麻ルールで北風牌を抜いたときの処理 */
@@ -225,8 +225,8 @@ namespace { /* 内部処理分割用 */
 #endif /* GUOBIAO */
 		if ((gameStat->TilePointer < (gameStat->RinshanPointer - (gameStat->DeadTiles - 1))) && // ハイテイでない
 			(gameStat->KangNum < kanLim)) { // 合計数の制限内である
-				if ((DiscardTileIndex.type == DiscardTileNum::Ankan) ||
-					(DiscardTileIndex.type == DiscardTileNum::Kakan)) {
+				if ((DiscardTileIndex.type == DiscardType::ankan) ||
+					(DiscardTileIndex.type == DiscardType::kakan)) {
 #ifndef GUOBIAO
 						if (RuleData::chkRule("minkan_pao", "yes") || RuleData::chkRule("minkan_pao", "yes_2han")) {
 							gameStat->PaoFlag[pyMinkan].paoPlayer =
@@ -236,7 +236,7 @@ namespace { /* 内部処理分割用 */
 						/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
 						EndType roundEndType;
 						if (fuuroproc(gameStat, &roundEndType, DiscardTileIndex,
-							(DiscardTileIndex.type == DiscardTileNum::Ankan) ?
+							(DiscardTileIndex.type == DiscardType::ankan) ?
 							FuuroAnkan : FuuroKakan))
 							return roundEndType;
 						else return EndType::drawRinshan;
@@ -246,25 +246,25 @@ namespace { /* 内部処理分割用 */
 	}
 	void procDahaiSubRiichi(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) { /* 立直をするときの処理 */
 #ifdef GUOBIAO
-		DiscardTileIndex.type = DiscardTileNum::Normal;
+		DiscardTileIndex.type = DiscardType::normal;
 		warn(_T("リーチが指定されましたが、これを無視します。"));
 #else /* GUOBIAO */
 		if (gameStat->tilesLeft() < ACTUAL_PLAYERS) {
 			// 残り４枚未満の時はリーチ無効
-			DiscardTileIndex.type = DiscardTileNum::Normal;
+			DiscardTileIndex.type = DiscardType::normal;
 			warn(_T("山牌の残数要件を満たしていません。通常の打牌とみなします。"));
 		} else if (!isRichiReqSatisfied(gameStat, gameStat->CurrentPlayer.Active)) {
 			// 点棒条件を満たしていない時はリーチ無効
-			DiscardTileIndex.type = DiscardTileNum::Normal;
+			DiscardTileIndex.type = DiscardType::normal;
 			warn(_T("持ち点の要件を満たしていません。通常の打牌とみなします。"));
 		}
-		if ((!RuleData::chkRuleApplied("open_riichi")) && (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
+		if ((!RuleData::chkRuleApplied("open_riichi")) && (DiscardTileIndex.type == DiscardType::openRiichi)) {
 			// オープン立直無しの時
-			DiscardTileIndex.type = DiscardTileNum::Riichi;
+			DiscardTileIndex.type = DiscardType::riichi;
 			warn(_T("オープン立直はできません。通常の立直とみなします。"));
 		}
 		/* 立直を宣言する */
-		if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) {
+		if (DiscardTileIndex.type == DiscardType::openRiichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::riichi);
 			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 			sound::Play(sound::IDs::voxRichi);
@@ -276,7 +276,7 @@ namespace { /* 内部処理分割用 */
 			gameStat->statOfActive().HandStat = handOpenRiichi;
 			gameStat->statOfActive().RichiFlag.OpenFlag = true;
 		}
-		if (DiscardTileIndex.type == DiscardTileNum::Riichi) {
+		if (DiscardTileIndex.type == DiscardType::riichi) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::riichi);
 			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
 			sound::Play(sound::IDs::voxRichi);
@@ -303,9 +303,9 @@ namespace { /* 内部処理分割用 */
 		DiscardTile* const newDiscard = &(gameStat->statOfActive().Discard[++gameStat->statOfActive().DiscardPointer]);
 		newDiscard->tcode = gameStat->CurrentDiscard = gameStat->statOfActive().Hand[DiscardTileIndex.id];
 #ifndef GUOBIAO
-		if (DiscardTileIndex.type == DiscardTileNum::Riichi) /* 立直宣言牌の場合 */
+		if (DiscardTileIndex.type == DiscardType::riichi) /* 立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
-		else if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi) /* オープン立直宣言牌の場合 */
+		else if (DiscardTileIndex.type == DiscardType::openRiichi) /* オープン立直宣言牌の場合 */
 			newDiscard->dstat = discardRiichi;
 		else /* それ以外の場合 */
 #endif /* GUOBIAO */
@@ -322,7 +322,7 @@ namespace { /* 内部処理分割用 */
 		}
 #ifndef GUOBIAO
 		/* 立直をした直後の場合、千点を供託し一発のフラグを立てる */
-		if ((DiscardTileIndex.type == DiscardTileNum::Riichi) || (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)) {
+		if ((DiscardTileIndex.type == DiscardType::riichi) || (DiscardTileIndex.type == DiscardType::openRiichi)) {
 			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::none);
 			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none); // 発声文字列を消去
 			gameStat->statOfActive().RichiFlag.RichiFlag =
@@ -330,10 +330,10 @@ namespace { /* 内部処理分割用 */
 			gameStat->statOfActive().RichiFlag.DoubleFlag =
 				gameStat->statOfActive().FirstDrawFlag;
 			gameStat->statOfActive().RichiFlag.OpenFlag =
-				(DiscardTileIndex.type == DiscardTileNum::OpenRiichi);
+				(DiscardTileIndex.type == DiscardType::openRiichi);
 			++gameStat->Deposit;
 			gameStat->statOfActive().PlayerScore -= 1000;
-			if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)
+			if (DiscardTileIndex.type == DiscardType::openRiichi)
 				chkOpenMachi(gameStat, gameStat->CurrentPlayer.Active);
 		}
 		/* 天和や地和のフラグを降ろす */
@@ -374,19 +374,19 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	if (!gameStat->statOfActive().RichiFlag.RichiFlag)
 		gameStat->statOfActive().DoujunFuriten = false;
 	/* 自摸和の処理 */
-	if (DiscardTileIndex.type == DiscardTileNum::Agari) {
+	if (DiscardTileIndex.type == DiscardType::agari) {
 		RoundEndType = procDahaiSubAgari(gameStat, DiscardTileIndex);
 		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	/* 九種九牌が宣言された場合 */
-	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardTileNum::Kyuushu)) {
+	if ((!gameStat->chkGameType(SanmaS)) && (DiscardTileIndex.type == DiscardType::kyuushu)) {
 		RoundEndType = procDahaiSubKyuushu(gameStat, DiscardTileIndex);
 		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	/* 打牌を牌譜に記録する */
-	if ((DiscardTileIndex.type == DiscardTileNum::Normal) ||
-		(DiscardTileIndex.type == DiscardTileNum::Riichi) ||
-		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
+	if ((DiscardTileIndex.type == DiscardType::normal) ||
+		(DiscardTileIndex.type == DiscardType::riichi) ||
+		(DiscardTileIndex.type == DiscardType::openRiichi))
 		haifu::haifurecmota(gameStat, DiscardTileIndex);
 	/* 花牌を抜いた場合の処理 */
 	if (!gameStat->chkGameType(SanmaS)) {
@@ -402,8 +402,8 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 	gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
 #ifndef GUOBIAO
 	/* 立直をするときの処理 */
-	if ((DiscardTileIndex.type == DiscardTileNum::Riichi) ||
-		(DiscardTileIndex.type == DiscardTileNum::OpenRiichi))
+	if ((DiscardTileIndex.type == DiscardType::riichi) ||
+		(DiscardTileIndex.type == DiscardType::openRiichi))
 		procDahaiSubRiichi(gameStat, DiscardTileIndex);
 	/* 戻牌天和フラグ */
 	if ((gameStat->statOfActive().renpaiTenhohStat == 0) &&

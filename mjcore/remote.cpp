@@ -29,7 +29,7 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 }
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
-	remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = 0;
+	remoteDahai.type = DiscardType::normal; remoteDahai.id = 0;
 	myThread = std::thread(startthread, this);
 }
 RemoteDahai::~RemoteDahai() {
@@ -121,23 +121,23 @@ begin:
 			lipai(gameStat, gameStat->CurrentPlayer.Active);
 			goto begin;
 		} else if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
+			remoteDahai.type = DiscardType::normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Ankan_Offset) && (ReceivedMsg < (Dahai_Type_Ankan_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
+			remoteDahai.type = DiscardType::ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Kakan_Offset) && (ReceivedMsg < (Dahai_Type_Kakan_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Kakan; remoteDahai.id = ReceivedMsg - Dahai_Type_Kakan_Offset;
+			remoteDahai.type = DiscardType::kakan; remoteDahai.id = ReceivedMsg - Dahai_Type_Kakan_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Riichi_Offset) && (ReceivedMsg < (Dahai_Type_Riichi_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Riichi; remoteDahai.id = ReceivedMsg - Dahai_Type_Riichi_Offset;
+			remoteDahai.type = DiscardType::riichi; remoteDahai.id = ReceivedMsg - Dahai_Type_Riichi_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_ORiichi_Offset) && (ReceivedMsg < (Dahai_Type_ORiichi_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::OpenRiichi; remoteDahai.id = ReceivedMsg - Dahai_Type_ORiichi_Offset;
+			remoteDahai.type = DiscardType::openRiichi; remoteDahai.id = ReceivedMsg - Dahai_Type_ORiichi_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Flower_Offset) && (ReceivedMsg < (Dahai_Type_Flower_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Flower; remoteDahai.id = ReceivedMsg - Dahai_Type_Flower_Offset;
+			remoteDahai.type = DiscardType::flower; remoteDahai.id = ReceivedMsg - Dahai_Type_Flower_Offset;
 		} else if (ReceivedMsg == Dahai_Kyuushu) {
-			remoteDahai.type = DiscardTileNum::Kyuushu; remoteDahai.id = 0;
+			remoteDahai.type = DiscardType::kyuushu; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Tsumo) {
-			remoteDahai.type = DiscardTileNum::Agari; remoteDahai.id = 0;
+			remoteDahai.type = DiscardType::agari; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Remote_Disconnect) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = TsumohaiIndex;
+			remoteDahai.type = DiscardType::normal; remoteDahai.id = TsumohaiIndex;
 		}
 	}
 	finished = true;

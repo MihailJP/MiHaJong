@@ -59,7 +59,7 @@ public:
 	void enable(ButtonID buttonID);
 	void disable(ButtonID buttonID);
 	void enable(const std::bitset<btnMAXIMUM>& flagset);
-	void setMode(mihajong_structs::DiscardTileNum::discardType, ButtonID, std::function<bool(int, GameTable*)> = [](int, GameTable*){return false;});
+	void setMode(mihajong_structs::DiscardType, ButtonID, std::function<bool(int, GameTable*)> = [](int, GameTable*){return false;});
 private: // ボタンの押し込み
 	ButtonID sunkenButton;
 	static constexpr auto NoSunkenButton = static_cast<ButtonID>(-3);

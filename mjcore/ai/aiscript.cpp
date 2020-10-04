@@ -8,7 +8,7 @@
 #include "../logging.h"
 #include "../../common/strcode.h"
 
-constexpr DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
+constexpr DiscardTileNum aiscript::DiscardThrough = {DiscardType::normal, NumOfTilesInHand - 1};
 
 aiscript::ScriptStates aiscript::status[Players] = {{nullptr, false}};
 constexpr char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
@@ -155,7 +155,7 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 	return determine_discard(gameStat);
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
-	DiscardTileNum discard = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
+	DiscardTileNum discard = {DiscardType::normal, NumOfTilesInHand - 1};
 	std::thread myThread(calcDiscard_threaded, std::ref(discard), gameStat);
 	myThread.join();
 	return discard;
@@ -170,16 +170,16 @@ void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gam
 	} else {
 		/* 実行完了 */
 		int flag;
-		answer.type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
+		answer.type = (DiscardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
 		if (!flag) {
 			warn(_T("1番目の返り値が数値ではありません。通常の打牌とみなします。"));
-			answer.type = DiscardTileNum::Normal; // fallback
-		} else if ((answer.type < DiscardTileNum::Normal) || (answer.type > DiscardTileNum::Disconnect)) {
+			answer.type = DiscardType::normal; // fallback
+		} else if ((answer.type < DiscardType::normal) || (answer.type > DiscardType::disconnect)) {
 			warn(_T("1番目の返り値が正しくありません。通常の打牌とみなします。"));
-			answer.type = DiscardTileNum::Normal; // fallback
+			answer.type = DiscardType::normal; // fallback
 		}
-		if ((answer.type == DiscardTileNum::Agari) || (answer.type == DiscardTileNum::Kyuushu) ||
-			(answer.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
+		if ((answer.type == DiscardType::agari) || (answer.type == DiscardType::kyuushu) ||
+			(answer.type == DiscardType::disconnect)) { // 番号指定が不要な場合
 				answer.id = static_cast<uint8_t>(NumOfTilesInHand - 1); // 2番めの返り値は無視
 		} else {
 			lua_Integer i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
