@@ -29,7 +29,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(totalHan + totalBonusHan <= 7) &&
 			(totalSemiMangan + totalBonusSemiMangan == 0)) {
 				LPCTSTR name = _T("アリス・マーガトロイド");
-				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_baiman(analysis);
+				yakuHan[name] = 2_manganF(analysis);
 				yakuOrd.push_back(name);
 				suppression.insert(_T("対々和"));
 				suppression.insert(_T("三色同刻"));
@@ -44,7 +44,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	/* 无番和 */
 	if (totalHan <= 0) {
 		LPCTSTR name = _T("无番和");
-		yakuHan[name] = yaku::yakuCalculator::Yaku::yval_8(analysis);
+		yakuHan[name] = 8_fenF(analysis);
 		yakuOrd.push_back(name);
 	}
 #else /* GUOBIAO */
@@ -56,7 +56,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(! analysis->PlayerStat->RichiFlag.RichiFlag) &&
 			(totalHan <= 0) && (totalSemiMangan == 0)) {
 				LPCTSTR name = _T("カラス");
-				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
+				yakuHan[name] = 1_hanF(analysis);
 				yakuOrd.push_back(name);
 		}
 	}
@@ -68,7 +68,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(analysis->PlayerStat->RichiFlag.RichiFlag) &&
 			(totalHan == 1) && (totalSemiMangan == 0)) {
 				LPCTSTR name = _T("カラス立直");
-				yakuHan[name] = yaku::yakuCalculator::Yaku::yval_1han(analysis);
+				yakuHan[name] = 1_hanF(analysis);
 				yakuOrd.push_back(name);
 		}
 	}
@@ -88,7 +88,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 			(analysis->MianziDat[0].tile == NorthWind)) { /* 雀頭が北か？ */
 				LPCTSTR name = _T("北枕");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::YAKU_HAN(
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null,
+					0_han,
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(-1));
 				yakuOrd.push_back(name);
 		}
