@@ -298,7 +298,7 @@ static_assert(std::is_standard_layout<PlayerTable>::value, "PlayerTable is not s
 
 // -------------------------------------------------------------------------
 
-enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
+enum class SeatAbsolute : uint8_t { east, south, west, north, white, green, red };
 enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
 
 // -------------------------------------------------------------------------
@@ -360,12 +360,16 @@ struct GameTable { // 卓の情報を格納する
 		return Dice[2].Number + Dice[3].Number;
 	}
 
-	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
-		if (chkGameType(SanmaT))
-			return static_cast<seatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-		else return static_cast<seatAbsolute>((player + 32 - currentRound) % 4);
+	SeatAbsolute prevailingwind() const { // 場風
+		return static_cast<SeatAbsolute>(GameRound / 4);
 	}
-	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
+
+	SeatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
+		if (chkGameType(SanmaT))
+			return static_cast<SeatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return static_cast<SeatAbsolute>((player + 32 - currentRound) % 4);
+	}
+	SeatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
 		return playerwind(player, GameRound);
 	}
 

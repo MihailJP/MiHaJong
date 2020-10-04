@@ -52,7 +52,7 @@ namespace { // 席替え後のプレイヤー番号対照
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskipX(PlayerID targetPlayer) {
 	if (GameStat.chkGameType(SanmaT) && (targetPlayer == 3)) return; // 三麻で北家にあたる位置だったら帰る
-	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == sNorth)) return; // 四人三麻で北家だったら帰る
+	if (GameStat.chkGameType(Sanma4) && (GameStat.playerwind(targetPlayer) == SeatAbsolute::north)) return; // 四人三麻で北家だったら帰る
 	checkCycle();
 #ifdef GUOBIAO
 	XhaifuBufferBody << _T("\t\t\t\t<turn player=\"player") << playerNumberList[currWindNum][static_cast<int>(targetPlayer)] << _T("\" />") << std::endl;
@@ -723,7 +723,7 @@ void haifu::tools::hfwriter::finalformWriter::hfExposedMeld(const GameTable* con
 	}
 }
 
-void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind, EndType RoundEndType) {
+void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, SeatAbsolute wind, EndType RoundEndType) {
 	// 点数の変動
 	CodeConv::tostringstream o;
 	o << _T(" ") << origPoint[player].to_str(_T(""), _T("△"));
@@ -748,7 +748,7 @@ void haifu::tools::hfwriter::hfScoreWriteOut(const GameTable* const gameStat, Pl
 #else /* GUOBIAO */
 	XhaifuBuffer << _T("\t\t\t\t<player ref=\"player") << static_cast<int>(player) << _T("\" wind=\"") <<
 #endif /* GUOBIAO */
-		nomDeVent[wind] << _T("\" score=\"")
+		nomDeVent[static_cast<int>(wind)] << _T("\" score=\"")
 		<< origPoint[player].to_str_plain() << _T('"');
 	if (origPoint[player] != gameStat->Player[player].PlayerScore) // 点数が一致しないなら
 		XhaifuBuffer << _T(" delta=\"") <<
@@ -820,7 +820,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 		finalformWriter::hfFlower(gameStat, k);
 		finalformWriter::hfExposedMeld(gameStat, k);
 		// 点棒状況を書き出す
-		hfScoreWriteOut(gameStat, k, static_cast<seatAbsolute>(i), RoundEndType);
+		hfScoreWriteOut(gameStat, k, static_cast<SeatAbsolute>(i), RoundEndType);
 		// 色々書き出し
 		XhaifuBufferBody << _T("\t\t\t</final-hand>") << std::endl;
 	}

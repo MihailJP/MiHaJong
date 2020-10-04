@@ -288,10 +288,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("風雪宝双風"), get_yaku_han("feng_xue_bao_shangfeng"),
 			_T("対々和"), _T("混老頭"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (Wind2Tile(analysis->GameStat->GameRound / 4) != // ダブ風でなくて
-					Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))) &&
-					(analysis->DuiziCount[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1) && // 自風があり
-					(analysis->DuiziCount[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1) && // 場風があり
+				return (Wind2Tile(analysis->GameStat->prevailingwind()) != // ダブ風でなくて
+					Wind2Tile(analysis->GameStat->playerwind(analysis->player))) &&
+					(analysis->DuiziCount[Wind2Tile(analysis->GameStat->playerwind(analysis->player))] >= 1) && // 自風があり
+					(analysis->DuiziCount[Wind2Tile(analysis->GameStat->prevailingwind())] >= 1) && // 場風があり
 					(analysis->DuiziCount[CircleOne] >= 1) && (analysis->DuiziCount[BambooOne] >= 1) &&
 					(analysis->DuiziCount[WhiteDragon] >= 1);
 			}

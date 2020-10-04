@@ -97,7 +97,7 @@ private:
 				~finalformWriter() = delete;
 			};
 
-			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, seatAbsolute wind, EndType RoundEndType);
+			static void hfScoreWriteOut(const GameTable* const gameStat, PlayerID player, SeatAbsolute wind, EndType RoundEndType);
 
 		public:
 			static void hfWriteHead(const GameTable* const gameStat,

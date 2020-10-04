@@ -64,7 +64,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	};
 	auto getRinshanFlag2 = getRinshanFlag(2);
 	auto getRinshanFlag1 = getRinshanFlag(1);
-	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (gameStat->playerwind(trueTargetPlayer) % 2 == 1);
+	const bool shorterWall = (std::get<0>(yamahaiAttr) == 2) && (static_cast<int>(gameStat->playerwind(trueTargetPlayer)) % 2 == 1);
 	if (gameStat->chkGameType(GuobiaoMJ) && (gameStat->tilesLeft() == 0)) { // 中国ルールで最後の牌まで自摸った場合
 		for (int i = 0; i < 144; ++i)
 			TileTexture->DelTile(i);

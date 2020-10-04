@@ -206,8 +206,8 @@ void TableProtoScene::ScoreBoard::Render() {
 
 void TableProtoScene::ScoreBoard::renderWind() {
 	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
-	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
-	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
+	const SeatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
+	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == SeatAbsolute::north)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	const RECT rect = {
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
@@ -216,7 +216,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		WindCharWidth, WindCharHeight,
-		(wind == sEast) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
+		(wind == SeatAbsolute::east) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
 		&rect, 0, 0, &myMatrix);
 }
 

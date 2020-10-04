@@ -551,8 +551,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("五門斎"),
 			[uumenchii](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (uumenchii(analysis) &&
-					(analysis->GameStat->GameRound / 4 == sEast) &&
-					(analysis->GameStat->playerwind(analysis->player) == sEast) &&
+					(analysis->GameStat->prevailingwind() == SeatAbsolute::east) &&
+					(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::east) &&
 					(analysis->KeziCount[EastWind] >= 1)
 					);
 			}

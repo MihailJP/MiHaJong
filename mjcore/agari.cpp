@@ -74,7 +74,7 @@ namespace {
 	{
 		const PlayerID AgariPlayer = (Mode == CAP_normal) ? gameStat->CurrentPlayer.Agari : static_cast<PlayerID>(Mode);
 		const bool TsumoAgari = (Mode == CAP_normal) ? gameStat->TsumoAgariFlag : true;
-		if (gameStat->playerwind(AgariPlayer) == sEast) { // 親の和了り
+		if (gameStat->playerwind(AgariPlayer) == SeatAbsolute::east) { // 親の和了り
 			if (TsumoAgari) { // ツモアガリ(包の人が一人払い)
 				for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 					if (cnt == AgariPlayer) {
@@ -127,7 +127,7 @@ namespace {
 	void calcAgariPoints_Ron( // 通常時：ロン
 		const GameTable* gameStat, LargeNum& agariPoint, const LargeNum& AgariPointRaw, InfoByPlayer<LargeNum>& PointDelta, PlayerID AgariPlayer)
 	{
-		if (gameStat->playerwind(AgariPlayer) == sEast) { // 親の和了り
+		if (gameStat->playerwind(AgariPlayer) == SeatAbsolute::east) { // 親の和了り
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (cnt == AgariPlayer) {
 					agariPoint = agaricalc(AgariPointRaw, 6, 0, 0);
@@ -174,7 +174,7 @@ namespace {
 						agariPoint += 2000;
 						PointDelta[cnt] += 2000;
 					}
-				} else if (gameStat->playerwind(cnt) != sNorth) {
+				} else if (gameStat->playerwind(cnt) != SeatAbsolute::north) {
 					deltacalcminus(AgariPointRaw, PointDelta, 2, cnt);
 					if (RuleData::chkRule("tsumo_payment", "add_1000")) PointDelta[cnt] -= 1000;
 				}
@@ -185,7 +185,7 @@ namespace {
 					agariPoint = agaricalc(AgariPointRaw, 3, 3, 1);
 					deltacalcplus(AgariPointRaw, PointDelta, 3, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 3, cnt);
-				} else if (gameStat->playerwind(cnt) != sNorth)
+				} else if (gameStat->playerwind(cnt) != SeatAbsolute::north)
 					deltacalcminus(AgariPointRaw, PointDelta, 3, cnt);
 			}
 		}
@@ -203,7 +203,7 @@ namespace {
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
 				}
-				else if (gameStat->playerwind(cnt) == sEast)
+				else if (gameStat->playerwind(cnt) == SeatAbsolute::east)
 					deltacalcminus(AgariPointRaw, PointDelta, 2, cnt);
 				else
 					deltacalcminus(AgariPointRaw, PointDelta, 1, cnt);
@@ -216,7 +216,7 @@ namespace {
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, 2, cnt);
 				}
-				else if (gameStat->playerwind(cnt) != sNorth)
+				else if (gameStat->playerwind(cnt) != SeatAbsolute::north)
 					deltacalcminus(AgariPointRaw, PointDelta, 2, cnt);
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "north_segment_omitted") || RuleData::chkRule("tsumo_payment", "add_1000")) {
@@ -230,10 +230,10 @@ namespace {
 						agariPoint += 2000;
 						PointDelta[cnt] += 2000;
 					}
-				} else if (gameStat->playerwind(cnt) == sEast) {
+				} else if (gameStat->playerwind(cnt) == SeatAbsolute::east) {
 					deltacalcminus(AgariPointRaw, PointDelta, 2, cnt);
 					if (RuleData::chkRule("tsumo_payment", "add_1000")) PointDelta[cnt] -= 1000;
-				} else if (gameStat->playerwind(cnt) != sNorth) {
+				} else if (gameStat->playerwind(cnt) != SeatAbsolute::north) {
 					deltacalcminus(AgariPointRaw, PointDelta, 1, cnt);
 					if (RuleData::chkRule("tsumo_payment", "add_1000")) PointDelta[cnt] -= 1000;
 				}
@@ -246,9 +246,9 @@ namespace {
 					deltacalcplus(AgariPointRaw, PointDelta, Rat(8, 3), cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, Rat(4, 3), cnt);
 				}
-				else if (gameStat->playerwind(cnt) == sEast)
+				else if (gameStat->playerwind(cnt) == SeatAbsolute::east)
 					deltacalcminus(AgariPointRaw, PointDelta, Rat(8, 3), cnt);
-				else if (gameStat->playerwind(cnt) != sNorth)
+				else if (gameStat->playerwind(cnt) != SeatAbsolute::north)
 					deltacalcminus(AgariPointRaw, PointDelta, Rat(4, 3), cnt);
 			}
 		} else if (RuleData::chkRule("tsumo_payment", "north_segment_halved")) {
@@ -260,10 +260,10 @@ namespace {
 					deltacalcplus(AgariPointRaw, PointDelta, 1, cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, Rat(1, 2), cnt);
 					deltacalcplus(AgariPointRaw, PointDelta, Rat(1, 2), cnt);
-				} else if (gameStat->playerwind(cnt) == sEast) {
+				} else if (gameStat->playerwind(cnt) == SeatAbsolute::east) {
 					deltacalcminus(AgariPointRaw, PointDelta, 2, cnt);
 					deltacalcminus(AgariPointRaw, PointDelta, Rat(1, 2), cnt);
-				} else if (gameStat->playerwind(cnt) != sNorth) {
+				} else if (gameStat->playerwind(cnt) != SeatAbsolute::north) {
 					deltacalcminus(AgariPointRaw, PointDelta, 1, cnt);
 					deltacalcminus(AgariPointRaw, PointDelta, Rat(1, 2), cnt);
 				}
@@ -285,7 +285,7 @@ void endround::agari::calcAgariPoints(
 #else /* GUOBIAO */
 	if (isPaoAgari(gameStat, AgariPlayer)) // 包適用時
 		calcAgariPoints_Pao(gameStat, agariPoint, AgariPointRaw, PointDelta, Mode);
-	else if ((TsumoAgari) && (gameStat->playerwind(AgariPlayer) == sEast)) // 通常時：親のツモアガリ
+	else if ((TsumoAgari) && (gameStat->playerwind(AgariPlayer) == SeatAbsolute::east)) // 通常時：親のツモアガリ
 		calcAgariPoints_Tsumo_Dealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
 	else if (TsumoAgari) // 通常時：子のツモアガリ
 		calcAgariPoints_Tsumo_NonDealer(gameStat, agariPoint, AgariPointRaw, PointDelta, AgariPlayer);
@@ -628,19 +628,19 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	if (AgariPlayerPriority == -1) AgariPlayerPriority = gameStat->CurrentPlayer.Agari;
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {
-		case sEast:  ResultDesc += _T("東家"); break;
-		case sSouth: ResultDesc += _T("南家"); break;
-		case sWest:  ResultDesc += _T("西家"); break;
-		case sNorth: ResultDesc += _T("北家"); break;
+		case SeatAbsolute::east:  ResultDesc += _T("東家"); break;
+		case SeatAbsolute::south: ResultDesc += _T("南家"); break;
+		case SeatAbsolute::west:  ResultDesc += _T("西家"); break;
+		case SeatAbsolute::north: ResultDesc += _T("北家"); break;
 	}
 	if (gameStat->TsumoAgariFlag) {
 		ResultDesc += _T("のツモ和了り");
 	} else {
 		switch (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi)) {
-			case sEast:  ResultDesc += _T("が東家からロン和了り"); break;
-			case sSouth: ResultDesc += _T("が南家からロン和了り"); break;
-			case sWest:  ResultDesc += _T("が西家からロン和了り"); break;
-			case sNorth: ResultDesc += _T("が北家からロン和了り"); break;
+			case SeatAbsolute::east:  ResultDesc += _T("が東家からロン和了り"); break;
+			case SeatAbsolute::south: ResultDesc += _T("が南家からロン和了り"); break;
+			case SeatAbsolute::west:  ResultDesc += _T("が西家からロン和了り"); break;
+			case SeatAbsolute::north: ResultDesc += _T("が北家からロン和了り"); break;
 		}
 	}
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
@@ -668,7 +668,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 	sound::util::bgmstop();
 
 	transfer::resetDelta();
-	if (gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast)
+	if (gameStat->playerwind(gameStat->CurrentPlayer.Agari) == SeatAbsolute::east)
 		OyaAgari = gameStat->CurrentPlayer.Agari; // 親の和了り
 	LargeNum agariPoint;
 	calcAgariPoints(gameStat, agariPoint, AgariPointRaw, transfer::getDelta(), -1);
@@ -735,7 +735,7 @@ void endround::agari::endround_agariproc(GameTable* gameStat, CodeConv::tstring&
 
 	/* 四馬路が北家の放銃だった場合 */
 	if (!gameStat->chkGameType(SanmaT)) {
-		if (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi) == sNorth) {
+		if (gameStat->playerwind(gameStat->CurrentPlayer.Furikomi) == SeatAbsolute::north) {
 			if (std::regex_search(yakuInfo.yakuNameList, std::basic_regex<TCHAR>(_T("(^|\\r?\\n)四馬路(\r?\n|$)")))) {
 				transfer::resetDelta();
 				for (PlayerID i = 0; i < Players; ++i)
@@ -766,10 +766,10 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 #else /* GUOBIAO */
 	if (!ResultDesc.empty()) ResultDesc += _T("\n");
 	switch (gameStat->playerwind(gameStat->CurrentPlayer.Agari)) {
-		case sEast:  ResultDesc += _T("東家のチョンボ"); break;
-		case sSouth: ResultDesc += _T("南家のチョンボ"); break;
-		case sWest:  ResultDesc += _T("西家のチョンボ"); break;
-		case sNorth: ResultDesc += _T("北家のチョンボ"); break;
+		case SeatAbsolute::east:  ResultDesc += _T("東家のチョンボ"); break;
+		case SeatAbsolute::south: ResultDesc += _T("南家のチョンボ"); break;
+		case SeatAbsolute::west:  ResultDesc += _T("西家のチョンボ"); break;
+		case SeatAbsolute::north: ResultDesc += _T("北家のチョンボ"); break;
 	}
 	mihajong_graphic::ui::WaitUIWithTimeout(1500);
 	if (EnvTable::Instantiate()->WatchModeFlag)

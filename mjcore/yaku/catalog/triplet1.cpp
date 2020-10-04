@@ -426,7 +426,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 	const auto bakaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
+			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->prevailingwind())] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
@@ -438,7 +438,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	));
 	const auto jikaze =
 		[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-			return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1);
+			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(analysis->player))] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
@@ -470,7 +470,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("kaimenkaze")) {
 		kaimenkaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・開門風"), get_yaku_han("kaimenkaze"),
@@ -485,8 +485,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("urakaze")) {
 		urakaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(
-					RelativePositionOf(analysis->player, sOpposite))))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(
+					RelativePositionOf(analysis->player, sOpposite)))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・裏風"), get_yaku_han("urakaze"),
@@ -637,11 +637,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("役牌・場風"), _T("役牌・自風"), _T("役牌・中"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->GameStat->GameRound / 4 == sWest) &&
-					(analysis->GameStat->playerwind(analysis->player) == sSouth))
+				if ((analysis->GameStat->prevailingwind() == SeatAbsolute::west) &&
+					(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::south))
 					yakuFlag = true;
-				if ((analysis->GameStat->GameRound / 4 == sSouth) &&
-					(analysis->GameStat->playerwind(analysis->player) == sWest))
+				if ((analysis->GameStat->prevailingwind() == SeatAbsolute::south) &&
+					(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::west))
 					yakuFlag = true;
 				return ((analysis->KeziCount[SouthWind] >= 1) &&
 					(analysis->KeziCount[WestWind] >= 1) &&

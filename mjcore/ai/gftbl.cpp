@@ -124,7 +124,7 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, static_cast<int>(Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))));
+	lua_pushinteger(L, static_cast<int>(Wind2Tile(gameStat->prevailingwind())));
 	return 1;
 }
 
@@ -254,7 +254,7 @@ int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, static_cast<int>(Wind2Tile(static_cast<uint8_t>(gameStat->playerwind(player)))));
+	lua_pushinteger(L, static_cast<int>(Wind2Tile(gameStat->playerwind(player))));
 	return 1;
 }
 
@@ -477,7 +477,7 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
 		if (windtiles[i] ==
-			Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))) // 場風牌
+			Wind2Tile(gameStat->prevailingwind())) // 場風牌
 			flag = true;
 		else if (windtiles[i] ==
 			Wind2Tile(gameStat->playerwind(player))) // 自風牌

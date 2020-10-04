@@ -21,7 +21,7 @@ using mihajong_structs::InfoByPlayer;
 using mihajong_structs::PlayerID;
 using mihajong_structs::TileCode;
 
-using mihajong_structs::seatAbsolute;
+using mihajong_structs::SeatAbsolute;
 using mihajong_structs::seatRelative;
 using mihajong_structs::PlayerRank;
 using mihajong_structs::PlayerRankList;
@@ -62,12 +62,12 @@ PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer);
 int RonPlayers(const GameTable* const gameStat);
 
 /* 「東家」「南家」「西家」「北家」の文字列を返す */
-CodeConv::tstring inline windName(seatAbsolute wind) {
+CodeConv::tstring inline windName(SeatAbsolute wind) {
 	switch (wind) {
-		case sEast: return CodeConv::tstring(_T("東家"));
-		case sSouth: return CodeConv::tstring(_T("南家"));
-		case sWest: return CodeConv::tstring(_T("西家"));
-		case sNorth: return CodeConv::tstring(_T("北家"));
+		case SeatAbsolute::east: return CodeConv::tstring(_T("東家"));
+		case SeatAbsolute::south: return CodeConv::tstring(_T("南家"));
+		case SeatAbsolute::west: return CodeConv::tstring(_T("西家"));
+		case SeatAbsolute::north: return CodeConv::tstring(_T("北家"));
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です"));
 			return CodeConv::tstring(_T("????")); break;
@@ -164,7 +164,7 @@ CodeConv::tstring inline TileName(TileCode tile) {
 	}
 }
 
-TileCode Wind2Tile(uint8_t wind);
+TileCode Wind2Tile(SeatAbsolute wind);
 
 LargeNum BasePoint();
 bool isAboveBase(const GameTable* const gameStat, PlayerID player);

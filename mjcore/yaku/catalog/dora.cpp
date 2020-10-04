@@ -65,10 +65,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenAll] != -1) return false; // 和了ってないなら戻る
 				switch (analysis->GameStat->playerwind(analysis->player)) {
-					case sEast: return analysis->PlayerStat->FlowerFlag.Spring;
-					case sSouth: return analysis->PlayerStat->FlowerFlag.Summer;
-					case sWest: return analysis->PlayerStat->FlowerFlag.Autumn;
-					case sNorth: return analysis->PlayerStat->FlowerFlag.Winter;
+					case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Spring;
+					case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Summer;
+					case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Autumn;
+					case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Winter;
 					default:
 						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("自風が東南西北のどれでもありません"));
 						return false;
@@ -80,10 +80,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[shantenAll] != -1) return false; // 和了ってないなら戻る
 				switch (analysis->GameStat->playerwind(analysis->player)) {
-					case sEast: return analysis->PlayerStat->FlowerFlag.Plum;
-					case sSouth: return analysis->PlayerStat->FlowerFlag.Orchid;
-					case sWest: return analysis->PlayerStat->FlowerFlag.Chrys;
-					case sNorth: return analysis->PlayerStat->FlowerFlag.Bamboo;
+					case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Plum;
+					case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Orchid;
+					case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Chrys;
+					case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Bamboo;
 					default:
 						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("自風が東南西北のどれでもありません"));
 						return false;

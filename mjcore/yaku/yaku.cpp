@@ -121,7 +121,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	switch (analysis->MianziDat[0].tile) { /* 風牌は条件によって役牌 */
 	case EastWind: case SouthWind: case WestWind: case NorthWind:
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))) // 場風牌
+			Wind2Tile(gameStat->prevailingwind())) // 場風牌
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
 			Wind2Tile(gameStat->playerwind(analysis->player))) // 自風牌
