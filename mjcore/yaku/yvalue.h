@@ -4,23 +4,6 @@
 
 #ifdef GUOBIAO
 
-#define DEF_YAKU_VAL(i) const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_##i = \
-	yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i);
-
-DEF_YAKU_VAL(1);
-DEF_YAKU_VAL(2);
-DEF_YAKU_VAL(3);
-DEF_YAKU_VAL(4);
-DEF_YAKU_VAL(6);
-DEF_YAKU_VAL(8);
-DEF_YAKU_VAL(12);
-DEF_YAKU_VAL(16);
-DEF_YAKU_VAL(24);
-DEF_YAKU_VAL(32);
-DEF_YAKU_VAL(48);
-DEF_YAKU_VAL(64);
-DEF_YAKU_VAL(88);
-
 #else /* GUOBIAO */
 
 const yaku::yakuCalculator::Yaku::YAKU_HAN::HAN yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null =

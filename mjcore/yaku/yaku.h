@@ -100,10 +100,7 @@ public:
 				HAN(int8_t h, hanUnit u);
 				int8_t getHan() const;
 				hanUnit getUnit() const;
-#ifdef GUOBIAO
-				static const HAN
-					yv_1, yv_2, yv_3, yv_4, yv_6, yv_8, yv_12, yv_16, yv_24, yv_32, yv_48, yv_64, yv_88;
-#else /* GUOBIAO */
+#ifndef GUOBIAO
 				static const HAN
 					yv_null, yv_1han, yv_2han, yv_3han, yv_4han, yv_5han, yv_6han, yv_7han, yv_8han, 
 					yv_mangan, yv_haneman, yv_baiman, yv_3baiman, yv_yakuman, yv_double_yakuman,
@@ -235,6 +232,7 @@ public:
 };
 
 #ifdef GUOBIAO
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _fen(unsigned long long fen);
 yaku::yakuCalculator::Yaku::FixedHan operator"" _fenF(unsigned long long fen);
 #else /* GUOBIAO */
 yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han);
