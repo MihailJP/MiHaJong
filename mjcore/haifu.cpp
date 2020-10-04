@@ -62,14 +62,14 @@ void haifu::tools::haifuskipX(PlayerID targetPlayer) {
 }
 void haifu::tools::haifuskip(
 	PlayerID PassivePlayer, PlayerID ActivePlayer) {
-		if (playerRelative(ActivePlayer, PassivePlayer) == sOpposite) {
+		if (playerRelative(ActivePlayer, PassivePlayer) == SeatRelative::opposite) {
 			// 対面からポンした場合
-			haifuskipX(RelativePositionOf(ActivePlayer, sRight));
+			haifuskipX(RelativePositionOf(ActivePlayer, SeatRelative::right));
 		}
-		if (playerRelative(ActivePlayer, PassivePlayer) == sRight) {
+		if (playerRelative(ActivePlayer, PassivePlayer) == SeatRelative::right) {
 			// 下家からポンした場合
-			haifuskipX(RelativePositionOf(ActivePlayer, sRight));
-			haifuskipX(RelativePositionOf(ActivePlayer, sOpposite));
+			haifuskipX(RelativePositionOf(ActivePlayer, SeatRelative::right));
+			haifuskipX(RelativePositionOf(ActivePlayer, SeatRelative::opposite));
 		}
 }
 
@@ -126,9 +126,9 @@ void haifu::tools::haifuwritetsumohai(
 }
 
 void haifu::tools::haifuskipall(PlayerID PassivePlayer) {
-	haifuskipX(RelativePositionOf(PassivePlayer, sRight));
-	haifuskipX(RelativePositionOf(PassivePlayer, sOpposite));
-	haifuskipX(RelativePositionOf(PassivePlayer, sLeft));
+	haifuskipX(RelativePositionOf(PassivePlayer, SeatRelative::right));
+	haifuskipX(RelativePositionOf(PassivePlayer, SeatRelative::opposite));
+	haifuskipX(RelativePositionOf(PassivePlayer, SeatRelative::left));
 }
 
 /* 一半荘分の牌譜バッファを初期化 */
@@ -806,7 +806,7 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 	XhaifuBufferBody << _T("\t\t<final-hands>") << std::endl;
 	XhaifuBuffer << _T("\t\t\t<player-score>") << std::endl;
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
-		PlayerID k = RelativePositionOf(i, static_cast<seatRelative>(OrigTurn % Players));
+		PlayerID k = RelativePositionOf(i, static_cast<SeatRelative>(OrigTurn % Players));
 #ifdef GUOBIAO
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << playerNumberList[currWindNum][k] << _T("\">") << std::endl;
 #else /* GUOBIAO */

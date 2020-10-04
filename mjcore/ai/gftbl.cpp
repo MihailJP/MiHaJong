@@ -417,9 +417,9 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 			{
 				static const char tblname[3][16] = {"kamicha", "toimen", "shimocha",};
 				const PlayerID targetP[3] = {
-					RelativePositionOf(player, sLeft),
-					RelativePositionOf(player, sOpposite),
-					RelativePositionOf(player, sRight),
+					RelativePositionOf(player, SeatRelative::left),
+					RelativePositionOf(player, SeatRelative::opposite),
+					RelativePositionOf(player, SeatRelative::right),
 				};
 				for (int k = 0; k < 3; k++) {
 					lua_newtable(L);

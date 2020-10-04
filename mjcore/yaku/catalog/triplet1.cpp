@@ -486,7 +486,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		urakaze =
 			[chkYakuhai](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(
-					RelativePositionOf(analysis->player, sOpposite)))] >= 1);
+					RelativePositionOf(analysis->player, SeatRelative::opposite)))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・裏風"), get_yaku_han("urakaze"),

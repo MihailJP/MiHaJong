@@ -21,7 +21,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		yamahaiAttr = std::make_tuple(1, 144, 18, 130);
 	else
 		yamahaiAttr = std::make_tuple(2, 140, 18, 130);
-	seatRelative tmpPlayerCode = playerRelative(trueTargetPlayer, gameStat->PlayerID);
+	SeatRelative tmpPlayerCode = playerRelative(trueTargetPlayer, gameStat->PlayerID);
 	auto calcTileNum = [&gameStat, &targetPlayer, &yamahaiAttr](unsigned j) -> unsigned {
 		const unsigned yamahaiMode = std::get<0>(yamahaiAttr);
 		const unsigned dice = gameStat->Dice[0].Number + gameStat->Dice[1].Number;
@@ -71,7 +71,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 		return;
 	}
 	switch (tmpPlayerCode) {
-	case sOpposite:
+	case SeatRelative::opposite:
 		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* 対面側の山 */
 			unsigned tileNum = calcTileNum((34 - (i - (shorterWall ? 2 : 0))) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
@@ -85,7 +85,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 				DeckPosV - TileThickness, TileDirection::upsideDown, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
-	case sLeft:
+	case SeatRelative::left:
 		for (int i = 0; i < (static_cast<int>(std::get<2>(yamahaiAttr)) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 上家側の山 */
 			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
@@ -99,7 +99,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2), TileDirection::clockwise, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
-	case sRight:
+	case SeatRelative::right:
 		for (int i = (18 - std::get<2>(yamahaiAttr) + (shorterWall ? 1 : 0)) * 2; i < 36; i += 2) { /* 下家側の山 */
 			unsigned tileNum = calcTileNum((34 - (i - (shorterWall ? 2 : 0))) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;
@@ -113,7 +113,7 @@ void GameTableScreen::YamahaiReconst::Reconstruct(const GameTable* gameStat, Pla
 				DeckPosH - TileThickness + ShowTile::VertTileWidth * (i / 2 - 1), TileDirection::withershins, dora ? TileSide::obverse : TileSide::reverse);
 		}
 		break;
-	case sSelf:
+	case SeatRelative::self:
 		for (int i = 0; i < (static_cast<int>(std::get<2>(yamahaiAttr)) - (shorterWall ? 1 : 0)) * 2; i += 2) { /* 自分の山 */
 			unsigned tileNum = calcTileNum((i + (shorterWall ? 2 : 0)) / 2);
 			unsigned k = std::get<1>(yamahaiAttr) - 2 - tileNum;

@@ -13,7 +13,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 	bool r1, bool r2, bool r3, bool r4)
 {
 	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-	case sOpposite:
+	case SeatRelative::opposite:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 15 - i - IDOffset;},
 			[=](unsigned i) -> int {
@@ -35,7 +35,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 				}
 			},
 			TileDirection::clockwise, TileDirection::upsideDown, TileDirection::withershins);
-	case sLeft:
+	case SeatRelative::left:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 31 - i - IDOffset;},
 			[=](unsigned i) -> int {
@@ -58,7 +58,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 			},
 			TileDirection::portrait, TileDirection::clockwise, TileDirection::upsideDown);
 		break;
-	case sRight:
+	case SeatRelative::right:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 32 + i + IDOffset;},
 			[=](unsigned i) -> int {
@@ -81,7 +81,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 			},
 			TileDirection::upsideDown, TileDirection::withershins, TileDirection::portrait);
 		break;
-	case sSelf:
+	case SeatRelative::self:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 48 + i + IDOffset;},
 			[=](unsigned i) -> int {

@@ -59,22 +59,22 @@ void TableProtoScene::ShowSidebar() {
 void TableProtoScene::InitScorePanel() {
 	const float widthScale = Geometry::SidebarWidth() / (Geometry::BaseSize / 0.75f - Geometry::BaseSize);
 	if (widthScale >= 1.5f) {
-		scorePanel[0] = new ScoreBoard(caller->getDevice(), sOpposite,
+		scorePanel[0] = new ScoreBoard(caller->getDevice(), SeatRelative::opposite,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3     + 3, panelPosY +  62, widthScale / 1.5f);
-		scorePanel[1] = new ScoreBoard(caller->getDevice(), sLeft,
+		scorePanel[1] = new ScoreBoard(caller->getDevice(), SeatRelative::left,
 			Geometry::BaseSize                                    + 3, panelPosY + 125, widthScale / 1.5f);
-		scorePanel[2] = new ScoreBoard(caller->getDevice(), sRight,
+		scorePanel[2] = new ScoreBoard(caller->getDevice(), SeatRelative::right,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3 * 2 + 3, panelPosY + 125, widthScale / 1.5f);
-		scorePanel[3] = new ScoreBoard(caller->getDevice(), sSelf,
+		scorePanel[3] = new ScoreBoard(caller->getDevice(), SeatRelative::self,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3     + 3, panelPosY + 188, widthScale / 1.5f);
 	} else {
-		scorePanel[0] = new ScoreBoard(caller->getDevice(), sOpposite,
+		scorePanel[0] = new ScoreBoard(caller->getDevice(), SeatRelative::opposite,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 4    , panelPosY      , widthScale);
-		scorePanel[1] = new ScoreBoard(caller->getDevice(), sLeft,
+		scorePanel[1] = new ScoreBoard(caller->getDevice(), SeatRelative::left,
 			Geometry::BaseSize                                + 3, panelPosY + 125, widthScale);
-		scorePanel[2] = new ScoreBoard(caller->getDevice(), sRight,
+		scorePanel[2] = new ScoreBoard(caller->getDevice(), SeatRelative::right,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 2 + 3, panelPosY + 125, widthScale);
-		scorePanel[3] = new ScoreBoard(caller->getDevice(), sSelf,
+		scorePanel[3] = new ScoreBoard(caller->getDevice(), SeatRelative::self,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 4    , panelPosY + 250, widthScale);
 	}
 }
@@ -173,7 +173,7 @@ PlayerID TableProtoScene::ScoreBoard::playerID() {
 	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
 }
 
-TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale) {
+TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, SeatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);

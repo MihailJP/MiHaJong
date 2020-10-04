@@ -12,8 +12,8 @@ using utils::playerRelative;
 
 /* 手牌を表示する */
 void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
-	std::function<std::tuple<int, int> (seatRelative)> coordFunc,
-	seatRelative direction, std::function<ArgbColor (int)> colorFunc,
+	std::function<std::tuple<int, int> (SeatRelative)> coordFunc,
+	SeatRelative direction, std::function<ArgbColor (int)> colorFunc,
 	std::function<void (const int*, const int*, int)> regionFunc)
 {
 	int tilePos, x, y;
@@ -23,7 +23,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 		(gameStat->Player[targetPlayer].HandStat == handUpright) ? TileSide::upright :
 		(gameStat->Player[targetPlayer].HandStat == handHidden) ? TileSide::reverse : TileSide::obverse;
 	switch (direction) {
-	case sOpposite: /* 対面の手牌 */
+	case SeatRelative::opposite: /* 対面の手牌 */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
 			if (gameStat->Player[targetPlayer].Hand[i])
@@ -33,7 +33,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				y, TileDirection::upsideDown, tileStat);
 			else TileTexture->DelTile(i);
 		break;
-	case sLeft: /* 上家の手牌 */
+	case SeatRelative::left: /* 上家の手牌 */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i)
 			if (gameStat->Player[targetPlayer].Hand[i])
@@ -44,7 +44,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				TileDirection::clockwise, tileStat);
 			else TileTexture->DelTile(i + NumOfTilesInHand);
 		break;
-	case sRight: /* 下家の手牌 */
+	case SeatRelative::right: /* 下家の手牌 */
 		tilePos = 0;
 		for (int i = HandLength; i >= 0; --i)
 			if (gameStat->Player[targetPlayer].Hand[i])
@@ -58,7 +58,7 @@ void ShowTehai::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer,
 				TileDirection::withershins, tileStat);
 			else TileTexture->DelTile((NumOfTilesInHand - 1 - i) + NumOfTilesInHand * 2);
 		break;
-	case sSelf: /* 自分の手牌 */
+	case SeatRelative::self: /* 自分の手牌 */
 		tilePos = 0;
 		for (int i = 0; i <= HandLength; ++i) {
 			if (gameStat->Player[targetPlayer].Hand[i]) {

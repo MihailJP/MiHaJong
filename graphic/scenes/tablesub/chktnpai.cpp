@@ -50,10 +50,10 @@ void TableSubsceneCheckTenpai::ShowTenpaiFlag(PlayerID player, int x, int y) {
 }
 
 void TableSubsceneCheckTenpai::RecalcTenpaiFlag() {
-	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
-	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
-	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
-	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
+	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::opposite), TableSize / 2      ,                 192);
+	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::left    ),                 256, TableSize / 2      );
+	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::right   ), TableSize     - 256, TableSize / 2      );
+	CalculateTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::self    ), TableSize / 2      , TableSize     - 192);
 }
 
 void TableSubsceneCheckTenpai::Render() {
@@ -63,10 +63,10 @@ void TableSubsceneCheckTenpai::Render() {
 		initialized = true;
 	}
 #endif /*_WIN32*/
-	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
-	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
-	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
-	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
+	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::opposite), TableSize / 2      ,                 192);
+	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::left    ),                 256, TableSize / 2      );
+	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::right   ), TableSize     - 256, TableSize / 2      );
+	ShowTenpaiFlag(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::self    ), TableSize / 2      , TableSize     - 192);
 	txtRenderer->Render();
 	tileRenderer->Render();
 }

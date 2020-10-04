@@ -25,7 +25,7 @@ void GameTableScreen::TrayReconst::ShowTray() {
 /* 起家マークの表示 */
 void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 	switch (playerRelative(0, gameStat->PlayerID)) {
-	case sSelf:
+	case SeatRelative::self:
 		{
 			const RECT rect = {
 				static_cast<int32_t>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding),
@@ -35,7 +35,7 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 		}
 		break;
-	case sOpposite:
+	case SeatRelative::opposite:
 		{
 			const RECT rect = {
 				static_cast<int32_t>((PlateWidthH + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding),
@@ -45,7 +45,7 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 				PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 		}
 		break;
-	case sRight:
+	case SeatRelative::right:
 		{
 			const RECT rect = {
 				static_cast<int32_t>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
@@ -55,7 +55,7 @@ void GameTableScreen::TrayReconst::ShowChiicha(const GameTable* gameStat) {
 				PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
 		}
 		break;
-	case sLeft:
+	case SeatRelative::left:
 		{
 			const RECT rect = {
 				static_cast<int32_t>((PlateWidthV + PlatePadding * 2) * (gameStat->GameRound / Players    ) + PlatePadding), static_cast<int32_t>((PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2),
@@ -73,7 +73,7 @@ void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
 	for (PlayerID i = 0; i < Players; ++i) {
 		if (!gameStat->Player[i].YakitoriFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
-		case sSelf:
+		case SeatRelative::self:
 			{
 				constexpr RECT rect = {
 					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (0    ) + PlatePadding,
@@ -83,7 +83,7 @@ void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
 					PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 			}
 			break;
-		case sOpposite:
+		case SeatRelative::opposite:
 			{
 				constexpr RECT rect = {
 					(PlateWidthH + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightH + PlatePadding * 2) * (1    ) + PlatePadding,
@@ -93,7 +93,7 @@ void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
 					PlateWidthH, PlateHeightH, 0xffffffff, &rect, PlateWidthH / 2, PlateHeightH / 2);
 			}
 			break;
-		case sRight:
+		case SeatRelative::right:
 			{
 				constexpr RECT rect = {
 					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (0    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,
@@ -103,7 +103,7 @@ void GameTableScreen::TrayReconst::ShowYakitori(const GameTable* gameStat) {
 					PlateWidthV, PlateHeightV, 0xffffffff, &rect, PlateWidthV / 2, PlateHeightV / 2);
 			}
 			break;
-		case sLeft:
+		case SeatRelative::left:
 			{
 				constexpr RECT rect = {
 					(PlateWidthV + PlatePadding * 2) * (PlateID_Yakitori    ) + PlatePadding, (PlateHeightV + PlatePadding * 2) * (1    ) + PlatePadding + (PlateHeightH + PlatePadding * 2) * 2,

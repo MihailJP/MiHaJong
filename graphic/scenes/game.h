@@ -45,7 +45,7 @@ private:
 	Timer myTimer;
 private:
 	DevicePtr myDevice;
-	seatRelative relativePlayerID;
+	SeatRelative relativePlayerID;
 	int xpos, ypos; float wScale;
 	TexturePtr texture;
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
@@ -83,7 +83,7 @@ private:
 	SmallTextRenderer* nameText;
 	void renderName();
 public:
-	ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale);
+	ScoreBoard(DevicePtr device, SeatRelative relativePos, int x, int y, float widthScale);
 	ScoreBoard(const ScoreBoard&) = delete; // Delete unexpected copy constructor
 	ScoreBoard& operator= (const ScoreBoard&) = delete; // Delete unexpected assign operator
 	~ScoreBoard();

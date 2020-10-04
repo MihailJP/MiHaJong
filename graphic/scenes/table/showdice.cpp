@@ -29,7 +29,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 		static_cast<int32_t>((DiceWidth + DicePadding) * (diceFace2    )), static_cast<int32_t>((DiceHeight + DicePadding) * (diceDirection2 + 1)),
 	};
 	switch (playerRelative(dicePlayer, gameStat->PlayerID)) {
-	case sSelf:
+	case SeatRelative::self:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
@@ -37,7 +37,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 			tDice, DicePosH + (DiceWidth + DicePosInterstice) / 2, DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
-	case sOpposite:
+	case SeatRelative::opposite:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
@@ -45,7 +45,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 			tDice, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
-	case sLeft:
+	case SeatRelative::left:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, TableSize - DicePosV, DicePosH - (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
@@ -53,7 +53,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 			tDice, TableSize - DicePosV, DicePosH + (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
-	case sRight:
+	case SeatRelative::right:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, DicePosV, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);

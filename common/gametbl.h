@@ -299,7 +299,7 @@ static_assert(std::is_standard_layout<PlayerTable>::value, "PlayerTable is not s
 // -------------------------------------------------------------------------
 
 enum class SeatAbsolute : uint8_t { east, south, west, north, white, green, red };
-enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
+enum class SeatRelative : uint8_t { self, right, opposite, left };
 
 // -------------------------------------------------------------------------
 

@@ -4,10 +4,10 @@
 
 bool aiscript::table::functable::gametbl::luafunc::riskchk::issameasprevious
 	(const GameTable* const gameStat, PlayerID player, int index) { // 合わせ打ちできるかどうか
-		PlayerID prev_p = RelativePositionOf(player, sLeft); // 上家のプレイヤー番号
+		PlayerID prev_p = RelativePositionOf(player, SeatRelative::left); // 上家のプレイヤー番号
 		if (gameStat->chkGameType(SanmaT) && (prev_p == 3)) prev_p = 2;
 		else if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(prev_p) == SeatAbsolute::north))
-			prev_p = RelativePositionOf(player, sOpposite);
+			prev_p = RelativePositionOf(player, SeatRelative::opposite);
 		if (gameStat->Player[prev_p].Discard[gameStat->Player[prev_p].DiscardPointer].tcode.tile ==
 			gameStat->Player[player].Hand[index].tile)
 			return true;

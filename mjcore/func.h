@@ -22,7 +22,7 @@ using mihajong_structs::PlayerID;
 using mihajong_structs::TileCode;
 
 using mihajong_structs::SeatAbsolute;
-using mihajong_structs::seatRelative;
+using mihajong_structs::SeatRelative;
 using mihajong_structs::PlayerRank;
 using mihajong_structs::PlayerRankList;
 
@@ -30,12 +30,12 @@ using mihajong_structs::PlayerRankList;
 
 #ifdef MJCORE_EXPORTS
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
-seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
-	return static_cast<seatRelative>((Players + targetPlayer - basePlayer) % Players);
+SeatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
+	return static_cast<SeatRelative>((Players + targetPlayer - basePlayer) % Players);
 }
 
 /* あるプレイヤーの(下家、対面、上家)を調べる */
-PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative) {
+PlayerID inline RelativePositionOf(PlayerID targetPlayer, SeatRelative relative) {
 	return static_cast<PlayerID>((static_cast<int>(targetPlayer) + static_cast<int>(relative)) % Players);
 }
 

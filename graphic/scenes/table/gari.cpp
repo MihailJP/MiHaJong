@@ -24,7 +24,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 
 	// 表示処理
 	switch (playerRelative(playerID, gameStat->PlayerID)) {
-	case sOpposite:
+	case SeatRelative::opposite:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
 				TileTexture->NewTile(i, Tile(flowerParam[i].tileCode),
@@ -34,7 +34,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 			else
 				TileTexture->DelTile(i);
 		break;
-	case sLeft:
+	case SeatRelative::left:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
 				TileTexture->NewTile(i + 8, Tile(flowerParam[i].tileCode),
@@ -44,7 +44,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 			else
 				TileTexture->DelTile(i + 8);
 		break;
-	case sRight:
+	case SeatRelative::right:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
 				TileTexture->NewTile(23 - i, Tile(flowerParam[i].tileCode),
@@ -54,7 +54,7 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 			else
 				TileTexture->DelTile(23 - i);
 		break;
-	case sSelf:
+	case SeatRelative::self:
 		for (int i = 0; i < 8; ++i)
 			if (flowerParam[i].flag)
 				TileTexture->NewTile(i + 24, Tile(flowerParam[i].tileCode),
@@ -75,7 +75,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 
 	// 表示処理
 	switch (playerRelative(playerID, gameStat->PlayerID)) {
-	case sOpposite:
+	case SeatRelative::opposite:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
 				TileTexture->NewTile(i, Tile(NorthWind),
@@ -85,7 +85,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 			else
 				TileTexture->DelTile(i);
 		break;
-	case sLeft:
+	case SeatRelative::left:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
 				TileTexture->NewTile(i + 4, Tile(NorthWind),
@@ -95,7 +95,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 			else
 				TileTexture->DelTile(i + 4);
 		break;
-	case sRight:
+	case SeatRelative::right:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
 				TileTexture->NewTile(11 - i, Tile(NorthWind),
@@ -105,7 +105,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 			else
 				TileTexture->DelTile(11 - i);
 		break;
-	case sSelf:
+	case SeatRelative::self:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
 				TileTexture->NewTile(i + 12, Tile(NorthWind),

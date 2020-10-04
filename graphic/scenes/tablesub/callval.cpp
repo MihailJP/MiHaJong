@@ -74,10 +74,10 @@ void TableSubsceneCallValue::ShowCall(PlayerID player, int x, int y) {
 }
 
 void TableSubsceneCallValue::ShowAllCall() {
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sOpposite), TableSize / 2      ,                 192);
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sLeft    ),                 256, TableSize / 2      );
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sRight   ), TableSize     - 256, TableSize / 2      );
-	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, sSelf    ), TableSize / 2      , TableSize     - 192);
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::opposite), TableSize / 2      ,                 192);
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::left    ),                 256, TableSize / 2      );
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::right   ), TableSize     - 256, TableSize / 2      );
+	ShowCall(utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, SeatRelative::self    ), TableSize / 2      , TableSize     - 192);
 }
 
 void TableSubsceneCallValue::Render() {

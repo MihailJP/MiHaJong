@@ -191,12 +191,12 @@ TableSubsceneAgariScreenProto::AgariTehai::~AgariTehai() {
 
 void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gameStat) {
 	ShowTehai::Reconstruct(gameStat, gameStat->CurrentPlayer.Agari,
-		[this](seatRelative) -> std::tuple<int, int> {
+		[this](SeatRelative) -> std::tuple<int, int> {
 			const double Zeit = myCaller->seconds();
 			const int yOffset = (Zeit >= 1.0) ? 0 : static_cast<int>(pow(1.0 - Zeit, 2) * static_cast<double>(Geometry::BaseSize));
 			return std::make_tuple(BaseX + 28, handPosY - yOffset);
 		},
-		sSelf, [](int){return static_cast<ArgbColor>(0xffffffff);},
+		SeatRelative::self, [](int){return static_cast<ArgbColor>(0xffffffff);},
 		[](const int*, const int*, int){});
 }
 

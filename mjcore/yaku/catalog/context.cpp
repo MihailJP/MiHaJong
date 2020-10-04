@@ -88,11 +88,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 						(analysis->PlayerStat->RichiFlag.IppatsuFlag) && // 一発フラグが立っている
 						(!*analysis->TsumoAgariFlag) && // ロンである
 						(
-							(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, sRight)) || // 下家から和了った
+							(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, SeatRelative::right)) || // 下家から和了った
 							((analysis->GameStat->chkGameType(SanmaT)) &&
 								(analysis->GameStat->CurrentPlayer.Furikomi == 0) && (analysis->player == 2)) || // 三麻の特例
 							((analysis->GameStat->chkGameType(Sanma4)) &&
-								(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, sOpposite)) &&
+								(analysis->GameStat->CurrentPlayer.Furikomi == RelativePositionOf(analysis->player, SeatRelative::opposite)) &&
 								(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::west)) // 四人三麻の特例
 						));
 				}
@@ -240,9 +240,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(!analysis->PlayerStat->RichiFlag.RichiFlag) && // 自分はリーチしていない
-					(analysis->GameStat->Player[RelativePositionOf(analysis->player, sRight)].RichiFlag.RichiFlag) &&
-					(analysis->GameStat->Player[RelativePositionOf(analysis->player, sOpposite)].RichiFlag.RichiFlag) &&
-					(analysis->GameStat->Player[RelativePositionOf(analysis->player, sLeft)].RichiFlag.RichiFlag) // 他家全員立直
+					(analysis->GameStat->Player[RelativePositionOf(analysis->player, SeatRelative::right)].RichiFlag.RichiFlag) &&
+					(analysis->GameStat->Player[RelativePositionOf(analysis->player, SeatRelative::opposite)].RichiFlag.RichiFlag) &&
+					(analysis->GameStat->Player[RelativePositionOf(analysis->player, SeatRelative::left)].RichiFlag.RichiFlag) // 他家全員立直
 					);
 			}
 		));
@@ -254,9 +254,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(!analysis->PlayerStat->RichiFlag.RichiFlag) && // 自分はリーチしていない
-					(analysis->GameStat->Player[RelativePositionOf(analysis->player, sRight)].RichiFlag.DoubleFlag) &&
-					(analysis->GameStat->Player[RelativePositionOf(analysis->player, sOpposite)].RichiFlag.DoubleFlag) &&
-					(analysis->GameStat->Player[RelativePositionOf(analysis->player, sLeft)].RichiFlag.DoubleFlag) // 他家全員ダブリー(!)
+					(analysis->GameStat->Player[RelativePositionOf(analysis->player, SeatRelative::right)].RichiFlag.DoubleFlag) &&
+					(analysis->GameStat->Player[RelativePositionOf(analysis->player, SeatRelative::opposite)].RichiFlag.DoubleFlag) &&
+					(analysis->GameStat->Player[RelativePositionOf(analysis->player, SeatRelative::left)].RichiFlag.DoubleFlag) // 他家全員ダブリー(!)
 					);
 			}
 		));
@@ -734,7 +734,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 						(tc == Wind2Tile(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))) // 開門風だった
 							yakuFlag = false;
 					if (RuleData::chkRuleApplied("urakaze") &&
-						(tc == Wind2Tile(analysis->GameStat->playerwind(RelativePositionOf(analysis->player, sOpposite))))) // 裏風だった
+						(tc == Wind2Tile(analysis->GameStat->playerwind(RelativePositionOf(analysis->player, SeatRelative::opposite))))) // 裏風だった
 							yakuFlag = false;
 					break;
 				default: // 風牌じゃなかった
