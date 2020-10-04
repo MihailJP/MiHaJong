@@ -99,7 +99,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		gameStat->OpenRichiWait[i] = false;
 	gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // 嶺上開花；頭槓和；連開花と槓振り；搶槓の判定に使う
 	gameStat->KangFlag.chainFlag = 0;
-	gameStat->KangFlag.chankanFlag = chankanNone;
+	gameStat->KangFlag.chankanFlag = ChankanStat::none;
 	gameStat->TurnRound =  // 現在の巡目
 		gameStat->KangNum = 0; // 四槓流局、四槓子などの判定に使う
 	gameStat->RichiCounter =

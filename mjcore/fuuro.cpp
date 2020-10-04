@@ -372,17 +372,17 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 				(RuleData::chkRule("ankan_conceal", "open") && RuleData::chkRule("ankan_chankan", "yes"))) {
 #endif /* GUOBIAO */
 					debug(_T("搶槓の判定をします。"));
-					if (Mode == FuuroType::ankan) gameStat->KangFlag.chankanFlag = chankanOfAnkan;
-					else if (Mode == FuuroType::north) gameStat->KangFlag.chankanFlag = chankanOfNorth;
-					else gameStat->KangFlag.chankanFlag = chankanRegular;
+					if (Mode == FuuroType::ankan) gameStat->KangFlag.chankanFlag = ChankanStat::ankan;
+					else if (Mode == FuuroType::north) gameStat->KangFlag.chankanFlag = ChankanStat::north;
+					else gameStat->KangFlag.chankanFlag = ChankanStat::regular;
 					*RoundEndType = ronhuproc(gameStat);
-					if (Mode == FuuroType::north) gameStat->KangFlag.chankanFlag = chankanNone;
+					if (Mode == FuuroType::north) gameStat->KangFlag.chankanFlag = ChankanStat::none;
 					if (*RoundEndType == EndType::tripleRon) return true;
 					if (RonPlayers(gameStat) > 0) {
 						info(_T("搶槓が宣言されました。ループから出ます。"));
 						return true;
 					}
-					gameStat->KangFlag.chankanFlag = chankanNone;
+					gameStat->KangFlag.chankanFlag = ChankanStat::none;
 #ifndef GUOBIAO
 			}
 #endif /* GUOBIAO */
@@ -484,7 +484,7 @@ bool fuuroproc(GameTable* const gameStat, EndType* RoundEndType, const DiscardTi
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	if (CheckChankan(gameStat, RoundEndType, Mode)) return true;
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
-	threadSleep((gameStat->KangFlag.chankanFlag != chankanNone) ? 500 : 1000);
+	threadSleep((gameStat->KangFlag.chankanFlag != ChankanStat::none) ? 500 : 1000);
 	if (ProcRinshan(gameStat, RoundEndType, Mode, fuuroPlayer)) return true;
 	/* 事後処理 */
 	for (PlayerID i = 0; i < Players; ++i)
@@ -553,7 +553,7 @@ namespace {
 		PlayerTable* const playerStat = &(gameStat->statOfMine());
 		using namespace mihajong_graphic;
 		using namespace mihajong_graphic::naki;
-		if (gameStat->KangFlag.chankanFlag != chankanNone) {
+		if (gameStat->KangFlag.chankanFlag != ChankanStat::none) {
 			threadSleep(500);
 			Subscene(TableSubsceneID::playerChankan);
 		} else {
@@ -564,7 +564,7 @@ namespace {
 #else /*_WIN32*/
 		uint32_t result = ui::WaitUI();
 #endif /*_WIN32*/
-		if (gameStat->KangFlag.chankanFlag != chankanNone) {
+		if (gameStat->KangFlag.chankanFlag != ChankanStat::none) {
 			Subscene(TableSubsceneID::callChankanPre);
 		} else {
 			Subscene(TableSubsceneID::none);
@@ -832,7 +832,7 @@ EndType ronhuproc(GameTable* const gameStat) {
 			else
 				sound::Play(sound::IDs::voxRon);
 			/* 画面更新して戻る */
-			if (gameStat->KangFlag.chankanFlag != chankanNone) {
+			if (gameStat->KangFlag.chankanFlag != ChankanStat::none) {
 				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callChankan); // 発声表示処理
 			} else {
 				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理
@@ -844,8 +844,8 @@ EndType ronhuproc(GameTable* const gameStat) {
 	/* 牌譜に記録 */
 	roncount = 0;
 	if (RonPlayers(gameStat) > 0) {
-		if (gameStat->KangFlag.chankanFlag != chankanNone) {
-			if (gameStat->KangFlag.chankanFlag == chankanOfNorth)
+		if (gameStat->KangFlag.chankanFlag != ChankanStat::none) {
+			if (gameStat->KangFlag.chankanFlag == ChankanStat::north)
 				haifu::haifurecchanpei(gameStat);
 			else
 				haifu::haifurecchankan(gameStat);

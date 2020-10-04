@@ -609,7 +609,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-				(analysis->GameStat->KangFlag.chankanFlag)); // 槍槓フラグが立っている
+				(analysis->GameStat->KangFlag.chankanFlag != ChankanStat::none)); // 槍槓フラグが立っている
 		}
 	));
 #ifndef GUOBIAO
@@ -620,7 +620,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("搶槓"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
+					(analysis->GameStat->KangFlag.chankanFlag != ChankanStat::none) && // 槍槓フラグが立っている
 					(analysis->TsumoHai->tile == BambooTwo)); // 和了牌が二索
 			}
 		));
@@ -631,7 +631,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("搶槓"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
+					(analysis->GameStat->KangFlag.chankanFlag != ChankanStat::none) && // 槍槓フラグが立っている
 					(isFinalRound(analysis->GameStat))); // オーラスである
 			}
 		));
@@ -642,7 +642,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("欠牌和"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
+					(analysis->GameStat->KangFlag.chankanFlag != ChankanStat::none) && // 槍槓フラグが立っている
 					((analysis->SeenTiles[analysis->TsumoHai->tile] +
 					analysis->TileCount[analysis->TsumoHai->tile]) >=
 					(*analysis->TsumoAgariFlag ? 4 : 5)) && // ラス牌かどうか判定

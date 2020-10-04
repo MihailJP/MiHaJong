@@ -258,7 +258,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 
 	if (gameStat->CurrentDiscard.isFlower()) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
-	if ((gameStat->KangFlag.chankanFlag == chankanOfAnkan) && // 暗槓に対する搶槓判定のときで、
+	if ((gameStat->KangFlag.chankanFlag == ChankanStat::ankan) && // 暗槓に対する搶槓判定のときで、
 		gameStat->chkGameType(GameTypeID::richiMJ) && // 中国ルール以外で
 		(utils::calcShanten(gameStat, PassivePlayer, ShantenType::orphans) >= 0)) // 国士聴牌でない場合は
 		goto end; // 残りの判定をスキップ
@@ -273,14 +273,14 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 		if (TileCount[gameStat->CurrentDiscard.tile] >= 2)
 			buttonEnabled[ButtonID::pon] = true; // ポン
 		if ((TileCount[gameStat->CurrentDiscard.tile] >= 3) && // 出てきた牌を暗刻で持っていて
-			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
+			(gameStat->KangFlag.chankanFlag == ChankanStat::none) && // 槍槓の判定中ではなくて
 			(gameStat->KangNum < kanLim)) // 限度以内の場合
 			buttonEnabled[ButtonID::kan] = true; // カン
 
 		// チーできる条件：上家の捨牌であること、かつ、数牌であること
 		if ((gameStat->chkGameType(GameTypeID::yonma) || gameStat->chkGameType(GameTypeID::guobiaoMJ)) && // 四麻である
 			(gameStat->CurrentDiscard.isNumber()) && // 数牌で
-			(gameStat->KangFlag.chankanFlag == chankanNone) && // 槍槓の判定中ではなくて
+			(gameStat->KangFlag.chankanFlag == ChankanStat::none) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= 1) &&
 					(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃

@@ -218,7 +218,7 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 	gameStat->statOfPassive().DeclarationFlag.Pon =
 		gameStat->statOfPassive().DeclarationFlag.Kan =
 		gameStat->statOfPassive().DeclarationFlag.Ron = false;
-	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
+	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[static_cast<int>(gameStat->KangFlag.chankanFlag)], (gameStat->KangFlag.chankanFlag == ChankanStat::none))) {
 		return;
 	} else {
 		/* 実行完了 */

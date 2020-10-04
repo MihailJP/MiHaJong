@@ -187,8 +187,8 @@ static_assert(std::is_standard_layout<RichiStat>::value, "RichiStat is not stand
 
 // -------------------------------------------------------------------------
 
-enum ChankanStat : uint8_t {
-	chankanNone, chankanRegular, chankanOfAnkan, chankanOfNorth,
+enum class ChankanStat : uint8_t {
+	none, regular, ankan, north,
 };
 struct KangStat { bool kangFlag, topFlag; uint8_t chainFlag; ChankanStat chankanFlag; };
 static_assert(std::is_trivially_copyable<KangStat>::value, "KangStat is not trivially copyable");
