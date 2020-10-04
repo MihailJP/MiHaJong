@@ -349,18 +349,18 @@ namespace {
 		chonboIfAgariForbidden(gameStat, yakuInfo, machiInfo, RoundEndType);
 	}
 
-	enum OptionBool {oFalse, oTrue, oNull,};
+	enum class OptionBool {oFalse, oTrue, oNull,};
 
 	OptionBool procSecondaryRon(GameTable* gameStat, EndType& RoundEndType, int& cnt) {
 		RoundEndType = EndType::agari;
 		gameStat->CurrentPlayer.Agari = (gameStat->CurrentPlayer.Agari + 1) % Players;
-		if (gameStat->CurrentPlayer.Agari == gameStat->CurrentPlayer.Furikomi) return oFalse; // 一周した時点で抜ける
+		if (gameStat->CurrentPlayer.Agari == gameStat->CurrentPlayer.Furikomi) return OptionBool::oFalse; // 一周した時点で抜ける
 		if (gameStat->statOfAgari().DeclarationFlag.Ron) { // ロンしていれば
 			verifyAgari(gameStat, RoundEndType);
 		} else {
-			--cnt; return oTrue;
+			--cnt; return OptionBool::oTrue;
 		}
-		return oNull;
+		return OptionBool::oNull;
 	}
 
 	bool isSomeoneDobon(const GameTable* gameStat) {
@@ -420,8 +420,8 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 	forEachAgariPlayers([&gameStat, &RoundEndType](int& cnt) -> bool {
 		if (cnt > 0) { // ダブロン用の処理
 			OptionBool result = procSecondaryRon(gameStat, RoundEndType, cnt);
-			if (result == oFalse) return false;
-			else if (result == oTrue) return true;
+			if (result == OptionBool::oFalse) return false;
+			else if (result == OptionBool::oTrue) return true;
 		}
 		if (gameStat->TsumoAgariFlag) return false;
 		return true;
@@ -434,8 +434,8 @@ void endround::agari::agariproc(EndType& RoundEndType, GameTable* gameStat, bool
 		} else if (cnt > 0) {
 			if (!gameStat->TsumoAgariFlag) {
 				OptionBool result = procSecondaryRon(gameStat, RoundEndType, cnt);
-				if (result == oFalse) return false;
-				else if (result == oTrue) return true;
+				if (result == OptionBool::oFalse) return false;
+				else if (result == OptionBool::oTrue) return true;
 			}
 		}
 		haifu::haifualicedoraupd();
