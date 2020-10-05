@@ -9,5 +9,4 @@
 #include "main.h"
 #include "ruletbl.h"
 #include "shanten.h"
-#include "tilecode.h"
 #include "tileutil.h"

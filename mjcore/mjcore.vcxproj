@@ -360,7 +360,6 @@
     <ClInclude Include="ruletbl.h" />
     <ClInclude Include="socknum.h" />
     <ClInclude Include="sound.h" />
-    <ClInclude Include="tilecode.h" />
     <ClInclude Include="tileutil.h" />
     <ClInclude Include="yaku\catalog.h" />
     <ClInclude Include="yaku\yaku.h" />

@@ -20,7 +20,7 @@ libmihagbmj_la_SOURCES = \
 	../mjcore/endtype.h ../mjcore/envtbl.h ../mjcore/except.h ../mjcore/func.h ../mjcore/fuuro.h ../mjcore/gameloop.h ../mjcore/gametbl.h ../mjcore/haifu.h \
 	../mjcore/init.h ../mjcore/logging.h ../mjcore/main.h ../mjcore/mjexport.h ../mjcore/mjimport.h ../mjcore/mouda.h ../mjcore/prepare.h \
 	../mjcore/random.h ../mjcore/rankval.h ../mjcore/rational.h ../mjcore/remote.h ../mjcore/result.h ../mjcore/shanten.h \
-	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tilecode.h ../mjcore/tileutil.h \
+	../mjcore/resource.h ../mjcore/ruletbl.h ../mjcore/socknum.h ../mjcore/sound.h ../mjcore/tileutil.h \
 	../mjcore/ai/aiscript.h ../mjcore/ai/class.h ../mjcore/ai/functbl.h ../mjcore/ai/filesel.h \
 	../mjcore/conffile/conffile.h \
 	../mjcore/lzma/Alloc.c ../mjcore/lzma/LzFind.c ../mjcore/lzma/LzmaDec.c ../mjcore/lzma/LzmaLib.c ../mjcore/lzma/Sha256.c \
