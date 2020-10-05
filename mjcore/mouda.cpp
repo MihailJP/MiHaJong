@@ -304,12 +304,12 @@ namespace { /* 内部処理分割用 */
 		newDiscard->tcode = gameStat->CurrentDiscard = gameStat->statOfActive().Hand[DiscardTileIndex.id];
 #ifndef GUOBIAO
 		if (DiscardTileIndex.type == DiscardType::riichi) /* 立直宣言牌の場合 */
-			newDiscard->dstat = discardRiichi;
+			newDiscard->dstat = DiscardStat::riichi;
 		else if (DiscardTileIndex.type == DiscardType::openRiichi) /* オープン立直宣言牌の場合 */
-			newDiscard->dstat = discardRiichi;
+			newDiscard->dstat = DiscardStat::riichi;
 		else /* それ以外の場合 */
 #endif /* GUOBIAO */
-			newDiscard->dstat = discardNormal;
+			newDiscard->dstat = DiscardStat::normal;
 		newDiscard->isDiscardThrough = (DiscardTileIndex.id == NumOfTilesInHand - 1) && (!gameStat->TianHuFlag);
 		gameStat->statOfActive().Hand[DiscardTileIndex.id] = Tile();
 		/* 一発のフラグを降ろす */

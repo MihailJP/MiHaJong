@@ -202,8 +202,8 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat) {
 	for (int i = 0; i < Players; i++) {
 		if (gameStat->Player[i].DiscardPointer == 0) continue;
 		for (int j = 1; j <= gameStat->Player[i].DiscardPointer; j++)
-			if ((gameStat->Player[i].Discard[j].dstat != discardTaken) && // 鳴かれた牌をここで数えると
-				(gameStat->Player[i].Discard[j].dstat != discardRiichiTaken)) // 二重にカウントされることになるので数えない
+			if ((gameStat->Player[i].Discard[j].dstat != DiscardStat::taken) && // 鳴かれた牌をここで数えると
+				(gameStat->Player[i].Discard[j].dstat != DiscardStat::riichiTaken)) // 二重にカウントされることになるので数えない
 				seenTiles[gameStat->Player[i].Discard[j].tcode.tile]++;
 	}
 
@@ -739,8 +739,8 @@ bool isNagashiMangan(const GameTable* const gameStat, PlayerID targetPlayer) {
 	int YaojiuSutehai = 0;
 	for (int i = 1; i <= gameStat->Player[targetPlayer].DiscardPointer; i++) {
 		// 鳴かれた牌だったら無視
-		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardTaken) continue;
-		if (gameStat->Player[targetPlayer].Discard[i].dstat == discardRiichiTaken) continue;
+		if (gameStat->Player[targetPlayer].Discard[i].dstat == DiscardStat::taken) continue;
+		if (gameStat->Player[targetPlayer].Discard[i].dstat == DiscardStat::riichiTaken) continue;
 		// 鳴かれていない牌
 		if (isYaojiu(gameStat->Player[targetPlayer].Discard[i].tcode.tile)) YaojiuSutehai++;
 	}

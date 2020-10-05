@@ -151,7 +151,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {
 			// 捨牌の配列(４人分)
 			gameStat->Player[pl].Discard[i].tcode = Tile();
-			gameStat->Player[pl].Discard[i].dstat = discardNormal;
+			gameStat->Player[pl].Discard[i].dstat = DiscardStat::normal;
 			gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 		}
 		gameStat->Player[pl].MenzenFlag = true; // 門前フラグ

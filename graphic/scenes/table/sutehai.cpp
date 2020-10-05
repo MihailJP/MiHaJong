@@ -103,11 +103,11 @@ void GameTableScreen::SutehaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	}
 	for (unsigned i = 0; i < gameStat->Player[targetPlayer].DiscardPointer; ++i) {
 		if (gameStat->Player[targetPlayer].Discard[i + 1].tcode) { // WORKAROUND: 何故かNoTileになる問題（花牌を親が抜いていて子が1巡目にポン）
-			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi) ||
-				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichiTaken))
+			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == DiscardStat::riichi) ||
+				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == DiscardStat::riichiTaken))
 				riichiFlag = true;
-			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardNormal) ||
-				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == discardRiichi)) {
+			if ((gameStat->Player[targetPlayer].Discard[i + 1].dstat == DiscardStat::normal) ||
+				(gameStat->Player[targetPlayer].Discard[i + 1].dstat == DiscardStat::riichi)) {
 				if (riichiFlag) {
 					ReconstructSutehai_rotated(gameStat, targetPlayer, i, tilePosCol, tilePosRow, shiftPosFlag);
 					riichiFlag = false;

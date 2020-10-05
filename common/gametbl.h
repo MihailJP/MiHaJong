@@ -130,11 +130,11 @@ typedef Tile HandTiles[NumOfTilesInHand];
 // -------------------------------------------------------------------------
 
 constexpr unsigned int SutehaiTypeStep = 200;
-enum DiscardStat : uint8_t {
-	discardNormal,
-	discardTaken,
-	discardRiichi,
-	discardRiichiTaken,
+enum class DiscardStat : uint8_t {
+	normal,
+	taken,
+	riichi,
+	riichiTaken,
 };
 struct DiscardTile {
 	Tile tcode;
@@ -142,8 +142,8 @@ struct DiscardTile {
 	bool isDiscardThrough; // ツモ切りフラグ
 	explicit operator bool() const {return tcode.tile != NoTile;}
 	bool operator !() const {return tcode.tile == NoTile;}
-	DiscardTile(Tile tile = Tile(), DiscardStat dStat = discardNormal, bool discardThrough = false)
-		: tcode(tile), dstat(dStat), isDiscardThrough(discardNormal) {}
+	DiscardTile(Tile tile = Tile(), DiscardStat dStat = DiscardStat::normal, bool discardThrough = false)
+		: tcode(tile), dstat(dStat), isDiscardThrough(false) {}
 };
 typedef DiscardTile DiscardBuf[SizeOfDiscardBuffer];
 static_assert(std::is_trivially_copyable<DiscardTile>::value, "DiscardTile is not trivially copyable");

@@ -182,10 +182,10 @@ int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L)
 		TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Discard[i].tcode.tile));
 		TableAdd(L, "red", static_cast<lua_Integer>(gameStat->Player[player].Discard[i].tcode.red));
 		TableAdd(L, "through", gameStat->Player[player].Discard[i].isDiscardThrough);
-		TableAdd(L, "riichi", (gameStat->Player[player].Discard[i].dstat == discardRiichi) ||
-			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
-		TableAdd(L, "taken", (gameStat->Player[player].Discard[i].dstat == discardTaken) ||
-			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
+		TableAdd(L, "riichi", (gameStat->Player[player].Discard[i].dstat == DiscardStat::riichi) ||
+			(gameStat->Player[player].Discard[i].dstat == DiscardStat::riichiTaken));
+		TableAdd(L, "taken", (gameStat->Player[player].Discard[i].dstat == DiscardStat::taken) ||
+			(gameStat->Player[player].Discard[i].dstat == DiscardStat::riichiTaken));
 		lua_settable(L, -3);
 	}
 	return 1;

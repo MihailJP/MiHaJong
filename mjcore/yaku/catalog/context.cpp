@@ -122,8 +122,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				{
 					for (int i = 1; i < analysis->PlayerStat->DiscardPointer; i++)
 						if ((analysis->PlayerStat->Discard[i].tcode.tile == BambooOne) &&
-							((analysis->PlayerStat->Discard[i].dstat == discardRiichi) ||
-							(analysis->PlayerStat->Discard[i].dstat == discardRiichiTaken)))
+							((analysis->PlayerStat->Discard[i].dstat == DiscardStat::riichi) ||
+							(analysis->PlayerStat->Discard[i].dstat == DiscardStat::riichiTaken)))
 							return true;
 					return false;
 				}

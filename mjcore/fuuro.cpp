@@ -338,10 +338,10 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		PlayerTable* const activePlDat = &(gameStat->statOfActive());
 		DiscardTile* const tmpSutehaiVar = &(activePlDat->Discard[activePlDat->DiscardPointer]);
 		assert(tmpSutehaiVar->tcode.tile == gameStat->CurrentDiscard.tile); // [デバッグ用]本当に正しい牌なのか確認
-		if (tmpSutehaiVar->dstat == discardNormal)
-			tmpSutehaiVar->dstat = discardTaken;
-		else if (tmpSutehaiVar->dstat == discardRiichi)
-			tmpSutehaiVar->dstat = discardRiichiTaken;
+		if (tmpSutehaiVar->dstat == DiscardStat::normal)
+			tmpSutehaiVar->dstat = DiscardStat::taken;
+		else if (tmpSutehaiVar->dstat == DiscardStat::riichi)
+			tmpSutehaiVar->dstat = DiscardStat::riichiTaken;
 	}
 	/* カンを宣言、天和や地和のフラグが立っていれば降ろす */
 	if ((Mode == FuuroType::ankan) || (Mode == FuuroType::kakan) || (Mode == FuuroType::daiminkan)) {
