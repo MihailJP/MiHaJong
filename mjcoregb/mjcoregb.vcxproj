@@ -360,7 +360,6 @@
     <ClInclude Include="..\mjcore\ruletbl.h" />
     <ClInclude Include="..\mjcore\socknum.h" />
     <ClInclude Include="..\mjcore\sound.h" />
-    <ClInclude Include="..\mjcore\tilecode.h" />
     <ClInclude Include="..\mjcore\tileutil.h" />
     <ClInclude Include="..\mjcore\yaku\catalog.h" />
     <ClInclude Include="..\mjcore\yaku\yaku.h" />

@@ -302,9 +302,6 @@
     <ClInclude Include="ruletbl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="tilecode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="mjexport.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

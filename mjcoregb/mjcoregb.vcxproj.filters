@@ -341,9 +341,6 @@
     <ClInclude Include="..\mjcore\sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\mjcore\tilecode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\mjcore\tileutil.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

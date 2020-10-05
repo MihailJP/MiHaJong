@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <cassert>
 #include "except.h"
-#include "tilecode.h"
 #include "func.h"
 #include "logging.h"
 #include "reader/readrsrc.h"
@@ -90,7 +89,7 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	unsigned int ans = 0;
 	// 数牌
 	int mianzi = 0; int tarzi = 0; bool atama = false; // 面子塔子雀頭の数
-	for (int suit = 0; suit < TILE_NUMERAL_COLORS; suit++) {
+	for (int suit = 0; suit < TileNumeralColors; suit++) {
 		unsigned int statcode = 0; unsigned int qDigit = 1;
 		for (int i = 1; i <= 9; i++) {
 			statcode += std::min(static_cast<int>(tileCount[suit * TileSuitStep + i]), 4) * qDigit;
