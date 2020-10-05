@@ -7,6 +7,7 @@
 #include <cstring>
 #include <queue>
 #include <algorithm>
+#include <array>
 #include "logging.h"
 #include "ruletbl.h"
 #include "shanten.h"
@@ -31,24 +32,11 @@ PlayerID tobePlayed(const GameTable* const gameStat, int id) {
 	return tp[id];
 }
 
-/* 一九字牌のコード一覧 */
-const TileCode* Honor_Major_Tiles() {
-	static const TileCode YaojiuPai[] = {
-		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
-		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
-	};
-	return YaojiuPai;
-}
-TileCode Honor_Major_Tiles(int code) {
-	assert((code >= 0)&&(code < 13));
-	const TileCode* YaojiuPai = Honor_Major_Tiles();
-	return YaojiuPai[code];
-}
 /* 一九字牌かどうか調べる */
 bool isYaojiu(TileCode code) {
 	bool ans = false;
-	for (int i = 0; i < 13; i++)
-		if (code == Honor_Major_Tiles(i)) ans = true;
+	for (auto tile : Honor_Major_Tiles)
+		if (code == tile) ans = true;
 	return ans;
 }
 
@@ -469,8 +457,8 @@ MJCORE bool chkdaopaiability(const GameTable* const gameStat, PlayerID targetPla
 	if (RuleData::chkRule("nine_terminals", "continue")) return false; // 九種九牌なしのルールだったら戻る
 	Int8ByTile TileCount = countTilesInHand(gameStat, targetPlayer);
 	int YaojiuCount = 0; bool AtamaFlag = false;
-	for (int i = 0; i < 13; i++) // ヤオ九牌１種類につき、１をカウントする。
-		if (TileCount[Honor_Major_Tiles(i)] >= 1) YaojiuCount++;
+	for (auto tile : Honor_Major_Tiles) // ヤオ九牌１種類につき、１をカウントする。
+		if (TileCount[tile] >= 1) YaojiuCount++;
 	return (YaojiuCount >= 9);
 }
 

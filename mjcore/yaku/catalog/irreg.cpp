@@ -39,7 +39,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("混老頭"), _T("混一色"), _T("三元七対子"), _T("四喜七対子"), _T("紅白七対"),
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (isQiDui(analysis))
-					return (yaku::countingFacility::countPairs(analysis->TileCount, Honor_Major_Tiles()+6, 7) == NumOfTilesInHand / 2);
+					return (yaku::countingFacility::countPairs(analysis->TileCount, &Honor_Major_Tiles[6], 7) == NumOfTilesInHand / 2);
 				else return false;
 			}
 		));
