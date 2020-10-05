@@ -73,11 +73,11 @@ void haifu::tools::haifuskip(
 		}
 }
 
-CodeConv::tstring haifu::tools::haifudoraClassX(doraCol Akadora) { // 赤牌黒牌の別(XML牌譜)
+CodeConv::tstring haifu::tools::haifudoraClassX(DoraCol Akadora) { // 赤牌黒牌の別(XML牌譜)
 	switch (Akadora) {
-	case AkaDora:
+	case DoraCol::akaDora:
 		return _T(" dora=\"red\"");
-	case AoDora:
+	case DoraCol::aoDora:
 		return _T(" dora=\"blue\"");
 	default:
 		return _T("");
@@ -98,7 +98,7 @@ void haifu::tools::recordTile_Inline(Tile tlCode, bool rotate) {
 		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
-void haifu::tools::recordTile_Inline(Tile tlCode, doraCol kakanCol) {
+void haifu::tools::recordTile_Inline(Tile tlCode, DoraCol kakanCol) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
 		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(kakanCol) * TileNonflowerMax] << _T('\"') <<
 		haifudoraClassX(kakanCol) << _T(" /><tile tile=\"") <<

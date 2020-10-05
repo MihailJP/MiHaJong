@@ -266,7 +266,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					CircleSeven, CircleNine, RedDragon,
 				};
 				return chktiles(analysis, kezi, 7, kezi, 1, false) &&
-					((countRedTilesInHand(analysis->GameStat, analysis->player, AkaDora))[CircleFive] > 0) &&
+					((countRedTilesInHand(analysis->GameStat, analysis->player, DoraCol::akaDora))[CircleFive] > 0) &&
 					yakuFlag;
 			}
 		));

@@ -44,7 +44,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat);
 
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID playerID);
 
-MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, int doraCol);
+MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, DoraCol doraCol);
 
 MJCORE TileStatus gettilestatus(
 	const GameTable* const gameStat, PlayerID targetPlayer, int targetTile, bool CheckMode);

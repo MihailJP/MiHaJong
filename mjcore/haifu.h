@@ -51,10 +51,10 @@ private:
 		static void haifuRecTime(CodeConv::tstring tagName);
 		static void haifuskipX(PlayerID targetPlayer);
 		static void haifuskip(PlayerID PassivePlayer, PlayerID ActivePlayer);
-		static CodeConv::tstring haifudoraClassX(doraCol Akadora);
+		static CodeConv::tstring haifudoraClassX(DoraCol Akadora);
 		static void recordDoraStream(CodeConv::tostringstream* const x, TileCode tmpDora);
 		static void recordTile_Inline(Tile tlCode, bool rotate);
-		static void recordTile_Inline(Tile tlCode, doraCol kakanCol);
+		static void recordTile_Inline(Tile tlCode, DoraCol kakanCol);
 		static void recordTile_Table(Tile tlCode, CodeConv::tstring tagName = _T("tile"), bool keepOpen = false);
 		static void haifuwritetsumohai(PlayerID ActivePlayer, Tile tlCode, CodeConv::tstring XAttr);
 		static void haifuskipall(PlayerID PassivePlayer);

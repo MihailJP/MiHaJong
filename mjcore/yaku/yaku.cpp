@@ -300,16 +300,16 @@ void yaku::yakuCalculator::countDora
 		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
 		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TileNonflowerMax) continue;
 		switch (gameStat->Player[targetPlayer].Hand[i].red) {
-			case AkaDora: ++red; break;
-			case AoDora: ++blue; break;
+			case DoraCol::akaDora: ++red; break;
+			case DoraCol::aoDora: ++blue; break;
 		}
 	}
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		for (int j = 0; j < (k->mstat >= MeldStat::quadConcealed ? 4 : 3); j++) {
 			switch (gameStat->Player[targetPlayer].Meld[i].red[j]) {
-				case AkaDora: ++red; break;
-				case AoDora: ++blue; break;
+				case DoraCol::akaDora: ++red; break;
+				case DoraCol::aoDora: ++blue; break;
 			}
 		}
 	}

@@ -160,7 +160,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		for (int i = 0; i < SizeOfMeldBuffer; i++) {
 			// 鳴き面子を格納
 			gameStat->Player[pl].Meld[i].tile = NoTile;
-			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = Normal;
+			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = DoraCol::normal;
 			gameStat->Player[pl].Meld[i].mstat = static_cast<MeldStat>(0);
 		}
 		gameStat->Player[pl].NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）

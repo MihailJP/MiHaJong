@@ -11,7 +11,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					((analysis->GameStat->DoraFlag.Omote[analysis->TsumoHai->tile] > 0) || // ツモ牌が表ドラになっている(裏ドラは対象外)
-					(analysis->TsumoHai->red != Normal))); // 赤ドラか青ドラになっている
+					(analysis->TsumoHai->red != DoraCol::normal))); // 赤ドラか青ドラになっている
 			}
 		));
 	/* 北四枚抜き */
@@ -98,12 +98,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			for (int i = 0; i < NumOfTilesInHand; i++) {
 				if (analysis->PlayerStat->Hand[i].tile == NoTile) continue;
 				else if (analysis->PlayerStat->Hand[i].tile >= TileNonflowerMax) continue;
-				else if (analysis->PlayerStat->Hand[i].red == AkaDora) ++red;
+				else if (analysis->PlayerStat->Hand[i].red == DoraCol::akaDora) ++red;
 			}
 			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {
 				const auto k = &analysis->PlayerStat->Meld[i];
 				for (int j = 0; j < (k->mstat >= MeldStat::quadConcealed ? 4 : 3); j++) {
-					if (analysis->PlayerStat->Meld[i].red[j] == AkaDora) ++red;
+					if (analysis->PlayerStat->Meld[i].red[j] == DoraCol::akaDora) ++red;
 				}
 			}
 			return red;

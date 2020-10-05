@@ -52,7 +52,7 @@ void ShowTile::RenderSide(const TileDescriptor* tile, const RECT* rect) {
 }
 void ShowTile::Render() {
 	for (auto& k : mySprites) {
-		const int32_t kVal = k.tile.tile + k.tile.red * TileNonflowerMax;
+		const int32_t kVal = k.tile.tile + static_cast<int>(k.tile.red) * TileNonflowerMax;
 		if (k.exist) {
 			if ((k.direction == TileDirection::portrait) || (k.direction == TileDirection::upsideDown)) {
 				/* TileDirection::portrait alignment */

@@ -49,7 +49,7 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 			int i = 0;
 			for (int j = 1; j < TileNonflowerMax; ++j) {
 				if (machiInfo.Machihai[j].MachihaiFlag) {
-					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), Normal),
+					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), DoraCol::normal),
 						TipX + myTextRenderer->strWidthByPix(o.str()) + 20 + i * (ShowTile::VertTileWidth + 2),
 						TipY + (ShowTile::VertTileHeight / 2) - 6,
 						TileDirection::portrait, TileSide::obverse,

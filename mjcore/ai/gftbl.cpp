@@ -69,7 +69,7 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 				tmpGameStat->Player[player].Hand[i].tile = static_cast<TileCode>(lua_tointeger(L, -1));
 				lua_pop(L, 1);
 				lua_getfield(L, -1, "red");
-				tmpGameStat->Player[player].Hand[i].red = static_cast<doraCol>(lua_tointeger(L, -1));
+				tmpGameStat->Player[player].Hand[i].red = static_cast<DoraCol>(lua_tointeger(L, -1));
 				lua_pop(L, 1);
 			} // 変なことになっていたら無視
 			lua_pop(L, 1);

@@ -34,9 +34,9 @@ void ShowNakihai::NakihaiKamicha(const GameTable* gameStat, PlayerID targetPlaye
 	const TileCode tileL = (tile->mstat == MeldStat::sequenceExposedMiddle) ? static_cast<TileCode>(tile->tile + 1) : ((tile->mstat == MeldStat::sequenceExposedUpper) ? static_cast<TileCode>(tile->tile + 2) : tile->tile);
 	const TileCode tileC = (tile->mstat == MeldStat::sequenceExposedLower) ? static_cast<TileCode>(tile->tile + 1) : tile->tile;
 	const TileCode tileR = (tile->mstat == MeldStat::sequenceExposedUpper) ? static_cast<TileCode>(tile->tile + 1) : ((tile->mstat == MeldStat::sequenceExposedLower) || (tile->mstat == MeldStat::sequenceExposedMiddle) ? static_cast<TileCode>(tile->tile + 2) : tile->tile);
-	const doraCol redL = (tile->mstat == MeldStat::sequenceExposedMiddle) ? tile->red[1] : ((tile->mstat == MeldStat::sequenceExposedUpper) ? tile->red[2] : tile->red[0]);
-	const doraCol redC = ((tile->mstat == MeldStat::sequenceExposedMiddle) || (tile->mstat == MeldStat::sequenceExposedUpper)) ? tile->red[0] : tile->red[1];
-	const doraCol redR = (tile->mstat == MeldStat::sequenceExposedUpper) ? tile->red[1] : tile->red[2];
+	const DoraCol redL = (tile->mstat == MeldStat::sequenceExposedMiddle) ? tile->red[1] : ((tile->mstat == MeldStat::sequenceExposedUpper) ? tile->red[2] : tile->red[0]);
+	const DoraCol redC = ((tile->mstat == MeldStat::sequenceExposedMiddle) || (tile->mstat == MeldStat::sequenceExposedUpper)) ? tile->red[0] : tile->red[1];
+	const DoraCol redR = (tile->mstat == MeldStat::sequenceExposedUpper) ? tile->red[1] : tile->red[2];
 	std::function<unsigned (unsigned)> num; std::function<int (unsigned)>x, y; TileDirection vert, hor;
 	std::tie(num, x, y, hor, vert, std::ignore) = playerPosition(gameStat, targetPlayer, PositionOffset, IDOffset, meldID,
 		MPosHVertR(1), MPosHVertR(2), MPosHHor(3), MPosHHor(3), MPosVVert(), MPosVVert(), MPosVHorU(), MPosVHorL(),

@@ -17,10 +17,10 @@ namespace mihajong_structs {
 
 // -------------------------------------------------------------------------
 
-enum doraCol : uint8_t { Normal, AkaDora, AoDora };
+enum class DoraCol : uint8_t { normal, akaDora, aoDora };
 struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
-	doraCol red;
+	DoraCol red;
 	constexpr explicit operator bool() const {return tile != NoTile;}
 	constexpr bool operator ! () const {return tile == NoTile;}
 	constexpr bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
@@ -29,8 +29,8 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 		if (tile < otherTile.tile) return true;
 		else if (tile > otherTile.tile) return false;
 		else if (red == otherTile.red) return false;
-		else if (red == Normal) return false;
-		else if (otherTile.red == Normal) return true;
+		else if (red == DoraCol::normal) return false;
+		else if (otherTile.red == DoraCol::normal) return true;
 		else return red < otherTile.red;
 	}
 	constexpr bool operator > (const Tile& otherTile) const {return otherTile < *this;}
@@ -62,7 +62,7 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 	}
 	constexpr bool isHonor() const {return getSuit() == TileSuitHonors;}
 	constexpr bool isFlower() const {return getSuit() == TileSuitFlowers;}
-	constexpr explicit Tile(TileCode tile = NoTile, doraCol red = Normal) : tile(tile), red(red) {}
+	constexpr explicit Tile(TileCode tile = NoTile, DoraCol red = DoraCol::normal) : tile(tile), red(red) {}
 };
 static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");
 static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout");
@@ -172,7 +172,7 @@ enum class MeldStat : uint8_t {
 };
 struct MeldCode {
 	TileCode tile;
-	doraCol red[4];
+	DoraCol red[4];
 	MeldStat mstat;
 	explicit operator bool() const {return tile != NoTile;}
 };

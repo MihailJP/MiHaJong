@@ -33,13 +33,13 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 	case FuuroType::chii:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
-			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
+			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = DoraCol::normal;
 		haifu::haifurecchi(gameStat); // 牌譜に記録
 		break;
 	case FuuroType::pon:
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
-			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
+			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = DoraCol::normal;
 		haifu::haifurecpon(gameStat); // 牌譜に記録
 		break;
 	case FuuroType::flower:
@@ -60,7 +60,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 		fuuroPlayer = gameStat->CurrentPlayer.Passive;
 		gameStat->KangFlag.kangFlag = true; // 嶺上開花のフラグを立てる
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
-			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
+			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = DoraCol::normal;
 		haifu::haifurecminkan(gameStat);
 #ifndef GUOBIAO
 		gameStat->KangFlag.chainFlag++; // 連続槓の回数を記録
@@ -80,7 +80,7 @@ PlayerID PrepareFuuro(GameTable* const gameStat, const DiscardTileNum& DiscardTi
 	case FuuroType::ankan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
 		for (int i = 0; i < 4; i++) // 赤ドラバグ回避のため
-			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = Normal;
+			gameStat->Player[fuuroPlayer].Meld[gameStat->Player[fuuroPlayer].MeldPointer + 1].red[i] = DoraCol::normal;
 		/* FALLTHRU */
 	case FuuroType::kakan:
 		fuuroPlayer = gameStat->CurrentPlayer.Active;
@@ -195,7 +195,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		sound::Play(sound::IDs::voxFlower);
 		++(gameStat->Player[kangPlayer].NorthFlag);
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
-		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = Normal;
+		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = DoraCol::normal;
 		gameStat->TianHuFlag = false;
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::CallType::north);
 		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call); // 発声表示処理

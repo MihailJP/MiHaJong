@@ -73,9 +73,9 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 /* ドラの色コード */
 inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "Normal", static_cast<lua_Integer>(Normal));
-	TableAdd(L, "Red", static_cast<lua_Integer>(AkaDora));
-	TableAdd(L, "Blue", static_cast<lua_Integer>(AoDora));
+	TableAdd(L, "Normal", static_cast<lua_Integer>(DoraCol::normal));
+	TableAdd(L, "Red", static_cast<lua_Integer>(DoraCol::akaDora));
+	TableAdd(L, "Blue", static_cast<lua_Integer>(DoraCol::aoDora));
 	lockTable(L); lua_setfield(L, -2, "DoraColor");
 }
 

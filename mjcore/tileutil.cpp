@@ -281,13 +281,13 @@ MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID pla
 }
 
 /* 手牌に存在する赤ドラを種類別にカウントする */
-MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, int doraCol) {
-	assert((doraCol == 1)||(doraCol == 2));
+MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, DoraCol doraCol) {
+	assert((doraCol == DoraCol::akaDora)||(doraCol == DoraCol::aoDora));
 	// 手牌に存在する牌を種類別にカウントする（鳴き面子・暗槓は除く）
 	Int8ByTile count; memset(&count, 0, sizeof(count)); TileCode tmpTC;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
 		if ((tmpTC = TileCode(gameStat->Player[playerID].Hand[i].tile)) != NoTile)
-			if (TileCode(gameStat->Player[playerID].Hand[i].red) == doraCol)
+			if (gameStat->Player[playerID].Hand[i].red == doraCol)
 				count[tmpTC]++;
 	}
 	// 赤ドラのみ数えるときは便宜のため、鳴き面子も数える

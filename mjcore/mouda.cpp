@@ -345,9 +345,9 @@ namespace { /* 内部処理分割用 */
 #ifndef GUOBIAO
 		if (gameStat->CurrentDiscard.isFlower())
 			sound::Play(sound::IDs::sndDahai2);
-		else if ((gameStat->CurrentDiscard.red == AkaDora) || (gameStat->DoraFlag.Omote[gameStat->CurrentDiscard.tile] > 0))
+		else if ((gameStat->CurrentDiscard.red == DoraCol::akaDora) || (gameStat->DoraFlag.Omote[gameStat->CurrentDiscard.tile] > 0))
 			sound::Play(sound::IDs::sndDahai2);
-		else if ((gameStat->CurrentDiscard.red == AoDora) && (!RuleData::chkRule("blue_tiles", "-1han")))
+		else if ((gameStat->CurrentDiscard.red == DoraCol::aoDora) && (!RuleData::chkRule("blue_tiles", "-1han")))
 			sound::Play(sound::IDs::sndDahai2);
 		else
 #endif /* GUOBIAO */
