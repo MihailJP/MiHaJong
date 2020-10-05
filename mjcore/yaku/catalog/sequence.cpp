@@ -1168,7 +1168,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedLower) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
-						if (analysis->MianziDat[i].tile == TileSuitStep + 7) --count;
+						if (analysis->MianziDat[i].tile == j * TileSuitStep + 7) --count;
 					}
 				}
 			}
@@ -1197,7 +1197,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedUpper) {
 					++count;
 					for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
-						if (analysis->MianziDat[i].tile == TileSuitStep + 1) --count;
+						if (analysis->MianziDat[i].tile == j * TileSuitStep + 1) --count;
 					}
 				}
 			}
