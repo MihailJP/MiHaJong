@@ -1138,9 +1138,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				for (int j = 0; j < TileSuitHonors; j += TileSuitStep) {
 					if ((analysis->MianziDat[i].mstat == meldSequenceExposedLower) &&
-						(analysis->MianziDat[i].tile == TileSuitStep + 7)) ++count;
+						(analysis->MianziDat[i].tile == j * TileSuitStep + 7)) ++count;
 					if ((analysis->MianziDat[i].mstat == meldSequenceExposedUpper) &&
-						(analysis->MianziDat[i].tile == TileSuitStep + 1)) ++count;
+						(analysis->MianziDat[i].tile == j * TileSuitStep + 1)) ++count;
 				}
 			}
 			return count;
