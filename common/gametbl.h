@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <type_traits>
 #include <functional>
+#include <array>
 #include "tilecode.h"
 #include "gametype.h"
 #include "largenum.h"
@@ -196,10 +197,19 @@ static_assert(std::is_standard_layout<KangStat>::value, "KangStat is not standar
 
 // -------------------------------------------------------------------------
 
-enum PaoYakuPage : uint8_t {pyDaisangen, pyDaisixi, pySikang, pyMinkan, PaoYakuPages};
+enum class PaoYakuPage : uint8_t {daisangen, daisixi, sikang, minkan, pages};
+constexpr auto PaoYakuPages = static_cast<unsigned int>(PaoYakuPage::pages);
 
 struct PaoStat { PlayerID paoPlayer, agariPlayer; };
-typedef PaoStat PaoStatBook[PaoYakuPages];
+struct PaoStatBook : public std::array<PaoStat, PaoYakuPages> {
+	constexpr PaoStat operator[] (PaoYakuPage p) const { return std::array<PaoStat, PaoYakuPages>::operator[](static_cast<std::size_t>(p)); }
+	reference operator[] (PaoYakuPage p) { return std::array<PaoStat, PaoYakuPages>::operator[](static_cast<std::size_t>(p)); }
+	constexpr PaoStat operator[] (std::size_t p) const { return std::array<PaoStat, PaoYakuPages>::operator[](p); }
+	reference operator[] (std::size_t p) { return std::array<PaoStat, PaoYakuPages>::operator[](p); }
+	PaoStatBook() = default;
+	PaoStatBook(const PaoStatBook&) = default;
+	PaoStatBook& operator = (const PaoStatBook&) = default;
+};
 static_assert(std::is_trivially_copyable<PaoStat>::value, "PaoStat is not trivially copyable");
 static_assert(std::is_standard_layout<PaoStat>::value, "PaoStat is not standard layout");
 

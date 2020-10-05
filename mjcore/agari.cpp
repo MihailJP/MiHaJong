@@ -777,7 +777,7 @@ void endround::agari::endround_chonboproc(GameTable* gameStat, CodeConv::tstring
 	sound::util::bgmplay(sound::IDs::musRyuukyoku);
 	/* 誤ロンまたは誤ツモ */
 	if ((gameStat->AgariSpecialStat == 0) || (gameStat->AgariSpecialStat == 1)) {
-		if ((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong"))
+		if ((gameStat->PaoFlag[PaoYakuPage::minkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong"))
 			ResultDesc += _T("(大明槓の嶺上牌での和了り)"); // 大明槓の嶺上開花禁止ルールの場合
 		else if ((!gameStat->statOfAgari().RichiFlag.RichiFlag) && RuleData::chkRuleApplied("riichi_shibari"))
 			ResultDesc += _T("(ダマ聴での和了り)"); // 立直縛りで立直してないなら錯和

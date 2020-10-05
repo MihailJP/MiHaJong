@@ -303,7 +303,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
-					(analysis->GameStat->PaoFlag[pyMinkan].paoPlayer >= 0)); // 明槓の直後
+					(analysis->GameStat->PaoFlag[PaoYakuPage::minkan].paoPlayer >= 0)); // 明槓の直後
 			}
 		));
 	/* 連槓開花 */

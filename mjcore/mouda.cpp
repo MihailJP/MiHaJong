@@ -151,7 +151,7 @@ namespace { /* 内部処理分割用 */
 #ifndef GUOBIAO
 		if ((!yaku::yakuCalculator::checkShibari(gameStat, &yakuInfo)) ||
 			(RuleData::chkRuleApplied("riichi_shibari") && (!gameStat->statOfActive().RichiFlag.RichiFlag)) ||
-			((gameStat->PaoFlag[pyMinkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
+			((gameStat->PaoFlag[PaoYakuPage::minkan].agariPlayer != -1) && RuleData::chkRule("minkan_pao", "chombo_if_mahjong")) ||
 			((!RuleData::chkRuleApplied("kataagari")) && (!isKataagari(gameStat, gameStat->CurrentPlayer.Active))))
 			RoundEndType = EndType::chonbo; /* 縛りを満たしていない場合(役が無いなど)…錯和として局を終了する */
 		else
@@ -229,8 +229,8 @@ namespace { /* 内部処理分割用 */
 					(DiscardTileIndex.type == DiscardType::kakan)) {
 #ifndef GUOBIAO
 						if (RuleData::chkRule("minkan_pao", "yes") || RuleData::chkRule("minkan_pao", "yes_2han")) {
-							gameStat->PaoFlag[pyMinkan].paoPlayer =
-								gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
+							gameStat->PaoFlag[PaoYakuPage::minkan].paoPlayer =
+								gameStat->PaoFlag[PaoYakuPage::minkan].agariPlayer = -1;
 						}
 #endif /* GUOBIAO */
 						/* 槓をすると嶺上牌の分自摸が増えるので次の打牌へ */
@@ -399,7 +399,7 @@ EndType procdahai(GameTable* const gameStat, DiscardTileNum& DiscardTileIndex) {
 		if (RoundEndType != EndType::continuing) return RoundEndType;
 	}
 	gameStat->KangFlag.kangFlag = false; // 嶺上開花のフラグを降ろす
-	gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->PaoFlag[pyMinkan].agariPlayer = -1;
+	gameStat->PaoFlag[PaoYakuPage::minkan].paoPlayer = gameStat->PaoFlag[PaoYakuPage::minkan].agariPlayer = -1;
 #ifndef GUOBIAO
 	/* 立直をするときの処理 */
 	if ((DiscardTileIndex.type == DiscardType::riichi) ||

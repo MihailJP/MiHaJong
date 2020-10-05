@@ -406,8 +406,8 @@ bool CheckChankan(GameTable* const gameStat, EndType* RoundEndType, FuuroType Mo
 #ifndef GUOBIAO
 		/* 大明槓の包判定用 */
 		if ((!RuleData::chkRule("minkan_pao", "no")) && (!RuleData::chkRule("minkan_pao", "no_but_2han"))) {
-			gameStat->PaoFlag[pyMinkan].paoPlayer = gameStat->CurrentPlayer.Active;
-			gameStat->PaoFlag[pyMinkan].agariPlayer = gameStat->CurrentPlayer.Passive;
+			gameStat->PaoFlag[PaoYakuPage::minkan].paoPlayer = gameStat->CurrentPlayer.Active;
+			gameStat->PaoFlag[PaoYakuPage::minkan].agariPlayer = gameStat->CurrentPlayer.Passive;
 		}
 #endif /* GUOBIAO */
 	}
@@ -522,25 +522,25 @@ void checkpao(GameTable* const gameStat) {
 	}
 	CodeConv::tostringstream o;
 	if (RuleData::chkRuleApplied("normal_pao")) {
-		if ((DragonPons == 3) && (gameStat->PaoFlag[pyDaisangen].paoPlayer == -1)) {
+		if ((DragonPons == 3) && (gameStat->PaoFlag[PaoYakuPage::daisangen].paoPlayer == -1)) {
 			o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] は、大三元を包になります。");
 			debug(o.str().c_str());
-			gameStat->PaoFlag[pyDaisangen].paoPlayer = gameStat->CurrentPlayer.Active;
-			gameStat->PaoFlag[pyDaisangen].agariPlayer = gameStat->CurrentPlayer.Passive;
+			gameStat->PaoFlag[PaoYakuPage::daisangen].paoPlayer = gameStat->CurrentPlayer.Active;
+			gameStat->PaoFlag[PaoYakuPage::daisangen].agariPlayer = gameStat->CurrentPlayer.Passive;
 		}
-		if ((WindPons == 4) && (gameStat->PaoFlag[pyDaisixi].paoPlayer == -1)) {
+		if ((WindPons == 4) && (gameStat->PaoFlag[PaoYakuPage::daisixi].paoPlayer == -1)) {
 			o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] は、大四喜を包になります。");
 			debug(o.str().c_str());
-			gameStat->PaoFlag[pyDaisixi].paoPlayer = gameStat->CurrentPlayer.Active;
-			gameStat->PaoFlag[pyDaisixi].agariPlayer = gameStat->CurrentPlayer.Passive;
+			gameStat->PaoFlag[PaoYakuPage::daisixi].paoPlayer = gameStat->CurrentPlayer.Active;
+			gameStat->PaoFlag[PaoYakuPage::daisixi].agariPlayer = gameStat->CurrentPlayer.Passive;
 		}
 	}
 	if ((RuleData::chkRule("suukantsu", "yakuman_with_pao") || RuleData::chkRule("suukantsu", "double_yakuman_with_pao")) &&
-		(NumOfKangs == 4) && (gameStat->PaoFlag[pySikang].paoPlayer == -1)) {
+		(NumOfKangs == 4) && (gameStat->PaoFlag[PaoYakuPage::sikang].paoPlayer == -1)) {
 		o << _T("プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Active) << _T("] は、四槓子を包になります。");
 		debug(o.str().c_str());
-		gameStat->PaoFlag[pySikang].paoPlayer = gameStat->CurrentPlayer.Active;
-		gameStat->PaoFlag[pySikang].agariPlayer = gameStat->CurrentPlayer.Passive;
+		gameStat->PaoFlag[PaoYakuPage::sikang].paoPlayer = gameStat->CurrentPlayer.Active;
+		gameStat->PaoFlag[PaoYakuPage::sikang].agariPlayer = gameStat->CurrentPlayer.Passive;
 	}
 	// 包の判定 ここまで
 	return;
