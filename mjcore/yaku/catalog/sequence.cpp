@@ -734,10 +734,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("鏡同和"), get_yaku_han("kyantonhoh"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < (TileSuitHonors * 2); i += TileSuitStep * 2) {
+				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
 					int yakuTmpFlag = 0;
 					for (int k = 1; k <= 7; k++)
-						if ((analysis->ShunziCount[i % TileSuitHonors + k] >= 1) &&
+						if ((analysis->ShunziCount[i + k] >= 1) &&
 							(analysis->ShunziCount[(i + TileSuitStep) % TileSuitHonors + k] >= 1))
 								++yakuTmpFlag;
 					if (yakuTmpFlag == 2) yakuFlag = true;
