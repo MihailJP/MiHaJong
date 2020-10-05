@@ -177,7 +177,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("三連刻"), _T("小三連刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
 					for (int k = 1; k <= 6; k++)
 						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->KeziCount[i + k + 1] >= 1) &&
 							(analysis->KeziCount[i + k + 2] >= 1) && (analysis->DuiziCount[i + k + 3] >= 1))
@@ -192,7 +192,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("小三連刻"), get_yaku_han("shou_sanrenkoh"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
 					for (int k = 1; k <= 7; k++)
 						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->DuiziCount[i + k + 1] >= 1) &&
 							(analysis->DuiziCount[i + k + 2] >= 1))
@@ -226,9 +226,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (int i = 1; i <= 9; i++)
-				if ((analysis->KeziCount[i + TileSuitCharacters] >= 1) &&
-					(analysis->KeziCount[i + TileSuitCircles] >= 1) &&
-					(analysis->KeziCount[i + TileSuitBamboos] >= 1))
+				if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+					(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+					(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1))
 					yakuFlag = true;
 			return yakuFlag;
 		}
@@ -242,9 +242,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->KeziCount[i + TileSuitCharacters] >= 1) &&
-						(analysis->KeziCount[i + TileSuitCircles] >= 1) &&
-						(analysis->KeziCount[i + TileSuitBamboos] >= 1) &&
+					if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1) &&
 						(analysis->KeziCount[WhiteDragon] >= 1))
 						yakuFlag = true;
 				return yakuFlag;
@@ -257,9 +257,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->DuiziCount[i + TileSuitCharacters] >= 1) &&
-						(analysis->DuiziCount[i + TileSuitCircles] >= 1) &&
-						(analysis->DuiziCount[i + TileSuitBamboos] >= 1))
+					if ((analysis->DuiziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1))
 						yakuFlag = true;
 				return yakuFlag;
 			}
@@ -924,16 +924,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				constexpr int suit[3][2] = {
-					{TileSuitCharacters, TileSuitCircles},
-					{TileSuitCharacters, TileSuitBamboos},
-					{TileSuitCircles, TileSuitBamboos},
+				constexpr std::array<std::pair<TileSuit, TileSuit>, 3> suit = {
+					std::make_pair(TileSuit::characters, TileSuit::circles),
+					std::make_pair(TileSuit::characters, TileSuit::bamboos),
+					std::make_pair(TileSuit::circles, TileSuit::bamboos),
 				};
-				for (int k = 0; k < 3; k++) {
+				for (auto& k : suit) {
 					int j = 0;
 					for (int i = 1; i <= 9; i++)
-						if ((analysis->KeziCount[i + suit[k][0]] >= 1) &&
-							(analysis->KeziCount[i + suit[k][1]] >= 1)) ++j;
+						if ((analysis->KeziCount[composeNumberTile(k.first,  i)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(k.second, i)] >= 1)) ++j;
 					if (j == 2) yakuFlag = true;
 				}
 				return yakuFlag;
@@ -948,15 +948,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->KeziCount[i + TileSuitCharacters] >= 1) &&
-						(analysis->KeziCount[i + TileSuitCircles] >= 1) &&
-						(analysis->KeziCount[i + TileSuitBamboos] >= 1))
-						if ((analysis->KeziCount[i + TileSuitCharacters + 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitCircles + 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitBamboos + 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitCharacters - 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitCircles - 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitBamboos - 1] >= 1))
+					if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1))
+						if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i + 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i + 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i + 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::characters, i - 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i - 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i - 1)] >= 1))
 							yakuFlag = true;
 				return yakuFlag;
 			}

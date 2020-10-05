@@ -34,20 +34,20 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 		settile(CharacterNine, p); // 萬子
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
-			settile(static_cast<TileCode>(TileSuitCharacters + k), p); // 萬子
+			settile(composeNumberTile(TileSuit::characters, k), p); // 萬子
 	}
 	for (unsigned int k = 1u; k <= 9u; ++k)
-		settile(static_cast<TileCode>(TileSuitCircles + k), p); // 筒子
+		settile(composeNumberTile(TileSuit::circles, k), p); // 筒子
 	if (gameStat->chkGameType(GameTypeID::sanmaSeto)) {
 		settile(BambooOne, p); // 索子
 		settile(BambooNine, p); // 索子
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
-			settile(static_cast<TileCode>(TileSuitBamboos + k), p); // 索子
+			settile(composeNumberTile(TileSuit::bamboos, k), p); // 索子
 	}
 	if (!gameStat->chkGameType(GameTypeID::sanmaS)) {
 		for (unsigned int k = 1u; k <= 7u; ++k)
-			settile(static_cast<TileCode>(TileSuitHonors + k), p); // 字牌
+			settile(composeNumberTile(TileSuit::honors, k), p); // 字牌
 #ifndef GUOBIAO
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
 #endif /* GUOBIAO */
@@ -78,17 +78,17 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
-				gameStat->Deck[tilepos[TileSuitCharacters + i + 1]].red = DoraCol::akaDora;
+				gameStat->Deck[tilepos[composeNumberTile(TileSuit::characters, i + 1)]].red = DoraCol::akaDora;
 			if (RuleData::chkRule(tileRules[i], "circle_suit") || // 筒子
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
-				gameStat->Deck[tilepos[TileSuitCircles + i + 1]].red = DoraCol::akaDora;
+				gameStat->Deck[tilepos[composeNumberTile(TileSuit::circles, i + 1)]].red = DoraCol::akaDora;
 			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // 索子
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
-				gameStat->Deck[tilepos[TileSuitBamboos + i + 1]].red = DoraCol::akaDora;
+				gameStat->Deck[tilepos[composeNumberTile(TileSuit::bamboos, i + 1)]].red = DoraCol::akaDora;
 		}
 	}
 	// 5のドラは特殊
@@ -163,17 +163,17 @@ inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 青�
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
-				gameStat->Deck[tilepos[TileSuitCharacters + tileNum[i]] + 3].red = DoraCol::aoDora;
+				gameStat->Deck[tilepos[composeNumberTile(TileSuit::characters, tileNum[i])] + 3].red = DoraCol::aoDora;
 			if (RuleData::chkRule(tileRules[i], "circle_suit") || // 筒子
 				RuleData::chkRule(tileRules[i], "character_circle_suit") ||
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
-				gameStat->Deck[tilepos[TileSuitCircles + tileNum[i]] + 3].red = DoraCol::aoDora;
+				gameStat->Deck[tilepos[composeNumberTile(TileSuit::circles, tileNum[i])] + 3].red = DoraCol::aoDora;
 			if (RuleData::chkRule(tileRules[i], "bamboo_suit") || // 索子
 				RuleData::chkRule(tileRules[i], "circle_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "character_bamboo_suit") ||
 				RuleData::chkRule(tileRules[i], "all_three_suits"))
-				gameStat->Deck[tilepos[TileSuitBamboos + tileNum[i]] + 3].red = DoraCol::aoDora;
+				gameStat->Deck[tilepos[composeNumberTile(TileSuit::bamboos, tileNum[i])] + 3].red = DoraCol::aoDora;
 		}
 	}
 	{
@@ -222,9 +222,9 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 			unsigned int dice = gameStat->Dice[i + 0].Number + gameStat->Dice[i + 1].Number;
 			if (dice <= 8) { // 2〜8はその数牌がドラ　三麻では萬子がないので別処理
 				if (!gameStat->chkGameType(GameTypeID::sanmaX))
-					nagatadora(static_cast<TileCode>(TileSuitCharacters + dice));
-				nagatadora(    static_cast<TileCode>(TileSuitCircles    + dice));
-				nagatadora(    static_cast<TileCode>(TileSuitBamboos    + dice));
+					nagatadora(composeNumberTile(TileSuit::characters, dice));
+				nagatadora(    composeNumberTile(TileSuit::circles   , dice));
+				nagatadora(    composeNumberTile(TileSuit::bamboos   , dice));
 			} else if (dice == 9) { // 9はそのまま9がドラ
 				nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
 			} else if (dice == 10) { // 10は三元牌がドラ
@@ -533,7 +533,7 @@ namespace {
 			statsync(gameStat, gameStat->Deck[i].tile + static_cast<int>(gameStat->Deck[i].red) * TileNonflowerMax + mihajong_socket::protocol::StartRound_Tile_Excess,
 				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信
 					const auto recvTile = ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess;
-					if ((recvTile > TileNonflowerMax) && (recvTile < TileSuitFlowers)) {
+					if ((recvTile > TileNonflowerMax) && (recvTile < static_cast<int>(TileSuit::flowers))) {
 							gameStat->Deck[i] = Tile(TileCode(recvTile % TileNonflowerMax), DoraCol(recvTile / TileNonflowerMax));
 					} else {
 						gameStat->Deck[i] = Tile(TileCode(recvTile));

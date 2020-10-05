@@ -15,12 +15,12 @@
 #define TileSuitStep         mihajong_structs::TileSuitStep
 #define TILE_NUMERAL_COLORS    mihajong_structs::TileNumeralColors
 
-#define TileSuitCharacters   mihajong_structs::TileSuitCharacters
-#define TileSuitCircles      mihajong_structs::TileSuitCircles
-#define TileSuitBamboos      mihajong_structs::TileSuitBamboos
-#define TileSuitHonors       mihajong_structs::TileSuitHonors
+#define TileSuitCharacters   mihajong_structs::TileSuit::characters
+#define TileSuitCircles      mihajong_structs::TileSuit::circles
+#define TileSuitBamboos      mihajong_structs::TileSuit::bamboos
+#define TileSuitHonors       mihajong_structs::TileSuit::honors
 #define TileNonflowerMax     mihajong_structs::TileNonflowerMax
-#define TileSuitFlowers      mihajong_structs::TileSuitFlowers
+#define TileSuitFlowers      mihajong_structs::TileSuit::flowers
 #define TILE_FLOWER_MAX        mihajong_structs::TileFlowerMax
 
 using mihajong_structs::TileCode;

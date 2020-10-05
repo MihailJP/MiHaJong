@@ -11,7 +11,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			_T("対々和"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int count = 0;
-				for (int i = 1; i < TileSuitHonors; i += 2)
+				for (int i = 1; i < static_cast<int>(TileSuit::honors); i += 2)
 					if (analysis->DuiziCount[i] >= 1) ++count;
 				return (count == SizeOfMeldBuffer);
 			}
@@ -29,7 +29,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int count = 0;
-				for (int i = 2; i < TileSuitHonors; i += 2)
+				for (int i = 2; i < static_cast<int>(TileSuit::honors); i += 2)
 					if (analysis->DuiziCount[i] >= 1) ++count;
 				return (count == SizeOfMeldBuffer);
 			}
@@ -183,7 +183,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int k = 1; k <= 3; k++)
-					yakuFlag = yakuFlag || haouben(analysis, static_cast<TileCode>(TileSuitBamboos + k), 3);
+					yakuFlag = yakuFlag || haouben(analysis, composeNumberTile(TileSuit::bamboos, k), 3);
 				return yakuFlag;
 			}
 		));
@@ -192,7 +192,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			_T("覇王鞭"), get_yaku_han("haouben"),
 			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					for (int k = 1; k <= 3; k++)
 						yakuFlag = yakuFlag || haouben(analysis, static_cast<TileCode>(i + k), 3);
 				return yakuFlag;
@@ -204,7 +204,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			_T("劉関張"), get_yaku_han("ryuukanchan"),
 			[haouben](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					for (int k = 1; k <= 7; k++)
 						yakuFlag = yakuFlag || haouben(analysis, static_cast<TileCode>(i + k), 1);
 				return yakuFlag;
@@ -514,18 +514,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			_T("琳両数"), get_yaku_han("rinryanshii"),
 			/* 対々和が必ず複合 */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
-				char pattern[] = "121314151617181923242526272829343536373839454647484956575859676869787989";
-				TileCode tCode[TileSuitHonors / TileSuitStep * 2];
+				constexpr char pattern[] = "121314151617181923242526272829343536373839454647484956575859676869787989";
+				TileCode tCode[static_cast<int>(TileSuit::honors) / TileSuitStep * 2];
 				bool yakuFlag = false;
 				for (int i = 0; i < 36; i++) {
 					int num1 = static_cast<int>(pattern[i * 2] - _T('0'));
 					int num2 = static_cast<int>(pattern[i * 2 + 1] - _T('0'));
-					for (int k = 0; k < TileSuitHonors / TileSuitStep * 2; k += 2) {
+					for (int k = 0; k < static_cast<int>(TileSuit::honors) / TileSuitStep * 2; k += 2) {
 						tCode[k] = static_cast<TileCode>(k / 2 * TileSuitStep + num1);
 						tCode[k + 1] = static_cast<TileCode>(k / 2 * TileSuitStep + num2);
 					}
 					if (yaku::countingFacility::countSpecMentz(
-						analysis->MianziDat, tCode, TileSuitHonors / TileSuitStep * 2, nullptr, 0, false) == SizeOfMeldBuffer)
+						analysis->MianziDat, tCode, static_cast<int>(TileSuit::honors) / TileSuitStep * 2, nullptr, 0, false) == SizeOfMeldBuffer)
 						yakuFlag = true;
 				}
 				return yakuFlag;
@@ -536,9 +536,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		[](const MENTSU_ANALYSIS* const analysis, int val1, int val2, int val3, bool noDui) -> bool {
 			const Int8ByTile* count = noDui ? &analysis->KeziCount : &analysis->DuiziCount;
 			bool yakuFlag = false;
-			for (int suit1 = 0; suit1 < TileSuitHonors; suit1+= TileSuitStep)
-				for (int suit2 = 0; suit2 < TileSuitHonors; suit2 += TileSuitStep)
-					for (int suit3 = 0; suit3 < TileSuitHonors; suit3 += TileSuitStep)
+			for (int suit1 = 0; suit1 < static_cast<int>(TileSuit::honors); suit1+= TileSuitStep)
+				for (int suit2 = 0; suit2 < static_cast<int>(TileSuit::honors); suit2 += TileSuitStep)
+					for (int suit3 = 0; suit3 < static_cast<int>(TileSuit::honors); suit3 += TileSuitStep)
 						if (((*count)[suit1 + val1] >= 1) && ((*count)[suit2 + val2] >= 1) &&
 							((*count)[suit3 + val3] >= 1)) yakuFlag = true;
 			return yakuFlag;
@@ -583,8 +583,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 		[](const MENTSU_ANALYSIS* const analysis, int val1, int val2, bool noDui) -> bool {
 			const Int8ByTile* count = noDui ? &analysis->KeziCount : &analysis->DuiziCount;
 			bool yakuFlag = false;
-			for (int suit1 = 0; suit1 < TileSuitHonors; suit1+= TileSuitStep)
-				for (int suit2 = 0; suit2 < TileSuitHonors; suit2 += TileSuitStep)
+			for (int suit1 = 0; suit1 < static_cast<int>(TileSuit::honors); suit1+= TileSuitStep)
+				for (int suit2 = 0; suit2 < static_cast<int>(TileSuit::honors); suit2 += TileSuitStep)
 					if (((*count)[suit1 + val1] >= 1) && ((*count)[suit2 + val2] >= 1))
 						yakuFlag = true;
 			return yakuFlag;
@@ -730,7 +730,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[CircleThree] >= 1) &&
 					(analysis->KeziCount[CircleFour] >= 1) &&
 					(analysis->KeziCount[CircleOne] >= 1) &&
-					(analysis->MianziDat[0].tile / TileSuitStep == TileSuitCircles / TileSuitStep);
+					(getTileSuit(analysis->MianziDat[0].tile) == TileSuit::circles);
 			}
 		));
 	}

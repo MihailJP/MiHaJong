@@ -72,9 +72,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("三色同刻"), _T("三槓子"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < 9; i++)
-					if ((analysis->KangziCount[TileSuitCharacters + i] >= 1) &&
-						(analysis->KangziCount[TileSuitCircles + i] >= 1) &&
-						(analysis->KangziCount[TileSuitBamboos + i] >= 1))
+					if ((analysis->KangziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->KangziCount[composeNumberTile(TileSuit::circles, i)] >= 1) &&
+						(analysis->KangziCount[composeNumberTile(TileSuit::bamboos, i)] >= 1))
 						return true;
 				return false;
 			}
@@ -164,7 +164,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("暗中模索"), get_yaku_han("anchumosaku"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->AnKangziCount[RedDragon] >= 1) &&
-					(analysis->TsumoHai->tile / TileSuitStep == TileSuitBamboos / TileSuitStep) &&
+					(getTileSuit(analysis->TsumoHai->tile) == TileSuit::bamboos) &&
 					(*analysis->TsumoAgariFlag));
 			}
 		));
@@ -214,7 +214,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("草加"), get_yaku_han("souka"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (int i = 1; i < 9; i++)
-					if (analysis->KaKangziCount[TileSuitBamboos + i] >= 1)
+					if (analysis->KaKangziCount[composeNumberTile(TileSuit::bamboos, i)] >= 1)
 						return true;
 				return false;
 			}
@@ -225,9 +225,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("合格祈願"), get_yaku_han("goukaku_kigan"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag1 = false; bool flag2 = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					if (analysis->KangziCount[i + 5] >= 1) flag1 = true;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					if (analysis->KangziCount[i + 9] >= 1) flag2 = true;
 				return flag1 && flag2;
 			}

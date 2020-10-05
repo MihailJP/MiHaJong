@@ -40,28 +40,28 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 		switch (tile) {
 		case CharacterOne: case CharacterTwo: case CharacterThree: case CharacterFour: case CharacterFive:
 		case CharacterSix: case CharacterSeven: case CharacterEight: case CharacterNine:
-			return TileSuitCharacters;
+			return TileSuit::characters;
 		case CircleOne: case CircleTwo: case CircleThree: case CircleFour: case CircleFive:
 		case CircleSix: case CircleSeven: case CircleEight: case CircleNine:
-			return TileSuitCircles;
+			return TileSuit::circles;
 		case BambooOne: case BambooTwo: case BambooThree: case BambooFour: case BambooFive:
 		case BambooSix: case BambooSeven: case BambooEight: case BambooNine:
-			return TileSuitBamboos;
+			return TileSuit::bamboos;
 		case EastWind: case SouthWind: case WestWind: case NorthWind:
 		case WhiteDragon: case GreenDragon: case RedDragon:
-			return TileSuitHonors;
+			return TileSuit::honors;
 		case Spring: case Summer: case Autumn: case Winter:
 		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
-			return TileSuitFlowers;
+			return TileSuit::flowers;
 		default:
-			return TileSuitInvalid;
+			return TileSuit::invalid;
 		}
 	}
 	constexpr bool isNumber() const {
-		return (tile != NoTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors));		
+		return (tile != NoTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuit::honors));		
 	}
-	constexpr bool isHonor() const {return getSuit() == TileSuitHonors;}
-	constexpr bool isFlower() const {return getSuit() == TileSuitFlowers;}
+	constexpr bool isHonor() const {return getSuit() == TileSuit::honors;}
+	constexpr bool isFlower() const {return getSuit() == TileSuit::flowers;}
 	constexpr explicit Tile(TileCode tile = NoTile, DoraCol red = DoraCol::normal) : tile(tile), red(red) {}
 };
 static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");

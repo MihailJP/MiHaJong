@@ -7,27 +7,27 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 #ifndef GUOBIAO
 	const auto countTilesOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->TileCount[TileSuitCharacters + numeral] +
-				analysis->TileCount[TileSuitCircles + numeral] +
-				analysis->TileCount[TileSuitBamboos + numeral];
+			return analysis->TileCount[composeNumberTile(TileSuit::characters, numeral)] +
+				analysis->TileCount[composeNumberTile(TileSuit::circles, numeral)] +
+				analysis->TileCount[composeNumberTile(TileSuit::bamboos, numeral)];
 		};
 	const auto countKangziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->KangziCount[TileSuitCharacters + numeral] +
-				analysis->KangziCount[TileSuitCircles + numeral] +
-				analysis->KangziCount[TileSuitBamboos + numeral];
+			return analysis->KangziCount[composeNumberTile(TileSuit::characters, numeral)] +
+				analysis->KangziCount[composeNumberTile(TileSuit::circles, numeral)] +
+				analysis->KangziCount[composeNumberTile(TileSuit::bamboos, numeral)];
 		};
 	const auto countKeziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->KeziCount[TileSuitCharacters + numeral] +
-				analysis->KeziCount[TileSuitCircles + numeral] +
-				analysis->KeziCount[TileSuitBamboos + numeral];
+			return analysis->KeziCount[composeNumberTile(TileSuit::characters, numeral)] +
+				analysis->KeziCount[composeNumberTile(TileSuit::circles, numeral)] +
+				analysis->KeziCount[composeNumberTile(TileSuit::bamboos, numeral)];
 		};
 	const auto countDuiziOf =
 		[](const MENTSU_ANALYSIS* const analysis, unsigned numeral) -> unsigned {
-			return analysis->DuiziCount[TileSuitCharacters + numeral] +
-				analysis->DuiziCount[TileSuitCircles + numeral] +
-				analysis->DuiziCount[TileSuitBamboos + numeral];
+			return analysis->DuiziCount[composeNumberTile(TileSuit::characters, numeral)] +
+				analysis->DuiziCount[composeNumberTile(TileSuit::circles, numeral)] +
+				analysis->DuiziCount[composeNumberTile(TileSuit::bamboos, numeral)];
 		};
 
 	// ---------------------------------------------------------------------
@@ -39,7 +39,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("清一色"), _T("対々和"), _T("筋牌刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					if ((analysis->DuiziCount[i + 1] >= 1) &&
 						(analysis->DuiziCount[i + 7] >= 1) &&
 						(analysis->DuiziCount[i + 8] >= 1) &&
@@ -61,7 +61,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[isApril1st](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (!isApril1st()) return false;
 				bool flag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					if ((analysis->KeziCount[i + 4] >= 1) &&
 						(analysis->KeziCount[i + 1] >= 1))
 						flag = true;
@@ -124,7 +124,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
 				for (int i = 2; i <= 9; ++i)
-					if (analysis->KeziCount[TileSuitBamboos + i] >= 1)
+					if (analysis->KeziCount[composeNumberTile(TileSuit::bamboos, i)] >= 1)
 						flag = true;
 				return flag &&
 					(analysis->KeziCount[GreenDragon] >= 1) &&
@@ -266,7 +266,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("対々和"), _T("筋牌刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					if ((analysis->KeziCount[i + 5] >= 1) && (analysis->KeziCount[i + 9] >= 1) &&
 						(analysis->KeziCount[i + 6] >= 1) && (analysis->KeziCount[i + 3] >= 1))
 						flag = true;
@@ -426,10 +426,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("混一色"), _T("四帰一"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool pairIsHonor = false; bool flag = false;
-				for (int i = TileSuitHonors; i < TileNonflowerMax; i++)
+				for (int i = static_cast<int>(TileSuit::honors); i < TileNonflowerMax; i++)
 					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i))
 						pairIsHonor = true;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
 					if ((analysis->KeziCount[i + 3] >= 1) &&
 						(analysis->KeziCount[i + 6] >= 1) &&
 						(analysis->KeziCount[NorthWind] >= 1) &&
@@ -759,7 +759,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[(k[1] - _T('0')) * TileSuitStep + 7] >= 1) &&
 						(analysis->KeziCount[(k[2] - _T('0')) * TileSuitStep + 3] >= 1))
 						flag1 = true;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
+				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
 					if ((analysis->KeziCount[i + 8] >= 1) &&
 						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 8)))
 						flag2 = true;

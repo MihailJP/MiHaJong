@@ -113,7 +113,7 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	constexpr char suitname[3][16] = {"Character","Circle","Bamboo",};
 	constexpr char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
 	lua_newtable(L);
-	for (int suit = 0; suit < TileSuitHonors; suit += TileSuitStep) { // 数牌(ループ)
+	for (int suit = 0; suit < static_cast<int>(TileSuit::honors); suit += TileSuitStep) { // 数牌(ループ)
 		lua_newtable(L);
 		for (int num = 1; num <= 9; num++) {
 			TableAdd(L, numeral[num - 1], static_cast<lua_Integer>(suit + num));

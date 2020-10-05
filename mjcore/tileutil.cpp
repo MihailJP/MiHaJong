@@ -502,7 +502,7 @@ namespace setdora_tools {
 
 	void addDora(GameTable* const gameStat, TileCode tc, int Mode) {
 		for (int i = (RuleData::chkRuleApplied("nagatacho") ? tc % 10 : tc);
-			i <= ((RuleData::chkRuleApplied("nagatacho") && Tile(tc).isNumber()) ? static_cast<int>(TileSuitHonors) : static_cast<int>(tc));
+			i <= ((RuleData::chkRuleApplied("nagatacho") && Tile(tc).isNumber()) ? static_cast<int>(TileSuit::honors) : static_cast<int>(tc));
 			i += 10) {
 				CodeConv::tostringstream o;
 				if (Mode) gameStat->DoraFlag.Ura[i]++;	// ドラを設定する

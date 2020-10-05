@@ -46,12 +46,12 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 
 	// 順子(順子優先正順モードの時)
 	if (AtamaCode.Order == Shun_Ke)
-		for (int i = 1; i < TileSuitHonors; i++)
+		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				--i;
 	// 順子(順子優先逆順モードの時)
 	if (AtamaCode.Order == Shun_Ke_Rev)
-		for (int i = TileSuitHonors - 1; i > 0; i--)
+		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				++i;
 
@@ -66,12 +66,12 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 
 	// 順子(暗刻優先正順モードの時)
 	if (AtamaCode.Order == Ke_Shun)
-		for (int i = 1; i < TileSuitHonors; i++)
+		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				--i;
 	// 順子(暗刻優先逆順モードの時)
 	if (AtamaCode.Order == Ke_Shun_Rev)
-		for (int i = TileSuitHonors - 1; i > 0; i--)
+		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				++i;
 
@@ -103,7 +103,7 @@ int yaku::countingFacility::countPairs(
 int yaku::countingFacility::countTileNumerals(const Int8ByTile tileCount) {
 	/* 数字の合計を数える */
 	int Cifr = 0;
-	for (int i = 1; i < (TileSuitHonors - 1); i++)
+	for (int i = 1; i < (static_cast<int>(TileSuit::honors) - 1); i++)
 		Cifr += tileCount[i] * (i % TileSuitStep);
 	return Cifr;
 }
@@ -218,7 +218,7 @@ int yaku::countingFacility::countSpecMentzWithDup(const MeldBuf MianziDat, const
 int yaku::countingFacility::countMentzNumerals(const MeldBuf MianziDat) { /* 数字の合計を数える */
 	int Cifr = 0;
 	for (int i = 0; i < SizeOfMeldBuffer; i++) {
-		if (MianziDat[i].tile % TileCodeMaximum < TileSuitHonors) {
+		if (MianziDat[i].tile % TileCodeMaximum < static_cast<int>(TileSuit::honors)) {
 			if (i == 0) { // 雀頭
 				Cifr += (MianziDat[0].tile % TileSuitStep) * 2;
 			} else { // 面子
