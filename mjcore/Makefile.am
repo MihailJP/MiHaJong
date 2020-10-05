@@ -20,7 +20,7 @@ libmihajong_la_SOURCES = \
 	endtype.h envtbl.h except.h func.h fuuro.h gameloop.h gametbl.h haifu.h \
 	init.h logging.h main.h mjexport.h mjimport.h mouda.h prepare.h \
 	random.h rankval.h rational.h remote.h result.h shanten.h \
-	resource.h ruletbl.h socknum.h sound.h tilecode.h tileutil.h \
+	resource.h ruletbl.h socknum.h sound.h tileutil.h \
 	ai/aiscript.h ai/class.h ai/functbl.h ai/filesel.h \
 	conffile/conffile.h \
 	lzma/Alloc.c lzma/LzFind.c lzma/LzmaDec.c lzma/LzmaLib.c lzma/Sha256.c \
