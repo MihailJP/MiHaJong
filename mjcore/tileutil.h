@@ -26,8 +26,10 @@ using mihajong_structs::TileStatus;
 PlayerID* tobePlayed(const GameTable* const gameStat);
 PlayerID tobePlayed(const GameTable* const gameStat, int id);
 
-const TileCode* Honor_Major_Tiles();
-TileCode Honor_Major_Tiles(int code);
+constexpr std::array<TileCode, 13> Honor_Major_Tiles = {
+	CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
+	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+};
 bool isYaojiu(TileCode code);
 
 void lipai(GameTable* const gameStat, PlayerID targetPlayer);
