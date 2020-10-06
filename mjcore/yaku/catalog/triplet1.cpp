@@ -177,10 +177,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("三連刻"), _T("小三連刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
+				for (auto i : NumberTileSuits) {
 					for (int k = 1; k <= 6; k++)
-						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->KeziCount[i + k + 1] >= 1) &&
-							(analysis->KeziCount[i + k + 2] >= 1) && (analysis->DuiziCount[i + k + 3] >= 1))
+						if ((analysis->DuiziCount[composeNumberTile(i, k + 0)] >= 1) && (analysis->KeziCount[composeNumberTile(i, k + 1)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(i, k + 2)] >= 1) && (analysis->DuiziCount[composeNumberTile(i, k + 3)] >= 1))
 							yakuFlag = true;
 				}
 				return yakuFlag;
@@ -192,10 +192,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("小三連刻"), get_yaku_han("shou_sanrenkoh"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
+				for (auto i : NumberTileSuits) {
 					for (int k = 1; k <= 7; k++)
-						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->DuiziCount[i + k + 1] >= 1) &&
-							(analysis->DuiziCount[i + k + 2] >= 1))
+						if ((analysis->DuiziCount[composeNumberTile(i, k + 0)] >= 1) && (analysis->DuiziCount[composeNumberTile(i, k + 1)] >= 1) &&
+							(analysis->DuiziCount[composeNumberTile(i, k + 2)] >= 1))
 							yakuFlag = true;
 				}
 				return yakuFlag;

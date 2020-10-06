@@ -32,6 +32,10 @@ constexpr std::array<TileCode, 13> Honor_Major_Tiles = {
 };
 bool isYaojiu(TileCode code);
 
+constexpr std::array<TileSuit, 3> NumberTileSuits = {
+	TileSuit::characters, TileSuit::circles, TileSuit::bamboos,
+};
+
 void lipai(GameTable* const gameStat, PlayerID targetPlayer);
 namespace MoveTile {
 void moveTile(GameTable* const gameStat, PlayerID targetPlayer, bool execute, int tileIndex);

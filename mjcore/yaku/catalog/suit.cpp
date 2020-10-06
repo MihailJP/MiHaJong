@@ -23,16 +23,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	const auto chkHaishiki =
 		[](const MENTSU_ANALYSIS* const analysis, const char* const haishiki) -> bool {
 			bool yakuFlag = false;
-			for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-				if ((analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 1)] >= static_cast<int>(haishiki[0] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 2)] >= static_cast<int>(haishiki[1] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 3)] >= static_cast<int>(haishiki[2] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 4)] >= static_cast<int>(haishiki[3] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 5)] >= static_cast<int>(haishiki[4] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 6)] >= static_cast<int>(haishiki[5] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 7)] >= static_cast<int>(haishiki[6] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 8)] >= static_cast<int>(haishiki[7] - _T('0'))) &&
-					(analysis->TileCount[composeNumberTile(static_cast<TileSuit>(i), 9)] >= static_cast<int>(haishiki[8] - _T('0'))) ) yakuFlag = true;
+			for (auto i : NumberTileSuits)
+				if ((analysis->TileCount[composeNumberTile(i, 1)] >= static_cast<int>(haishiki[0] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 2)] >= static_cast<int>(haishiki[1] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 3)] >= static_cast<int>(haishiki[2] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 4)] >= static_cast<int>(haishiki[3] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 5)] >= static_cast<int>(haishiki[4] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 6)] >= static_cast<int>(haishiki[5] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 7)] >= static_cast<int>(haishiki[6] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 8)] >= static_cast<int>(haishiki[7] - _T('0'))) &&
+					(analysis->TileCount[composeNumberTile(i, 9)] >= static_cast<int>(haishiki[8] - _T('0'))) ) yakuFlag = true;
 			return yakuFlag;
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
