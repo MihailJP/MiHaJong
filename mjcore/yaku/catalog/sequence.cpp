@@ -661,9 +661,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				bool yakuFlag = false;
 				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
 					int yakuFlagCount = 0;
-					if ((analysis->ShunziCount[i + 0] >= 1) && (analysis->ShunziCount[i + 3] >= 2) && (analysis->ShunziCount[i + 6] >= 1)) {
+					if ((analysis->ShunziCount[i + 1] >= 1) && (analysis->ShunziCount[i + 4] >= 2) && (analysis->ShunziCount[i + 7] >= 1)) {
 						yakuFlag = true;
-					} else if ((analysis->ShunziCount[i + 0] >= 1) && (analysis->ShunziCount[i + 3] == 1) && (analysis->ShunziCount[i + 6] >= 1)) {
+					} else if ((analysis->ShunziCount[i + 1] >= 1) && (analysis->ShunziCount[i + 4] == 1) && (analysis->ShunziCount[i + 7] >= 1)) {
 						continue;
 					} else {
 						for (int j = 1; j <= 4; j++)
