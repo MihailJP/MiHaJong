@@ -2,14 +2,14 @@
 #include "../../../common/strcode.h"
 
 static const TileCode YaojiuShunCode[] = {
-	CharacterOne, CharacterSeven, CircleOne, CircleSeven, BambooOne, BambooSeven,
-	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+	TileCode::characterOne, TileCode::characterSeven, TileCode::circleOne, TileCode::circleSeven, TileCode::bambooOne, TileCode::bambooSeven,
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
 };
-static const TileCode OneCode[] = {CharacterOne, CircleOne, BambooOne,
-	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon};
-static const TileCode SevenCode[] = {CharacterSeven, CircleSeven, BambooSeven};
-static const TileCode NineCode[] = {CharacterNine, CircleNine, BambooNine,
-	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon};
+static const TileCode OneCode[] = {TileCode::characterOne, TileCode::circleOne, TileCode::bambooOne,
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon};
+static const TileCode SevenCode[] = {TileCode::characterSeven, TileCode::circleSeven, TileCode::bambooSeven};
+static const TileCode NineCode[] = {TileCode::characterNine, TileCode::circleNine, TileCode::bambooNine,
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon};
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_yaojiu()
 {

@@ -138,8 +138,8 @@ void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID p
 		case MeldStat::sequenceExposedUpper:
 			// 順子の時
 			tileCount[gameStat->Player[playerID].Meld[i].tile]++;
-			tileCount[gameStat->Player[playerID].Meld[i].tile + 1]++;
-			tileCount[gameStat->Player[playerID].Meld[i].tile + 2]++;
+			tileCount[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 1]++;
+			tileCount[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 2]++;
 			break;
 		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
 		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
@@ -188,8 +188,8 @@ Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, Pla
 	if (gameStat->chkGameType(GameTypeID::sanmaS)) return ShantenImpossible; // 数牌三麻では不可能
 
 	TileCode YaojiuPai[13] = {
-		CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
-		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+		TileCode::characterOne, TileCode::characterNine, TileCode::circleOne, TileCode::circleNine, TileCode::bambooOne, TileCode::bambooNine,
+		TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
 	};
 	Shanten shanten = 13; bool atama = false;
 	for (int i = 0; i < 13; i++) {
@@ -208,36 +208,36 @@ Shanten ShantenAnalyzer::calcShantenKokushi(const GameTable* const gameStat, Pla
 void ShantenAnalyzer::setQixingTilePattern(TileCode* const QixingPai, unsigned int pattern) {
 	switch (pattern) {
 	case 0: case 1:
-		QixingPai[0] = CharacterOne; QixingPai[1] = CharacterFour;
-		QixingPai[2] = CharacterSeven; break;
+		QixingPai[0] = TileCode::characterOne; QixingPai[1] = TileCode::characterFour;
+		QixingPai[2] = TileCode::characterSeven; break;
 	case 2: case 3:
-		QixingPai[0] = CharacterTwo; QixingPai[1] = CharacterFive;
-		QixingPai[2] = CharacterEight; break;
+		QixingPai[0] = TileCode::characterTwo; QixingPai[1] = TileCode::characterFive;
+		QixingPai[2] = TileCode::characterEight; break;
 	case 4: case 5:
-		QixingPai[0] = CharacterThree; QixingPai[1] = CharacterSix;
-		QixingPai[2] = CharacterNine; break;
+		QixingPai[0] = TileCode::characterThree; QixingPai[1] = TileCode::characterSix;
+		QixingPai[2] = TileCode::characterNine; break;
 	}
 	switch (pattern) {
 	case 2: case 4:
-		QixingPai[3] = CircleOne; QixingPai[4] = CircleFour;
-		QixingPai[5] = CircleSeven; break;
+		QixingPai[3] = TileCode::circleOne; QixingPai[4] = TileCode::circleFour;
+		QixingPai[5] = TileCode::circleSeven; break;
 	case 0: case 5:
-		QixingPai[3] = CircleTwo; QixingPai[4] = CircleFive;
-		QixingPai[5] = CircleEight; break;
+		QixingPai[3] = TileCode::circleTwo; QixingPai[4] = TileCode::circleFive;
+		QixingPai[5] = TileCode::circleEight; break;
 	case 1: case 3:
-		QixingPai[3] = CircleThree; QixingPai[4] = CircleSix;
-		QixingPai[5] = CircleNine; break;
+		QixingPai[3] = TileCode::circleThree; QixingPai[4] = TileCode::circleSix;
+		QixingPai[5] = TileCode::circleNine; break;
 	}
 	switch (pattern) {
 	case 3: case 5:
-		QixingPai[6] = BambooOne; QixingPai[7] = BambooFour;
-		QixingPai[8] = BambooSeven; break;
+		QixingPai[6] = TileCode::bambooOne; QixingPai[7] = TileCode::bambooFour;
+		QixingPai[8] = TileCode::bambooSeven; break;
 	case 1: case 4:
-		QixingPai[6] = BambooTwo; QixingPai[7] = BambooFive;
-		QixingPai[8] = BambooEight; break;
+		QixingPai[6] = TileCode::bambooTwo; QixingPai[7] = TileCode::bambooFive;
+		QixingPai[8] = TileCode::bambooEight; break;
 	case 0: case 2:
-		QixingPai[6] = BambooThree; QixingPai[7] = BambooSix;
-		QixingPai[8] = BambooNine; break;
+		QixingPai[6] = TileCode::bambooThree; QixingPai[7] = TileCode::bambooSix;
+		QixingPai[8] = TileCode::bambooNine; break;
 	}
 }
 
@@ -250,7 +250,7 @@ Shanten ShantenAnalyzer::calcShantenStellar(const GameTable* const gameStat, Pla
 
 	Shanten shanten = ShantenImpossible;
 	TileCode QixingZiPai[7] = {
-		EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+		TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
 	};
 	int qixingZiPaiCount = 0;
 	for (int i = 0; i < 7; i++)
@@ -285,32 +285,32 @@ Shanten ShantenAnalyzer::calcShantenCivilWar(const GameTable* const gameStat, Pl
 		Int8ByTile tileCountTmp;
 		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
 		TileCode CivilWarPai[NumOfTilesInHand] = {
-			NoTile, NoTile, NoTile, NoTile,
-			NoTile, NoTile, NoTile, NoTile,
-			SouthWind, SouthWind, SouthWind,
-			NorthWind, NorthWind, NorthWind
+			TileCode::noTile, TileCode::noTile, TileCode::noTile, TileCode::noTile,
+			TileCode::noTile, TileCode::noTile, TileCode::noTile, TileCode::noTile,
+			TileCode::southWind, TileCode::southWind, TileCode::southWind,
+			TileCode::northWind, TileCode::northWind, TileCode::northWind
 		};
 		switch (i) {
 		case 0: case 1:
-			CivilWarPai[0] = CharacterOne; CivilWarPai[1] = CivilWarPai[2] = CharacterEight;
-			CivilWarPai[3] = CharacterOne; break;
+			CivilWarPai[0] = TileCode::characterOne; CivilWarPai[1] = CivilWarPai[2] = TileCode::characterEight;
+			CivilWarPai[3] = TileCode::characterOne; break;
 		case 2: case 3:
-			CivilWarPai[0] = CircleOne; CivilWarPai[1] = CivilWarPai[2] = CircleEight;
-			CivilWarPai[3] = CircleOne; break;
+			CivilWarPai[0] = TileCode::circleOne; CivilWarPai[1] = CivilWarPai[2] = TileCode::circleEight;
+			CivilWarPai[3] = TileCode::circleOne; break;
 		case 4: case 5:
-			CivilWarPai[0] = BambooOne; CivilWarPai[1] = CivilWarPai[2] = BambooEight;
-			CivilWarPai[3] = BambooOne; break;
+			CivilWarPai[0] = TileCode::bambooOne; CivilWarPai[1] = CivilWarPai[2] = TileCode::bambooEight;
+			CivilWarPai[3] = TileCode::bambooOne; break;
 		}
 		switch (i) {
 		case 2: case 4:
-			CivilWarPai[4] = CharacterOne; CivilWarPai[5] = CivilWarPai[6] = CharacterEight;
-			CivilWarPai[7] = CharacterFive; break;
+			CivilWarPai[4] = TileCode::characterOne; CivilWarPai[5] = CivilWarPai[6] = TileCode::characterEight;
+			CivilWarPai[7] = TileCode::characterFive; break;
 		case 0: case 5:
-			CivilWarPai[4] = CircleOne; CivilWarPai[5] = CivilWarPai[6] = CircleEight;
-			CivilWarPai[7] = CircleFive; break;
+			CivilWarPai[4] = TileCode::circleOne; CivilWarPai[5] = CivilWarPai[6] = TileCode::circleEight;
+			CivilWarPai[7] = TileCode::circleFive; break;
 		case 1: case 3:
-			CivilWarPai[4] = BambooOne; CivilWarPai[5] = CivilWarPai[6] = BambooEight;
-			CivilWarPai[7] = BambooFive; break;
+			CivilWarPai[4] = TileCode::bambooOne; CivilWarPai[5] = CivilWarPai[6] = TileCode::bambooEight;
+			CivilWarPai[7] = TileCode::bambooFive; break;
 		}
 		int civilWarPaiCount = 0;
 		for (int j = 0; j < NumOfTilesInHand; j++) {
@@ -343,25 +343,25 @@ Shanten ShantenAnalyzer::calcShantenTohokuGreen(const GameTable* const gameStat,
 		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
 		addExposedMeld(gameStat, playerID, tileCountTmp); // 鳴き有効
 		TileCode TohokuGreenPai[NumOfTilesInHand] = {
-			CharacterOne,   CharacterTwo,   CharacterThree,
-			CharacterFour,  CharacterFive,  CharacterSix,
-			CharacterSeven, CharacterEight, CharacterNine,
-			EastWind,       EastWind,       NoTile,
-			NorthWind,      NorthWind
+			TileCode::characterOne,   TileCode::characterTwo,   TileCode::characterThree,
+			TileCode::characterFour,  TileCode::characterFive,  TileCode::characterSix,
+			TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
+			TileCode::eastWind,       TileCode::eastWind,       TileCode::noTile,
+			TileCode::northWind,      TileCode::northWind
 		};
 		switch (i) {
 		case 0: case 1:
-			TohokuGreenPai[1] = BambooTwo; break;
+			TohokuGreenPai[1] = TileCode::bambooTwo; break;
 		case 2: case 3:
-			TohokuGreenPai[2] = BambooThree; break;
+			TohokuGreenPai[2] = TileCode::bambooThree; break;
 		case 4: case 5:
-			TohokuGreenPai[3] = BambooFour; break;
+			TohokuGreenPai[3] = TileCode::bambooFour; break;
 		case 6: case 7:
-			TohokuGreenPai[5] = BambooSix; break;
+			TohokuGreenPai[5] = TileCode::bambooSix; break;
 		case 8: case 9:
-			TohokuGreenPai[7] = BambooEight; break;
+			TohokuGreenPai[7] = TileCode::bambooEight; break;
 		}
-		TohokuGreenPai[11] = (i % 2 == 0) ? EastWind : NorthWind;
+		TohokuGreenPai[11] = (i % 2 == 0) ? TileCode::eastWind : TileCode::northWind;
 		int tohokuGreenPaiCount = 0;
 		for (int j = 0; j < NumOfTilesInHand; j++) {
 			if (tileCountTmp[TohokuGreenPai[j]] >= 1) {
@@ -388,11 +388,11 @@ Shanten ShantenAnalyzer::calcShantenSyzygy(const GameTable* const gameStat, Play
 	Int8ByTile tileCountTmp;
 	for (int i = 0; i < TileNonflowerMax; i++) tileCountTmp[i] = tileCount[i];
 	TileCode syzygyPai[NumOfTilesInHand] = {
-		CircleOne, CircleOne, CircleTwo,
-		CircleThree, CircleThree, CircleFour,
-		CircleFive, CircleFive, CircleSix,
-		CircleSeven, CircleSeven, CircleEight,
-		CircleNine, CircleNine
+		TileCode::circleOne, TileCode::circleOne, TileCode::circleTwo,
+		TileCode::circleThree, TileCode::circleThree, TileCode::circleFour,
+		TileCode::circleFive, TileCode::circleFive, TileCode::circleSix,
+		TileCode::circleSeven, TileCode::circleSeven, TileCode::circleEight,
+		TileCode::circleNine, TileCode::circleNine
 	};
 	int syzygyPaiCount = 0;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
@@ -420,10 +420,10 @@ Shanten ShantenAnalyzer::calcShantenSevenup(const GameTable* const gameStat, Pla
 		Int8ByTile tileCountTmp;
 		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
 		TileCode tileArrange[NumOfTilesInHand] = {
-			NoTile, NoTile, NoTile, NoTile,
-			NoTile, NoTile, NoTile,
-			EastWind, SouthWind, WestWind, NorthWind,
-			WhiteDragon, GreenDragon, RedDragon,
+			TileCode::noTile, TileCode::noTile, TileCode::noTile, TileCode::noTile,
+			TileCode::noTile, TileCode::noTile, TileCode::noTile,
+			TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+			TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon,
 		};
 		for (int j = 0; j < 7; j++)
 			tileArrange[j] = static_cast<TileCode>(i * TileSuitStep + j + 1);
@@ -485,11 +485,11 @@ Shanten ShantenAnalyzer::calcShantenNinnaji(const GameTable* const gameStat, Pla
 		Int8ByTile tileCountTmp;
 		for (int j = 0; j < TileNonflowerMax; j++) tileCountTmp[j] = tileCount[j];
 		TileCode tileArrange[NumOfTilesInHand] = {
-			CharacterTwo, SouthWind, CharacterFour,
-			CircleTwo,    SouthWind, CircleFour,
-			BambooTwo,    SouthWind, BambooFour,
-			EastWind, SouthWind, WestWind, NorthWind,
-			i == 0 ? CircleEight : WhiteDragon,
+			TileCode::characterTwo, TileCode::southWind, TileCode::characterFour,
+			TileCode::circleTwo,    TileCode::southWind, TileCode::circleFour,
+			TileCode::bambooTwo,    TileCode::southWind, TileCode::bambooFour,
+			TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+			i == 0 ? TileCode::circleEight : TileCode::whiteDragon,
 		};
 
 		int yakuTileCount = 0;

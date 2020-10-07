@@ -49,9 +49,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("三元七対子"), get_yaku_han("dragon_pairs"),
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isQiDui(analysis) &&
-					(analysis->TileCount[WhiteDragon] >= 2) &&
-					(analysis->TileCount[GreenDragon] >= 2) &&
-					(analysis->TileCount[RedDragon] >= 2));
+					(analysis->TileCount[TileCode::whiteDragon] >= 2) &&
+					(analysis->TileCount[TileCode::greenDragon] >= 2) &&
+					(analysis->TileCount[TileCode::redDragon] >= 2));
 			}
 		));
 	/* 四喜七対子 */
@@ -60,10 +60,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("四喜七対子"), get_yaku_han("wind_pairs"),
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isQiDui(analysis) &&
-					(analysis->TileCount[EastWind] >= 2) &&
-					(analysis->TileCount[SouthWind] >= 2) &&
-					(analysis->TileCount[WestWind] >= 2) &&
-					(analysis->TileCount[NorthWind] >= 2));
+					(analysis->TileCount[TileCode::eastWind] >= 2) &&
+					(analysis->TileCount[TileCode::southWind] >= 2) &&
+					(analysis->TileCount[TileCode::westWind] >= 2) &&
+					(analysis->TileCount[TileCode::northWind] >= 2));
 			}
 		));
 	/* 奇数七対子 */
@@ -72,9 +72,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("奇数七対子"), get_yaku_han("odd_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode tc[15] = {
-					CharacterOne, CharacterThree, CharacterFive, CharacterSeven, CharacterNine,
-					CircleOne, CircleThree, CircleFive, CircleSeven, CircleNine,
-					BambooOne, BambooThree, BambooFive, BambooSeven, BambooNine,
+					TileCode::characterOne, TileCode::characterThree, TileCode::characterFive, TileCode::characterSeven, TileCode::characterNine,
+					TileCode::circleOne, TileCode::circleThree, TileCode::circleFive, TileCode::circleSeven, TileCode::circleNine,
+					TileCode::bambooOne, TileCode::bambooThree, TileCode::bambooFive, TileCode::bambooSeven, TileCode::bambooNine,
 				};
 				return isQiDui(analysis) && chktiles(analysis, tc, 15);
 			}
@@ -86,9 +86,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("断幺九"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode tc[12] = {
-					CharacterTwo, CharacterFour, CharacterSix, CharacterEight,
-					CircleTwo, CircleFour, CircleSix, CircleEight,
-					BambooTwo, BambooFour, BambooSix, BambooEight,
+					TileCode::characterTwo, TileCode::characterFour, TileCode::characterSix, TileCode::characterEight,
+					TileCode::circleTwo, TileCode::circleFour, TileCode::circleSix, TileCode::circleEight,
+					TileCode::bambooTwo, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
 				};
 				return isQiDui(analysis) && chktiles(analysis, tc, 12);
 			}
@@ -102,8 +102,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("紅白七対"), get_yaku_han("kouhaku_chiitoi"),
 			[isQiDui](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return (isQiDui(analysis) &&
-					(analysis->TileCount[WhiteDragon] >= 2) &&
-					(analysis->TileCount[RedDragon] >= 2));
+					(analysis->TileCount[TileCode::whiteDragon] >= 2) &&
+					(analysis->TileCount[TileCode::redDragon] >= 2));
 			}
 		));
 	/* 北の大地 */
@@ -112,9 +112,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("北の大地"), yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MENTSU_ANALYSIS* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
 				switch (analysis->TsumoHai->tile) { /* 何で和了ったかで分岐 */
-				case NorthWind: /* 北で和了るとダブル役満 */
+				case TileCode::northWind: /* 北で和了るとダブル役満 */
 					return yaku::yakuCalculator::Yaku::YAKU_HAN(2_yakuman);
-				case WhiteDragon: /* 白で和了るとトリプル役満 */
+				case TileCode::whiteDragon: /* 白で和了るとトリプル役満 */
 					return yaku::yakuCalculator::Yaku::YAKU_HAN(3_yakuman);
 				default:
 					return yaku::yakuCalculator::Yaku::YAKU_HAN(1_yakuman);
@@ -123,8 +123,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("混一色"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode tc[7] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
-					NorthWind, WhiteDragon,
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
+					TileCode::northWind, TileCode::whiteDragon,
 				};
 				return isQiDui(analysis) && chktiles(analysis, tc, 7);
 			}
@@ -136,8 +136,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("四喜七対子"), _T("混老頭"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode tc[7] = {
-					CharacterOne, CircleOne, BambooOne,
-					EastWind, SouthWind, WestWind, NorthWind,
+					TileCode::characterOne, TileCode::circleOne, TileCode::bambooOne,
+					TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
 				};
 				return isQiDui(analysis) && chktiles(analysis, tc, 7);
 			}
@@ -148,8 +148,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("ニコニコ七対子"), get_yaku_han("nikoniko_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode tc[6] = {
-					CharacterTwo, CharacterFive,
-					CircleTwo, CircleFive, BambooTwo, BambooFive,
+					TileCode::characterTwo, TileCode::characterFive,
+					TileCode::circleTwo, TileCode::circleFive, TileCode::bambooTwo, TileCode::bambooFive,
 				};
 				return isQiDui(analysis) && chktiles(analysis, tc, 6);
 			}
@@ -160,9 +160,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 			_T("一休さん七対子"), get_yaku_han("ikkyuusan_pairs"),
 			[isQiDui, chktiles](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr TileCode tc[9] = {
-					CharacterOne, CharacterThree, CharacterNine,
-					CircleOne, CircleThree, CircleNine,
-					BambooOne, BambooThree, BambooNine,
+					TileCode::characterOne, TileCode::characterThree, TileCode::characterNine,
+					TileCode::circleOne, TileCode::circleThree, TileCode::circleNine,
+					TileCode::bambooOne, TileCode::bambooThree, TileCode::bambooNine,
 				};
 				return isQiDui(analysis) && chktiles(analysis, tc, 9);
 			}
@@ -191,8 +191,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		const auto gyakusharin =
 			[isQiDui](const MENTSU_ANALYSIS* const analysis, TileSuit suit) -> bool {
 				std::array<TileCode, 7> honors = {
-					EastWind, SouthWind, WestWind, NorthWind,
-					WhiteDragon, GreenDragon, RedDragon,
+					TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+					TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon,
 				}; int count = 0;
 				for (const auto& k : honors)
 					if (analysis->TileCount[k] >= 2) ++count;

@@ -118,7 +118,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 	/* 雀頭加符(役牌のみ２符) */
 	switch (analysis->MianziDat[0].tile) { /* 風牌は条件によって役牌 */
-	case EastWind: case SouthWind: case WestWind: case NorthWind:
+	case TileCode::eastWind: case TileCode::southWind: case TileCode::westWind: case TileCode::northWind:
 		if (analysis->MianziDat[0].tile ==
 			Wind2Tile(gameStat->prevailingwind())) // 場風牌
 			fu += 2;
@@ -133,7 +133,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 			fu += 2;
 		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ダブ風雀頭を2符と見なすルールの場合
 		break;
-	case WhiteDragon: case GreenDragon: case RedDragon: /* 三元牌は常に役牌 */
+	case TileCode::whiteDragon: case TileCode::greenDragon: case TileCode::redDragon: /* 三元牌は常に役牌 */
 		fu += 2;
 		break;
 	}
@@ -171,13 +171,13 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 		switch (analysis->MianziDat[i].mstat) {
 		case MeldStat::sequenceConcealed: case MeldStat::sequenceExposedLower:
 		case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: /* 順子 */
-			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = MachiType::kanchan;
+			if (analysis->MianziDat[i].tile == static_cast<TileCode>(static_cast<int>(*tsumoTile) - 1)) analysis->Machi = MachiType::kanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = MachiType::penchan; // 辺張待ち
+				if (getTileNumber(analysis->MianziDat[i].tile) == 7) analysis->Machi = MachiType::penchan; // 辺張待ち
 				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
-			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 2)) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = MachiType::penchan; // 辺張待ち
+			if (analysis->MianziDat[i].tile == static_cast<TileCode>(static_cast<int>(*tsumoTile) - 2)) {
+				if (getTileNumber(analysis->MianziDat[i].tile) == 1) analysis->Machi = MachiType::penchan; // 辺張待ち
 				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
 			break;
@@ -268,7 +268,7 @@ void yaku::yakuCalculator::countDora
 	int flower = 0; int north = 0;
 	/* ドラを計算する */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
+		if (gameStat->Player[targetPlayer].Hand[i].tile == TileCode::noTile) continue;
 		omote += gameStat->DoraFlag.Omote[gameStat->Player[targetPlayer].Hand[i].tile];
 		if (uradoraEnabled) // 裏ドラ適用
 			ura += gameStat->DoraFlag.Ura[gameStat->Player[targetPlayer].Hand[i].tile];
@@ -278,11 +278,11 @@ void yaku::yakuCalculator::countDora
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
 		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: // 順子
-			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[k->tile + 1] +
-				gameStat->DoraFlag.Omote[k->tile + 2];
+			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[static_cast<int>(k->tile) + 1] +
+				gameStat->DoraFlag.Omote[static_cast<int>(k->tile) + 2];
 			if (uradoraEnabled)
-				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[k->tile + 1] +
-				gameStat->DoraFlag.Ura[k->tile + 2];
+				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[static_cast<int>(k->tile) + 1] +
+				gameStat->DoraFlag.Ura[static_cast<int>(k->tile) + 2];
 			break;
 		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight: // 刻子
 			omote += gameStat->DoraFlag.Omote[k->tile] * 3;
@@ -297,8 +297,8 @@ void yaku::yakuCalculator::countDora
 	}
 	/* 赤ドラ・青ドラ */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
-		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TileNonflowerMax) continue;
+		if (gameStat->Player[targetPlayer].Hand[i].tile == TileCode::noTile) continue;
+		else if (static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile) >= TileNonflowerMax) continue;
 		switch (gameStat->Player[targetPlayer].Hand[i].red) {
 			case DoraCol::akaDora: ++red; break;
 			case DoraCol::aoDora: ++blue; break;
@@ -338,8 +338,8 @@ void yaku::yakuCalculator::countDora
 	if (RuleData::chkRuleApplied("flower_tiles")) {
 		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			north = gameStat->Player[targetPlayer].NorthFlag;
-			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
-			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];
+			omote += north * (gameStat->DoraFlag.Omote[TileCode::northWind] + 1);
+			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[TileCode::northWind];
 			result->FlowerQuantity = north;
 		} else {
 #endif /* GUOBIAO */
@@ -351,9 +351,9 @@ void yaku::yakuCalculator::countDora
 			if (gameStat->Player[targetPlayer].FlowerFlag.Orchid) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Chrys) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Bamboo) ++flower;
-			omote += flower * gameStat->DoraFlag.Omote[Flower];
+			omote += flower * gameStat->DoraFlag.Omote[TileCode::flower];
 #ifndef GUOBIAO
-			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[Flower];
+			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[TileCode::flower];
 #endif /* GUOBIAO */
 			result->FlowerQuantity = flower;
 #ifndef GUOBIAO
@@ -681,7 +681,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	YAKUSTAT result;
-	constexpr ParseMode pMode = {NoTile, Ke_Shun};
+	constexpr ParseMode pMode = {TileCode::noTile, Ke_Shun};
 	// 計算を実行
 	std::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
 	myThread.join(); // 同期
@@ -713,7 +713,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
 	}
 	// 計算を実行
-	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
+	for (int i = 4; i < 160; i++) { // 0〜3はTileCode::noTileなのでやらなくていい
 		myThreads.push_back(std::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &calcprm[i].analysis));
 	}
 	for (auto& thread : myThreads)

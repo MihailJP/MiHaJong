@@ -20,14 +20,14 @@ PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, in
 
 /* 牌の種類ごとの表をスタックに積む */
 constexpr std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
-	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
-	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
-	CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
-	CircleSix, CircleSeven, CircleEight, CircleNine,
-	BambooOne, BambooTwo, BambooThree, BambooFour, BambooFive,
-	BambooSix, BambooSeven, BambooEight, BambooNine,
-	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon,
-	Flower,
+	TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+	TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
+	TileCode::circleOne, TileCode::circleTwo, TileCode::circleThree, TileCode::circleFour, TileCode::circleFive,
+	TileCode::circleSix, TileCode::circleSeven, TileCode::circleEight, TileCode::circleNine,
+	TileCode::bambooOne, TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
+	TileCode::bambooSix, TileCode::bambooSeven, TileCode::bambooEight, TileCode::bambooNine,
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon,
+	TileCode::flower,
 };
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
 	lua_newtable(L); // テーブル
@@ -289,8 +289,12 @@ int aiscript::table::functable::gametbl::luafunc::getopenwait(lua_State* const L
 int aiscript::table::functable::gametbl::luafunc::getpreviousdiscard(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	if (gameStat->PreviousMeld.Discard != NoTile) lua_pushinteger(L, gameStat->PreviousMeld.Discard); else lua_pushnil(L);
-	if (gameStat->PreviousMeld.Stepped != NoTile) lua_pushinteger(L, gameStat->PreviousMeld.Stepped); else lua_pushnil(L);
+	if (gameStat->PreviousMeld.Discard != TileCode::noTile)
+		lua_pushinteger(L, static_cast<lua_Integer>(gameStat->PreviousMeld.Discard));
+	else lua_pushnil(L);
+	if (gameStat->PreviousMeld.Stepped != TileCode::noTile)
+		lua_pushinteger(L, static_cast<lua_Integer>(gameStat->PreviousMeld.Stepped));
+	else lua_pushnil(L);
 	return 2;
 }
 
@@ -472,7 +476,7 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 返り値を格納
-	constexpr TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
+	constexpr TileCode windtiles[4] = {TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,};
 	constexpr char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;

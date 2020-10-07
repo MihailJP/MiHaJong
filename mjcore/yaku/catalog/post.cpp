@@ -21,11 +21,11 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	if (RuleData::chkRuleApplied("alice_margatroid")) {
 		/*	制限事項
 			固定満貫役、固定跳満役が成立している場合、この役は成立しません */
-		if ((analysis->TotalAnKezi < 3) && (analysis->DuiziCount[EastWind] >= 1) &&
-			(analysis->DuiziCount[WhiteDragon] + analysis->DuiziCount[GreenDragon] + analysis->DuiziCount[RedDragon] >= 1) &&
-			(analysis->KeziCount[CharacterSeven] >= 1) &&
-			(analysis->KeziCount[CircleSeven] >= 1) &&
-			(analysis->KeziCount[BambooSeven] >= 1) &&
+		if ((analysis->TotalAnKezi < 3) && (analysis->DuiziCount[TileCode::eastWind] >= 1) &&
+			(analysis->DuiziCount[TileCode::whiteDragon] + analysis->DuiziCount[TileCode::greenDragon] + analysis->DuiziCount[TileCode::redDragon] >= 1) &&
+			(analysis->KeziCount[TileCode::characterSeven] >= 1) &&
+			(analysis->KeziCount[TileCode::circleSeven] >= 1) &&
+			(analysis->KeziCount[TileCode::bambooSeven] >= 1) &&
 			(totalHan + totalBonusHan <= 7) &&
 			(totalSemiMangan + totalBonusSemiMangan == 0)) {
 				LPCTSTR name = _T("アリス・マーガトロイド");
@@ -81,11 +81,11 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 	if (RuleData::chkRuleApplied("kitamakura")) {
 		if ((totalHan >= 2) && /* 2飜以上あるか？ */
 			(totalSemiMangan == 0) && /* 役満未満か？ */
-			(analysis->GameStat->DoraFlag.Omote[NorthWind] == 0) && /* 北はドラではないか？ */
+			(analysis->GameStat->DoraFlag.Omote[TileCode::northWind] == 0) && /* 北はドラではないか？ */
 			((!*analysis->MenzenFlag) || (!analysis->PlayerStat->RichiFlag.RichiFlag) ||
 			(RuleData::chkRuleApplied("uradora")) ||
-			(analysis->GameStat->DoraFlag.Ura[NorthWind] == 0)) && /* 北は裏ドラではないか？ */
-			(analysis->MianziDat[0].tile == NorthWind)) { /* 雀頭が北か？ */
+			(analysis->GameStat->DoraFlag.Ura[TileCode::northWind] == 0)) && /* 北は裏ドラではないか？ */
+			(analysis->MianziDat[0].tile == TileCode::northWind)) { /* 雀頭が北か？ */
 				LPCTSTR name = _T("北枕");
 				yakuHan[name] = yaku::yakuCalculator::Yaku::YAKU_HAN(
 					0_han,

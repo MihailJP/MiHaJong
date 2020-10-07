@@ -194,7 +194,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	case FuuroType::north: /* 三麻抜きドラ */
 		sound::Play(sound::IDs::voxFlower);
 		++(gameStat->Player[kangPlayer].NorthFlag);
-		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = NoTile;
+		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].tile = TileCode::noTile;
 		gameStat->Player[kangPlayer].Hand[DiscardTileIndex.id].red = DoraCol::normal;
 		gameStat->TianHuFlag = false;
 		mihajong_graphic::calltext::setCall(kangPlayer, mihajong_graphic::calltext::CallType::north);
@@ -207,14 +207,14 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 	case FuuroType::flower: /* 花牌 */
 		sound::Play(sound::IDs::voxFlower);
 		switch (gameStat->CurrentDiscard.tile) {
-			case Spring:        gameStat->Player[kangPlayer].FlowerFlag.Spring = true; break;
-			case Summer:        gameStat->Player[kangPlayer].FlowerFlag.Summer = true; break;
-			case Autumn:        gameStat->Player[kangPlayer].FlowerFlag.Autumn = true; break;
-			case Winter:        gameStat->Player[kangPlayer].FlowerFlag.Winter = true; break;
-			case Plum:          gameStat->Player[kangPlayer].FlowerFlag.Plum   = true; break;
-			case Orchid:        gameStat->Player[kangPlayer].FlowerFlag.Orchid = true; break;
-			case Chrysanthemum: gameStat->Player[kangPlayer].FlowerFlag.Chrys  = true; break;
-			case Bamboo:        gameStat->Player[kangPlayer].FlowerFlag.Bamboo = true; break;
+			case TileCode::spring:        gameStat->Player[kangPlayer].FlowerFlag.Spring = true; break;
+			case TileCode::summer:        gameStat->Player[kangPlayer].FlowerFlag.Summer = true; break;
+			case TileCode::autumn:        gameStat->Player[kangPlayer].FlowerFlag.Autumn = true; break;
+			case TileCode::winter:        gameStat->Player[kangPlayer].FlowerFlag.Winter = true; break;
+			case TileCode::plum:          gameStat->Player[kangPlayer].FlowerFlag.Plum   = true; break;
+			case TileCode::orchid:        gameStat->Player[kangPlayer].FlowerFlag.Orchid = true; break;
+			case TileCode::chrysanthemum: gameStat->Player[kangPlayer].FlowerFlag.Chrys  = true; break;
+			case TileCode::bamboo:        gameStat->Player[kangPlayer].FlowerFlag.Bamboo = true; break;
 		default:
 			{
 				CodeConv::tostringstream o;
@@ -268,7 +268,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		/* 喰い替えの判定に使う変数を設定 */
 #ifndef GUOBIAO
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
-		gameStat->PreviousMeld.Stepped = NoTile;
+		gameStat->PreviousMeld.Stepped = TileCode::noTile;
 		/* 包の判定 */
 		checkpao(gameStat);
 #endif /* GUOBIAO */
@@ -282,7 +282,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			for (int i = NumOfTilesInHand - 1; i < NumOfTilesInHand * 2 - 1; i++) {
 				for (unsigned j = 0; j < 3; j++) {
 					if ((!nakiCount[j]) && (gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].tile ==
-						(gameStat->CurrentDiscard.tile + j + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi)))) {
+						static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) + j + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi)))) {
 							gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[j] = gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].red;
 							gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand] = Tile();
 							nakiCount[j] = true;
@@ -302,7 +302,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::upper)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::sequenceExposedUpper;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile =
-			static_cast<TileCode>(gameStat->CurrentDiscard.tile + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi));
+			static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi));
 		/* 自動理牌 */
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
@@ -314,12 +314,12 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
 			switch (gameStat->Player[kangPlayer].DeclarationFlag.Chi) {
-				case ChiiType::lower:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile + 3); break;
-				case ChiiType::middle: gameStat->PreviousMeld.Stepped = NoTile; break;
-				case ChiiType::upper:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(gameStat->CurrentDiscard.tile - 3); break;
+				case ChiiType::lower:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) + 3); break;
+				case ChiiType::middle: gameStat->PreviousMeld.Stepped = TileCode::noTile; break;
+				case ChiiType::upper:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) - 3); break;
 			}
 		} else {
-			gameStat->PreviousMeld.Stepped = NoTile;
+			gameStat->PreviousMeld.Stepped = TileCode::noTile;
 		}
 #endif /* GUOBIAO */
 		break;
@@ -508,9 +508,9 @@ void checkpao(GameTable* const gameStat) {
 	const PlayerTable* playerStat = &gameStat->statOfPassive();
 	for (unsigned i = 1; i <= playerStat->MeldPointer; i++) {
 		switch (playerStat->Meld[i].tile) {
-		case WhiteDragon: case GreenDragon: case RedDragon:
+		case TileCode::whiteDragon: case TileCode::greenDragon: case TileCode::redDragon:
 			++DragonPons; break;
-		case EastWind: case SouthWind: case WestWind: case NorthWind:
+		case TileCode::eastWind: case TileCode::southWind: case TileCode::westWind: case TileCode::northWind:
 			++WindPons; break;
 		}
 		switch (playerStat->Meld[i].mstat) {

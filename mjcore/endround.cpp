@@ -35,11 +35,11 @@ namespace { // 内部処理に使う関数
 	bool chksifeng(const GameTable* gameStat) {
 		bool flag = false;
 #ifndef GUOBIAO
-		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
+		std::array<TileCode, 4> winds = {TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,};
 		for (const auto& k : winds) {
 			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
 				RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")) &&
-				(k != WestWind))
+				(k != TileCode::westWind))
 				continue; // 西以外は無視するルールの場合
 			bool tmpflag = true;
 			if (gameStat->chkGameType(GameTypeID::sanma4)) {

@@ -211,7 +211,7 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 				// 加槓できる場合
 				else if (TileCount[i] == 1) {
 					for (int j = 1; j <= playerStat->MeldPointer; ++j)
-						if ((playerStat->Meld[j].tile == i) &&
+						if ((playerStat->Meld[j].tile == static_cast<TileCode>(i)) &&
 							((playerStat->Meld[j].mstat == MeldStat::tripletExposedLeft) ||
 							(playerStat->Meld[j].mstat == MeldStat::tripletExposedCenter) ||
 							(playerStat->Meld[j].mstat == MeldStat::tripletExposedRight)))
@@ -225,10 +225,10 @@ void GameTableScreen::ButtonReconst::btnSetForDahai() { // ツモ番の時用の
 		(!playerStat->RichiFlag.RichiFlag)) || utils::chkAnkanAbility(gameStat, ActivePlayer))
 		buttonEnabled[ButtonID::kan] = true;
 
-	const TileCode flowerTile = gameStat->chkGameType(GameTypeID::sanmaX) ? NorthWind : Flower;
+	const TileCode flowerTile = gameStat->chkGameType(GameTypeID::sanmaX) ? TileCode::northWind : TileCode::flower;
 	const bool Flowerabilityflag = [gameStat, playerStat]() -> bool {
 		if (gameStat->chkGameType(GameTypeID::sanmaX))
-			return (playerStat->Tsumohai().tile == NorthWind) && (!rules::chkRule("flower_tiles", "no"));
+			return (playerStat->Tsumohai().tile == TileCode::northWind) && (!rules::chkRule("flower_tiles", "no"));
 		else
 			return playerStat->Tsumohai().isFlower();
 	} ();
@@ -254,7 +254,7 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 	PlayerTable* const playerStat = &(gameStat->Player[PassivePlayer]);
 	playerStat->Tsumohai().tile = gameStat->CurrentDiscard.tile;
 	const Shanten shanten = utils::calcShanten(gameStat, gameStat->PlayerID, ShantenType::all);
-	playerStat->Tsumohai().tile = NoTile;
+	playerStat->Tsumohai().tile = TileCode::noTile;
 
 	if (gameStat->CurrentDiscard.isFlower()) goto end; /* 花牌の場合は残りの判定をスキップ */
 	if (playerStat->AgariHouki) goto end; /* 和了り放棄だったら残りの判定をスキップ */
@@ -282,16 +282,16 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 			(gameStat->CurrentDiscard.isNumber()) && // 数牌で
 			(gameStat->KangFlag.chankanFlag == ChankanStat::none) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
-				if ((gameStat->CurrentDiscard.tile >= 1) &&
-					(TileCount[gameStat->CurrentDiscard.tile + 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 2] >= 1)) { // 下吃
+				if ((gameStat->CurrentDiscard.tile >= static_cast<TileCode>(1)) &&
+					(TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) + 1] >= 1) && (TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) + 2] >= 1)) { // 下吃
 						buttonEnabled[ButtonID::chii] = true;
 				}
-				if ((gameStat->CurrentDiscard.tile >= 2) &&
-					(TileCount[gameStat->CurrentDiscard.tile - 1] >= 1) && (TileCount[gameStat->CurrentDiscard.tile + 1] >= 1)) { // 嵌張吃
+				if ((gameStat->CurrentDiscard.tile >= static_cast<TileCode>(2)) &&
+					(TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) - 1] >= 1) && (TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) + 1] >= 1)) { // 嵌張吃
 						buttonEnabled[ButtonID::chii] = true;
 				}
-				if ((gameStat->CurrentDiscard.tile >= 3) &&
-					(TileCount[gameStat->CurrentDiscard.tile - 2] >= 1) && (TileCount[gameStat->CurrentDiscard.tile - 1] >= 1)) { // 上吃
+				if ((gameStat->CurrentDiscard.tile >= static_cast<TileCode>(3)) &&
+					(TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) - 2] >= 1) && (TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) - 1] >= 1)) { // 上吃
 						buttonEnabled[ButtonID::chii] = true;
 				}
 		}
@@ -344,7 +344,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 		sound::Play(sound::IDs::sndCuohu);
 	} else if (this->getButtonSet() == ButtonSet::tsumo) {
 		auto isTenpaiTile = [](int i, GameTable* tmpStat) -> bool {
-			tmpStat->statOfActive().Hand[i].tile = NoTile;
+			tmpStat->statOfActive().Hand[i].tile = TileCode::noTile;
 			Shanten shanten = utils::calcShanten(tmpStat, tmpStat->CurrentPlayer.Active, ShantenType::all);
 			return (shanten > 0);
 		};
@@ -388,7 +388,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					if (tmpStat->statOfActive().RichiFlag.RichiFlag)
 						return (i != TsumohaiIndex); // リーチ時は自摸牌以外選択できないようにする
 					if (tmpStat->chkGameType(GameTypeID::sanmaX))
-						return tmpStat->statOfActive().Hand[i].tile != NorthWind;
+						return tmpStat->statOfActive().Hand[i].tile != TileCode::northWind;
 					else
 						return !tmpStat->statOfActive().Hand[i].isFlower();
 				});
@@ -429,10 +429,10 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 				const auto chiiable = [&tilesInHand](TileCode p, TileCode q) {
 					if (getTileSuit(p) != getTileSuit(q))
 						return false;
-					else if ((p == q + 2) && (tilesInHand[q + 1] > 0)) return true;
-					else if  (p == q + 1)                              return true;
-					else if  (p == q - 1)                              return true;
-					else if ((p == q - 2) && (tilesInHand[p + 1] > 0)) return true;
+					else if ((static_cast<int>(p) == static_cast<int>(q) + 2) && (tilesInHand[static_cast<int>(q) + 1] > 0)) return true;
+					else if  (static_cast<int>(p) == static_cast<int>(q) + 1)                              return true;
+					else if  (static_cast<int>(p) == static_cast<int>(q) - 1)                              return true;
+					else if ((static_cast<int>(p) == static_cast<int>(q) - 2) && (tilesInHand[static_cast<int>(p) + 1] > 0)) return true;
 					else                                               return false;
 				};
 				if (caller->countTiles(chiiable) > 2) {
@@ -444,9 +444,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					caller->tehaiReconst->Render();
 				} else {
 					const auto discard = GameStatus::gameStat()->CurrentDiscard.tile;
-					if ((discard % mihajong_structs::TileSuitStep > 2) && (tilesInHand[discard - 2] > 0)) {
+					if ((getTileNumber(discard) > 2) && (tilesInHand[static_cast<int>(discard) - 2] > 0)) {
 						ui::UIEvent->set(naki::nakiChiUpper);
-					} else if ((discard % mihajong_structs::TileSuitStep < 8) && (tilesInHand[discard + 2] > 0)) {
+					} else if ((getTileNumber(discard) < 8) && (tilesInHand[static_cast<int>(discard) + 2] > 0)) {
 						ui::UIEvent->set(naki::nakiChiLower);
 					} else {
 						ui::UIEvent->set(naki::nakiChiMiddle);

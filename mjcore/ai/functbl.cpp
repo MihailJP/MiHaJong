@@ -122,20 +122,20 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 		lockTable(L); lua_setfield(L, -2, suitname[suit / TileSuitStep]);
 	}
 	lua_newtable(L);
-	TableAdd(L, "East", static_cast<lua_Integer>(EastWind)); TableAdd(L, "South", static_cast<lua_Integer>(SouthWind));
-	TableAdd(L, "West", static_cast<lua_Integer>(WestWind)); TableAdd(L, "North", static_cast<lua_Integer>(NorthWind));
+	TableAdd(L, "East", static_cast<lua_Integer>(TileCode::eastWind)); TableAdd(L, "South", static_cast<lua_Integer>(TileCode::southWind));
+	TableAdd(L, "West", static_cast<lua_Integer>(TileCode::westWind)); TableAdd(L, "North", static_cast<lua_Integer>(TileCode::northWind));
 	lockTable(L); lua_setfield(L, -2, "Wind");
 	lua_newtable(L);
-	TableAdd(L, "White", static_cast<lua_Integer>(WhiteDragon)); TableAdd(L, "Green", static_cast<lua_Integer>(GreenDragon));
-	TableAdd(L, "Red", static_cast<lua_Integer>(RedDragon));
+	TableAdd(L, "White", static_cast<lua_Integer>(TileCode::whiteDragon)); TableAdd(L, "Green", static_cast<lua_Integer>(TileCode::greenDragon));
+	TableAdd(L, "Red", static_cast<lua_Integer>(TileCode::redDragon));
 	lockTable(L); lua_setfield(L, -2, "Dragon");
 	lua_newtable(L);
-	TableAdd(L, "Spring", static_cast<lua_Integer>(Spring)); TableAdd(L, "Summer", static_cast<lua_Integer>(Summer));
-	TableAdd(L, "Autumn", static_cast<lua_Integer>(Autumn)); TableAdd(L, "Winter", static_cast<lua_Integer>(Winter));
-	TableAdd(L, "Plum", static_cast<lua_Integer>(Plum)); TableAdd(L, "Orchid", static_cast<lua_Integer>(Orchid));
-	TableAdd(L, "Chrysanthemum", static_cast<lua_Integer>(Chrysanthemum)); TableAdd(L, "Bamboo", static_cast<lua_Integer>(Bamboo));
-	TableAdd(L, "Fall", static_cast<lua_Integer>(Autumn)); TableAdd(L, "Chrys", static_cast<lua_Integer>(Chrysanthemum));
-	TableAdd(L, "Flower", static_cast<lua_Integer>(Flower));
+	TableAdd(L, "Spring", static_cast<lua_Integer>(TileCode::spring)); TableAdd(L, "Summer", static_cast<lua_Integer>(TileCode::summer));
+	TableAdd(L, "Autumn", static_cast<lua_Integer>(TileCode::autumn)); TableAdd(L, "Winter", static_cast<lua_Integer>(TileCode::winter));
+	TableAdd(L, "Plum", static_cast<lua_Integer>(TileCode::plum)); TableAdd(L, "Orchid", static_cast<lua_Integer>(TileCode::orchid));
+	TableAdd(L, "Chrysanthemum", static_cast<lua_Integer>(TileCode::chrysanthemum)); TableAdd(L, "Bamboo", static_cast<lua_Integer>(TileCode::bamboo));
+	TableAdd(L, "Fall", static_cast<lua_Integer>(TileCode::autumn)); TableAdd(L, "Chrys", static_cast<lua_Integer>(TileCode::chrysanthemum));
+	TableAdd(L, "Flower", static_cast<lua_Integer>(TileCode::flower));
 	lockTable(L); lua_setfield(L, -2, "Flower");
 	lockTable(L); lua_setfield(L, -2, "Tile");
 }

@@ -21,8 +21,8 @@ enum class DoraCol : uint8_t { normal, akaDora, aoDora };
 struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
 	DoraCol red;
-	constexpr explicit operator bool() const {return tile != NoTile;}
-	constexpr bool operator ! () const {return tile == NoTile;}
+	constexpr explicit operator bool() const {return tile != TileCode::noTile;}
+	constexpr bool operator ! () const {return tile == TileCode::noTile;}
 	constexpr bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
 	constexpr bool operator != (const Tile& otherTile) const {return !(*this == otherTile);}
 	constexpr bool operator < (const Tile& otherTile) const {
@@ -38,11 +38,11 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 	constexpr bool operator >= (const Tile& otherTile) const {return !(*this < otherTile);}
 	constexpr TileSuit getSuit() const {return getTileSuit(tile);}
 	constexpr bool isNumber() const {
-		return (tile != NoTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuit::honors));		
+		return (tile != TileCode::noTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuit::honors));		
 	}
 	constexpr bool isHonor() const {return getSuit() == TileSuit::honors;}
 	constexpr bool isFlower() const {return getSuit() == TileSuit::flowers;}
-	constexpr explicit Tile(TileCode tile = NoTile, DoraCol red = DoraCol::normal) : tile(tile), red(red) {}
+	constexpr explicit Tile(TileCode tile = TileCode::noTile, DoraCol red = DoraCol::normal) : tile(tile), red(red) {}
 };
 static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");
 static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout");
@@ -120,8 +120,8 @@ struct DiscardTile {
 	Tile tcode;
 	DiscardStat dstat;
 	bool isDiscardThrough; // ツモ切りフラグ
-	explicit operator bool() const {return tcode.tile != NoTile;}
-	bool operator !() const {return tcode.tile == NoTile;}
+	explicit operator bool() const {return tcode.tile != TileCode::noTile;}
+	bool operator !() const {return tcode.tile == TileCode::noTile;}
 	DiscardTile(Tile tile = Tile(), DiscardStat dStat = DiscardStat::normal, bool discardThrough = false)
 		: tcode(tile), dstat(dStat), isDiscardThrough(false) {}
 };
@@ -154,7 +154,7 @@ struct MeldCode {
 	TileCode tile;
 	DoraCol red[4];
 	MeldStat mstat;
-	explicit operator bool() const {return tile != NoTile;}
+	explicit operator bool() const {return tile != TileCode::noTile;}
 };
 typedef MeldCode MeldBuf[SizeOfMeldBuffer];
 static_assert(std::is_trivially_copyable<MeldCode>::value, "MeldCode is not trivially copyable");

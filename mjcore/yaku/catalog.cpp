@@ -98,23 +98,23 @@ bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALY
 	if (analysis->shanten[ShantenType::all] >= 0) return false; // 足切り要件：和了ってない
 	constexpr TileCode Tiles[][9] = {
 		{
-			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
-			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
+			TileCode::characterOne, TileCode::characterTwo,   TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+			TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
 		}, {
-			CircleOne,    CircleTwo,      CircleThree,    CircleFour,    CircleFive,
-			CircleSix,    CircleSeven,    CircleEight,    CircleNine,
+			TileCode::circleOne,    TileCode::circleTwo,      TileCode::circleThree,    TileCode::circleFour,    TileCode::circleFive,
+			TileCode::circleSix,    TileCode::circleSeven,    TileCode::circleEight,    TileCode::circleNine,
 		}, {
-			BambooOne,    BambooTwo,      BambooThree,    BambooFour,    BambooFive,
-			BambooSix,    BambooSeven,    BambooEight,    BambooNine,
+			TileCode::bambooOne,    TileCode::bambooTwo,      TileCode::bambooThree,    TileCode::bambooFour,    TileCode::bambooFive,
+			TileCode::bambooSix,    TileCode::bambooSeven,    TileCode::bambooEight,    TileCode::bambooNine,
 		}, {
-			EastWind,     SouthWind,      WestWind,       NorthWind,
-			WhiteDragon,  GreenDragon,    RedDragon,      NoTile,        NoTile,
+			TileCode::eastWind,     TileCode::southWind,      TileCode::westWind,       TileCode::northWind,
+			TileCode::whiteDragon,  TileCode::greenDragon,    TileCode::redDragon,      TileCode::noTile,        TileCode::noTile,
 		}
 	};
 	unsigned count[4] = {0};
 	for (unsigned k = 0; k < 4; k++) {
 		for (unsigned i = 0; i < 9; i++) {
-			if (Tiles[k][i] != NoTile) {
+			if (Tiles[k][i] != TileCode::noTile) {
 				if (analysis->shanten[ShantenType::regular] == -1)
 					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else

@@ -15,7 +15,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 			_T("平和"),
 			[](const MENTSU_ANALYSIS* const analysis) {
 				return (analysis->isPinfu &&
-					(analysis->TsumoHai->tile == CircleOne));
+					(analysis->TsumoHai->tile == TileCode::circleOne));
 			}
 		));
 #endif /* GUOBIAO */

@@ -6,12 +6,12 @@ bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf 
 	int* const ProcessedMelds, TileCode tile)
 { /* 順子の処理 */
 	if ((countForMentsu[tile] >= 1)&&
-		(countForMentsu[tile+1] >= 1)&&
-		(countForMentsu[tile+2] >= 1)) {
+		(countForMentsu[static_cast<int>(tile) + 1] >= 1)&&
+		(countForMentsu[static_cast<int>(tile) + 2] >= 1)) {
 			MianziDat[*ProcessedMelds].mstat = MeldStat::sequenceConcealed;
 			MianziDat[(*ProcessedMelds)++].tile = tile;
-			--countForMentsu[tile]; --countForMentsu[tile+1];
-			--countForMentsu[tile+2];
+			--countForMentsu[tile]; --countForMentsu[static_cast<int>(tile) + 1];
+			--countForMentsu[static_cast<int>(tile) + 2];
 			return true;
 	}
 	return false;
@@ -118,7 +118,7 @@ Int8ByTile yaku::countingFacility::countByMelds(
 	Int8ByTile hitCount; memset(&hitCount, 0, sizeof(hitCount));
 	if (hits != nullptr) *hits = 0;
 	for (int i = 1; i < SizeOfMeldBuffer; i++) {
-		if (f(MianziDat[i].mstat)&&(MianziDat[i].tile != NoTile)) {
+		if (f(MianziDat[i].mstat)&&(MianziDat[i].tile != TileCode::noTile)) {
 			++(hitCount[MianziDat[i].tile]);
 			if (hits != nullptr) ++(*hits);
 		}
@@ -193,11 +193,11 @@ inline int yaku::countingFacility::countSpecMentz(const MeldBuf MianziDat, const
 	auto ShunzCount = countShunz(MianziDat, nullptr);
 	int yakuflagcount = 0;
 	for (int i = 0; i < numOfKez; i++) {
-		if (targetKez[i] == NoTile) continue;
+		if (targetKez[i] == TileCode::noTile) continue;
 		if (DuiCount[targetKez[i]] >= 1) ++yakuflagcount;
 	}
 	for (int i = 0; i < numOfShunz; i++) {
-		if (targetShunz[i] == NoTile) continue;
+		if (targetShunz[i] == TileCode::noTile) continue;
 		if (ShunzCount[targetShunz[i]] >= 1)
 			yakuflagcount += allowDup ? ShunzCount[targetShunz[i]] : 1;
 	}
@@ -218,21 +218,21 @@ int yaku::countingFacility::countSpecMentzWithDup(const MeldBuf MianziDat, const
 int yaku::countingFacility::countMentzNumerals(const MeldBuf MianziDat) { /* 数字の合計を数える */
 	int Cifr = 0;
 	for (int i = 0; i < SizeOfMeldBuffer; i++) {
-		if (MianziDat[i].tile % TileCodeMaximum < static_cast<int>(TileSuit::honors)) {
+		if (Tile(MianziDat[i].tile).isNumber()) {
 			if (i == 0) { // 雀頭
-				Cifr += (MianziDat[0].tile % TileSuitStep) * 2;
+				Cifr += getTileNumber(MianziDat[0].tile) * 2;
 			} else { // 面子
 				switch (MianziDat[i].mstat) {
 				case MeldStat::sequenceConcealed: case MeldStat::sequenceExposedLower:
 				case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper:
-					Cifr += (((MianziDat[i].tile % TileSuitStep)+1) * 3); // 順子
+					Cifr += (getTileNumber(MianziDat[i].tile) + 1) * 3; // 順子
 					break;
 				case MeldStat::tripletConcealed: case MeldStat::tripletExposedLeft:
 				case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight:
-					Cifr += ((MianziDat[i].tile % TileSuitStep) * 3); // 刻子
+					Cifr += getTileNumber(MianziDat[i].tile) * 3; // 刻子
 					break;
 				default:
-					Cifr += ((MianziDat[i].tile % TileSuitStep) * 4); // 槓子
+					Cifr += getTileNumber(MianziDat[i].tile) * 4; // 槓子
 					break;
 				}
 			}

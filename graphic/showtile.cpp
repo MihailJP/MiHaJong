@@ -52,7 +52,7 @@ void ShowTile::RenderSide(const TileDescriptor* tile, const RECT* rect) {
 }
 void ShowTile::Render() {
 	for (auto& k : mySprites) {
-		const int32_t kVal = k.tile.tile + static_cast<int>(k.tile.red) * TileNonflowerMax;
+		const int32_t kVal = static_cast<int>(k.tile.tile) + static_cast<int>(k.tile.red) * TileNonflowerMax;
 		if (k.exist) {
 			if ((k.direction == TileDirection::portrait) || (k.direction == TileDirection::upsideDown)) {
 				/* TileDirection::portrait alignment */
@@ -63,10 +63,10 @@ void ShowTile::Render() {
 					static_cast<int32_t>((kVal / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding),
 				};
 				RECT rectrev = {
-					(static_cast<int>(BackSide) % 10) * (VertTileWidth + TexturePadding),
-					(static_cast<int>(BackSide) / 10) * (VertTileHeight + TexturePadding),
-					(static_cast<int>(BackSide) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
-					(static_cast<int>(BackSide) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
+					(static_cast<int>(TileCode::backSide) % 10) * (VertTileWidth + TexturePadding),
+					(static_cast<int>(TileCode::backSide) / 10) * (VertTileHeight + TexturePadding),
+					(static_cast<int>(TileCode::backSide) % 10 + 1) * (VertTileWidth + TexturePadding) - TexturePadding,
+					(static_cast<int>(TileCode::backSide) / 10 + 1) * (VertTileHeight + TexturePadding) - TexturePadding,
 				};
 				switch (k.side) {
 				case TileSide::obverse:
@@ -101,10 +101,10 @@ void ShowTile::Render() {
 					static_cast<int32_t>((kVal / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding),
 				};
 				RECT rectrev = {
-					(static_cast<int>(BackSide) % 10) * (HoriTileWidth + TexturePadding),
-					(static_cast<int>(BackSide) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
-					(static_cast<int>(BackSide) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
-					(static_cast<int>(BackSide) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
+					(static_cast<int>(TileCode::backSide) % 10) * (HoriTileWidth + TexturePadding),
+					(static_cast<int>(TileCode::backSide) / 10) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows,
+					(static_cast<int>(TileCode::backSide) % 10 + 1) * (HoriTileWidth + TexturePadding) - TexturePadding,
+					(static_cast<int>(TileCode::backSide) / 10 + 1) * (HoriTileHeight + TexturePadding) + (VertTileHeight + TexturePadding) * TileRows - TexturePadding,
 				};
 				RECT rectside = {
 					2 * TileCols * (HoriTileWidth + TexturePadding),

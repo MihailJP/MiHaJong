@@ -132,7 +132,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 
 	gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
 	gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
-		gameStat->PreviousMeld.Stepped = NoTile;
+		gameStat->PreviousMeld.Stepped = TileCode::noTile;
 	for (int i = 0; i < TileNonflowerMax; i++) // ドラ判定の配列
 		gameStat->DoraFlag.Omote[i] = gameStat->DoraFlag.Ura[i] = 0;
 	gameStat->TsumoAgariFlag = false;
@@ -159,7 +159,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
 		for (int i = 0; i < SizeOfMeldBuffer; i++) {
 			// 鳴き面子を格納
-			gameStat->Player[pl].Meld[i].tile = NoTile;
+			gameStat->Player[pl].Meld[i].tile = TileCode::noTile;
 			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = DoraCol::normal;
 			gameStat->Player[pl].Meld[i].mstat = static_cast<MeldStat>(0);
 		}

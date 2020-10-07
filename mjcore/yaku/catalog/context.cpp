@@ -107,7 +107,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 						(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 						(analysis->PlayerStat->RichiFlag.IppatsuFlag) && // 一発フラグが立っている
 						(*analysis->TsumoAgariFlag) && // ツモである
-						(analysis->TsumoHai->tile == SouthWind)); // 南で和了
+						(analysis->TsumoHai->tile == TileCode::southWind)); // 南で和了
 				}
 			));
 	}
@@ -121,7 +121,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(analysis->PlayerStat->RichiFlag.RichiFlag)) // 立直している
 				{
 					for (int i = 1; i < analysis->PlayerStat->DiscardPointer; i++)
-						if ((analysis->PlayerStat->Discard[i].tcode.tile == BambooOne) &&
+						if ((analysis->PlayerStat->Discard[i].tcode.tile == TileCode::bambooOne) &&
 							((analysis->PlayerStat->Discard[i].dstat == DiscardStat::riichi) ||
 							(analysis->PlayerStat->Discard[i].dstat == DiscardStat::riichiTaken)))
 							return true;
@@ -139,7 +139,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->PlayerStat->RichiFlag.DoubleFlag) && // ダブル立直フラグが立っている
-					(analysis->TsumoHai->tile == WhiteDragon)); // 和了牌が白
+					(analysis->TsumoHai->tile == TileCode::whiteDragon)); // 和了牌が白
 			}
 		));
 	/* 北四巡(立直自摸) */
@@ -149,7 +149,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
-					(analysis->TsumoHai->tile == NorthWind) && // 和了牌が北
+					(analysis->TsumoHai->tile == TileCode::northWind) && // 和了牌が北
 					(analysis->GameStat->TurnRound == 4)); // 4巡目である
 			}
 		));
@@ -327,7 +327,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
-					(analysis->TsumoHai->tile == CircleFive)); // 和了牌が五筒
+					(analysis->TsumoHai->tile == TileCode::circleFive)); // 和了牌が五筒
 			}
 		));
 	/* 中上開花 */
@@ -339,7 +339,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
-					(analysis->TsumoHai->tile == RedDragon)); // 和了牌が中
+					(analysis->TsumoHai->tile == TileCode::redDragon)); // 和了牌が中
 			}
 		));
 	/* 頭槓和 */
@@ -389,7 +389,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(analysis->GameStat->GameRound / 4 == 0) && // 東場
 					(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::east) && // 東家
-					(analysis->KangziCount[EastWind] >= 1)); // 東の槓子がある
+					(analysis->KangziCount[TileCode::eastWind] >= 1)); // 東の槓子がある
 			}
 		));
 	/* 花見 */
@@ -401,10 +401,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
-					((analysis->TsumoHai->tile == CharacterThree) || // 和了牌が三萬か
-					(analysis->TsumoHai->tile == CircleThree) || // 三筒か
-					(analysis->TsumoHai->tile == BambooThree)) && // 三索
-					(analysis->KangziCount[CircleFive] >= 1)); // 五筒を槓している
+					((analysis->TsumoHai->tile == TileCode::characterThree) || // 和了牌が三萬か
+					(analysis->TsumoHai->tile == TileCode::circleThree) || // 三筒か
+					(analysis->TsumoHai->tile == TileCode::bambooThree)) && // 三索
+					(analysis->KangziCount[TileCode::circleFive] >= 1)); // 五筒を槓している
 			}
 		));
 #endif /* GUOBIAO */
@@ -439,7 +439,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == CircleOne)); // 和了牌が一筒
+					(analysis->TsumoHai->tile == TileCode::circleOne)); // 和了牌が一筒
 			}
 		));
 	/* 海底撈針 */
@@ -451,7 +451,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == CharacterOne)); // 和了牌が一萬
+					(analysis->TsumoHai->tile == TileCode::characterOne)); // 和了牌が一萬
 			}
 		));
 	/* 海底撈花 */
@@ -463,7 +463,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == CircleFive)); // 和了牌が五筒
+					(analysis->TsumoHai->tile == TileCode::circleFive)); // 和了牌が五筒
 			}
 		));
 	/* 発底摸月 */
@@ -476,7 +476,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == GreenDragon)); // 和了牌が發
+					(analysis->TsumoHai->tile == TileCode::greenDragon)); // 和了牌が發
 			}
 		));
 	/* 深海底 */
@@ -518,7 +518,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == CircleNine)); // 和了牌が九筒
+					(analysis->TsumoHai->tile == TileCode::circleNine)); // 和了牌が九筒
 			}
 		));
 	/* 白底撈魚 */
@@ -531,7 +531,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == WhiteDragon)); // 和了牌が白
+					(analysis->TsumoHai->tile == TileCode::whiteDragon)); // 和了牌が白
 			}
 		));
 	/* 深淵和 */
@@ -567,7 +567,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
-					(analysis->TsumoHai->tile == WhiteDragon)); // 和了牌が白
+					(analysis->TsumoHai->tile == TileCode::whiteDragon)); // 和了牌が白
 			}
 		));
 	/* 石の上にも三年 */
@@ -621,7 +621,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chankanFlag != ChankanStat::none) && // 槍槓フラグが立っている
-					(analysis->TsumoHai->tile == BambooTwo)); // 和了牌が二索
+					(analysis->TsumoHai->tile == TileCode::bambooTwo)); // 和了牌が二索
 			}
 		));
 	/* 深搶槓 */
@@ -702,7 +702,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("四馬路"), get_yaku_han("sumaro"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->TsumoHai->tile == CharacterFour) && // 和了牌が四萬
+					(analysis->TsumoHai->tile == TileCode::characterFour) && // 和了牌が四萬
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
 					(analysis->PlayerStat->SumaroFlag)); // 解禁フラグが立っている
 			}
@@ -713,7 +713,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("美鈴"), get_yaku_han("meiling"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->TsumoHai->tile == BambooTwo) && // 和了牌が二索
+					(analysis->TsumoHai->tile == TileCode::bambooTwo) && // 和了牌が二索
 					(!*analysis->TsumoAgariFlag)); // ロンアガリ
 			}
 		));
@@ -724,7 +724,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag;
 				switch (TileCode tc = analysis->TsumoHai->tile) {
-				case EastWind: case SouthWind: case WestWind: case NorthWind: // 風牌だった
+				case TileCode::eastWind: case TileCode::southWind: case TileCode::westWind: case TileCode::northWind: // 風牌だった
 					yakuFlag = (!*analysis->TsumoAgariFlag); // 仮にフラグ設定
 					if (tc == Wind2Tile(analysis->GameStat->playerwind(analysis->player))) // 自風だった
 						yakuFlag = false;
@@ -754,8 +754,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			"daija_kanketsu", "dongfengchui", "nanfengchui", "xifengchui", "beifengchui",
 		};
 		constexpr TileCode tmpTileCodeList[Rules] = {
-			BambooOne, CircleOne, CharacterOne, BambooSeven, CircleSeven,
-			CharacterSeven, EastWind, SouthWind, WestWind, NorthWind,
+			TileCode::bambooOne, TileCode::circleOne, TileCode::characterOne, TileCode::bambooSeven, TileCode::circleSeven,
+			TileCode::characterSeven, TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
 		};
 		constexpr TCHAR tmpYakuNameList[Rules][16] = {
 			_T("鳳還巣"), _T("月還巡"), _T("針戻手"), _T("金亀帰還"), _T("北斗召還"),
@@ -791,8 +791,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("金龍天和"), get_yaku_han("golddragon"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->TsumoHai->tile >= CircleOne) && // 和了牌が筒子
-					(analysis->TsumoHai->tile <= CircleNine) &&
+					(analysis->TsumoHai->tile >= TileCode::circleOne) && // 和了牌が筒子
+					(analysis->TsumoHai->tile <= TileCode::circleNine) &&
 					(analysis->GameStat->TurnRound <= 3)); // 3巡目以内
 			}
 		));
@@ -802,8 +802,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("旋風栄和"), get_yaku_han("whirlwind"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->TsumoHai->tile >= EastWind) && // 和了牌が風牌
-					(analysis->TsumoHai->tile <= NorthWind) &&
+					(analysis->TsumoHai->tile >= TileCode::eastWind) && // 和了牌が風牌
+					(analysis->TsumoHai->tile <= TileCode::northWind) &&
 					(analysis->GameStat->TurnRound <= 3)); // 3巡目以内
 			}
 		));
@@ -830,7 +830,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			_T("猫まっしぐら"), get_yaku_han("nekomasshigura"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				return ((analysis->shanten[ShantenType::regular] == -1) && // 面子手で和了になっている
-					(analysis->TsumoHai->tile == BambooThree) && // 和了牌が三索
+					(analysis->TsumoHai->tile == TileCode::bambooThree) && // 和了牌が三索
 					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan)); // 嵌張待ち
 			}
 		));

@@ -431,7 +431,7 @@ void tsumoproc(GameTable* const gameStat) {
 	if (gameStat->playerwind(gameStat->CurrentPlayer.Active) == SeatAbsolute::east)
 		++gameStat->TurnRound;
 	gameStat->statOfActive().Tsumohai() = gameStat->Deck[gameStat->TilePointer];
-	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = NoTile;
+	gameStat->PreviousMeld.Discard = gameStat->PreviousMeld.Stepped = TileCode::noTile;
 	++gameStat->TilePointer;
 	sound::Play(sound::IDs::sndTsumo);
 	if (gameStat->tilesLeft() < 10)

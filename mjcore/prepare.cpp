@@ -30,8 +30,8 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 	};
 	unsigned int p = 0; // 牌の位置ID
 	if (gameStat->chkGameType(GameTypeID::sanmaX)) {
-		settile(CharacterOne, p); // 萬子
-		settile(CharacterNine, p); // 萬子
+		settile(TileCode::characterOne, p); // 萬子
+		settile(TileCode::characterNine, p); // 萬子
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
 			settile(composeNumberTile(TileSuit::characters, k), p); // 萬子
@@ -39,8 +39,8 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 	for (unsigned int k = 1u; k <= 9u; ++k)
 		settile(composeNumberTile(TileSuit::circles, k), p); // 筒子
 	if (gameStat->chkGameType(GameTypeID::sanmaSeto)) {
-		settile(BambooOne, p); // 索子
-		settile(BambooNine, p); // 索子
+		settile(TileCode::bambooOne, p); // 索子
+		settile(TileCode::bambooNine, p); // 索子
 	} else {
 		for (unsigned int k = 1u; k <= 9u; ++k)
 			settile(composeNumberTile(TileSuit::bamboos, k), p); // 索子
@@ -51,14 +51,14 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 #ifndef GUOBIAO
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
 #endif /* GUOBIAO */
-			gameStat->Deck[p++].tile = Spring; gameStat->Deck[p++].tile = Summer;
-			gameStat->Deck[p++].tile = Autumn; gameStat->Deck[p++].tile = Winter;
+			gameStat->Deck[p++].tile = TileCode::spring; gameStat->Deck[p++].tile = TileCode::summer;
+			gameStat->Deck[p++].tile = TileCode::autumn; gameStat->Deck[p++].tile = TileCode::winter;
 #ifndef GUOBIAO
 		}
 		if (RuleData::chkRule("flower_tiles", "flowers") || RuleData::chkRule("flower_tiles", "8tiles")) {
 #endif /* GUOBIAO */
-			gameStat->Deck[p++].tile = Plum; gameStat->Deck[p++].tile = Orchid;
-			gameStat->Deck[p++].tile = Chrysanthemum; gameStat->Deck[p++].tile = Bamboo;
+			gameStat->Deck[p++].tile = TileCode::plum; gameStat->Deck[p++].tile = TileCode::orchid;
+			gameStat->Deck[p++].tile = TileCode::chrysanthemum; gameStat->Deck[p++].tile = TileCode::bamboo;
 #ifndef GUOBIAO
 		}
 #endif /* GUOBIAO */
@@ -94,47 +94,47 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 	// 5のドラは特殊
 	if (gameStat->chkGameType(GameTypeID::sanmaX)) { // 三麻
 		if (RuleData::chkRule("red_five", "2tiles")) {
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive]].red = DoraCol::akaDora;
 		}
 		else if (RuleData::chkRule("red_five", "4tiles")) {
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive] + 1].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive] + 1].red = DoraCol::akaDora;
 		}
 		else if (RuleData::chkRule("red_five", "2_circle_tiles")) {
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive] + 1].red = DoraCol::akaDora;
 		}
 	} else { // 四麻・数牌三麻
 		if (RuleData::chkRule("red_five", "3tiles")) {
-			gameStat->Deck[tilepos[CharacterFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::characterFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive]].red = DoraCol::akaDora;
 		}
 		else if (RuleData::chkRule("red_five", "4tiles")) {
-			gameStat->Deck[tilepos[CharacterFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive] + 1].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::characterFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive]].red = DoraCol::akaDora;
 		}
 		else if (RuleData::chkRule("red_five", "6tiles")) {
-			gameStat->Deck[tilepos[CharacterFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CharacterFive] + 1].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive] + 1].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[BambooFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::characterFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::characterFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::bambooFive] + 1].red = DoraCol::akaDora;
 		}
 		else if (RuleData::chkRule("red_five", "2_circle_tiles")) {
-			gameStat->Deck[tilepos[CircleFive]].red = DoraCol::akaDora;
-			gameStat->Deck[tilepos[CircleFive] + 1].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive]].red = DoraCol::akaDora;
+			gameStat->Deck[tilepos[TileCode::circleFive] + 1].red = DoraCol::akaDora;
 		}
 	}
 	{
 		constexpr char tileRules[2][16] = {"red_west", "red_north",};
-		constexpr TileCode tileCodes[2] = {WestWind, NorthWind,};
+		constexpr TileCode tileCodes[2] = {TileCode::westWind, TileCode::northWind,};
 		for (unsigned int i = 0; i < 2; ++i) { // 字牌の赤ドラ
 			if (RuleData::chkRule(tileRules[i], "4tiles") || RuleData::chkRule(tileRules[i], "3tiles") ||
 				RuleData::chkRule(tileRules[i], "2tiles") || RuleData::chkRule(tileRules[i], "1tile"))
@@ -150,7 +150,7 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 	}
 	{
 		if (RuleData::chkRule("haku_potchi", "1tile_dora")) // オールマイティー扱いはせず、赤ドラと同じ扱い
-			gameStat->Deck[tilepos[WhiteDragon]].red = DoraCol::akaDora; // 白ポッチ
+			gameStat->Deck[tilepos[TileCode::whiteDragon]].red = DoraCol::akaDora; // 白ポッチ
 	}
 }
 
@@ -178,7 +178,7 @@ inline void bluetiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 青�
 	}
 	{
 		if (RuleData::chkRule("blue_lvfa", "yes"))
-			gameStat->Deck[tilepos[GreenDragon] + 3].red = DoraCol::aoDora;
+			gameStat->Deck[tilepos[TileCode::greenDragon] + 3].red = DoraCol::aoDora;
 	}
 }
 #endif /* GUOBIAO */
@@ -217,7 +217,7 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 		gameStat->DoraPointer = 102 - gameStat->ExtraRinshan; // ドラ表示牌のポインタ
 	else gameStat->DoraPointer = 130; // ドラ表示牌のポインタ
 	if (RuleData::chkRuleApplied("nagatacho")) { // 永田町ルール
-		nagatadora(BambooSeven); // 七索は常にドラ
+		nagatadora(TileCode::bambooSeven); // 七索は常にドラ
 		for (int i = 0; i <= (RuleData::chkRule("dice_roll", "roll_twice") ? 0 : 2); i += 2) {
 			unsigned int dice = gameStat->Dice[i + 0].Number + gameStat->Dice[i + 1].Number;
 			if (dice <= 8) { // 2〜8はその数牌がドラ　三麻では萬子がないので別処理
@@ -226,13 +226,13 @@ void initdora(GameTable* const gameStat) { // ドラの設定
 				nagatadora(    composeNumberTile(TileSuit::circles   , dice));
 				nagatadora(    composeNumberTile(TileSuit::bamboos   , dice));
 			} else if (dice == 9) { // 9はそのまま9がドラ
-				nagatadora(CharacterNine); nagatadora(CircleNine); nagatadora(BambooNine);
+				nagatadora(TileCode::characterNine); nagatadora(TileCode::circleNine); nagatadora(TileCode::bambooNine);
 			} else if (dice == 10) { // 10は三元牌がドラ
-				nagatadora(WhiteDragon); nagatadora(GreenDragon); nagatadora(RedDragon);
+				nagatadora(TileCode::whiteDragon); nagatadora(TileCode::greenDragon); nagatadora(TileCode::redDragon);
 			} else if (dice == 11) { // 11は数牌の1がドラ
-				nagatadora(CharacterOne); nagatadora(CircleOne); nagatadora(BambooOne);
+				nagatadora(TileCode::characterOne); nagatadora(TileCode::circleOne); nagatadora(TileCode::bambooOne);
 			} else if (dice == 12) { // 12は風牌全てドラ
-				nagatadora(EastWind); nagatadora(SouthWind); nagatadora(WestWind); nagatadora(NorthWind);
+				nagatadora(TileCode::eastWind); nagatadora(TileCode::southWind); nagatadora(TileCode::westWind); nagatadora(TileCode::northWind);
 			}
 		}
 	}
@@ -530,7 +530,7 @@ namespace {
 			tmpNumberOfTiles = 140;
 #endif /* GUOBIAO */
 		for (unsigned i = 0; i < tmpNumberOfTiles; i++) // サーバーの場合、牌山のデータを送信
-			statsync(gameStat, gameStat->Deck[i].tile + static_cast<int>(gameStat->Deck[i].red) * TileNonflowerMax + mihajong_socket::protocol::StartRound_Tile_Excess,
+			statsync(gameStat, static_cast<int>(gameStat->Deck[i].tile) + static_cast<int>(gameStat->Deck[i].red) * TileNonflowerMax + mihajong_socket::protocol::StartRound_Tile_Excess,
 				[i](GameTable* const gameStat, int ReceivedMsg) -> bool { // クライアントの場合、データを受信
 					const auto recvTile = ReceivedMsg - mihajong_socket::protocol::StartRound_Tile_Excess;
 					if ((recvTile > TileNonflowerMax) && (recvTile < static_cast<int>(TileSuit::flowers))) {

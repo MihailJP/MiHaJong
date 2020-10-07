@@ -85,10 +85,10 @@ CodeConv::tstring haifu::tools::haifudoraClassX(DoraCol Akadora) { // 赤牌黒�
 }
 
 void haifu::tools::recordDoraStream(CodeConv::tostringstream* const x, TileCode tmpDora) {
-	if (tmpDora == Flower) {
+	if (tmpDora == TileCode::flower) {
 		*x << _T("\t\t\t\t花") << std::endl;
 	} else {
-		*x << _T("\t\t\t\t<tile tile=\"") << Xtilerefcode[tmpDora] << _T("\" />") << std::endl;
+		*x << _T("\t\t\t\t<tile tile=\"") << Xtilerefcode[static_cast<std::size_t>(tmpDora)] << _T("\" />") << std::endl;
 	}
 }
 
@@ -543,7 +543,7 @@ void haifu::tools::hfwriter::finalformWriter::hfFinalForm(const GameTable* const
 	bool agariFlag = false;
 	XhaifuBufferBody << _T("\t\t\t\t<hand>") << std::endl;
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[player].Hand[i].tile) {
+		if (gameStat->Player[player].Hand[i].tile != TileCode::noTile) {
 			if (i == NumOfTilesInHand - 1) {
 				if ((RoundEndType == EndType::ryuukyoku)||(RoundEndType == EndType::agari)||(RoundEndType == EndType::chonbo)) {
 					if (gameStat->TsumoAgariFlag) {
@@ -612,18 +612,18 @@ void haifu::tools::hfwriter::finalformWriter::MeldWriter::hfChii(PlayerID player
 	switch (meld.mstat) {
 	case MeldStat::sequenceExposedLower:
 		meldTile[0] = Tile(meld.tile, meld.red[0]);
-		meldTile[1] = Tile(TileCode(meld.tile + 1), meld.red[1]);
-		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
+		meldTile[1] = Tile(TileCode(static_cast<int>(meld.tile) + 1), meld.red[1]);
+		meldTile[2] = Tile(TileCode(static_cast<int>(meld.tile) + 2), meld.red[2]);
 		break;
 	case MeldStat::sequenceExposedMiddle:
 		meldTile[1] = Tile(meld.tile, meld.red[0]);
-		meldTile[0] = Tile(TileCode(meld.tile + 1), meld.red[1]);
-		meldTile[2] = Tile(TileCode(meld.tile + 2), meld.red[2]);
+		meldTile[0] = Tile(TileCode(static_cast<int>(meld.tile) + 1), meld.red[1]);
+		meldTile[2] = Tile(TileCode(static_cast<int>(meld.tile) + 2), meld.red[2]);
 		break;
 	case MeldStat::sequenceExposedUpper:
 		meldTile[1] = Tile(meld.tile, meld.red[0]);
-		meldTile[2] = Tile(TileCode(meld.tile + 1), meld.red[1]);
-		meldTile[0] = Tile(TileCode(meld.tile + 2), meld.red[2]);
+		meldTile[2] = Tile(TileCode(static_cast<int>(meld.tile) + 1), meld.red[1]);
+		meldTile[0] = Tile(TileCode(static_cast<int>(meld.tile) + 2), meld.red[2]);
 		break;
 	default:
 		// This must not occur...

@@ -25,7 +25,7 @@ void TableSubsceneCheckTenpai::CalculateTenpaiFlag(PlayerID player, int x, int y
 	machiInfo[player] = utils::chkFuriten(GameStatus::gameStat(), player);
 	if (tenpaiflag[player]) { // 聴牌
 		int tile = 0;
-		for (TileCode k = CharacterOne; k <= RedDragon; k = static_cast<TileCode>(k + 1)) {
+		for (TileCode k = TileCode::characterOne; k <= TileCode::redDragon; k = static_cast<TileCode>(static_cast<int>(k) + 1)) {
 			if (machiInfo[player].Machihai[k].MachihaiFlag) // 待ち牌になっている場合
 				tileRenderer->NewTile(player * 9 + tile, Tile(k),
 				x - 20 * (machiInfo[player].MachiMen - 1) + 40 * (tile),

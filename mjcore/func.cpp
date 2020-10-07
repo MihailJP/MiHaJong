@@ -88,16 +88,16 @@ int RonPlayers(const GameTable* const gameStat) {
 /* 場風牌のリスト */
 TileCode Wind2Tile(SeatAbsolute wind) {
 	switch (wind) {
-		case SeatAbsolute::east:  return EastWind;
-		case SeatAbsolute::south: return SouthWind;
-		case SeatAbsolute::west:  return WestWind;
-		case SeatAbsolute::north: return NorthWind;
-		case SeatAbsolute::white: return WhiteDragon;
-		case SeatAbsolute::green: return GreenDragon;
-		case SeatAbsolute::red:   return RedDragon;
+		case SeatAbsolute::east:  return TileCode::eastWind;
+		case SeatAbsolute::south: return TileCode::southWind;
+		case SeatAbsolute::west:  return TileCode::westWind;
+		case SeatAbsolute::north: return TileCode::northWind;
+		case SeatAbsolute::white: return TileCode::whiteDragon;
+		case SeatAbsolute::green: return TileCode::greenDragon;
+		case SeatAbsolute::red:   return TileCode::redDragon;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です"));
-			return NoTile;
+			return TileCode::noTile;
 	}
 }
 

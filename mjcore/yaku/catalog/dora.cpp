@@ -65,11 +65,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenType::all] != -1) return false; // 和了ってないなら戻る
 				switch (analysis->GameStat->playerwind(analysis->player)) {
-					case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Spring;
-					case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Summer;
-					case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Autumn;
-					case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Winter;
-					default:
+				case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Spring;
+				case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Summer;
+				case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Autumn;
+				case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Winter;
+				default:
 						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("自風が東南西北のどれでもありません"));
 						return false;
 				}
@@ -80,11 +80,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (analysis->shanten[ShantenType::all] != -1) return false; // 和了ってないなら戻る
 				switch (analysis->GameStat->playerwind(analysis->player)) {
-					case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Plum;
-					case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Orchid;
-					case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Chrys;
-					case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Bamboo;
-					default:
+				case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Plum;
+				case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Orchid;
+				case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Chrys;
+				case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Bamboo;
+				default:
 						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("自風が東南西北のどれでもありません"));
 						return false;
 				}
@@ -96,8 +96,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		const auto countRed = [](const MENTSU_ANALYSIS* const analysis) -> unsigned {
 			unsigned red = 0;
 			for (int i = 0; i < NumOfTilesInHand; i++) {
-				if (analysis->PlayerStat->Hand[i].tile == NoTile) continue;
-				else if (analysis->PlayerStat->Hand[i].tile >= TileNonflowerMax) continue;
+				if (analysis->PlayerStat->Hand[i].tile == TileCode::noTile) continue;
+				else if (static_cast<int>(analysis->PlayerStat->Hand[i].tile) >= TileNonflowerMax) continue;
 				else if (analysis->PlayerStat->Hand[i].red == DoraCol::akaDora) ++red;
 			}
 			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {

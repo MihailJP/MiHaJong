@@ -640,13 +640,13 @@ void GameTableScreen::FinishTileChoice() {
 							return false;
 						switch (static_cast<int>(GameStatus::gameStat()->statOfMine().Hand[tehaiReconst->getTileCursor()].tile) - static_cast<int>(q)) {
 						case -2:
-							return p == q - 1;
+							return static_cast<int>(p) == static_cast<int>(q) - 1;
 						case -1:
-							return (p == q + 1) || (p == q - 2);
+							return (static_cast<int>(p) == static_cast<int>(q) + 1) || (static_cast<int>(p) == static_cast<int>(q) - 2);
 						case 1:
-							return (p == q - 1) || (p == q + 2);
+							return (static_cast<int>(p) == static_cast<int>(q) - 1) || (static_cast<int>(p) == static_cast<int>(q) + 2);
 						case 2:
-							return p == q + 1;
+							return static_cast<int>(p) == static_cast<int>(q) + 1;
 						default:
 							return false;
 						}
@@ -679,10 +679,10 @@ void GameTableScreen::FinishTileChoice() {
 					}
 					return false;
 				};
-				if (selected(static_cast<TileCode>(GameStatus::gameStat()->CurrentDiscard.tile - 2))) {
+				if (selected(static_cast<TileCode>(static_cast<int>(GameStatus::gameStat()->CurrentDiscard.tile) - 2))) {
 					tehaiReconst->setFirstChosenTile();
 					ui::UIEvent->set(naki::nakiChiUpper);
-				} else if (selected(static_cast<TileCode>(GameStatus::gameStat()->CurrentDiscard.tile + 2))) {
+				} else if (selected(static_cast<TileCode>(static_cast<int>(GameStatus::gameStat()->CurrentDiscard.tile) + 2))) {
 					tehaiReconst->setFirstChosenTile();
 					ui::UIEvent->set(naki::nakiChiLower);
 				} else {

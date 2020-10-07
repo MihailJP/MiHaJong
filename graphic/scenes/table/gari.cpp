@@ -12,10 +12,10 @@ void GameTableScreen::GariReconst::RenderFlower(PlayerID playerID) {
 
 	// 判定に使うパラメータ
 	const struct {const bool& flag; TileCode tileCode;} flowerParam[8] = {
-		{flowerFlag->Spring, Spring       }, {flowerFlag->Summer, Summer},
-		{flowerFlag->Autumn, Autumn       }, {flowerFlag->Winter, Winter},
-		{flowerFlag->Plum,   Plum         }, {flowerFlag->Orchid, Orchid},
-		{flowerFlag->Chrys,  Chrysanthemum}, {flowerFlag->Bamboo, Bamboo},
+		{flowerFlag->Spring, TileCode::spring       }, {flowerFlag->Summer, TileCode::summer},
+		{flowerFlag->Autumn, TileCode::autumn       }, {flowerFlag->Winter, TileCode::winter},
+		{flowerFlag->Plum,   TileCode::plum         }, {flowerFlag->Orchid, TileCode::orchid},
+		{flowerFlag->Chrys,  TileCode::chrysanthemum}, {flowerFlag->Bamboo, TileCode::bamboo},
 	};
 	int numOfTiles = 0, currentTile = 0;
 	for (int i = 0; i < 8; ++i)
@@ -78,7 +78,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case SeatRelative::opposite:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(i, Tile(NorthWind),
+				TileTexture->NewTile(i, Tile(TileCode::northWind),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				GariPosV(),
 				TileDirection::upsideDown, TileSide::obverse);
@@ -88,7 +88,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case SeatRelative::left:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(i + 4, Tile(NorthWind),
+				TileTexture->NewTile(i + 4, Tile(TileCode::northWind),
 				GariPosV(),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				TileDirection::clockwise, TileSide::obverse);
@@ -98,7 +98,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case SeatRelative::right:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(11 - i, Tile(NorthWind),
+				TileTexture->NewTile(11 - i, Tile(TileCode::northWind),
 				TableSize - GariPosV(),
 				TableSize - (GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++))),
 				TileDirection::withershins, TileSide::obverse);
@@ -108,7 +108,7 @@ void GameTableScreen::GariReconst::RenderNorth(PlayerID playerID) {
 	case SeatRelative::self:
 		for (int i = 0; i < 4; ++i)
 			if (i < numOfTiles)
-				TileTexture->NewTile(i + 12, Tile(NorthWind),
+				TileTexture->NewTile(i + 12, Tile(TileCode::northWind),
 				GariPosH() - ShowTile::VertTileWidth * (numOfTiles - (currentTile++)),
 				TableSize - GariPosV(),
 				TileDirection::portrait, TileSide::obverse);

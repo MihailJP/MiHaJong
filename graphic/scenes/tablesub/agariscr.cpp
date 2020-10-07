@@ -313,7 +313,7 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 		if (Zeit >= 0.0) {
 			const ArgbColor color = (Zeit >= 0.325) ? 0xffffffff : ((255 - static_cast<int>((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
 			tileObj->NewTile(tileIndex,
-				(gameStat->DoraPointer <= i) ? gameStat->Deck[i] : Tile(BackSide),
+				(gameStat->DoraPointer <= i) ? gameStat->Deck[i] : Tile(TileCode::backSide),
 				xPos() + ShowTile::VertTileWidth * tileIndex, yPos(), TileDirection::portrait, TileSide::obverse, color);
 		}
 	}
