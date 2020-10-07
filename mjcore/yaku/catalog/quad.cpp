@@ -225,10 +225,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("合格祈願"), get_yaku_han("goukaku_kigan"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag1 = false; bool flag2 = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-					if (analysis->KangziCount[i + 5] >= 1) flag1 = true;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-					if (analysis->KangziCount[i + 9] >= 1) flag2 = true;
+				for (auto i : NumberTileSuits)
+					if (analysis->KangziCount[composeNumberTile(i, 5)] >= 1) flag1 = true;
+				for (auto i : NumberTileSuits)
+					if (analysis->KangziCount[composeNumberTile(i, 9)] >= 1) flag2 = true;
 				return flag1 && flag2;
 			}
 		));

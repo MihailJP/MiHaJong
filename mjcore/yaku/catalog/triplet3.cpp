@@ -39,12 +39,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("清一色"), _T("対々和"), _T("筋牌刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-					if ((analysis->DuiziCount[i + 1] >= 1) &&
-						(analysis->DuiziCount[i + 7] >= 1) &&
-						(analysis->DuiziCount[i + 8] >= 1) &&
-						(analysis->DuiziCount[i + 5] >= 1) &&
-						(analysis->DuiziCount[i + 2] >= 1))
+				for (auto i : NumberTileSuits)
+					if ((analysis->DuiziCount[composeNumberTile(i, 1)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(i, 7)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(i, 8)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(i, 5)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(i, 2)] >= 1))
 						flag = true;
 				return flag;
 			}
@@ -61,9 +61,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			[isApril1st](const MENTSU_ANALYSIS* const analysis) -> bool {
 				if (!isApril1st()) return false;
 				bool flag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-					if ((analysis->KeziCount[i + 4] >= 1) &&
-						(analysis->KeziCount[i + 1] >= 1))
+				for (auto i : NumberTileSuits)
+					if ((analysis->KeziCount[composeNumberTile(i, 4)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(i, 1)] >= 1))
 						flag = true;
 				return flag && (analysis->TileCount[TileCode::circleNine]);
 			}
@@ -266,9 +266,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("対々和"), _T("筋牌刻"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool flag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-					if ((analysis->KeziCount[i + 5] >= 1) && (analysis->KeziCount[i + 9] >= 1) &&
-						(analysis->KeziCount[i + 6] >= 1) && (analysis->KeziCount[i + 3] >= 1))
+				for (auto i : NumberTileSuits)
+					if ((analysis->KeziCount[composeNumberTile(i, 5)] >= 1) && (analysis->KeziCount[composeNumberTile(i, 9)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(i, 6)] >= 1) && (analysis->KeziCount[composeNumberTile(i, 3)] >= 1))
 						flag = true;
 				return flag;
 			}
@@ -429,16 +429,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				for (int i = static_cast<int>(TileSuit::honors); i < TileNonflowerMax; i++)
 					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i))
 						pairIsHonor = true;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
-					if ((analysis->KeziCount[i + 3] >= 1) &&
-						(analysis->KeziCount[i + 6] >= 1) &&
+				for (auto i : NumberTileSuits) {
+					if ((analysis->KeziCount[composeNumberTile(i, 3)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(i, 6)] >= 1) &&
 						(analysis->KeziCount[TileCode::northWind] >= 1) &&
 						(pairIsHonor)) {
-							if ((analysis->ShunziCount[i + 4] >= 1) &&
-								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)))
+							if ((analysis->ShunziCount[composeNumberTile(i, 4)] >= 1) &&
+								(analysis->TsumoHai->tile == composeNumberTile(i, 6)))
 								flag = true;
-							if ((analysis->ShunziCount[i + 3] >= 1) &&
-								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)))
+							if ((analysis->ShunziCount[composeNumberTile(i, 3)] >= 1) &&
+								(analysis->TsumoHai->tile == composeNumberTile(i, 3)))
 								flag = true;
 					}
 				}
@@ -759,9 +759,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[(k[1] - _T('0')) * TileSuitStep + 7] >= 1) &&
 						(analysis->KeziCount[(k[2] - _T('0')) * TileSuitStep + 3] >= 1))
 						flag1 = true;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-					if ((analysis->KeziCount[i + 8] >= 1) &&
-						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 8)))
+				for (auto i : NumberTileSuits)
+					if ((analysis->KeziCount[composeNumberTile(i, 8)] >= 1) &&
+						(analysis->TsumoHai->tile == composeNumberTile(i, 8)))
 						flag2 = true;
 				return flag1 && flag2 &&
 					(analysis->MianziDat[0].tile == TileCode::southWind);

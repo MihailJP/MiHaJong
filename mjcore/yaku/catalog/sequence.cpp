@@ -1,4 +1,5 @@
 ﻿#include "../catalog.h"
+#include "../../tileutil.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	/* 一色双龍会 */
@@ -232,10 +233,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	const auto ikki_tsuukan =
 		[](const MENTSU_ANALYSIS* const analysis, bool* const yakuFlag, TileSuit* const yakuCol) -> void {
 			*yakuFlag = false;
-			for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
-				if ((analysis->ShunziCount[i + 1] >= 1) &&
-					(analysis->ShunziCount[i + 4] >= 1) &&
-					(analysis->ShunziCount[i + 7] >= 1)) {
+			for (auto i : NumberTileSuits) {
+				if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(i, 4)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) {
 						*yakuFlag = true;
 						if (yakuCol != nullptr) *yakuCol = static_cast<TileSuit>(i);
 				}
@@ -623,11 +624,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	const auto chkGoldenGateBridge =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
-			for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep)
-				if ((analysis->ShunziCount[i + 1] >= 1) &&
-					(analysis->ShunziCount[i + 3] >= 1) &&
-					(analysis->ShunziCount[i + 5] >= 1) &&
-					(analysis->ShunziCount[i + 7] >= 1)) yakuFlag = true;
+			for (auto i : NumberTileSuits)
+				if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(i, 3)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(i, 5)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) yakuFlag = true;
 			return yakuFlag;
 		};
 #ifdef GUOBIAO
@@ -659,19 +660,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("清一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
+				for (auto i : NumberTileSuits) {
 					int yakuFlagCount = 0;
-					if ((analysis->ShunziCount[i + 1] >= 1) && (analysis->ShunziCount[i + 4] >= 2) && (analysis->ShunziCount[i + 7] >= 1)) {
+					if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) && (analysis->ShunziCount[composeNumberTile(i, 4)] >= 2) && (analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) {
 						yakuFlag = true;
-					} else if ((analysis->ShunziCount[i + 1] >= 1) && (analysis->ShunziCount[i + 4] == 1) && (analysis->ShunziCount[i + 7] >= 1)) {
+					} else if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) && (analysis->ShunziCount[composeNumberTile(i, 4)] == 1) && (analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) {
 						continue;
 					} else {
 						for (int j = 1; j <= 4; j++)
 							for (int k = 1; k <= 2; k++)
-								if ((analysis->ShunziCount[i + j] >= k) && (analysis->ShunziCount[i + j + 3] >= k))
+								if ((analysis->ShunziCount[composeNumberTile(i, j)] >= k) && (analysis->ShunziCount[composeNumberTile(i, j + 3)] >= k))
 									++yakuFlagCount;
 					}
-					if ((yakuFlagCount == 2) && (static_cast<int>(analysis->MianziDat[0].tile) == i + 7))
+					if ((yakuFlagCount == 2) && (analysis->MianziDat[0].tile == composeNumberTile(i, 7)))
 						yakuFlag = true;
 				}
 				return yakuFlag;
@@ -684,28 +685,28 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("一気通貫"), _T("清一色"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < static_cast<int>(TileSuit::honors); i += TileSuitStep) {
+				for (auto i : NumberTileSuits) {
 					int yakuFlagCount = 0;
-					if ((analysis->ShunziCount[i + 1] >= 2) &&
-						(analysis->ShunziCount[i + 4] >= 1) &&
-						(analysis->ShunziCount[i + 7] >= 1)) yakuFlagCount += 2;
-					if ((analysis->ShunziCount[i + 1] >= 1) &&
-						(analysis->ShunziCount[i + 4] >= 2) &&
-						(analysis->ShunziCount[i + 7] >= 1)) yakuFlagCount += 2;
-					if ((analysis->ShunziCount[i + 1] >= 1) &&
-						(analysis->ShunziCount[i + 4] >= 1) &&
-						(analysis->ShunziCount[i + 7] >= 2)) yakuFlagCount += 2;
-					if ((analysis->ShunziCount[i + 1] == 1) &&
-						(analysis->ShunziCount[i + 4] == 1) &&
-						(analysis->ShunziCount[i + 7] == 1)) yakuFlagCount += 1;
-					if ((analysis->ShunziCount[i + 2] >= 1) ||
-						(analysis->ShunziCount[i + 3] >= 1) ||
-						(analysis->ShunziCount[i + 5] >= 1) ||
-						(analysis->ShunziCount[i + 6] >= 1)) yakuFlagCount += 1;
+					if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 2) &&
+						(analysis->ShunziCount[composeNumberTile(i, 4)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) yakuFlagCount += 2;
+					if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 4)] >= 2) &&
+						(analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) yakuFlagCount += 2;
+					if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 4)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 7)] >= 2)) yakuFlagCount += 2;
+					if ((analysis->ShunziCount[composeNumberTile(i, 1)] == 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 4)] == 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 7)] == 1)) yakuFlagCount += 1;
+					if ((analysis->ShunziCount[composeNumberTile(i, 2)] >= 1) ||
+						(analysis->ShunziCount[composeNumberTile(i, 3)] >= 1) ||
+						(analysis->ShunziCount[composeNumberTile(i, 5)] >= 1) ||
+						(analysis->ShunziCount[composeNumberTile(i, 6)] >= 1)) yakuFlagCount += 1;
 					if ((yakuFlagCount == 2) &&
-						((static_cast<int>(analysis->MianziDat[0].tile) == i + 2) ||
-						(static_cast<int>(analysis->MianziDat[0].tile) == i + 5) ||
-						(static_cast<int>(analysis->MianziDat[0].tile) == i + 8))) yakuFlag = true;
+						((analysis->MianziDat[0].tile == composeNumberTile(i, 2)) ||
+						(analysis->MianziDat[0].tile == composeNumberTile(i, 5)) ||
+						(analysis->MianziDat[0].tile == composeNumberTile(i, 8)))) yakuFlag = true;
 				}
 				return yakuFlag;
 			}
@@ -893,10 +894,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	const auto LianLiu =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int yakuCnt = 0;
-			for (int j = 0; j < static_cast<int>(TileSuit::honors); j += TileSuitStep)
+			for (auto j : NumberTileSuits)
 				for (int i = 1; i <= 4; i++)
-					if ((analysis->ShunziCount[j + i] >= 1) &&
-						(analysis->ShunziCount[j + i + 3] >= 1))
+					if ((analysis->ShunziCount[composeNumberTile(j, i)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(j, i + 3)] >= 1))
 						++yakuCnt;
 			return yakuCnt;
 		};
@@ -916,9 +917,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 	const auto LaoShaoFu =
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int yakuCnt = 0;
-			for (int j = 0; j < static_cast<int>(TileSuit::honors); j += TileSuitStep)
-				if ((analysis->ShunziCount[j + 1] >= 1) &&
-					(analysis->ShunziCount[j + 7] >= 1))
+			for (auto j : NumberTileSuits)
+				if ((analysis->ShunziCount[composeNumberTile(j, 1)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(j, 7)] >= 1))
 					++yakuCnt;
 			return yakuCnt;
 		};
@@ -1139,11 +1140,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 		[](const MENTSU_ANALYSIS* const analysis) -> int {
 			int count = 0;
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
-				for (int j = 0; j < static_cast<int>(TileSuit::honors); j += TileSuitStep) {
+				for (auto j : NumberTileSuits) {
 					if ((analysis->MianziDat[i].mstat == MeldStat::sequenceExposedLower) &&
-						(static_cast<int>(analysis->MianziDat[i].tile) == j * TileSuitStep + 7)) ++count;
+						(analysis->MianziDat[i].tile == composeNumberTile(j, 7))) ++count;
 					if ((analysis->MianziDat[i].mstat == MeldStat::sequenceExposedUpper) &&
-						(static_cast<int>(analysis->MianziDat[i].tile) == j * TileSuitStep + 1)) ++count;
+						(analysis->MianziDat[i].tile == composeNumberTile(j, 1))) ++count;
 				}
 			}
 			return count;
@@ -1170,8 +1171,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedLower) {
 					++count;
-					for (int j = 0; j < static_cast<int>(TileSuit::honors); j += TileSuitStep) {
-						if (static_cast<int>(analysis->MianziDat[i].tile) == j * TileSuitStep + 7) --count;
+					for (auto j : NumberTileSuits) {
+						if (analysis->MianziDat[i].tile == composeNumberTile(j, 7)) --count;
 					}
 				}
 			}
@@ -1199,8 +1200,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			for (int i = 1; i < SizeOfMeldBuffer; i++) {
 				if (analysis->MianziDat[i].mstat == MeldStat::sequenceExposedUpper) {
 					++count;
-					for (int j = 0; j < static_cast<int>(TileSuit::honors); j += TileSuitStep) {
-						if (static_cast<int>(analysis->MianziDat[i].tile) == j * TileSuitStep + 1) --count;
+					for (auto j : NumberTileSuits) {
+						if (analysis->MianziDat[i].tile == composeNumberTile(j, 1)) --count;
 					}
 				}
 			}
