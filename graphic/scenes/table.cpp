@@ -636,7 +636,7 @@ void GameTableScreen::FinishTileChoice() {
 					}
 				} else { // チー選択
 					const auto validTile = [this](TileCode p, TileCode q) {
-						if (Tile(p).getSuit() != Tile(q).getSuit())
+						if (getTileSuit(p) != getTileSuit(q))
 							return false;
 						switch (static_cast<int>(GameStatus::gameStat()->statOfMine().Hand[tehaiReconst->getTileCursor()].tile) - static_cast<int>(q)) {
 						case -2:

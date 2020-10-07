@@ -427,7 +427,7 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 			assert(GameStatus::gameStat()->CurrentDiscard.isNumber());
 			{
 				const auto chiiable = [&tilesInHand](TileCode p, TileCode q) {
-					if (Tile(p).getSuit() != Tile(q).getSuit())
+					if (getTileSuit(p) != getTileSuit(q))
 						return false;
 					else if ((p == q + 2) && (tilesInHand[q + 1] > 0)) return true;
 					else if  (p == q + 1)                              return true;

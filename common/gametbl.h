@@ -36,27 +36,7 @@ struct Tile { // 赤ドラデータを含めた牌のデータ
 	constexpr bool operator > (const Tile& otherTile) const {return otherTile < *this;}
 	constexpr bool operator <= (const Tile& otherTile) const {return !(otherTile < *this);}
 	constexpr bool operator >= (const Tile& otherTile) const {return !(*this < otherTile);}
-	constexpr TileSuit getSuit() const {
-		switch (tile) {
-		case CharacterOne: case CharacterTwo: case CharacterThree: case CharacterFour: case CharacterFive:
-		case CharacterSix: case CharacterSeven: case CharacterEight: case CharacterNine:
-			return TileSuit::characters;
-		case CircleOne: case CircleTwo: case CircleThree: case CircleFour: case CircleFive:
-		case CircleSix: case CircleSeven: case CircleEight: case CircleNine:
-			return TileSuit::circles;
-		case BambooOne: case BambooTwo: case BambooThree: case BambooFour: case BambooFive:
-		case BambooSix: case BambooSeven: case BambooEight: case BambooNine:
-			return TileSuit::bamboos;
-		case EastWind: case SouthWind: case WestWind: case NorthWind:
-		case WhiteDragon: case GreenDragon: case RedDragon:
-			return TileSuit::honors;
-		case Spring: case Summer: case Autumn: case Winter:
-		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
-			return TileSuit::flowers;
-		default:
-			return TileSuit::invalid;
-		}
-	}
+	constexpr TileSuit getSuit() const {return getTileSuit(tile);}
 	constexpr bool isNumber() const {
 		return (tile != NoTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuit::honors));		
 	}
