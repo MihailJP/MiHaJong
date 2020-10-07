@@ -46,34 +46,34 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 
 	// 順子(順子優先正順モードの時)
 	if (AtamaCode.Order == Shun_Ke)
-		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
+		for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
 				--i;
 	// 順子(順子優先逆順モードの時)
 	if (AtamaCode.Order == Shun_Ke_Rev)
-		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
-				++i;
+		for (auto i = NumberTiles.rbegin(); i != NumberTiles.rend(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				--i;
 
 	// 暗刻(正順モードの時)
 	if ((AtamaCode.Order == Ke_Shun)||(AtamaCode.Order == Shun_Ke))
-		for (int i = 1; i < TileNonflowerMax; i++)
-			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i));
+		for (auto i = AllTiles.begin(); i != AllTiles.end(); i++)
+			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, *i);
 	// 暗刻(逆順モードの時)
 	if ((AtamaCode.Order == Ke_Shun_Rev)||(AtamaCode.Order == Shun_Ke_Rev))
-		for (int i = TileNonflowerMax - 1; i > 0; i--)
-			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i));
+		for (auto i = AllTiles.rbegin(); i != AllTiles.rend(); i++)
+			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, *i);
 
 	// 順子(暗刻優先正順モードの時)
 	if (AtamaCode.Order == Ke_Shun)
-		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
+		for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
 				--i;
 	// 順子(暗刻優先逆順モードの時)
 	if (AtamaCode.Order == Ke_Shun_Rev)
-		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
-				++i;
+		for (auto i = NumberTiles.rbegin(); i != NumberTiles.rend(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				--i;
 
 	// 鳴いた面子、暗槓
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
@@ -103,8 +103,8 @@ int yaku::countingFacility::countPairs(
 int yaku::countingFacility::countTileNumerals(const Int8ByTile tileCount) {
 	/* 数字の合計を数える */
 	int Cifr = 0;
-	for (int i = 1; i < (static_cast<int>(TileSuit::honors) - 1); i++)
-		Cifr += tileCount[i] * (i % TileSuitStep);
+	for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
+		Cifr += tileCount[*i] * getTileNumber(*i);
 	return Cifr;
 }
 	

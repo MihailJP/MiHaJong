@@ -395,8 +395,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("混一色"), _T("鏡音リン"), _T("鏡音レン"), _T("三連刻"), _T("対々和"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
-					if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i + 1] >= 1) && (analysis->KeziCount[i + 2] >= 1))
+				for (auto i : NumberTiles)
+					if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[static_cast<int>(i) + 1] >= 1) && (analysis->KeziCount[static_cast<int>(i) + 2] >= 1))
 						yakuFlag = true;
 				return (isshoku(analysis, false) && yakuFlag &&
 					(analysis->KeziCount[TileCode::whiteDragon] >= 1) &&

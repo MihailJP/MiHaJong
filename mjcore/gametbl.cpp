@@ -95,7 +95,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 	}
 #endif /* GUOBIAO */
 
-	for (int i = 0; i < TileNonflowerMax; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+	for (auto i : AllTiles) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 		gameStat->OpenRichiWait[i] = false;
 	gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // 嶺上開花；頭槓和；連開花と槓振り；搶槓の判定に使う
 	gameStat->KangFlag.chainFlag = 0;
@@ -133,7 +133,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 	gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
 	gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
 		gameStat->PreviousMeld.Stepped = TileCode::noTile;
-	for (int i = 0; i < TileNonflowerMax; i++) // ドラ判定の配列
+	for (auto i : AllTiles) // ドラ判定の配列
 		gameStat->DoraFlag.Omote[i] = gameStat->DoraFlag.Ura[i] = 0;
 	gameStat->TsumoAgariFlag = false;
 	gameStat->AgariSpecialStat = 0;
@@ -316,7 +316,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	sandbox->Deposit = gameStat->Deposit;
 	sandbox->AgariChain = gameStat->AgariChain;
 	sandbox->LastAgariPlayer = gameStat->LastAgariPlayer;
-	for (int i = 0; i < TileNonflowerMax; i++)
+	for (auto i : AllTiles)
 		sandbox->OpenRichiWait[i] = gameStat->OpenRichiWait[i];
 	sandbox->KangFlag.kangFlag = gameStat->KangFlag.kangFlag;
 	sandbox->KangFlag.chainFlag = gameStat->KangFlag.chainFlag;
@@ -354,7 +354,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	sandbox->Deposit = gameStat->Deposit;
 	sandbox->Deposit = gameStat->Deposit;
 	sandbox->Deposit = gameStat->Deposit;
-	for (int i = 0; i < TileNonflowerMax; i++) {
+	for (auto i : AllTiles) {
 		sandbox->DoraFlag.Omote[i] = gameStat->DoraFlag.Omote[i];
 		sandbox->DoraFlag.Ura[i] = gameStat->DoraFlag.Ura[i];
 	}
