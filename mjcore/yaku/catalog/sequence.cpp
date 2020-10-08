@@ -2,6 +2,21 @@
 #include "../../tileutil.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
+	const auto seqSuit = [](const char suitNum) -> TileSuit {
+		switch (suitNum) {
+		case '0':
+			return TileSuit::characters;
+		case '1':
+			return TileSuit::circles;
+		case '2':
+			return TileSuit::bamboos;
+		default:
+			return TileSuit::invalid;
+		}
+	};
+
+	// ---------------------------------------------------------------------
+
 	/* 一色双龍会 */
 #ifdef GUOBIAO
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -755,15 +770,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 
 	/* 四歩高 */
 	const auto puukao =
-		[](const MENTSU_ANALYSIS* const analysis,
+		[seqSuit](const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step, bool suupuukao) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (7 - step * (suupuukao ? 3 : 2)); k++)
-					if ((analysis->ShunziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + step * 0 + k] >= 1) &&
-						(analysis->ShunziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + step * 1 + k] >= 1) &&
-						(analysis->ShunziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + step * 2 + k] >= 1) &&
-						((!suupuukao)||(analysis->ShunziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + step * 3 + k] >= 1)) )
+					if ((analysis->ShunziCount[composeNumberTile(seqSuit(parsedat[i * fldsize + 0]), step * 0 + k)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(seqSuit(parsedat[i * fldsize + 1]), step * 1 + k)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(seqSuit(parsedat[i * fldsize + 2]), step * 2 + k)] >= 1) &&
+						((!suupuukao)||(analysis->ShunziCount[composeNumberTile(seqSuit(parsedat[i * fldsize + 3]), step * 3 + k)] >= 1)) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
@@ -963,12 +978,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 
 	/* 花龍 */
 	const auto sanshoku_tsuukan =
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[seqSuit](const MENTSU_ANALYSIS* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (const auto& k : parsedat_trichrome3)
-				if ((analysis->ShunziCount[static_cast<int>(k[0] - _T('0')) * TileSuitStep + 1] >= 1) &&
-					(analysis->ShunziCount[static_cast<int>(k[1] - _T('0')) * TileSuitStep + 4] >= 1) &&
-					(analysis->ShunziCount[static_cast<int>(k[2] - _T('0')) * TileSuitStep + 7] >= 1))
+				if ((analysis->ShunziCount[composeNumberTile(seqSuit(k[0]), 1)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(seqSuit(k[1]), 4)] >= 1) &&
+					(analysis->ShunziCount[composeNumberTile(seqSuit(k[2]), 7)] >= 1))
 						yakuFlag = true;
 			return yakuFlag;
 		};

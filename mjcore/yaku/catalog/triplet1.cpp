@@ -4,6 +4,21 @@
 #include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
+	const auto liankeSuit = [](const char suitNum) -> TileSuit {
+		switch (suitNum) {
+		case '0':
+			return TileSuit::characters;
+		case '1':
+			return TileSuit::circles;
+		case '2':
+			return TileSuit::bamboos;
+		default:
+			return TileSuit::invalid;
+		}
+	};
+
+	// ---------------------------------------------------------------------
+
 	/* 四暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
@@ -66,31 +81,31 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #ifndef GUOBIAO
 	/* 五連刻 */
 	const auto wulianke =
-		[](const MENTSU_ANALYSIS* const analysis,
+		[liankeSuit](const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (9 - step * 4); k++)
-					if ((analysis->DuiziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1) &&
-						(analysis->DuiziCount[static_cast<int>(parsedat[i * fldsize + 4] - _T('0')) * TileSuitStep + k + step * 4] >= 1) )
+					if ((analysis->DuiziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 0]), k + step * 0)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 1]), k + step * 1)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 2]), k + step * 2)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 3]), k + step * 3)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 4]), k + step * 4)] >= 1) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
 		};
 #endif /* GUOBIAO */
 	const auto lianke =
-		[](const MENTSU_ANALYSIS* const analysis,
+		[liankeSuit](const MENTSU_ANALYSIS* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step, bool suurnkoh) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (9 - step * (suurnkoh ? 3 : 2)); k++)
-					if ((analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
-						((!suurnkoh)||(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1)) )
+					if ((analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 0]), k + step * 0)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 1]), k + step * 1)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 2]), k + step * 2)] >= 1) &&
+						((!suurnkoh)||(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 3]), k + step * 3)] >= 1)) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
@@ -134,17 +149,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("四連刻両面待ち"), get_yaku_han("suurenkoh_double"),
 			_T("清一色"), _T("対々和"), _T("金梯"), _T("四連刻"), _T("小四連刻"), _T("三連刻"), _T("小三連刻"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[liankeSuit](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (auto i = parsedat_monochrome5.begin(); i != parsedat_monochrome5.end(); i++) {
 					for (int k = 1; k <= 5; k++)
-						if ((analysis->DuiziCount[static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0] >= 1) &&
-							(analysis->KeziCount[static_cast<int>((*i)[1] - _T('0')) * TileSuitStep + k + 1] >= 1) &&
-							(analysis->KeziCount[static_cast<int>((*i)[2] - _T('0')) * TileSuitStep + k + 2] >= 1) &&
-							(analysis->KeziCount[static_cast<int>((*i)[3] - _T('0')) * TileSuitStep + k + 3] >= 1) &&
-							(analysis->DuiziCount[static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4] >= 1) &&
-							((analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0)) ||
-							(analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4)))
+						if ((analysis->DuiziCount[composeNumberTile(liankeSuit((*i)[0]), k + 0)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[1]), k + 1)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[2]), k + 2)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[3]), k + 3)] >= 1) &&
+							(analysis->DuiziCount[composeNumberTile(liankeSuit((*i)[4]), k + 4)] >= 1) &&
+							((analysis->TsumoHai->tile == composeNumberTile(liankeSuit((*i)[0]), k + 0)) ||
+							(analysis->TsumoHai->tile == composeNumberTile(liankeSuit((*i)[4]), k + 4)))
 							)
 							yakuFlag = true;
 				}
