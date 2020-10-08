@@ -5,6 +5,7 @@
 #endif
 #include <cstdint>
 #include <functional>
+#include <array>
 #include "mjexport.h"
 #include "gametbl.h"
 #include "../common/machihai.h"
