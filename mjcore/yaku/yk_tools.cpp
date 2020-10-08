@@ -9,12 +9,12 @@ bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf 
 	int* const ProcessedMelds, TileCode tile)
 { /* 順子の処理 */
 	if ((countForMentsu[tile] >= 1)&&
-		(countForMentsu[static_cast<int>(tile) + 1] >= 1)&&
-		(countForMentsu[static_cast<int>(tile) + 2] >= 1)) {
+		(countForMentsu[offsetTileNumber(tile, 1)] >= 1)&&
+		(countForMentsu[offsetTileNumber(tile, 2)] >= 1)) {
 			MianziDat[*ProcessedMelds].mstat = MeldStat::sequenceConcealed;
 			MianziDat[(*ProcessedMelds)++].tile = tile;
-			--countForMentsu[tile]; --countForMentsu[static_cast<int>(tile) + 1];
-			--countForMentsu[static_cast<int>(tile) + 2];
+			--countForMentsu[tile]; --countForMentsu[offsetTileNumber(tile, 1)];
+			--countForMentsu[offsetTileNumber(tile, 2)];
 			return true;
 	}
 	return false;

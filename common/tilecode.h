@@ -198,4 +198,11 @@ inline constexpr unsigned int getTileNumber(TileCode tile) {
 	}
 }
 
+inline constexpr TileCode offsetTileNumber(TileCode tile, int offset) {
+	const int newNum = static_cast<int>(getTileNumber(tile)) + offset;
+	if (getTileNumber(tile) > 0)
+		return composeNumberTile(getTileSuit(tile), newNum > 0 ? static_cast<unsigned int>(newNum) : 0u);
+	else return TileCode::noTile;
+}
+
 } /* namespace */

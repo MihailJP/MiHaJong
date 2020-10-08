@@ -139,8 +139,8 @@ void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID p
 		case MeldStat::sequenceExposedUpper:
 			// 順子の時
 			tileCount[gameStat->Player[playerID].Meld[i].tile]++;
-			tileCount[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 1]++;
-			tileCount[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 2]++;
+			tileCount[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 1)]++;
+			tileCount[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 2)]++;
 			break;
 		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
 		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:

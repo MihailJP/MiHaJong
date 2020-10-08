@@ -282,7 +282,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 			for (int i = NumOfTilesInHand - 1; i < NumOfTilesInHand * 2 - 1; i++) {
 				for (unsigned j = 0; j < 3; j++) {
 					if ((!nakiCount[j]) && (gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].tile ==
-						static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) + j + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi)))) {
+						offsetTileNumber(gameStat->CurrentDiscard.tile, static_cast<int>(j) + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi)))) {
 							gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer + 1].red[j] = gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand].red;
 							gameStat->Player[kangPlayer].Hand[i % NumOfTilesInHand] = Tile();
 							nakiCount[j] = true;
@@ -302,7 +302,7 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		else if (gameStat->Player[kangPlayer].DeclarationFlag.Chi == ChiiType::upper)
 			gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].mstat = MeldStat::sequenceExposedUpper;
 		gameStat->Player[kangPlayer].Meld[gameStat->Player[kangPlayer].MeldPointer].tile =
-			static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) + 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi));
+			offsetTileNumber(gameStat->CurrentDiscard.tile, 1 - static_cast<int>(gameStat->Player[kangPlayer].DeclarationFlag.Chi));
 		/* 自動理牌 */
 		lipai(gameStat, kangPlayer);
 		/* チーを宣言 */
@@ -314,9 +314,9 @@ void MakeMeld(GameTable* const gameStat, const DiscardTileNum& DiscardTileIndex,
 		gameStat->PreviousMeld.Discard = gameStat->CurrentDiscard.tile;
 		if (RuleData::chkRule("kuikae", "agari_houki") || RuleData::chkRule("kuikae", "chombo")) {
 			switch (gameStat->Player[kangPlayer].DeclarationFlag.Chi) {
-				case ChiiType::lower:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) + 3); break;
+				case ChiiType::lower:  gameStat->PreviousMeld.Stepped = offsetTileNumber(gameStat->CurrentDiscard.tile, 3); break;
 				case ChiiType::middle: gameStat->PreviousMeld.Stepped = TileCode::noTile; break;
-				case ChiiType::upper:  gameStat->PreviousMeld.Stepped = static_cast<TileCode>(static_cast<int>(gameStat->CurrentDiscard.tile) - 3); break;
+				case ChiiType::upper:  gameStat->PreviousMeld.Stepped = offsetTileNumber(gameStat->CurrentDiscard.tile, -3); break;
 			}
 		} else {
 			gameStat->PreviousMeld.Stepped = TileCode::noTile;

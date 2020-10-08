@@ -287,9 +287,9 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			if (gameStat->Player[playerID].Meld[i].red[1] == doraCol)
-				count[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 1]++;
+				count[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 1)]++;
 			if (gameStat->Player[playerID].Meld[i].red[2] == doraCol)
-				count[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 2]++;
+				count[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 2)]++;
 			break;
 		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
 		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
@@ -334,11 +334,11 @@ MJCORE TileStatus gettilestatus(
 	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // 暗刻を形成している場合
 	
 	if (Tile(*theTile).isNumber()) { // 順子を形成している場合
-		if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) + 2] >= 1))
+		if ((tlCount[*theTile] >= 1)&&(tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(tlCount[offsetTileNumber(*theTile, 2)] >= 1))
 			tlStat.formsSequence = true;
-		else if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
+		else if ((tlCount[*theTile] >= 1)&&(tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(tlCount[offsetTileNumber(*theTile, -1)] >= 1))
 			tlStat.formsSequence = true;
-		else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) - 2] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
+		else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[*theTile] >= 1)&&(tlCount[offsetTileNumber(*theTile, -2)] >= 1)&&(tlCount[offsetTileNumber(*theTile, -1)] >= 1))
 			tlStat.formsSequence = true;
 	}
 
@@ -346,31 +346,31 @@ MJCORE TileStatus gettilestatus(
 
 	if (Tile(*theTile).isNumber()) { // 辺張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
-			if ((tlCount[static_cast<int>(*theTile) + 1] >= 1)&&(getTileNumber(*theTile) == 1))
+			if ((tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(getTileNumber(*theTile) == 1))
 				tlStat.seqSingleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) + 1] >= 1)&&(getTileNumber(*theTile) == 8))
+			else if ((tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(getTileNumber(*theTile) == 8))
 				tlStat.seqSingleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) - 1] >= 1)&&(getTileNumber(*theTile) == 2))
+			else if ((tlCount[offsetTileNumber(*theTile, -1)] >= 1)&&(getTileNumber(*theTile) == 2))
 				tlStat.seqSingleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) - 1] >= 1)&&(getTileNumber(*theTile) == 9))
+			else if ((tlCount[offsetTileNumber(*theTile, -1)] >= 1)&&(getTileNumber(*theTile) == 9))
 				tlStat.seqSingleSideWait = true;
 		}
 	}
 	
 	if (Tile(*theTile).isNumber()) { // 両面塔子を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
-			if ((tlCount[static_cast<int>(*theTile) + 1] >= 1)&&(getTileNumber(*theTile) != 1)&&
+			if ((tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(getTileNumber(*theTile) != 1)&&
 				(getTileNumber(*theTile) != 8)) tlStat.seqDoubleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) - 1] >= 1)&&(getTileNumber(*theTile) != 2)&&
+			else if ((tlCount[offsetTileNumber(*theTile, -1)] >= 1)&&(getTileNumber(*theTile) != 2)&&
 				(getTileNumber(*theTile) != 9)) tlStat.seqDoubleSideWait = true;
 		}
 	}
 	
 	if (Tile(*theTile).isNumber()) { // 嵌張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
-			if ((tlCount[static_cast<int>(*theTile) + 2] >= 1)&&(getTileNumber(*theTile) != 9))
+			if ((tlCount[offsetTileNumber(*theTile, 2)] >= 1)&&(getTileNumber(*theTile) != 9))
 				tlStat.seqMidWait = true;
-			else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[static_cast<int>(*theTile) - 2] >= 1)&&(getTileNumber(*theTile) != 1))
+			else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[offsetTileNumber(*theTile, -2)] >= 1)&&(getTileNumber(*theTile) != 1))
 				tlStat.seqMidWait = true;
 		}
 	}

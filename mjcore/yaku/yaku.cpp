@@ -171,12 +171,12 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 		switch (analysis->MianziDat[i].mstat) {
 		case MeldStat::sequenceConcealed: case MeldStat::sequenceExposedLower:
 		case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: /* 順子 */
-			if (analysis->MianziDat[i].tile == static_cast<TileCode>(static_cast<int>(*tsumoTile) - 1)) analysis->Machi = MachiType::kanchan;
+			if (analysis->MianziDat[i].tile == offsetTileNumber(*tsumoTile, -1)) analysis->Machi = MachiType::kanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
 				if (getTileNumber(analysis->MianziDat[i].tile) == 7) analysis->Machi = MachiType::penchan; // 辺張待ち
 				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
-			if (analysis->MianziDat[i].tile == static_cast<TileCode>(static_cast<int>(*tsumoTile) - 2)) {
+			if (analysis->MianziDat[i].tile == offsetTileNumber(*tsumoTile, -2)) {
 				if (getTileNumber(analysis->MianziDat[i].tile) == 1) analysis->Machi = MachiType::penchan; // 辺張待ち
 				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
@@ -278,11 +278,11 @@ void yaku::yakuCalculator::countDora
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
 		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: // 順子
-			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[static_cast<int>(k->tile) + 1] +
-				gameStat->DoraFlag.Omote[static_cast<int>(k->tile) + 2];
+			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[offsetTileNumber(k->tile, 1)] +
+				gameStat->DoraFlag.Omote[offsetTileNumber(k->tile, 2)];
 			if (uradoraEnabled)
-				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[static_cast<int>(k->tile) + 1] +
-				gameStat->DoraFlag.Ura[static_cast<int>(k->tile) + 2];
+				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[offsetTileNumber(k->tile, 1)] +
+				gameStat->DoraFlag.Ura[offsetTileNumber(k->tile, 2)];
 			break;
 		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight: // 刻子
 			omote += gameStat->DoraFlag.Omote[k->tile] * 3;

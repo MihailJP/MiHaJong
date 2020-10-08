@@ -538,28 +538,28 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (auto i : NumberTiles) {
 					// 123 123 234 234: 牌式24420
-					if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 2) &&
+					if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 2) &&
 						((analysis->MianziDat[0].tile == i) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(i) + 3))))
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3))))
 						return true;
 					// 123 123 234 345: 牌式23421
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 1) &&
-						(analysis->ShunziCount[static_cast<int>(i) + 2] >= 1) &&
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1) &&
 						((analysis->MianziDat[0].tile == i) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(i) + 3))))
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3))))
 						return true;
 					// 123 123 345 345: 牌式22422
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[static_cast<int>(i) + 2] >= 2) &&
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 2) &&
 						((analysis->MianziDat[0].tile == i) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(i) + 1)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(i) + 3)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(i) + 4))))
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 1)) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3)) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 4))))
 						return true;
 					// 123 234 345 345: 牌式12432
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 1) &&
-						(analysis->ShunziCount[static_cast<int>(i) + 2] >= 2) &&
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i,  + 2)] >= 2) &&
 						((analysis->MianziDat[0].tile == i) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(i) + 3))))
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3))))
 						return true;
 				}
 				return false;
@@ -573,13 +573,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (auto i : NumberTiles) {
 					// 123 123 123 234: 牌式34410
-					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 1))
+					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1))
 						return true;
 					// 123 123 234 234: 牌式24420
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 2))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 2))
 						return true;
 					// 123 234 234 234: 牌式14430
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 3))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 3))
 						return true;
 				}
 				return false;
@@ -592,25 +592,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				for (auto i : NumberTiles) {
 					// 123 123 123 345: 牌式33411
-					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[static_cast<int>(i) + 2] >= 1))
+					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1))
 						return true;
 					// 123 123 234 345: 牌式23421
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 1) &&
-						(analysis->ShunziCount[static_cast<int>(i) + 2] >= 1))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1))
 						return true;
 					// 123 123 345 345: 牌式22422
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[static_cast<int>(i) + 2] >= 2))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 2))
 						return true;
 					// 123 234 234 345: 牌式13431
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 2) &&
-						(analysis->ShunziCount[static_cast<int>(i) + 2] >= 1))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 2) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1))
 						return true;
 					// 123 234 345 345: 牌式12432
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[static_cast<int>(i) + 1] >= 1) &&
-						(analysis->ShunziCount[static_cast<int>(i) + 2] >= 2))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 2))
 						return true;
 					// 123 345 345 345: 牌式11433
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[static_cast<int>(i) + 2] >= 3))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 3))
 						return true;
 				}
 				return false;
@@ -627,16 +627,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						if (analysis->ShunziCount[i] >= 2)
 							return true;
 						else if (static_cast<int>(i) < 1) continue;
-						else if ((analysis->ShunziCount[static_cast<int>(i) - 1] >= 1) && (analysis->ShunziCount[i] >= 1))
+						else if ((analysis->ShunziCount[offsetTileNumber(i, -1)] >= 1) && (analysis->ShunziCount[i] >= 1))
 							return true;
-						else if (analysis->ShunziCount[static_cast<int>(i) - 1] >= 2)
+						else if (analysis->ShunziCount[offsetTileNumber(i, -1)] >= 2)
 							return true;
 						else if (static_cast<int>(i) < 2) continue;
-						else if ((analysis->ShunziCount[static_cast<int>(i) - 2] >= 1) && (analysis->ShunziCount[i] >= 1))
+						else if ((analysis->ShunziCount[offsetTileNumber(i, -2)] >= 1) && (analysis->ShunziCount[i] >= 1))
 							return true;
-						else if ((analysis->ShunziCount[static_cast<int>(i) - 2] >= 1) && (analysis->ShunziCount[static_cast<int>(i) - 1] >= 1))
+						else if ((analysis->ShunziCount[offsetTileNumber(i, -2)] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, -1)] >= 1))
 							return true;
-						else if (analysis->ShunziCount[static_cast<int>(i) - 2] >= 2)
+						else if (analysis->ShunziCount[offsetTileNumber(i, -2)] >= 2)
 							return true;
 					}
 				}
@@ -652,8 +652,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					for (auto i : NumberTiles)
 						if ((analysis->ShunziCount[i] >= 1) &&
 							((analysis->KeziCount[i] >= 1) ||
-							(analysis->KeziCount[static_cast<int>(i) + 1] >= 1) ||
-							(analysis->KeziCount[static_cast<int>(i) + 2] >= 1))) yakuFlag = true;
+							(analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) ||
+							(analysis->KeziCount[offsetTileNumber(i, 2)] >= 1))) yakuFlag = true;
 					return suukuisan(analysis) && yakuFlag;
 				}
 			));
@@ -678,8 +678,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				for (auto i : NumberTiles)
 					if ((analysis->ShunziCount[i] >= 1) &&
 						(analysis->KeziCount[i] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(i) + 1] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(i) + 2] >= 1)) yakuFlag = true;
+						(analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->KeziCount[offsetTileNumber(i, 2)] >= 1)) yakuFlag = true;
 				return yakuFlag;
 			}
 		));
@@ -692,9 +692,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				bool yakuFlag = false;
 				for (auto i : NumberTiles) {
 					if (analysis->ShunziCount[i] >= 1) {
-						if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[static_cast<int>(i) + 1] >= 1)) yakuFlag = true;
-						else if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[static_cast<int>(i) + 2] >= 1)) yakuFlag = true;
-						else if ((analysis->KeziCount[static_cast<int>(i) + 1] >= 1) && (analysis->KeziCount[static_cast<int>(i) + 2] >= 1)) yakuFlag = true;
+						if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 1)] >= 1)) yakuFlag = true;
+						else if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1)) yakuFlag = true;
+						else if ((analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1)) yakuFlag = true;
 					}
 				}
 				return yakuFlag;
@@ -707,8 +707,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				for (auto i : NumberTiles) {
 					if (analysis->ShunziCount[i] >= 1) {
 						if (analysis->KeziCount[i] >= 1) ++count;
-						else if (analysis->KeziCount[static_cast<int>(i) + 1] >= 1) ++count;
-						else if (analysis->KeziCount[static_cast<int>(i) + 2] >= 1) ++count;
+						else if (analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) ++count;
+						else if (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1) ++count;
 					}
 				}
 				return count;
@@ -764,8 +764,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle:
 					case MeldStat::sequenceExposedUpper:
 						++tiles[analysis->MianziDat[i].tile];
-						++tiles[static_cast<int>(analysis->MianziDat[i].tile) + 1];
-						++tiles[static_cast<int>(analysis->MianziDat[i].tile) + 2];
+						++tiles[offsetTileNumber(analysis->MianziDat[i].tile, 1)];
+						++tiles[offsetTileNumber(analysis->MianziDat[i].tile, 2)];
 						break;
 					case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
 					case MeldStat::tripletExposedRight:

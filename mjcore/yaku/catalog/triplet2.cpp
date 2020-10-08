@@ -164,13 +164,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	const auto haouben =
 		[](const MENTSU_ANALYSIS* const analysis, TileCode tc, int step) -> bool {
 			if ((analysis->KangziCount[tc] >= 1) &&
-				(analysis->KeziCount[static_cast<int>(tc) + step] >= 1) &&
-				(analysis->KangziCount[static_cast<int>(tc) + step] == 0) &&
-				(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(tc) + step * 2)) )
+				(analysis->KeziCount[offsetTileNumber(tc, step)] >= 1) &&
+				(analysis->KangziCount[offsetTileNumber(tc, step)] == 0) &&
+				(analysis->MianziDat[0].tile == offsetTileNumber(tc, step * 2)) )
 				return true;
-			if ((analysis->KangziCount[static_cast<int>(tc) + step * 2] >= 1) &&
-				(analysis->KeziCount[static_cast<int>(tc) + step] >= 1) &&
-				(analysis->KangziCount[static_cast<int>(tc) + step] == 0) &&
+			if ((analysis->KangziCount[offsetTileNumber(tc, step * 2)] >= 1) &&
+				(analysis->KeziCount[offsetTileNumber(tc, step)] >= 1) &&
+				(analysis->KangziCount[offsetTileNumber(tc, step)] == 0) &&
 				(analysis->MianziDat[0].tile == tc) )
 				return true;
 			return false;

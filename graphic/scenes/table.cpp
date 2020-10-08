@@ -679,10 +679,10 @@ void GameTableScreen::FinishTileChoice() {
 					}
 					return false;
 				};
-				if (selected(static_cast<TileCode>(static_cast<int>(GameStatus::gameStat()->CurrentDiscard.tile) - 2))) {
+				if (selected(offsetTileNumber(GameStatus::gameStat()->CurrentDiscard.tile, -2))) {
 					tehaiReconst->setFirstChosenTile();
 					ui::UIEvent->set(naki::nakiChiUpper);
-				} else if (selected(static_cast<TileCode>(static_cast<int>(GameStatus::gameStat()->CurrentDiscard.tile) + 2))) {
+				} else if (selected(offsetTileNumber(GameStatus::gameStat()->CurrentDiscard.tile, 2))) {
 					tehaiReconst->setFirstChosenTile();
 					ui::UIEvent->set(naki::nakiChiLower);
 				} else {

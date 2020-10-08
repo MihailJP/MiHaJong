@@ -283,15 +283,15 @@ void GameTableScreen::ButtonReconst::btnSetForNaki() { // 鳴きの時用の
 			(gameStat->KangFlag.chankanFlag == ChankanStat::none) && // 槍槓の判定中ではなくて
 			(gameStat->CurrentPlayer.Active == ((gameStat->CurrentPlayer.Passive + 3) % 4))) { // 捨てたのが上家
 				if ((gameStat->CurrentDiscard.tile >= static_cast<TileCode>(1)) &&
-					(TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) + 1] >= 1) && (TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) + 2] >= 1)) { // 下吃
+					(TileCount[offsetTileNumber(gameStat->CurrentDiscard.tile, +1)] >= 1) && (TileCount[offsetTileNumber(gameStat->CurrentDiscard.tile, +2)] >= 1)) { // 下吃
 						buttonEnabled[ButtonID::chii] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= static_cast<TileCode>(2)) &&
-					(TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) - 1] >= 1) && (TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) + 1] >= 1)) { // 嵌張吃
+					(TileCount[offsetTileNumber(gameStat->CurrentDiscard.tile, -1)] >= 1) && (TileCount[offsetTileNumber(gameStat->CurrentDiscard.tile, +1)] >= 1)) { // 嵌張吃
 						buttonEnabled[ButtonID::chii] = true;
 				}
 				if ((gameStat->CurrentDiscard.tile >= static_cast<TileCode>(3)) &&
-					(TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) - 2] >= 1) && (TileCount[static_cast<int>(gameStat->CurrentDiscard.tile) - 1] >= 1)) { // 上吃
+					(TileCount[offsetTileNumber(gameStat->CurrentDiscard.tile, -2)] >= 1) && (TileCount[offsetTileNumber(gameStat->CurrentDiscard.tile, -1)] >= 1)) { // 上吃
 						buttonEnabled[ButtonID::chii] = true;
 				}
 		}
@@ -429,10 +429,10 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 				const auto chiiable = [&tilesInHand](TileCode p, TileCode q) {
 					if (getTileSuit(p) != getTileSuit(q))
 						return false;
-					else if ((static_cast<int>(p) == static_cast<int>(q) + 2) && (tilesInHand[static_cast<int>(q) + 1] > 0)) return true;
-					else if  (static_cast<int>(p) == static_cast<int>(q) + 1)                              return true;
-					else if  (static_cast<int>(p) == static_cast<int>(q) - 1)                              return true;
-					else if ((static_cast<int>(p) == static_cast<int>(q) - 2) && (tilesInHand[static_cast<int>(p) + 1] > 0)) return true;
+					else if ((p == offsetTileNumber(q, +2)) && (tilesInHand[offsetTileNumber(q, 1)] > 0)) return true;
+					else if  (p == offsetTileNumber(q, +1))                                               return true;
+					else if  (p == offsetTileNumber(q, -1))                                               return true;
+					else if ((p == offsetTileNumber(q, -2)) && (tilesInHand[offsetTileNumber(p, 1)] > 0)) return true;
 					else                                               return false;
 				};
 				if (caller->countTiles(chiiable) > 2) {
@@ -444,9 +444,9 @@ void GameTableScreen::ButtonReconst::ButtonPressed() {
 					caller->tehaiReconst->Render();
 				} else {
 					const auto discard = GameStatus::gameStat()->CurrentDiscard.tile;
-					if ((getTileNumber(discard) > 2) && (tilesInHand[static_cast<int>(discard) - 2] > 0)) {
+					if ((getTileNumber(discard) > 2) && (tilesInHand[offsetTileNumber(discard, -2)] > 0)) {
 						ui::UIEvent->set(naki::nakiChiUpper);
-					} else if ((getTileNumber(discard) < 8) && (tilesInHand[static_cast<int>(discard) + 2] > 0)) {
+					} else if ((getTileNumber(discard) < 8) && (tilesInHand[offsetTileNumber(discard, 2)] > 0)) {
 						ui::UIEvent->set(naki::nakiChiLower);
 					} else {
 						ui::UIEvent->set(naki::nakiChiMiddle);
