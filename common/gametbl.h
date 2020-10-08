@@ -59,8 +59,10 @@ constexpr unsigned int SizeOfDiscardBuffer = 33;
 
 typedef int8_t PlayerID; // プレイヤー番号
 
-template <class T> struct InfoByPlayer { // プレイヤーごとに指定した型による情報(テンプレート)
+template <class T> class InfoByPlayer { // プレイヤーごとに指定した型による情報(テンプレート)
+private:
 	T val[Players];
+public:
 	const T& operator[](const PlayerID playerID) const {
 		if ((playerID >= 0)&&(playerID < Players)) {
 			return val[playerID];
@@ -293,7 +295,7 @@ enum class SeatRelative : uint8_t { self, right, opposite, left };
 
 // -------------------------------------------------------------------------
 
-template struct InfoByPlayer<PlayerTable>;
+template class InfoByPlayer<PlayerTable>;
 typedef InfoByPlayer<PlayerTable> StatusByPlayer;
 typedef PlayerID Player_ID;
 typedef Dice Dice_Struct;
