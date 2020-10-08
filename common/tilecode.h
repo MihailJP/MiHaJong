@@ -104,7 +104,11 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
 	T& operator[](const TileCode tile) {
-		if ((tile >= NoTile)&&(tile < TileNonflowerMax))
+		static T dummyVal;
+		dummyVal = T();
+		if (tile == NoTile)
+			return dummyVal;
+		else if ((tile >= NoTile)&&(tile < TileNonflowerMax))
 			return val[tile];
 		else if (((tile >= Spring)&&(tile <= Winter)) ||
 			((tile >= Plum)&&(tile <= Bamboo))) return val[Flower];
