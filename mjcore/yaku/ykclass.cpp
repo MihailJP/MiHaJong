@@ -3,37 +3,37 @@
 using std::max;
 
 yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC() {
-	hFunc = [](const MENTSU_ANALYSIS* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN();};
+	hFunc = [](const MentsuAnalysis* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN();};
 }
-yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC(std::function<yaku::yakuCalculator::Yaku::YAKU_HAN (const MENTSU_ANALYSIS* const)> f) {
+yaku::yakuCalculator::Yaku::HANFUNC::HANFUNC(std::function<yaku::yakuCalculator::Yaku::YAKU_HAN (const MentsuAnalysis* const)> f) {
 	hFunc = f;
 }
 
 yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::HANFUNC::operator()
-	(const MENTSU_ANALYSIS* const analysis) const
+	(const MentsuAnalysis* const analysis) const
 {
 	return this->hFunc(analysis);
 }
 
 yaku::yakuCalculator::Yaku::FixedHan::FixedHan(YAKU_HAN bHan)
 {
-	hFunc = [=](const MENTSU_ANALYSIS* const) {return bHan;};
+	hFunc = [=](const MentsuAnalysis* const) {return bHan;};
 }
 yaku::yakuCalculator::Yaku::FixedHan::FixedHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan)
 {
-	hFunc = [=](const MENTSU_ANALYSIS* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan);};
+	hFunc = [=](const MentsuAnalysis* const) {return yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan);};
 }
 
 #ifndef GUOBIAO
 yaku::yakuCalculator::Yaku::MenzenHan::MenzenHan(YAKU_HAN bHan)
 {
-	hFunc = [=](const MENTSU_ANALYSIS* const analysisDat) {
+	hFunc = [=](const MentsuAnalysis* const analysisDat) {
 		return *(analysisDat->MenzenFlag) ? bHan : yaku::yakuCalculator::Yaku::YAKU_HAN();
 	};
 }
 yaku::yakuCalculator::Yaku::MenzenHan::MenzenHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan)
 {
-	hFunc = [=](const MENTSU_ANALYSIS* const analysisDat) {
+	hFunc = [=](const MentsuAnalysis* const analysisDat) {
 		return *(analysisDat->MenzenFlag) ?
 			yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan) : yaku::yakuCalculator::Yaku::YAKU_HAN();
 	};
@@ -41,7 +41,7 @@ yaku::yakuCalculator::Yaku::MenzenHan::MenzenHan(YAKU_HAN::HAN cHan, YAKU_HAN::H
 
 yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN bHan)
 {
-	hFunc = [=](const MENTSU_ANALYSIS* const analysisDat) {
+	hFunc = [=](const MentsuAnalysis* const analysisDat) {
 		return *(analysisDat->MenzenFlag) ? bHan :
 			yaku::yakuCalculator::Yaku::YAKU_HAN(
 			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(bHan.coreHan.getHan() - 1, 0), bHan.coreHan.getUnit()),
@@ -51,7 +51,7 @@ yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN bHan)
 }
 yaku::yakuCalculator::Yaku::KuisagariHan::KuisagariHan(YAKU_HAN::HAN cHan, YAKU_HAN::HAN dHan)
 {
-	hFunc = [=](const MENTSU_ANALYSIS* const analysisDat) {
+	hFunc = [=](const MentsuAnalysis* const analysisDat) {
 		return *(analysisDat->MenzenFlag) ? yaku::yakuCalculator::Yaku::YAKU_HAN(cHan, dHan) :
 			yaku::yakuCalculator::Yaku::YAKU_HAN(
 			yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(max(cHan.getHan() - 1, 0), cHan.getUnit()),
@@ -82,13 +82,13 @@ yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN() {coreHan = HAN(); bonusHan = HA
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN(HAN han) {coreHan = han; bonusHan = HAN();}
 yaku::yakuCalculator::Yaku::YAKU_HAN::YAKU_HAN(HAN han, HAN bonus) {coreHan = han; bonusHan = bonus;}
 
-bool yaku::yakuCalculator::Yaku::checkYaku(const MENTSU_ANALYSIS* const mentsu) {
+bool yaku::yakuCalculator::Yaku::checkYaku(const MentsuAnalysis* const mentsu) {
 	// 役を判定する
 	return this->yakuProc(mentsu);
 }
 CodeConv::tstring yaku::yakuCalculator::Yaku::getName() {return this->yakuName;} // 役の名前を取得する
 yaku::yakuCalculator::Yaku::HANFUNC yaku::yakuCalculator::Yaku::getHan() {return han;}
-yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::getHan(const MENTSU_ANALYSIS* const mentsu)
+yaku::yakuCalculator::Yaku::YAKU_HAN yaku::yakuCalculator::Yaku::getHan(const MentsuAnalysis* const mentsu)
 {
 	return han(mentsu);
 }

@@ -12,7 +12,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* リーチ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("立直"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->PlayerStat->RichiFlag.RichiFlag)); // 立直している
 		}
@@ -21,7 +21,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("ダブル立直"), yaku::yakuCalculator::Yaku::yval_2han_menzen,
 		_T("立直"),
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 				(analysis->PlayerStat->RichiFlag.DoubleFlag)); // ダブル立直フラグが立っている
@@ -32,7 +32,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("オープン立直"), yaku::yakuCalculator::Yaku::yval_2han_menzen,
 			_T("立直"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->PlayerStat->RichiFlag.OpenFlag)); // オープン立直フラグが立っている
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("ダブル開立直"), yaku::yakuCalculator::Yaku::yval_3han_menzen,
 			_T("立直"), _T("ダブル立直"), _T("オープン立直"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->PlayerStat->RichiFlag.DoubleFlag) && // ダブル立直フラグが立っている
@@ -51,13 +51,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		));
 		/* プンリー放銃 */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("開立直栄和"), yaku::yakuCalculator::Yaku::HANFUNC( [](const MENTSU_ANALYSIS* const analysis) {
+			_T("開立直栄和"), yaku::yakuCalculator::Yaku::HANFUNC( [](const MentsuAnalysis* const analysis) {
 				return (*analysis->MenzenFlag) ?
 					yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(11, yaku::yakuCalculator::Han),
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null) :
 					yaku::yakuCalculator::Yaku::YAKU_HAN();
 			}),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->PlayerStat->RichiFlag.OpenFlag) && // オープン立直フラグが立っている
@@ -74,7 +74,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			yaku::yakuCalculator::Yaku::yval_1han_menzen_dependent : /* 一発は縛りを満たさない(リャンシバでリー即のみの和了を認めない)ルール */
 			yaku::yakuCalculator::Yaku::yval_1han_menzen, // リー即のみでも和了って良いルール
 			/* 必ず立直と複合する */
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->PlayerStat->RichiFlag.IppatsuFlag)); // 一発フラグが立っている
@@ -87,7 +87,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				yaku::yakuCalculator::Yaku::yval_2han_menzen_dependent : /* 一発は縛りを満たさない(リャンシバでリー即のみの和了を認めない)ルール */
 				yaku::yakuCalculator::Yaku::yval_2han_menzen, // リー即のみでも和了って良いルール
 				_T("一発"), /* 必ず立直と複合する */
-				[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				[](const MentsuAnalysis* const analysis) -> bool {
 					return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 						(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 						(analysis->PlayerStat->RichiFlag.IppatsuFlag) && // 一発フラグが立っている
@@ -107,7 +107,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("南単"), get_yaku_han("minamityan"),
 				/* 必ず立直、一発、ツモと複合する */
-				[](const MENTSU_ANALYSIS* const analysis) -> bool {
+				[](const MentsuAnalysis* const analysis) -> bool {
 					return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 						(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 						(analysis->PlayerStat->RichiFlag.IppatsuFlag) && // 一発フラグが立っている
@@ -121,7 +121,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("鳥リーチ"), get_yaku_han("bird_riichi"),
 			/* 立直は複合するらしい */
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				if ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag)) // 立直している
 				{
@@ -140,7 +140,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("リリーホワイト"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
 			/* ダブル立直に追加する役 */
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->PlayerStat->RichiFlag.DoubleFlag) && // ダブル立直フラグが立っている
@@ -151,7 +151,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("pei4jun_riichi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("北四巡"), get_yaku_han("pei4jun_riichi"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->RichiFlag.RichiFlag) && // 立直している
 					(analysis->TsumoHai->tile == NorthWind) && // 和了牌が北
@@ -165,7 +165,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("天和"), get_yaku_han("tenhoh"), // 普通に役満になるか
 		_T("門前清自摸和"),
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->playerwind(analysis->player) == sEast) && // 親である(東家として決め打ち……)
 				(analysis->PlayerStat->FirstDrawFlag)); // 天和・地和フラグが立っている
@@ -175,7 +175,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("地和"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
 		_T("門前清自摸和"),
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->playerwind(analysis->player) != sEast) && // 親である(東家として決め打ち……)
 				(analysis->PlayerStat->FirstDrawFlag) && // 天和・地和フラグが立っている
@@ -186,7 +186,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("renhoh")) {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("人和"), get_yaku_han("renhoh"), _T("門前清自摸和"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->playerwind(analysis->player) != sEast) && // 親である(東家として決め打ち……)
 					(analysis->PlayerStat->FirstDrawFlag) && // 天和・地和フラグが立っている
@@ -200,7 +200,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("不求人"), yaku::yakuCalculator::Yaku::yval_4,
 		_T("自摸"), _T("門前清"),
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 和了になっている
 				(*analysis->MenzenFlag) && // 門前である
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
@@ -209,7 +209,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 門前清 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("門前清"), yaku::yakuCalculator::Yaku::yval_2,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 和了になっている
 				(*analysis->MenzenFlag)); // 門前である
 		}
@@ -217,7 +217,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 自摸 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("自摸"), yaku::yakuCalculator::Yaku::yval_1,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 和了になっている
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
 		}
@@ -226,7 +226,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* ツモ */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("門前清自摸和"), yaku::yakuCalculator::Yaku::yval_1han_menzen,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(*analysis->MenzenFlag) && // 門前である
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
@@ -241,7 +241,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("sanseki_tempuku"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("三隻転覆"), get_yaku_han("sanseki_tempuku"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(!analysis->PlayerStat->RichiFlag.RichiFlag) && // 自分はリーチしていない
@@ -255,7 +255,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("kishi_kaisei"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("起死回生"), get_yaku_han("kishi_kaisei"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
 					(!analysis->PlayerStat->RichiFlag.RichiFlag) && // 自分はリーチしていない
@@ -272,7 +272,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("phoenix"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("不死鳥"), get_yaku_han("phoenix"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->YakitoriFlag) && // 焼き鳥である
 					(isFinalRound(analysis->GameStat))); // オーラスである
@@ -290,7 +290,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 #else /* GUOBIAO */
 		_T("嶺上開花"), yaku::yakuCalculator::Yaku::yval_1han,
 #endif /* GUOBIAO */
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 				(*analysis->TsumoAgariFlag)); // ツモアガリ
@@ -304,7 +304,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("明槓開花"), yaku::yakuCalculator::Yaku::yval_2han,
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -316,7 +316,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("連槓開花"), get_yaku_han("renkan_kaihoh"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -328,7 +328,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("五筒開花"), get_yaku_han("uupin_kaihoh"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -340,7 +340,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("中上開花"), get_yaku_han("chunshan_kaihoh"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -352,7 +352,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("頭槓和"), get_yaku_han("toukanhoh"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -364,7 +364,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("サヨナラホームラン"), get_yaku_han("sayonara_homerun"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -376,7 +376,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("深上開花"), get_yaku_han("shenshang_kaihoh"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -388,7 +388,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("東花園"), get_yaku_han("higashi_hanazono_triplets"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -402,7 +402,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("花見"), get_yaku_han("hanami"),
 			_T("嶺上開花"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後である
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -424,7 +424,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 #else /* GUOBIAO */
 		_T("海底摸月"), yaku::yakuCalculator::Yaku::yval_1han,
 #endif /* GUOBIAO */
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 #ifndef GUOBIAO
 				(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
@@ -439,7 +439,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("一筒摸月"), get_yaku_han("iipin_moyue"),
 			_T("海底摸月"), 
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -451,7 +451,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("haitei_raotsen"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("海底撈針"), get_yaku_han("haitei_raotsen"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -463,7 +463,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("haitei_raohwa"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("海底撈花"), get_yaku_han("haitei_raohwa"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -476,7 +476,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("発底摸月"), get_yaku_han("hatsutei_moyue"),
 			_T("海底摸月"), 
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -489,7 +489,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("深海底"), get_yaku_han("shen_haitei"),
 			_T("海底摸月"), 
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(*analysis->TsumoAgariFlag) && // ツモアガリ
@@ -505,7 +505,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 #else /* GUOBIAO */
 		_T("河底撈魚"), yaku::yakuCalculator::Yaku::yval_1han,
 #endif /* GUOBIAO */
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 				(!*analysis->TsumoAgariFlag) && // ロンアガリ
@@ -518,7 +518,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("九筒撈魚"), get_yaku_han("chuupin_raoyui"),
 			_T("河底撈魚"), 
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
@@ -531,7 +531,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("白底撈魚"), get_yaku_han("hakutei_raoyui"),
 			_T("河底撈魚"), 
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
@@ -544,7 +544,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("深淵和"), get_yaku_han("shenyuanhu"),
 			_T("河底撈魚"), 
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
@@ -556,7 +556,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("nitei_raochun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("泥底撈蟲"), get_yaku_han("nitei_raochun"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
@@ -568,7 +568,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("ラストオーダー麻婆豆腐"), get_yaku_han("maaboodoufu"),
 			_T("白底撈魚"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
@@ -580,7 +580,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("石の上にも三年"), get_yaku_han("three_years_on_stone"),
 			_T("ダブル立直"), _T("ダブル開立直"), _T("海底摸月"), _T("河底撈魚"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->KangFlag.kangFlag) && // 槓をした直後ではない
 					(analysis->GameStat->tilesLeft() == 0) && // ハイテイである
@@ -596,7 +596,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("kamburi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("槓振り"), get_yaku_han("kamburi"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chainFlag >= 1) && // 槓をした直後である
 					(!*analysis->TsumoAgariFlag)); // ロンアガリ
@@ -612,7 +612,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		_T("搶槓"), yaku::yakuCalculator::Yaku::yval_1han,
 		_T("欠牌和"), _T("槓振り") /* 槓振りは本来下位役ではないが下位役判定のシステムを使って複合しないようにする */,
 #endif /* GUOBIAO */
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 				(analysis->GameStat->KangFlag.chankanFlag)); // 槍槓フラグが立っている
 		}
@@ -623,7 +623,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("二索搶槓"), get_yaku_han("ryanzoh_chankan"),
 			_T("搶槓"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
 					(analysis->TsumoHai->tile == BambooTwo)); // 和了牌が二索
@@ -634,7 +634,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("深搶槓"), get_yaku_han("shen_chankan"),
 			_T("搶槓"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
 					(isFinalRound(analysis->GameStat))); // オーラスである
@@ -645,7 +645,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("金鶏奪食"), get_yaku_han("jinji_duoshi"),
 			_T("欠牌和"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->KangFlag.chankanFlag) && // 槍槓フラグが立っている
 					((analysis->SeenTiles[analysis->TsumoHai->tile] +
@@ -662,7 +662,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("paarenchan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("八連荘"), get_yaku_han("paarenchan"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->AgariChain == 8)); // 和了ったのが連続8回目
 			}
@@ -671,7 +671,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("breaking_paarenchan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("破回八連荘"), get_yaku_han("breaking_paarenchan"), // いいぜ、てめえがこの局で八連荘を和了れるっていうなら
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // まずはその
 					(analysis->GameStat->AgariChain == -1)); // ふざけた和了を頭ハネ(じゃなくてもいいけど)！
 			}
@@ -683,7 +683,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("tsubame_gaeshi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("燕返し"), get_yaku_han("tsubame_gaeshi"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->RichiCounter)); // フラグが立っている
 			}
@@ -693,7 +693,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("飛燕"), get_yaku_han("hien"),
 			_T("燕返し"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->GameStat->DoubleRichiCounter)); // フラグが立っている
 			}
@@ -705,7 +705,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("sumaro"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("四馬路"), get_yaku_han("sumaro"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->TsumoHai->tile == CharacterFour) && // 和了牌が四萬
 					(!*analysis->TsumoAgariFlag) && // ロンアガリ
@@ -716,7 +716,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("meiling"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("美鈴"), get_yaku_han("meiling"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->TsumoHai->tile == BambooTwo) && // 和了牌が二索
 					(!*analysis->TsumoAgariFlag)); // ロンアガリ
@@ -726,7 +726,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("otakaze_ron"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("客来和"), get_yaku_han("otakaze_ron"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag;
 				switch (TileCode tc = analysis->TsumoHai->tile) {
 				case EastWind: case SouthWind: case WestWind: case NorthWind: // 風牌だった
@@ -771,7 +771,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 				TileCode tc = tmpTileCodeList[i];
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 					tmpYakuNameList[i], get_yaku_han(tmpRuleCodeList[i]),
-					[tc](const MENTSU_ANALYSIS* const analysis) -> bool {
+					[tc](const MentsuAnalysis* const analysis) -> bool {
 						bool yakuFlag = false;
 						for (int i = 0; i < analysis->PlayerStat->DiscardPointer; i++) {
 							if (analysis->PlayerStat->Discard[i].tcode.tile == tc) {
@@ -794,7 +794,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("golddragon"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("金龍天和"), get_yaku_han("golddragon"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->TsumoHai->tile >= CircleOne) && // 和了牌が筒子
 					(analysis->TsumoHai->tile <= CircleNine) &&
@@ -805,7 +805,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("whirlwind"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("旋風栄和"), get_yaku_han("whirlwind"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->TsumoHai->tile >= EastWind) && // 和了牌が風牌
 					(analysis->TsumoHai->tile <= NorthWind) &&
@@ -816,7 +816,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("bolt_from_the_blue"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("青天の霹靂"), get_yaku_han("bolt_from_the_blue"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(!analysis->GameStat->Player[0].RichiFlag.RichiFlag) && // 誰もリーチしていない
 					(!analysis->GameStat->Player[1].RichiFlag.RichiFlag) &&
@@ -833,7 +833,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("nekomasshigura"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("猫まっしぐら"), get_yaku_han("nekomasshigura"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
 					(analysis->TsumoHai->tile == BambooThree) && // 和了牌が三索
 					(analysis->Machi == yaku::yakuCalculator::machiKanchan)); // 嵌張待ち
@@ -852,7 +852,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("欠牌和"), get_yaku_han("keppaihoh"),
 #endif /* GUOBIAO */
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag =
 					*analysis->TsumoAgariFlag ? // ツモアガリだったら、
 					(analysis->SeenTiles[analysis->TsumoHai->tile] + // 見えてる牌と
@@ -876,7 +876,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("shokan"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("初槓"), get_yaku_han("shokan"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->shokanFlag)); // フラグが立っている
 			}
@@ -885,7 +885,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("kansanjun"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("槓三巡"), get_yaku_han("kansanjun"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->kansanjunFlag)); // フラグが立っている
 			}
@@ -894,7 +894,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	if (RuleData::chkRuleApplied("renpai_tenhoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("戻牌天和"), get_yaku_han("renpai_tenhoh"),
-			[](const MENTSU_ANALYSIS* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->renpaiTenhohStat > 0)); // フラグが立っている
 			}
@@ -907,7 +907,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 坎張 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("坎張"), yaku::yakuCalculator::Yaku::yval_1,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
 				(analysis->Machi == yaku::yakuCalculator::machiKanchan) && // 嵌張待ちで
 				(analysis->MachiInfo.MachiMen == 1)); // 1面待ち
@@ -916,7 +916,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 辺張 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("辺張"), yaku::yakuCalculator::Yaku::yval_1,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
 				(analysis->Machi == yaku::yakuCalculator::machiPenchan) && // 辺張待ちで
 				(analysis->MachiInfo.MachiMen == 1)); // 1面待ち
@@ -925,7 +925,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 	/* 単調将 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("単調将"), yaku::yakuCalculator::Yaku::yval_1,
-		[](const MENTSU_ANALYSIS* const analysis) -> bool {
+		[](const MentsuAnalysis* const analysis) -> bool {
 			return ((analysis->shanten[shantenRegular] == -1) && // 面子手で和了になっている
 				(analysis->Machi == yaku::yakuCalculator::machiTanki) && // 単騎待ちで
 				(analysis->MachiInfo.MachiMen == 1)); // 1面待ち

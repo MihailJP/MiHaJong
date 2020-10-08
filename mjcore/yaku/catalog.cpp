@@ -96,7 +96,7 @@ yaku::yakuCalculator::Yaku::HANFUNC
 #endif /* GUOBIAO */
 
 /* 一色の判定 */
-bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MENTSU_ANALYSIS* const analysis, bool chin_itsu) {
+bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MentsuAnalysis* const analysis, bool chin_itsu) {
 	if (analysis->shanten[shantenAll] >= 0) return false; // 足切り要件：和了ってない
 	constexpr TileCode Tiles[][9] = {
 		{
