@@ -103,9 +103,9 @@ unsigned int ShantenAnalyzer::chkMianzi(const GameTable* const gameStat, PlayerI
 	}
 
 	// 字牌
-	for (int i = 1; i <= 7; i++) {
-		if (tileCount[composeNumberTile(TileSuit::honors, i)] == 2) {tarzi++; atama = true;}
-		if (tileCount[composeNumberTile(TileSuit::honors, i)] >= 3) {mianzi++;}
+	for (auto i : Honor_Tiles) {
+		if (tileCount[i] == 2) {tarzi++; atama = true;}
+		if (tileCount[i] >= 3) {mianzi++;}
 	}
 
 	// 鳴き面子や暗槓がある場合

@@ -46,8 +46,8 @@ inline unsigned int inittiles(GameTable* const gameStat, UInt8ByTile& tilepos) {
 			settile(composeNumberTile(TileSuit::bamboos, k), p); // 索子
 	}
 	if (!gameStat->chkGameType(GameTypeID::sanmaS)) {
-		for (unsigned int k = 1u; k <= 7u; ++k)
-			settile(composeNumberTile(TileSuit::honors, k), p); // 字牌
+		for (auto k : Honor_Tiles)
+			settile(k, p); // 字牌
 #ifndef GUOBIAO
 		if (RuleData::chkRule("flower_tiles", "seasons") || RuleData::chkRule("flower_tiles", "8tiles")) {
 #endif /* GUOBIAO */
