@@ -106,7 +106,11 @@ public:
 		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
 	T& operator[](const TileCode tile) {
-		if ((tile >= TileCode::noTile)&&(tile < static_cast<TileCode>(TileNonflowerMax)))
+		static T dummyVal;
+		dummyVal = T();
+		if (tile == TileCode::noTile)
+			return dummyVal;
+		else if ((tile >= TileCode::noTile)&&(tile < static_cast<TileCode>(TileNonflowerMax)))
 			return val[static_cast<int>(tile)];
 		else if (((tile >= TileCode::spring)&&(tile <= TileCode::winter)) ||
 			((tile >= TileCode::plum)&&(tile <= TileCode::bamboo))) return val[static_cast<int>(TileCode::flower)];
