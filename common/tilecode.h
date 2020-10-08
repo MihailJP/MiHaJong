@@ -84,8 +84,10 @@ enum TileCode : uint8_t { // 牌のコード
 
 // -------------------------------------------------------------------------
 
-template <class T> struct InfoByTile { // 牌ごとに指定した型による情報(テンプレート)
+template <class T> class InfoByTile { // 牌ごとに指定した型による情報(テンプレート)
+private:
 	T val[TileNonflowerMax];
+public:
 	const T& operator[](const TileCode tile) const {
 		if ((tile >= NoTile)&&(tile < TileNonflowerMax))
 			return val[tile];
@@ -122,17 +124,17 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 	}
 };
 
-template struct InfoByTile<bool>;
+template class InfoByTile<bool>;
 typedef InfoByTile<bool> FlagByTile;
 static_assert(std::is_trivially_copyable<FlagByTile>::value, "FlagByTile is not trivially copyable");
 static_assert(std::is_standard_layout<FlagByTile>::value, "FlagByTile is not standard layout");
 
-template struct InfoByTile<int8_t>;
+template class InfoByTile<int8_t>;
 typedef InfoByTile<int8_t> Int8ByTile;
 static_assert(std::is_trivially_copyable<Int8ByTile>::value, "Int8ByTile is not trivially copyable");
 static_assert(std::is_standard_layout<Int8ByTile>::value, "Int8ByTile is not standard layout");
 
-template struct InfoByTile<uint8_t>;
+template class InfoByTile<uint8_t>;
 typedef InfoByTile<uint8_t> UInt8ByTile;
 static_assert(std::is_trivially_copyable<UInt8ByTile>::value, "UInt8ByTile is not trivially copyable");
 static_assert(std::is_standard_layout<UInt8ByTile>::value, "UInt8ByTile is not standard layout");
