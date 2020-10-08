@@ -13,7 +13,7 @@ struct MachihaiTileInfo {
 static_assert(std::is_trivially_copyable<MachihaiTileInfo>::value, "MachihaiTileInfo is not trivially copyable");
 static_assert(std::is_standard_layout<MachihaiTileInfo>::value, "MachihaiTileInfo is not standard layout");
 
-template struct InfoByTile<MachihaiTileInfo>;
+template class InfoByTile<MachihaiTileInfo>;
 struct MachihaiInfo { // 待ち牌とかの情報を格納(chkFuriten関数用)
 	bool FuritenFlag; // フリテンかどうかのフラグ
 	InfoByTile<MachihaiTileInfo> Machihai; // 待ち牌情報

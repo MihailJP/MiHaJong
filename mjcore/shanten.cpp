@@ -457,7 +457,7 @@ Shanten ShantenAnalyzer::calcShantenZuhelong(const GameTable* const gameStat, Pl
 		TileCode QixingPai[9];
 		setQixingTilePattern(QixingPai, i);
 		int qTileCount = 0;
-		Int8ByTile tmpTileCount; memcpy(tmpTileCount.val, tileCount.val, sizeof(tmpTileCount.val));
+		Int8ByTile tmpTileCount;
 		for (int i = 0; i < 9; i++) {
 			if (tmpTileCount[QixingPai[i]] >= 1) {
 				++qTileCount; --tmpTileCount[QixingPai[i]];
