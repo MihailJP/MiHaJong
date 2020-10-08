@@ -50,13 +50,13 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 	// 順子(順子優先正順モードの時)
 	if (AtamaCode.Order == ParseOrder::Shun_Ke)
 		for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
-				--i;
+			while (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				;
 	// 順子(順子優先逆順モードの時)
 	if (AtamaCode.Order == ParseOrder::Shun_Ke_Rev)
 		for (auto i = NumberTiles.rbegin(); i != NumberTiles.rend(); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
-				--i;
+			while (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				;
 
 	// 暗刻(正順モードの時)
 	if ((AtamaCode.Order == ParseOrder::Ke_Shun)||(AtamaCode.Order == ParseOrder::Shun_Ke))
@@ -70,13 +70,13 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 	// 順子(暗刻優先正順モードの時)
 	if (AtamaCode.Order == ParseOrder::Ke_Shun)
 		for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
-				--i;
+			while (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				;
 	// 順子(暗刻優先逆順モードの時)
 	if (AtamaCode.Order == ParseOrder::Ke_Shun_Rev)
 		for (auto i = NumberTiles.rbegin(); i != NumberTiles.rend(); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
-				--i;
+			while (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				;
 
 	// 鳴いた面子、暗槓
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
