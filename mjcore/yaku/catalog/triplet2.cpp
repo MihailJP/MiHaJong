@@ -164,13 +164,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 	const auto haouben =
 		[](const MENTSU_ANALYSIS* const analysis, TileCode tc, int step) -> bool {
 			if ((analysis->KangziCount[tc] >= 1) &&
-				(analysis->KeziCount[static_cast<int>(tc) + step] >= 1) &&
-				(analysis->KangziCount[static_cast<int>(tc) + step] == 0) &&
-				(analysis->MianziDat[0].tile == static_cast<TileCode>(static_cast<int>(tc) + step * 2)) )
+				(analysis->KeziCount[offsetTileNumber(tc, step)] >= 1) &&
+				(analysis->KangziCount[offsetTileNumber(tc, step)] == 0) &&
+				(analysis->MianziDat[0].tile == offsetTileNumber(tc, step * 2)) )
 				return true;
-			if ((analysis->KangziCount[static_cast<int>(tc) + step * 2] >= 1) &&
-				(analysis->KeziCount[static_cast<int>(tc) + step] >= 1) &&
-				(analysis->KangziCount[static_cast<int>(tc) + step] == 0) &&
+			if ((analysis->KangziCount[offsetTileNumber(tc, step * 2)] >= 1) &&
+				(analysis->KeziCount[offsetTileNumber(tc, step)] >= 1) &&
+				(analysis->KangziCount[offsetTileNumber(tc, step)] == 0) &&
 				(analysis->MianziDat[0].tile == tc) )
 				return true;
 			return false;
@@ -515,7 +515,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			/* 対々和が必ず複合 */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr char pattern[] = "121314151617181923242526272829343536373839454647484956575859676869787989";
-				TileCode tCode[static_cast<int>(TileSuit::honors) / TileSuitStep * 2];
+				std::array<TileCode, static_cast<int>(TileSuit::honors) / TileSuitStep * 2> tCode;
 				bool yakuFlag = false;
 				for (int i = 0; i < 36; i++) {
 					int num1 = static_cast<int>(pattern[i * 2] - _T('0'));
@@ -525,7 +525,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 						tCode[k + 1] = static_cast<TileCode>(k / 2 * TileSuitStep + num2);
 					}
 					if (yaku::countingFacility::countSpecMentz(
-						analysis->MianziDat, tCode, static_cast<int>(TileSuit::honors) / TileSuitStep * 2, nullptr, 0, false) == SizeOfMeldBuffer)
+						analysis->MianziDat, tCode, std::array<TileCode, 0>(), false) == SizeOfMeldBuffer)
 						yakuFlag = true;
 				}
 				return yakuFlag;

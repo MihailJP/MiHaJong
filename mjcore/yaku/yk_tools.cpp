@@ -1,17 +1,20 @@
 ﻿#include "yaku.h"
+#include "yk_tools.h"
 
+#define COUNT_PAIRS(dSize) template int yaku::countingFacility::countPairs<dSize>(const Int8ByTile, const std::array<TileCode, dSize>&)
+#define COUNT_SPEC_MENTZ(kSize, sSize) template int yaku::countingFacility::countSpecMentz<kSize, sSize>(const MeldBuf, const std::array<TileCode, kSize>&, const std::array<TileCode, sSize>&, bool, bool)
 
 /* 順子の処理 */
 bool yaku::mentsuParser::makementsu_shuntsu(Int8ByTile& countForMentsu, MeldBuf MianziDat,
 	int* const ProcessedMelds, TileCode tile)
 { /* 順子の処理 */
 	if ((countForMentsu[tile] >= 1)&&
-		(countForMentsu[static_cast<int>(tile) + 1] >= 1)&&
-		(countForMentsu[static_cast<int>(tile) + 2] >= 1)) {
+		(countForMentsu[offsetTileNumber(tile, 1)] >= 1)&&
+		(countForMentsu[offsetTileNumber(tile, 2)] >= 1)) {
 			MianziDat[*ProcessedMelds].mstat = MeldStat::sequenceConcealed;
 			MianziDat[(*ProcessedMelds)++].tile = tile;
-			--countForMentsu[tile]; --countForMentsu[static_cast<int>(tile) + 1];
-			--countForMentsu[static_cast<int>(tile) + 2];
+			--countForMentsu[tile]; --countForMentsu[offsetTileNumber(tile, 1)];
+			--countForMentsu[offsetTileNumber(tile, 2)];
 			return true;
 	}
 	return false;
@@ -46,34 +49,34 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 
 	// 順子(順子優先正順モードの時)
 	if (AtamaCode.Order == ParseOrder::Shun_Ke)
-		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
+		for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
 				--i;
 	// 順子(順子優先逆順モードの時)
 	if (AtamaCode.Order == ParseOrder::Shun_Ke_Rev)
-		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
-				++i;
+		for (auto i = NumberTiles.rbegin(); i != NumberTiles.rend(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				--i;
 
 	// 暗刻(正順モードの時)
 	if ((AtamaCode.Order == ParseOrder::Ke_Shun)||(AtamaCode.Order == ParseOrder::Shun_Ke))
-		for (int i = 1; i < TileNonflowerMax; i++)
-			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i));
+		for (auto i = AllTiles.begin(); i != AllTiles.end(); i++)
+			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, *i);
 	// 暗刻(逆順モードの時)
 	if ((AtamaCode.Order == ParseOrder::Ke_Shun_Rev)||(AtamaCode.Order == ParseOrder::Shun_Ke_Rev))
-		for (int i = TileNonflowerMax - 1; i > 0; i--)
-			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i));
+		for (auto i = AllTiles.rbegin(); i != AllTiles.rend(); i++)
+			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, *i);
 
 	// 順子(暗刻優先正順モードの時)
 	if (AtamaCode.Order == ParseOrder::Ke_Shun)
-		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
+		for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
 				--i;
 	// 順子(暗刻優先逆順モードの時)
 	if (AtamaCode.Order == ParseOrder::Ke_Shun_Rev)
-		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
-			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
-				++i;
+		for (auto i = NumberTiles.rbegin(); i != NumberTiles.rend(); i++)
+			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, *i))
+				--i;
 
 	// 鳴いた面子、暗槓
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
@@ -88,23 +91,38 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 // -------------------------------------------------------------------------
 
 /* 指定の対子があるか数える */
-int yaku::countingFacility::countPairs(
-	const Int8ByTile tileCount, const TileCode* const targetTiles, int numOfTiles)
+template<std::size_t dSize> int yaku::countingFacility::countPairs(
+	const Int8ByTile tileCount, const std::array<TileCode, dSize>& targetTiles)
 {
 	// 指定した種類の対子を数える
 	trace(_T("対子の種類を調べます。"));
 	int yakuflagcount = 0;
-	for (int i = 0; i < numOfTiles; i++)
-		if (tileCount[targetTiles[i]] >= 2) yakuflagcount++;
+	for (auto i : targetTiles)
+		if (tileCount[i] >= 2) yakuflagcount++;
 	return yakuflagcount;
 }
+
+COUNT_PAIRS( 2);
+COUNT_PAIRS( 3);
+COUNT_PAIRS( 5);
+COUNT_PAIRS( 6);
+COUNT_PAIRS( 7);
+COUNT_PAIRS( 8);
+COUNT_PAIRS( 9);
+COUNT_PAIRS(10);
+COUNT_PAIRS(11);
+COUNT_PAIRS(12);
+COUNT_PAIRS(13);
+COUNT_PAIRS(14);
+COUNT_PAIRS(15);
+COUNT_PAIRS(20);
 
 /* 数字の合計を数える(七対子版) */
 int yaku::countingFacility::countTileNumerals(const Int8ByTile tileCount) {
 	/* 数字の合計を数える */
 	int Cifr = 0;
-	for (int i = 1; i < (static_cast<int>(TileSuit::honors) - 1); i++)
-		Cifr += tileCount[i] * (i % TileSuitStep);
+	for (auto i = NumberTiles.begin(); i != NumberTiles.end(); i++)
+		Cifr += tileCount[*i] * getTileNumber(*i);
 	return Cifr;
 }
 	
@@ -185,34 +203,65 @@ Int8ByTile yaku::countingFacility::countKaKangz(const MeldBuf MianziDat, uint8_t
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /* 指定の刻子・順子があるか数える */
-inline int yaku::countingFacility::countSpecMentz(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
-	const TileCode* const targetShunz, int numOfShunz, bool Mode, bool allowDup)
+template<std::size_t kSize, std::size_t sSize> int yaku::countingFacility::countSpecMentz(const MeldBuf MianziDat,
+	const std::array<TileCode, kSize>& targetKez, const std::array<TileCode, sSize>& targetShunz, bool Mode, bool allowDup)
 { // 指定した種類の面子を数える
 	int kz = 0; int sz = 0;
 	auto DuiCount = Mode ? countKez(MianziDat, nullptr) : countDuiz(MianziDat);
 	auto ShunzCount = countShunz(MianziDat, nullptr);
 	int yakuflagcount = 0;
-	for (int i = 0; i < numOfKez; i++) {
-		if (targetKez[i] == TileCode::noTile) continue;
-		if (DuiCount[targetKez[i]] >= 1) ++yakuflagcount;
+	for (auto i : targetKez) {
+		if (i == TileCode::noTile) continue;
+		if (DuiCount[i] >= 1) ++yakuflagcount;
 	}
-	for (int i = 0; i < numOfShunz; i++) {
-		if (targetShunz[i] == TileCode::noTile) continue;
-		if (ShunzCount[targetShunz[i]] >= 1)
-			yakuflagcount += allowDup ? ShunzCount[targetShunz[i]] : 1;
+	for (auto i : targetShunz) {
+		if (i == TileCode::noTile) continue;
+		if (ShunzCount[i] >= 1)
+			yakuflagcount += allowDup ? ShunzCount[i] : 1;
 	}
 	return yakuflagcount;
 }
-int yaku::countingFacility::countSpecMentz(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
-	const TileCode* const targetShunz, int numOfShunz, bool Mode)
-{
-	return countSpecMentz(MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, Mode, false);
-}
-int yaku::countingFacility::countSpecMentzWithDup(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
-	const TileCode* const targetShunz, int numOfShunz, bool Mode)
-{
-	return countSpecMentz(MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, Mode, true);
-}
+
+COUNT_SPEC_MENTZ( 1, 0);
+COUNT_SPEC_MENTZ( 4, 0);
+COUNT_SPEC_MENTZ( 5, 0);
+COUNT_SPEC_MENTZ( 6, 0);
+COUNT_SPEC_MENTZ( 7, 0);
+COUNT_SPEC_MENTZ( 8, 0);
+COUNT_SPEC_MENTZ(12, 0);
+COUNT_SPEC_MENTZ(13, 0);
+
+COUNT_SPEC_MENTZ( 3, 1);
+COUNT_SPEC_MENTZ( 5, 1);
+COUNT_SPEC_MENTZ( 6, 1);
+COUNT_SPEC_MENTZ( 7, 1);
+COUNT_SPEC_MENTZ( 8, 1);
+COUNT_SPEC_MENTZ(10, 1);
+COUNT_SPEC_MENTZ(11, 1);
+COUNT_SPEC_MENTZ(14, 1);
+
+COUNT_SPEC_MENTZ( 2, 2);
+
+COUNT_SPEC_MENTZ( 3, 3);
+COUNT_SPEC_MENTZ( 9, 3);
+COUNT_SPEC_MENTZ(10, 3);
+
+COUNT_SPEC_MENTZ( 7, 4);
+COUNT_SPEC_MENTZ( 8, 4);
+COUNT_SPEC_MENTZ(14, 4);
+
+COUNT_SPEC_MENTZ( 6, 6);
+COUNT_SPEC_MENTZ(12, 6);
+COUNT_SPEC_MENTZ(13, 6);
+
+COUNT_SPEC_MENTZ(10, 7);
+COUNT_SPEC_MENTZ(11, 7);
+
+COUNT_SPEC_MENTZ( 3, 8);
+COUNT_SPEC_MENTZ(20, 8);
+
+COUNT_SPEC_MENTZ( 3, 9);
+COUNT_SPEC_MENTZ(15, 9);
 
 /* 数字の合計を数える */
 int yaku::countingFacility::countMentzNumerals(const MeldBuf MianziDat) { /* 数字の合計を数える */

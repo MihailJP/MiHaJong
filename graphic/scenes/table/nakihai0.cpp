@@ -31,9 +31,9 @@ void ShowNakihai::NakihaiKamicha(const GameTable* gameStat, PlayerID targetPlaye
 	assert((tile->mstat == MeldStat::tripletExposedLeft) || (tile->mstat == MeldStat::quadAddedLeft) ||
 		(tile->mstat == MeldStat::sequenceExposedLower) || (tile->mstat == MeldStat::sequenceExposedMiddle) ||
 		(tile->mstat == MeldStat::sequenceExposedUpper));
-	const TileCode tileL = (tile->mstat == MeldStat::sequenceExposedMiddle) ? static_cast<TileCode>(static_cast<int>(tile->tile) + 1) : ((tile->mstat == MeldStat::sequenceExposedUpper) ? static_cast<TileCode>(static_cast<int>(tile->tile) + 2) : tile->tile);
-	const TileCode tileC = (tile->mstat == MeldStat::sequenceExposedLower) ? static_cast<TileCode>(static_cast<int>(tile->tile) + 1) : tile->tile;
-	const TileCode tileR = (tile->mstat == MeldStat::sequenceExposedUpper) ? static_cast<TileCode>(static_cast<int>(tile->tile) + 1) : ((tile->mstat == MeldStat::sequenceExposedLower) || (tile->mstat == MeldStat::sequenceExposedMiddle) ? static_cast<TileCode>(static_cast<int>(tile->tile) + 2) : tile->tile);
+	const TileCode tileL = (tile->mstat == MeldStat::sequenceExposedMiddle) ? offsetTileNumber(tile->tile, 1) : ((tile->mstat == MeldStat::sequenceExposedUpper) ? offsetTileNumber(tile->tile, 2) : tile->tile);
+	const TileCode tileC = (tile->mstat == MeldStat::sequenceExposedLower) ? offsetTileNumber(tile->tile, 1) : tile->tile;
+	const TileCode tileR = (tile->mstat == MeldStat::sequenceExposedUpper) ? offsetTileNumber(tile->tile, 1) : ((tile->mstat == MeldStat::sequenceExposedLower) || (tile->mstat == MeldStat::sequenceExposedMiddle) ? offsetTileNumber(tile->tile, 2) : tile->tile);
 	const DoraCol redL = (tile->mstat == MeldStat::sequenceExposedMiddle) ? tile->red[1] : ((tile->mstat == MeldStat::sequenceExposedUpper) ? tile->red[2] : tile->red[0]);
 	const DoraCol redC = ((tile->mstat == MeldStat::sequenceExposedMiddle) || (tile->mstat == MeldStat::sequenceExposedUpper)) ? tile->red[0] : tile->red[1];
 	const DoraCol redR = (tile->mstat == MeldStat::sequenceExposedUpper) ? tile->red[1] : tile->red[2];

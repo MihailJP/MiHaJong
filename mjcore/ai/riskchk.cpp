@@ -24,9 +24,9 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasuji
 		if (!Tile(t).isNumber()) {return false;}
 		else {
 			if (((getTileNumber(t)) >= 4) &&
-				(gameStat->DoraFlag.Omote[static_cast<int>(t) - 3] > 0)) return true;
+				(gameStat->DoraFlag.Omote[offsetTileNumber(t, -3)] > 0)) return true;
 			if (((getTileNumber(t)) <= 6) &&
-				(gameStat->DoraFlag.Omote[static_cast<int>(t) + 3] > 0)) return true;
+				(gameStat->DoraFlag.Omote[offsetTileNumber(t, +3)] > 0)) return true;
 		}
 		return false;
 }
@@ -36,13 +36,13 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isdorasoba
 		if (!Tile(t).isNumber()) {return false;}
 		else {
 			if (((getTileNumber(t)) >= 2) &&
-				(gameStat->DoraFlag.Omote[static_cast<int>(t) - 1] > 0)) return true;
+				(gameStat->DoraFlag.Omote[offsetTileNumber(t, -1)] > 0)) return true;
 			if (((getTileNumber(t)) >= 3) &&
-				(gameStat->DoraFlag.Omote[static_cast<int>(t) - 2] > 0)) return true;
+				(gameStat->DoraFlag.Omote[offsetTileNumber(t, -2)] > 0)) return true;
 			if (((getTileNumber(t)) <= 7) &&
-				(gameStat->DoraFlag.Omote[static_cast<int>(t) + 2] > 0)) return true;
+				(gameStat->DoraFlag.Omote[offsetTileNumber(t, +2)] > 0)) return true;
 			if (((getTileNumber(t)) <= 8) &&
-				(gameStat->DoraFlag.Omote[static_cast<int>(t) + 1] > 0)) return true;
+				(gameStat->DoraFlag.Omote[offsetTileNumber(t, +1)] > 0)) return true;
 		}
 		return false;
 }
@@ -53,10 +53,10 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnochance
 		const Int8ByTile h = countTilesInHand(gameStat, player);
 		if (!Tile(t).isNumber()) {return false;}
 		else {
-			if (((getTileNumber(t)) == 1) && (s[static_cast<int>(t) + 2] + h[static_cast<int>(t) + 2] >= 4)) return true;
-			if (((getTileNumber(t)) <= 2) && (s[static_cast<int>(t) + 1] + h[static_cast<int>(t) + 1] >= 4)) return true;
-			if (((getTileNumber(t)) >= 8) && (s[static_cast<int>(t) - 1] + h[static_cast<int>(t) - 1] <= 4)) return true;
-			if (((getTileNumber(t)) == 9) && (s[static_cast<int>(t) - 2] + h[static_cast<int>(t) - 2] <= 4)) return true;
+			if (((getTileNumber(t)) == 1) && (s[offsetTileNumber(t, +2)] + h[offsetTileNumber(t, +2)] >= 4)) return true;
+			if (((getTileNumber(t)) <= 2) && (s[offsetTileNumber(t, +1)] + h[offsetTileNumber(t, +1)] >= 4)) return true;
+			if (((getTileNumber(t)) >= 8) && (s[offsetTileNumber(t, -1)] + h[offsetTileNumber(t, -1)] <= 4)) return true;
+			if (((getTileNumber(t)) == 9) && (s[offsetTileNumber(t, -2)] + h[offsetTileNumber(t, -2)] <= 4)) return true;
 		}
 		return false;
 }
@@ -67,10 +67,10 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isonechance
 		const Int8ByTile h = countTilesInHand(gameStat, player);
 		if (!Tile(t).isNumber()) {return false;}
 		else {
-			if (((getTileNumber(t)) == 1) && (s[static_cast<int>(t) + 2] + h[static_cast<int>(t) + 2] == 3)) return true;
-			if (((getTileNumber(t)) <= 2) && (s[static_cast<int>(t) + 1] + h[static_cast<int>(t) + 1] == 3)) return true;
-			if (((getTileNumber(t)) >= 8) && (s[static_cast<int>(t) - 1] + h[static_cast<int>(t) - 1] == 3)) return true;
-			if (((getTileNumber(t)) == 9) && (s[static_cast<int>(t) - 2] + h[static_cast<int>(t) - 2] == 3)) return true;
+			if (((getTileNumber(t)) == 1) && (s[offsetTileNumber(t, +2)] + h[offsetTileNumber(t, +2)] == 3)) return true;
+			if (((getTileNumber(t)) <= 2) && (s[offsetTileNumber(t, +1)] + h[offsetTileNumber(t, +1)] == 3)) return true;
+			if (((getTileNumber(t)) >= 8) && (s[offsetTileNumber(t, -1)] + h[offsetTileNumber(t, -1)] == 3)) return true;
+			if (((getTileNumber(t)) == 9) && (s[offsetTileNumber(t, -2)] + h[offsetTileNumber(t, -2)] == 3)) return true;
 		}
 		return false;
 }
@@ -106,9 +106,9 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issuji
 		if (!Tile(t).isNumber()) return false; // 字牌と空白は除外
 		if (((getTileNumber(t)) >= 4) && ((getTileNumber(t)) <= 6)) return false; // 筋心牌以外にのみ適用可能
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
-			if (((getTileNumber(t)) < 4) && (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 3)))
+			if (((getTileNumber(t)) < 4) && (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 3)))
 				return true;
-			else if (((getTileNumber(t)) > 6) && (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 3)))
+			else if (((getTileNumber(t)) > 6) && (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -3)))
 				return true;
 		return false;
 }
@@ -120,9 +120,9 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnakasuji
 		if (((getTileNumber(t)) < 4) || ((getTileNumber(t)) > 6)) return false; // 筋心牌にのみ適用可能
 		bool flag1 = false; bool flag2 = false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++)
-			if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 3))
+			if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -3))
 				flag1 = true;
-			else if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 3))
+			else if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 3))
 				flag2 = true;
 		return flag1 && flag2;
 }
@@ -139,16 +139,16 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isurasuji
 		if (!Tile(t).isNumber()) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((getTileNumber(t)) >= 2) && ((getTileNumber(t)) <= 6))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 1))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -1))
 					return true;
 			if (((getTileNumber(t)) >= 5) && ((getTileNumber(t)) <= 9))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 4))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -4))
 					return true;
 			if (((getTileNumber(t)) >= 4) && ((getTileNumber(t)) <= 8))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 1))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 1))
 					return true;
 			if (((getTileNumber(t)) >= 1) && ((getTileNumber(t)) <= 5))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 4))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 4))
 					return true;
 		}
 		return false;
@@ -165,12 +165,12 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isaida4ken
 		if (!Tile(t).isNumber()) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((getTileNumber(t)) >= 2) && ((getTileNumber(t)) <= 5))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 1))
-					if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 4))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -1))
+					if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 4))
 						return true;
 			if (((getTileNumber(t)) >= 5) && ((getTileNumber(t)) <= 8))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 4))
-					if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 1))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -4))
+					if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 1))
 						return true;
 		}
 		return false;
@@ -188,16 +188,16 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::issenkisuji
 		if (!Tile(t).isNumber()) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((getTileNumber(t)) >= 3) && ((getTileNumber(t)) <= 6))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 2))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -2))
 					return true;
 			if (((getTileNumber(t)) >= 6) && ((getTileNumber(t)) <= 9))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 5))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -5))
 					return true;
 			if (((getTileNumber(t)) >= 4) && ((getTileNumber(t)) <= 7))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 2))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 2))
 					return true;
 			if (((getTileNumber(t)) >= 1) && ((getTileNumber(t)) <= 4))
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 5))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 5))
 					return true;
 		}
 		return false;
@@ -216,15 +216,15 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::ismatagisuji
 		if (!Tile(t).isNumber()) return false; // 字牌と空白は除外
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((getTileNumber(t)) >= 2) && ((getTileNumber(t)) <= 7)) {
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 1))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -1))
 					return true;
-				else if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 2))
+				else if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 2))
 					return true;
 			}
 			if (((getTileNumber(t)) >= 3) && ((getTileNumber(t)) <= 8)) {
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 2))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -2))
 					return true;
-				else if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 1))
+				else if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 1))
 					return true;
 			}
 		}
@@ -244,21 +244,21 @@ bool aiscript::table::functable::gametbl::luafunc::riskchk::isnamakurasuji
 		bool flag1 = false; bool flag2 = false;
 		for (int i = 1; i <= gameStat->Player[tplayer].DiscardPointer; i++) {
 			if (((getTileNumber(t)) >= 1) && ((getTileNumber(t)) <= 3)) {
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 6))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 6))
 					flag1 = true;
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 3))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 3))
 					flag2 = true;
 			}
 			if (((getTileNumber(t)) >= 4) && ((getTileNumber(t)) <= 6)) {
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) + 3))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, 3))
 					flag1 = true;
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 3))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -3))
 					flag1 = true;
 			}
 			if (((getTileNumber(t)) >= 7) && ((getTileNumber(t)) <= 9)) {
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 6))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -6))
 					flag1 = true;
-				if (gameStat->Player[tplayer].Discard[i].tcode.tile == static_cast<TileCode>(static_cast<int>(t) - 3))
+				if (gameStat->Player[tplayer].Discard[i].tcode.tile == offsetTileNumber(t, -3))
 					flag2 = true;
 			}
 			if (gameStat->Player[tplayer].Discard[i].tcode.tile == t)

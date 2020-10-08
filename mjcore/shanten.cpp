@@ -17,6 +17,7 @@
 #include "../common/strcode.h"
 #include "decomp.h"
 #include "ruletbl.h"
+#include "tileutil.h"
 
 using std::min;
 
@@ -138,8 +139,8 @@ void ShantenAnalyzer::addExposedMeld(const GameTable* const gameStat, PlayerID p
 		case MeldStat::sequenceExposedUpper:
 			// 順子の時
 			tileCount[gameStat->Player[playerID].Meld[i].tile]++;
-			tileCount[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 1]++;
-			tileCount[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 2]++;
+			tileCount[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 1)]++;
+			tileCount[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 2)]++;
 			break;
 		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
 		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
@@ -166,7 +167,7 @@ Shanten ShantenAnalyzer::calcShantenRegular(const GameTable* const gameStat, Pla
 Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, PlayerID playerID, const Int8ByTile& tileCount)
 { // 七対子に対する向聴数を求める。
 	Shanten shanten = 6;
-	for (int i = 0; i < TileNonflowerMax; i++) {
+	for (auto i : AllTiles) {
 		// 単純に対子の数を調べればよい
 		// ただし、同じ牌４枚を対子２つとして使ってはならない
 		if (tileCount[i] >= 2) shanten--;
@@ -175,7 +176,7 @@ Shanten ShantenAnalyzer::calcShantenChiitoi(const GameTable* const gameStat, Pla
 #endif /* GUOBIAO */
 	}
 	// 暗刻がある場合に聴牌とみなさないようにする
-	for (int i = 0; i < TileNonflowerMax; i++)
+	for (auto i : AllTiles)
 		if ((tileCount[i] >= 3)&&(shanten < 1)) shanten++;
 	// 鳴き面子や暗槓がある場合は七対子は不可能
 	if (gameStat->Player[playerID].MeldPointer > 0) shanten = ShantenImpossible;

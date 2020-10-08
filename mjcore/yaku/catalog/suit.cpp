@@ -323,14 +323,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				bool yakuFlag = false;
 				if (analysis->shanten[ShantenType::regular] == -1) {
 					int yakuFlagCount = 0;
-					constexpr TileCode targetKezi[] = {TileCode::characterOne, TileCode::characterNine,};
-					constexpr TileCode targetShunzi[] = {TileCode::characterOne, TileCode::characterSeven,};
-					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, 2, targetShunzi, 2, false) == 0)
+					constexpr std::array<TileCode, 2> targetKezi = {TileCode::characterOne, TileCode::characterNine,};
+					constexpr std::array<TileCode, 2> targetShunzi = {TileCode::characterOne, TileCode::characterSeven,};
+					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, targetShunzi, false) == 0)
 						yakuFlag = true;
 				} else if (analysis->shanten[ShantenType::pairs] == -1) {
 					int yakuFlagCount = 0;
-					constexpr TileCode targetDuizi[] = {TileCode::characterOne, TileCode::characterNine,};
-					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi, 2) == 0)
+					constexpr std::array<TileCode, 2> targetDuizi = {TileCode::characterOne, TileCode::characterNine,};
+					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi) == 0)
 						yakuFlag = true;
 				}
 				return (isshoku(analysis, true) && (yakuFlag) &&
@@ -395,8 +395,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("混一色"), _T("鏡音リン"), _T("鏡音レン"), _T("三連刻"), _T("対々和"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
-					if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i + 1] >= 1) && (analysis->KeziCount[i + 2] >= 1))
+				for (auto i : NumberTiles)
+					if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1))
 						yakuFlag = true;
 				return (isshoku(analysis, false) && yakuFlag &&
 					(analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
@@ -446,8 +446,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* 絶一門 */
 	const auto chueiimen =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			bool flag[static_cast<int>(TileSuit::honors) / TileSuitStep] = {false};
-			constexpr auto suitCharacters = static_cast<int>(TileSuit::characters) / TileSuitStep;
+		bool flag[static_cast<int>(TileSuit::honors) / TileSuitStep] = {false};
+		constexpr auto suitCharacters = static_cast<int>(TileSuit::characters) / TileSuitStep;
 			constexpr auto suitCircles    = static_cast<int>(TileSuit::circles)    / TileSuitStep;
 			constexpr auto suitBamboos    = static_cast<int>(TileSuit::bamboos)    / TileSuitStep;
 			if (analysis->shanten[ShantenType::regular] == -1) {
@@ -508,8 +508,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 	/* 五門斎 */
 	const auto uumenchii =
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
-			int mnzCount[static_cast<int>(TileSuit::honors) / TileSuitStep + 2] = {0};
-			bool yakuFlag = true;
+		int mnzCount[static_cast<int>(TileSuit::honors) / TileSuitStep + 2] = {0};
+		bool yakuFlag = true;
 			{
 				TileCode tc = TileCode::noTile;
 				if (analysis->shanten[ShantenType::regular] == -1)

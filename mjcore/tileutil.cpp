@@ -287,9 +287,9 @@ MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID 
 			if (gameStat->Player[playerID].Meld[i].red[0] == doraCol)
 				count[gameStat->Player[playerID].Meld[i].tile]++;
 			if (gameStat->Player[playerID].Meld[i].red[1] == doraCol)
-				count[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 1]++;
+				count[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 1)]++;
 			if (gameStat->Player[playerID].Meld[i].red[2] == doraCol)
-				count[static_cast<int>(gameStat->Player[playerID].Meld[i].tile) + 2]++;
+				count[offsetTileNumber(gameStat->Player[playerID].Meld[i].tile, 2)]++;
 			break;
 		case MeldStat::quadExposedLeft: case MeldStat::quadAddedLeft:
 		case MeldStat::quadExposedCenter: case MeldStat::quadAddedCenter:
@@ -334,11 +334,11 @@ MJCORE TileStatus gettilestatus(
 	if (tlCount[*theTile] >= 3) tlStat.formsTriplet = true; // 暗刻を形成している場合
 	
 	if (Tile(*theTile).isNumber()) { // 順子を形成している場合
-		if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) + 2] >= 1))
+		if ((tlCount[*theTile] >= 1)&&(tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(tlCount[offsetTileNumber(*theTile, 2)] >= 1))
 			tlStat.formsSequence = true;
-		else if ((tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) + 1] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
+		else if ((tlCount[*theTile] >= 1)&&(tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(tlCount[offsetTileNumber(*theTile, -1)] >= 1))
 			tlStat.formsSequence = true;
-		else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[*theTile] >= 1)&&(tlCount[int(*theTile) - 2] >= 1)&&(tlCount[int(*theTile) - 1] >= 1))
+		else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[*theTile] >= 1)&&(tlCount[offsetTileNumber(*theTile, -2)] >= 1)&&(tlCount[offsetTileNumber(*theTile, -1)] >= 1))
 			tlStat.formsSequence = true;
 	}
 
@@ -346,31 +346,31 @@ MJCORE TileStatus gettilestatus(
 
 	if (Tile(*theTile).isNumber()) { // 辺張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
-			if ((tlCount[static_cast<int>(*theTile) + 1] >= 1)&&(getTileNumber(*theTile) == 1))
+			if ((tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(getTileNumber(*theTile) == 1))
 				tlStat.seqSingleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) + 1] >= 1)&&(getTileNumber(*theTile) == 8))
+			else if ((tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(getTileNumber(*theTile) == 8))
 				tlStat.seqSingleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) - 1] >= 1)&&(getTileNumber(*theTile) == 2))
+			else if ((tlCount[offsetTileNumber(*theTile, -1)] >= 1)&&(getTileNumber(*theTile) == 2))
 				tlStat.seqSingleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) - 1] >= 1)&&(getTileNumber(*theTile) == 9))
+			else if ((tlCount[offsetTileNumber(*theTile, -1)] >= 1)&&(getTileNumber(*theTile) == 9))
 				tlStat.seqSingleSideWait = true;
 		}
 	}
 	
 	if (Tile(*theTile).isNumber()) { // 両面塔子を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
-			if ((tlCount[static_cast<int>(*theTile) + 1] >= 1)&&(getTileNumber(*theTile) != 1)&&
+			if ((tlCount[offsetTileNumber(*theTile, 1)] >= 1)&&(getTileNumber(*theTile) != 1)&&
 				(getTileNumber(*theTile) != 8)) tlStat.seqDoubleSideWait = true;
-			else if ((tlCount[static_cast<int>(*theTile) - 1] >= 1)&&(getTileNumber(*theTile) != 2)&&
+			else if ((tlCount[offsetTileNumber(*theTile, -1)] >= 1)&&(getTileNumber(*theTile) != 2)&&
 				(getTileNumber(*theTile) != 9)) tlStat.seqDoubleSideWait = true;
 		}
 	}
 	
 	if (Tile(*theTile).isNumber()) { // 嵌張を形成している場合
 		if ((tlCount[*theTile] >= 1)&&((!tlStat.formsSequence)||(CheckMode))) {
-			if ((tlCount[static_cast<int>(*theTile) + 2] >= 1)&&(getTileNumber(*theTile) != 9))
+			if ((tlCount[offsetTileNumber(*theTile, 2)] >= 1)&&(getTileNumber(*theTile) != 9))
 				tlStat.seqMidWait = true;
-			else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[static_cast<int>(*theTile) - 2] >= 1)&&(getTileNumber(*theTile) != 1))
+			else if ((*theTile > static_cast<TileCode>(1))&&(tlCount[offsetTileNumber(*theTile, -2)] >= 1)&&(getTileNumber(*theTile) != 1))
 				tlStat.seqMidWait = true;
 		}
 	}
@@ -386,8 +386,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	MachihaiInfo machihaiInfo; memset(&machihaiInfo, 0, sizeof(machihaiInfo)); // 初期化
 	GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable)); // テンポラリ卓情報オブジェクト(ここからは仮定法の世界……)
 
-	for (TileCode i = TileCode::characterOne; i < TileCode::flower; i = static_cast<TileCode>(static_cast<int>(i) + 1)) {
-		if (static_cast<int>(i) % TileSuitStep == 0) continue; // ない牌だったら戻る
+	for (auto i : AllTiles) {
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
 		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenType::all) == -1) { // 待ちになっていたら
 			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // フラグをセットしましょう
@@ -434,12 +433,9 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 	// オープンリーチの待ち牌情報を更新する
 	assert(!gameStat->Player[targetPlayer].Tsumohai());
-	for (int i = 0; i < TileNonflowerMax; i++) {
-		/* 変な牌で計算しないようにしましょう */
-		if (static_cast<int>(i) % TileSuitStep == 0) continue;
-		if (static_cast<int>(i) % TileSuitStep > static_cast<int>(TileCode::redDragon)) continue;
+	for (auto i : AllTiles) {
 		/* まずは、ある牌をツモったと仮定します */
-		gameStat->Player[targetPlayer].Tsumohai().tile = static_cast<TileCode>(i);
+		gameStat->Player[targetPlayer].Tsumohai().tile = i;
 		/* もしそれが和了になっていたら、フラグをセットしましょう */
 		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenType::all) == -1)
 			gameStat->OpenRichiWait[i] = true;

@@ -37,7 +37,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+				for (auto i : NumberTiles)
 					if (analysis->ShunziCount[i] == 4) yakuFlag = true;
 				return yakuFlag;
 			}
@@ -55,7 +55,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #endif /* GUOBIAO */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+				for (auto i : NumberTiles)
 					if (analysis->ShunziCount[i] == 3) yakuFlag = true;
 				return yakuFlag;
 			}
@@ -69,7 +69,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			int yakuFlagCount = 0;
-			for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+			for (auto i : NumberTiles)
 				if (analysis->ShunziCount[i] == 2) ++yakuFlagCount;
 			return (yakuFlagCount == 1);
 		}
@@ -85,7 +85,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 #endif /* GUOBIAO */
 		[](const MENTSU_ANALYSIS* const analysis) -> bool {
 			int yakuFlagCount = 0;
-			for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+			for (auto i : NumberTiles)
 				if (analysis->ShunziCount[i] == 2) ++yakuFlagCount;
 			return (yakuFlagCount == 2);
 		}
@@ -97,7 +97,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("大鏡"), get_yaku_han("ohkagami"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yakuFlagCount = 0;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+				for (auto i : NumberTiles)
 					if (analysis->ShunziCount[i] == 2) ++yakuFlagCount;
 				return ((yakuFlagCount == 2)&&(analysis->MianziDat[0].tile == TileCode::circleOne));
 			}
@@ -154,7 +154,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			}),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				int yakuFlagCount = 0;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+				for (auto i : NumberTiles)
 					if (analysis->ShunziCount[i] == 2) ++yakuFlagCount;
 				return (yakuFlagCount == 2);
 			}
@@ -166,7 +166,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("一色四順"), _T("一色三順"), _T("一盃口"), _T("二盃口"), _T("鳴き二盃口"), _T("重四帰四"), _T("四帰四"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
+				for (auto i : NumberTiles)
 					if (analysis->ShunziCount[i] == 4) yakuFlag = true;
 				return yakuFlag && (analysis->MianziDat[0].tile == TileCode::northWind);
 			}

@@ -426,8 +426,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("混一色"), _T("四帰一"),
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				bool pairIsHonor = false; bool flag = false;
-				for (int i = static_cast<int>(TileSuit::honors); i < TileNonflowerMax; i++)
-					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i))
+				for (auto i : HonorTiles)
+					if (analysis->MianziDat[0].tile == i)
 						pairIsHonor = true;
 				for (auto i : NumberTileSuits) {
 					if ((analysis->KeziCount[composeNumberTile(i, 3)] >= 1) &&

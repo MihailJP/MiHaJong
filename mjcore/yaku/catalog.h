@@ -31,6 +31,16 @@ private:
 	static void yakulst_sequence();
 	static void yakulst_misc();
 	static void yakulst_dora();
+	template <std::size_t kSize, std::size_t sSize> static bool chktiles(const MENTSU_ANALYSIS* const analysis,
+		const std::array<TileCode, kSize> targetKez,
+		const std::array<TileCode, sSize> targetShunz, bool noDui); // 面子手・七対子兼用の判定関数
+	template <std::size_t kSize, std::size_t sSize> static bool chktiles_nodup(const MENTSU_ANALYSIS* const analysis,
+		const std::array<TileCode, kSize> targetKez,
+		const std::array<TileCode, sSize> targetShunz, bool noDui); // 面子手・七対子兼用の判定関数
+	static bool isQiDui(const MENTSU_ANALYSIS* const analysis);
+#ifndef GUOBIAO
+	template <std::size_t dSize> static bool chktiles(const MENTSU_ANALYSIS* const analysis, const std::array<TileCode, dSize>& targetDuiz); // 判定関数
+#endif /* GUOBIAO */
 public:
 	static void init();
 public: /* Monostate class: cannot be instantiated */
