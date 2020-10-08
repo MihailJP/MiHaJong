@@ -110,7 +110,7 @@ void yaku::yakuCalculator::calculateScore(yaku::YAKUSTAT* const yStat) {
 
 /* 符を計算する */
 void yaku::yakuCalculator::CalculatorThread::calcbasepoints
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis)
+	(const GameTable* const gameStat, MentsuAnalysis* const analysis)
 {
 #ifndef GUOBIAO
 	trace(_T("符計算の処理に入ります。"));
@@ -235,7 +235,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 /* ドラ計数 */
 void yaku::yakuCalculator::countDora
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+	(const GameTable* const gameStat, MentsuAnalysis* const analysis,
 	YAKUSTAT* const result, PlayerID targetPlayer)
 {
 	auto doraText =
@@ -403,7 +403,7 @@ void yaku::yakuCalculator::countDora
 
 /* ドラ計数 */
 void yaku::yakuCalculator::CalculatorThread::countDora
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result)
+	(const GameTable* const gameStat, MentsuAnalysis* const analysis, YAKUSTAT* const result)
 {
 	yaku::yakuCalculator::countDora(gameStat, analysis, result, analysis->player);
 }
@@ -561,7 +561,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 }
 
 /* 計算ルーチン */
-void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis) {
+void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MentsuAnalysis* analysis) {
 	/* 面子解析処理 */
 	if (analysis->shanten[ShantenType::regular] == -1) {
 		int NumOfMelds = 0;
@@ -668,8 +668,8 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	const ShantenData shanten, YAKUSTAT* const yakuInfo)
 {
 	// 変数を用意
-	MENTSU_ANALYSIS analysis;
-	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
+	MentsuAnalysis analysis;
+	memset(&analysis, 0, sizeof(MentsuAnalysis));
 	analysis.shanten = shanten;
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
@@ -692,8 +692,8 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	const ShantenData shanten, YAKUSTAT* const yakuInfo)
 {
 	// 変数を用意
-	MENTSU_ANALYSIS analysis;
-	memset(&analysis, 0, sizeof(MENTSU_ANALYSIS));
+	MentsuAnalysis analysis;
+	memset(&analysis, 0, sizeof(MentsuAnalysis));
 	analysis.shanten = shanten;
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
@@ -710,7 +710,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	for (int i = 0; i < 160; i++) {
 		calcprm[i].pMode.AtamaCode = static_cast<TileCode>(i / 4);
 		calcprm[i].pMode.Order = static_cast<ParseOrder>(i % 4);
-		memcpy(&calcprm[i].analysis, &analysis, sizeof(MENTSU_ANALYSIS));
+		memcpy(&calcprm[i].analysis, &analysis, sizeof(MentsuAnalysis));
 	}
 	// 計算を実行
 	for (int i = 4; i < 160; i++) { // 0〜3はTileCode::noTileなのでやらなくていい

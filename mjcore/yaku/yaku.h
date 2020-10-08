@@ -50,7 +50,7 @@ private:
 		ShantenData(const ShantenData&) = default;
 		ShantenData& operator = (const ShantenData&) = default;
 	};
-	struct MENTSU_ANALYSIS { // 面子解析結果
+	struct MentsuAnalysis { // 面子解析結果
 		PlayerID player;
 		ShantenData shanten;
 		MeldBuf MianziDat; // 面子パース結果
@@ -82,14 +82,14 @@ private:
 		const bool* TsumoAgariFlag; // ツモアガリどうかのフラグ
 	};
 #ifdef MJCORE_EXPORTS
-	static_assert(std::is_trivially_copyable<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not trivially copyable");
-	static_assert(std::is_standard_layout<MENTSU_ANALYSIS>::value, "MENTSU_ANALYSIS is not standard layout");
+	static_assert(std::is_trivially_copyable<MentsuAnalysis>::value, "MentsuAnalysis is not trivially copyable");
+	static_assert(std::is_standard_layout<MentsuAnalysis>::value, "MentsuAnalysis is not standard layout");
 #endif
-	typedef std::function<bool (const MENTSU_ANALYSIS* const)> YAKUFUNC;
+	typedef std::function<bool (const MentsuAnalysis* const)> YAKUFUNC;
 
 	struct CalculatorParam {
 		ParseMode pMode;
-		MENTSU_ANALYSIS analysis;
+		MentsuAnalysis analysis;
 		YAKUSTAT result;
 		CalculatorParam() : pMode(), analysis(), result() {}
 	};
@@ -125,11 +125,11 @@ public:
 	public:
 		class HANFUNC {
 		protected:
-			std::function<YAKU_HAN (const MENTSU_ANALYSIS* const)> hFunc;
+			std::function<YAKU_HAN (const MentsuAnalysis* const)> hFunc;
 		public:
-			YAKU_HAN operator() (const MENTSU_ANALYSIS* const) const;
+			YAKU_HAN operator() (const MentsuAnalysis* const) const;
 			HANFUNC ();
-			HANFUNC (std::function<YAKU_HAN (const MENTSU_ANALYSIS* const)>);
+			HANFUNC (std::function<YAKU_HAN (const MentsuAnalysis* const)>);
 		};
 		class FixedHan : public HANFUNC {
 		public:
@@ -158,10 +158,10 @@ public:
 		std::set<CodeConv::tstring> suppressionList; // 下位役のリスト
 		Yaku() {} // Default constructor
 	public:
-		bool checkYaku(const MENTSU_ANALYSIS* const mentsu);
+		bool checkYaku(const MentsuAnalysis* const mentsu);
 		CodeConv::tstring getName(); // 役の名前を取得する
 		HANFUNC getHan();
-		YAKU_HAN getHan(const MENTSU_ANALYSIS* const mentsu);
+		YAKU_HAN getHan(const MentsuAnalysis* const mentsu);
 		std::set<CodeConv::tstring> getSuppression();
 		// Constructor
 		Yaku(CodeConv::tstring name, HANFUNC hanVal, YAKUFUNC f);
@@ -196,16 +196,16 @@ public:
 private:
 	class CalculatorThread {
 	public:
-		static void calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MENTSU_ANALYSIS* analysis);
+		static void calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MentsuAnalysis* analysis);
 		CalculatorThread() = delete;
 		CalculatorThread(const CalculatorThread&) = delete;
 		CalculatorThread& operator= (const CalculatorThread&) = delete;
 		~CalculatorThread() = delete;
 	private:
-		static void calcbasepoints(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis);
-		static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result);
+		static void calcbasepoints(const GameTable* const gameStat, MentsuAnalysis* const analysis);
+		static void countDora(const GameTable* const gameStat, MentsuAnalysis* const analysis, YAKUSTAT* const result);
 		static void checkPostponedYaku(
-			const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,
+			const GameTable* const gameStat, MentsuAnalysis* const analysis, YAKUSTAT* const result,
 			std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::set<CodeConv::tstring> &suppression,
 			std::vector<CodeConv::tstring> &yakuOrd);
 		static void hanSummation(
@@ -223,7 +223,7 @@ private:
 	static void analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
 		const ShantenData shanten, YAKUSTAT* const yakuInfo);
 
-	static void countDora(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis,
+	static void countDora(const GameTable* const gameStat, MentsuAnalysis* const analysis,
 		YAKUSTAT* const result, PlayerID targetPlayer);
 
 public:

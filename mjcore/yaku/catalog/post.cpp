@@ -3,7 +3,7 @@
 
 /* 判定を後回しにする役の処理(特殊な処理が必要なもの) */
 void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
-	(const GameTable* const gameStat, MENTSU_ANALYSIS* const analysis, YAKUSTAT* const result,
+	(const GameTable* const gameStat, MentsuAnalysis* const analysis, YAKUSTAT* const result,
 	std::map<CodeConv::tstring, Yaku::YAKU_HAN> &yakuHan, std::set<CodeConv::tstring> &suppression,
 	std::vector<CodeConv::tstring> &yakuOrd)
 {
