@@ -19,7 +19,24 @@ private:
 #endif
 
 	/* 雀牌の名前データ */
-	static const std::array<CodeConv::tstring, TileFlowerMax> Xtilerefcode;
+	struct TileNameData : public std::array<CodeConv::tstring, TileFlowerMax> {
+		using super = std::array<CodeConv::tstring, TileFlowerMax>;
+		const CodeConv::tstring operator[] (const Tile& p) const { return super::operator[](static_cast<std::size_t>(p.tile) + static_cast<std::size_t>(p.red) * TileNonflowerMax); }
+		reference operator[] (const Tile& p) { return super::operator[](static_cast<std::size_t>(p.tile) + static_cast<std::size_t>(p.red) * TileNonflowerMax); }
+		const CodeConv::tstring operator[] (TileCode p) const { return super::operator[](static_cast<std::size_t>(p)); }
+		reference operator[] (TileCode p) { return super::operator[](static_cast<std::size_t>(p)); }
+		const CodeConv::tstring operator[] (std::size_t p) const { return super::operator[](p); }
+		reference operator[] (std::size_t p) { return super::operator[](p); }
+		TileNameData() = default;
+		TileNameData(const TileNameData&) = default;
+		TileNameData& operator = (const TileNameData&) = default;
+		TileNameData(const std::initializer_list<LPCTSTR>& ini) {
+			auto i = begin(); auto j = ini.begin();
+			while (i != end() && j != ini.end())
+				*(i++) = *(j++);
+		};
+	};
+	static const TileNameData Xtilerefcode;
 
 	static InfoByPlayer<LargeNum> origPoint;
 	static CodeConv::tostringstream XMLhaifuBuffer, XhaifuBuffer, XhaifuBufferBody;
