@@ -323,14 +323,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				bool yakuFlag = false;
 				if (analysis->shanten[ShantenType::regular] == -1) {
 					int yakuFlagCount = 0;
-					constexpr TileCode targetKezi[] = {TileCode::characterOne, TileCode::characterNine,};
-					constexpr TileCode targetShunzi[] = {TileCode::characterOne, TileCode::characterSeven,};
-					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, 2, targetShunzi, 2, false) == 0)
+					constexpr std::array<TileCode, 2> targetKezi = {TileCode::characterOne, TileCode::characterNine,};
+					constexpr std::array<TileCode, 2> targetShunzi = {TileCode::characterOne, TileCode::characterSeven,};
+					if (yaku::countingFacility::countSpecMentz(analysis->MianziDat, targetKezi, targetShunzi, false) == 0)
 						yakuFlag = true;
 				} else if (analysis->shanten[ShantenType::pairs] == -1) {
 					int yakuFlagCount = 0;
-					constexpr TileCode targetDuizi[] = {TileCode::characterOne, TileCode::characterNine,};
-					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi, 2) == 0)
+					constexpr std::array<TileCode, 2> targetDuizi = {TileCode::characterOne, TileCode::characterNine,};
+					if (yaku::countingFacility::countPairs(analysis->TileCount, targetDuizi) == 0)
 						yakuFlag = true;
 				}
 				return (isshoku(analysis, true) && (yakuFlag) &&

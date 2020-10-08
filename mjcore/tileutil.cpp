@@ -386,8 +386,7 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 	MachihaiInfo machihaiInfo; memset(&machihaiInfo, 0, sizeof(machihaiInfo)); // 初期化
 	GameTable tmpGameStat; memcpy(&tmpGameStat, gameStat, sizeof(GameTable)); // テンポラリ卓情報オブジェクト(ここからは仮定法の世界……)
 
-	for (TileCode i = TileCode::characterOne; i < TileCode::flower; i = static_cast<TileCode>(static_cast<int>(i) + 1)) {
-		if (static_cast<int>(i) % TileSuitStep == 0) continue; // ない牌だったら戻る
+	for (auto i : AllTiles) {
 		tmpGameStat.Player[targetPlayer].Tsumohai().tile = i;
 		if (ShantenAnalyzer::calcShanten(&tmpGameStat, targetPlayer, ShantenType::all) == -1) { // 待ちになっていたら
 			machihaiInfo.MachiMen++; machihaiInfo.Machihai[i].MachihaiFlag = true; // フラグをセットしましょう
@@ -434,12 +433,9 @@ MJCORE MachihaiInfo chkFuriten(const GameTable* const gameStat, PlayerID targetP
 void chkOpenMachi(GameTable* const gameStat, PlayerID targetPlayer) {
 	// オープンリーチの待ち牌情報を更新する
 	assert(!gameStat->Player[targetPlayer].Tsumohai());
-	for (int i = 0; i < TileNonflowerMax; i++) {
-		/* 変な牌で計算しないようにしましょう */
-		if (static_cast<int>(i) % TileSuitStep == 0) continue;
-		if (static_cast<int>(i) % TileSuitStep > static_cast<int>(TileCode::redDragon)) continue;
+	for (auto i : AllTiles) {
 		/* まずは、ある牌をツモったと仮定します */
-		gameStat->Player[targetPlayer].Tsumohai().tile = static_cast<TileCode>(i);
+		gameStat->Player[targetPlayer].Tsumohai().tile = i;
 		/* もしそれが和了になっていたら、フラグをセットしましょう */
 		if (ShantenAnalyzer::calcShanten(gameStat, targetPlayer, ShantenType::all) == -1)
 			gameStat->OpenRichiWait[i] = true;

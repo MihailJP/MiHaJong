@@ -515,7 +515,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			/* 対々和が必ず複合 */
 			[](const MENTSU_ANALYSIS* const analysis) -> bool {
 				constexpr char pattern[] = "121314151617181923242526272829343536373839454647484956575859676869787989";
-				TileCode tCode[static_cast<int>(TileSuit::honors) / TileSuitStep * 2];
+				std::array<TileCode, static_cast<int>(TileSuit::honors) / TileSuitStep * 2> tCode;
 				bool yakuFlag = false;
 				for (int i = 0; i < 36; i++) {
 					int num1 = static_cast<int>(pattern[i * 2] - _T('0'));
@@ -525,7 +525,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 						tCode[k + 1] = static_cast<TileCode>(k / 2 * TileSuitStep + num2);
 					}
 					if (yaku::countingFacility::countSpecMentz(
-						analysis->MianziDat, tCode, static_cast<int>(TileSuit::honors) / TileSuitStep * 2, nullptr, 0, false) == SizeOfMeldBuffer)
+						analysis->MianziDat, tCode, std::array<TileCode, 0>(), false) == SizeOfMeldBuffer)
 						yakuFlag = true;
 				}
 				return yakuFlag;

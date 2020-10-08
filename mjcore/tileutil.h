@@ -33,6 +33,15 @@ constexpr std::array<TileCode, 13> Honor_Major_Tiles = {
 	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
 	TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
 };
+constexpr std::array<TileCode, 7> Honor_Tiles = {
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+	TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
+};
+constexpr std::array<TileCode, 6> Major_Tiles = {
+	TileCode::characterOne, TileCode::characterNine,
+	TileCode::circleOne, TileCode::circleNine,
+	TileCode::bambooOne, TileCode::bambooNine,
+};
 bool isYaojiu(TileCode code);
 
 constexpr std::array<TileCode, 34> AllTiles = {
