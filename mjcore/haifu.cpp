@@ -18,7 +18,7 @@
 /* レガシー牌譜形式（プレーンテキスト、HTML）は廃止しました。XMLに統一します。 */
 
 /* 雀牌の名前データ */
-const std::array<CodeConv::tstring, TileFlowerMax> haifu::Xtilerefcode = {
+const haifu::TileNameData haifu::Xtilerefcode = {
 	_T(""), _T("&m1;"),     _T("&m2;"),     _T("&m3;"),     _T("&m4;"),     _T("&m5;"),    _T("&m6;"),    _T("&m7;"),     _T("&m8;"),    _T("&m9;"),
 	_T(""), _T("&p1;"),     _T("&p2;"),     _T("&p3;"),     _T("&p4;"),     _T("&p5;"),    _T("&p6;"),    _T("&p7;"),     _T("&p8;"),    _T("&p9;"),
 	_T(""), _T("&s1;"),     _T("&s2;"),     _T("&s3;"),     _T("&s4;"),     _T("&s5;"),    _T("&s6;"),    _T("&s7;"),     _T("&s8;"),    _T("&s9;"),
@@ -95,19 +95,19 @@ void haifu::tools::recordDoraStream(CodeConv::tostringstream* const x, TileCode 
 /* 牌を記録する */
 void haifu::tools::recordTile_Inline(Tile tlCode, bool rotate) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
-		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[tlCode] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Inline(Tile tlCode, doraCol kakanCol) {
 	XhaifuBufferBody << _T("<tile tile=\"") <<
-		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(kakanCol) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[Tile(tlCode.tile, kakanCol)] << _T('\"') <<
 		haifudoraClassX(kakanCol) << _T(" /><tile tile=\"") <<
-		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[tlCode] << _T('\"') <<
 		haifudoraClassX(tlCode.red) << _T(" />");
 }
 void haifu::tools::recordTile_Table(Tile tlCode, CodeConv::tstring tagName, bool keepOpen) {
 	XhaifuBufferBody << _T('<') << tagName << _T(" tile=\"") <<
-		Xtilerefcode[static_cast<std::size_t>(tlCode.tile) + static_cast<std::size_t>(tlCode.red) * TileNonflowerMax] << _T('\"') <<
+		Xtilerefcode[tlCode] << _T('\"') <<
 		haifudoraClassX(tlCode.red);
 	if (!keepOpen) XhaifuBufferBody << _T(" />") << std::endl;
 }
