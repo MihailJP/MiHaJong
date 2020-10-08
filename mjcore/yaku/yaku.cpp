@@ -681,7 +681,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	YAKUSTAT result;
-	constexpr ParseMode pMode = {TileCode::noTile, Ke_Shun};
+	constexpr ParseMode pMode = {TileCode::noTile, ParseOrder::Ke_Shun};
 	// 計算を実行
 	std::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
 	myThread.join(); // 同期

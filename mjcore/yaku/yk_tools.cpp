@@ -45,32 +45,32 @@ void yaku::mentsuParser::makementsu(const GameTable* const gameStat,
 	countForMentsu[AtamaCode.AtamaCode] -= 2;
 
 	// 順子(順子優先正順モードの時)
-	if (AtamaCode.Order == Shun_Ke)
+	if (AtamaCode.Order == ParseOrder::Shun_Ke)
 		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				--i;
 	// 順子(順子優先逆順モードの時)
-	if (AtamaCode.Order == Shun_Ke_Rev)
+	if (AtamaCode.Order == ParseOrder::Shun_Ke_Rev)
 		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				++i;
 
 	// 暗刻(正順モードの時)
-	if ((AtamaCode.Order == Ke_Shun)||(AtamaCode.Order == Shun_Ke))
+	if ((AtamaCode.Order == ParseOrder::Ke_Shun)||(AtamaCode.Order == ParseOrder::Shun_Ke))
 		for (int i = 1; i < TileNonflowerMax; i++)
 			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i));
 	// 暗刻(逆順モードの時)
-	if ((AtamaCode.Order == Ke_Shun_Rev)||(AtamaCode.Order == Shun_Ke_Rev))
+	if ((AtamaCode.Order == ParseOrder::Ke_Shun_Rev)||(AtamaCode.Order == ParseOrder::Shun_Ke_Rev))
 		for (int i = TileNonflowerMax - 1; i > 0; i--)
 			makementsu_koutsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i));
 
 	// 順子(暗刻優先正順モードの時)
-	if (AtamaCode.Order == Ke_Shun)
+	if (AtamaCode.Order == ParseOrder::Ke_Shun)
 		for (int i = 1; i < static_cast<int>(TileSuit::honors); i++)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				--i;
 	// 順子(暗刻優先逆順モードの時)
-	if (AtamaCode.Order == Ke_Shun_Rev)
+	if (AtamaCode.Order == ParseOrder::Ke_Shun_Rev)
 		for (int i = static_cast<int>(TileSuit::honors) - 1; i > 0; i--)
 			if (makementsu_shuntsu(countForMentsu, MianziDat, ProcessedMelds, static_cast<TileCode>(i)))
 				++i;
