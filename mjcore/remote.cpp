@@ -243,7 +243,7 @@ void RemoteNaki::thread_server() {
 	}
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
 		using namespace mihajong_socket::protocol;
-		MoveTile::for_each([](std::pair<int, int>& indices) {
+		MoveTile::for_each([](const std::pair<int, int>& indices) {
 			mihajong_socket::server::send(Lipai_From + indices.first);
 			mihajong_socket::server::send(Lipai_To + indices.second);
 		}, i, true);
