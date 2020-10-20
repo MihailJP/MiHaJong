@@ -35,7 +35,10 @@ dist_gbai_DATA = data/gbai/default.lua
 haifudatdir = $(pkgdatadir)/haifu
 dist_haifudat_DATA = \
 	data/haifu/haifu.css data/haifu/haifu.dtd data/haifu/haifu.xsd \
-	data/haifu/haifu.xsl
+	data/haifu/haifu.xsl \
+	data/haifu/GL-Antique-Dice.woff \
+	data/haifu/GL-MahjongTile-Clr-WithFallback.woff \
+	data/haifu/GL-MahjongTile-Subset.woff
 
 sounddatdir = $(pkgdatadir)/sound
 dist_sounddat_DATA = \

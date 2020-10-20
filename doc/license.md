@@ -111,7 +111,7 @@ Wikimedia Commons ユーザーの Daderot 氏により撮影され、MihailJP �
 
 フォントデータについて
 ----------------------
-　フォントデータは「梅ゴシック」を使用しています。
+　ゲーム内のフォントデータは「梅ゴシック」を使用しています。
 
 > これらのフォントはフリー（自由な）ソフトウエアです。
 > あらゆる改変の有無に関わらず、また商業的な利用であっても、自由にご利用、
@@ -122,6 +122,32 @@ Wikimedia Commons ユーザーの Daderot 氏により撮影され、MihailJP �
 > either commercially and noncommercially. THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
 
 参照：[http://sourceforge.jp/projects/ume-font/wiki/FrontPage](http://sourceforge.jp/projects/ume-font/wiki/FrontPage)
+
+　牌譜表示用WOFFフォントデータは「GL-MahjongTile」「GL-MahjongTile-Clr」を使用しています。
+オリジナルの GL-MahjongTile-Clr では Chrome で表示したときに真っ白になってしまいますが
+（これはSVG in OpenTypeにChromeが対応していないからです）、
+対応していないブラウザでは白黒で表示されるように変更しています。
+なお、WOFF は fonttools を使用してサブセット化しています。
+
+> (C)2009-2018 Gutenberg Labo (http://gutenberg.osdn.jp/), All rights reserved.
+>
+> These fonts are free softwares.
+> Unlimited permission is granted to use, copy, and distribute it, with or without modification, either commercially and noncommercially.
+> THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
+
+参照：[http://gutenberg.osdn.jp/ja/license.html](http://gutenberg.osdn.jp/ja/license.html)
+
+　牌譜のサイコロ表示用WOFFフォントデータは「GL-Antique」を使用しています。
+なお、fonttoolsを使用してサブセット化（空白とサイコロのみ）しています。
+
+> (C)2003-2009 Das Ende der Wildnis (http://heiden.daynight.jp/)
+> (C)2008-2018 Gutenberg Labo (http://gutenberg.osdn.jp/), All rights reserved.
+>
+> These fonts are free softwares.
+> Unlimited permission is granted to use, copy, and distribute it, with or without modification, either commercially and noncommercially.
+> THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
+
+参照：[http://gutenberg.osdn.jp/ja/license.html](http://gutenberg.osdn.jp/ja/license.html)
 
 
 使用した効果音のデータについて
