@@ -131,7 +131,7 @@ void GameTableScreen::ShowStatus(const GameTable* gameStat) {
 	myTextRenderer->NewText(0, o.str(), Geometry::BaseSize + 5, 5, 0.875f);
 
 	o.str(_T(""));
-	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - gameStat->ExtraRinshan - gameStat->DeadTiles + 1;
+	const int tiles = gameStat->RinshanPointer - gameStat->TilePointer - (gameStat->chkGameType(AllSanma) ? 0 : gameStat->ExtraRinshan) - gameStat->DeadTiles + 1;
 	if (tiles >= 100) o << _T("残--牌");
 	else o << _T("残") << std::setw(2) << tiles << _T("牌");
 	if (!gameStat->chkGameType(GuobiaoMJ)) {
