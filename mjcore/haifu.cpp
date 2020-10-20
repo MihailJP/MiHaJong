@@ -48,6 +48,12 @@ namespace { // 席替え後のプレイヤー番号対照
 	};
 }
 #endif /* GUOBIAO */
+namespace { // プレイヤー番号対照
+	constexpr PlayerID playerRotationList[2][4][4] = {
+		{{0, 1, 2, 3}, {1, 2, 3, 0}, {2, 3, 0, 1}, {                 3, 0, 1, 2},}, // 四人打ち
+		{{0, 1, 2, 3}, {1, 2, 0, 3}, {2, 0, 1, 3}, {/* not likely */ 0, 1, 2, 3},}, // 三人打ち
+	};
+}
 
 /* 牌譜記録用の補助ルーチン */
 void haifu::tools::haifuskipX(PlayerID targetPlayer) {
@@ -248,7 +254,7 @@ void haifu::haifurechaipai(const GameTable* const gameStat) {
 	currWindNum = gameStat->GameRound / Players;
 #endif /* GUOBIAO */
 	XhaifuBufferBody << _T("\t\t<distribution>") << std::endl;
-	for (int p = 0; p < Players; p++) {
+	for (int p = 0; p < ACTUAL_PLAYERS; p++) {
 #ifdef GUOBIAO
 		XhaifuBufferBody << _T("\t\t\t<initial-hand player=\"player") << playerNumberList[currWindNum][p] << _T("\">") << std::endl;
 #else /* GUOBIAO */
@@ -806,15 +812,12 @@ void haifu::tools::hfwriter::hfWriteFinalForms(const GameTable* const gameStat, 
 	XhaifuBufferBody << _T("\t\t<final-hands>") << std::endl;
 	XhaifuBuffer << _T("\t\t\t<player-score>") << std::endl;
 	for (int i = 0; i < ACTUAL_PLAYERS; i++) {
-		PlayerID k = RelativePositionOf(i, static_cast<seatRelative>(OrigTurn % Players));
+		PlayerID k = playerRotationList[(gameStat->chkGameType(SanmaT)) ? 1 : 0][OrigTurn % Players][i];
 #ifdef GUOBIAO
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << playerNumberList[currWindNum][k] << _T("\">") << std::endl;
 #else /* GUOBIAO */
 		XhaifuBufferBody << _T("\t\t\t<final-hand player=\"player") << static_cast<int>(k) << _T("\">") << std::endl;
 #endif /* GUOBIAO */
-		if (gameStat->chkGameType(SanmaT))
-			if (((OrigTurn % static_cast<int>(Players)) + i) >= ACTUAL_PLAYERS)
-				k = (k + 1) % Players;
 		// 副露面子を出力する
 		finalformWriter::hfFinalForm(gameStat, k, RoundEndType);
 		finalformWriter::hfFlower(gameStat, k);
