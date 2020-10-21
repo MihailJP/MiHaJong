@@ -420,7 +420,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #ifdef GUOBIAO
 		totalHan += yakuHan[yName].coreHan.getHan();
 #else /* GUOBIAO */
-		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* 青点ルールで役満を13飜扱いとする場合 */
+		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* 青天ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
 				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
 				case yaku::yakuCalculator::SemiMangan:
@@ -472,15 +472,27 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		{ /* 単位が混在！ */
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が混在しています"));
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( (((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0))) ||
+			RuleData::chkRule("limitless", "yakuman_considered_13han") /* 青天ルールで役満を13飜扱いとする場合は強制的にここで処理 */ )
 		{ /* 普通の役の時 */
+#endif /* GUOBIAO */
+			int hanVal = yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan();
+#ifndef GUOBIAO
+			if (yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) {
+				hanVal *= 13;
+			} else if (yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) {
+				switch (yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) {
+				case 2: hanVal = 5; break;   case 3: hanVal = 6; break;
+				case 4: hanVal = 8; break;   case 6: hanVal = 11; break;
+				case 8: hanVal = 13; break;  case 16: hanVal = 26; break;
+				}
+			}
 #endif /* GUOBIAO */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
 			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
-				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
+			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, intstr(hanVal).c_str());
 #ifdef GUOBIAO
 			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("点\r\n"));
 #else /* GUOBIAO */
@@ -489,9 +501,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #elif defined(_WIN32)
 			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuValList,
-				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
-					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, intstr(hanVal).c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #ifdef GUOBIAO
 			_tcsncat(result->yakuValList, _T("点\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #else /* GUOBIAO */
@@ -500,9 +510,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #else
 			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
 			_tcsncat(result->yakuNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuValList,
-				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
-					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
+			_tcsncat(result->yakuValList, intstr(hanVal).c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #ifdef GUOBIAO
 			_tcsncat(result->yakuValList, _T("点\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
 #else /* GUOBIAO */
