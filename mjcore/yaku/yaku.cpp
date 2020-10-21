@@ -23,6 +23,22 @@
 #include "yvalue.h"
 #include "../ruletbl.h"
 
+#ifdef _WIN32
+#define T_NEWLINE _T("\r\n")
+#else /* _WIN32 */
+#define T_NEWLINE _T("\n")
+#endif /* _WIN32 */
+namespace {
+	void tcsCat(LPTSTR dest, size_t destsz, LPCTSTR src) {
+#ifdef _MSC_VER
+		_tcscat_s(dest, destsz, src);
+#else
+		_tcsncat(dest, src, destsz - _tcslen(dest));
+		dest[destsz - 1] = _T('\0');
+#endif
+	}
+}
+
 /* 翻を計算する */
 #ifndef GUOBIAO
 void yaku::yakuCalculator::doubling(yaku::YAKUSTAT* const yStat) {
@@ -241,25 +257,11 @@ void yaku::yakuCalculator::countDora
 {
 	auto doraText =
 		[](YAKUSTAT* const result, LPCTSTR const label, int quantity) {
-#if defined(_MSC_VER)
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T(" "));
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
-#elif defined(_WIN32)
-			_tcsncat(result->yakuNameList, label, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, _T(" "), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, intstr(quantity).c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuValList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#else
-			_tcsncat(result->yakuNameList, label, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, _T(" "), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, intstr(quantity).c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuValList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#endif
+			tcsCat(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, label);
+			tcsCat(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T(" "));
+			tcsCat(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, intstr(quantity).c_str());
+			tcsCat(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
+			tcsCat(result->yakuValList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
 		};
 #ifndef GUOBIAO
 	const bool uradoraEnabled = ((RuleData::chkRuleApplied("uradora")) && // 裏ドラありのルールで、
@@ -476,86 +478,34 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 普通の役の時 */
 #endif /* GUOBIAO */
-#if defined(_MSC_VER)
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-			_tcscat_s(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
+			tcsCat(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
+			tcsCat(result->yakuNameList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
+			tcsCat(result->yakuValList, yaku::YAKUSTAT::nameBufSize,
 				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str());
 #ifdef GUOBIAO
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("点\r\n"));
+			tcsCat(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("点") T_NEWLINE);
 #else /* GUOBIAO */
-			_tcscat_s(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("飜\r\n"));
+			tcsCat(result->yakuValList, yaku::YAKUSTAT::nameBufSize, _T("飜") T_NEWLINE);
 #endif /* GUOBIAO */
-#elif defined(_WIN32)
-			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuValList,
-				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
-					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#ifdef GUOBIAO
-			_tcsncat(result->yakuValList, _T("点\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#else /* GUOBIAO */
-			_tcsncat(result->yakuValList, _T("飜\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#endif /* GUOBIAO */
-#else
-			_tcsncat(result->yakuNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuNameList));
-			_tcsncat(result->yakuValList,
-				intstr(yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()).c_str(),
-					yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#ifdef GUOBIAO
-			_tcsncat(result->yakuValList, _T("点\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#else /* GUOBIAO */
-			_tcsncat(result->yakuValList, _T("飜\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakuValList));
-#endif /* GUOBIAO */
-#endif
 #ifndef GUOBIAO
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 満貫 */
-#if defined(_MSC_VER)
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
-			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
-				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
-			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
-#elif defined(_WIN32)
-			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			_tcsncat(result->yakumanNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\r\n"),
-				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
-			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
-#else
-			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			_tcsncat(result->yakumanNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\n"),
-				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan));
-			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
-#endif
+			tcsCat(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
+			tcsCat(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
+			tcsCat(result->yakumanValList, yaku::YAKUSTAT::nameBufSize,
+				to_tstring(static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan)).c_str());
+			tcsCat(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
 		}
 		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
 			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 役満 */
-#if defined(_MSC_VER)
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
-			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, _T("\r\n"));
-			TCHAR hstr[16]; _stprintf_s(hstr, 16, _T("%d\r\n"),
-				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
-			_tcscat_s(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, hstr);
-#elif defined(_WIN32)
-			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			_tcsncat(result->yakumanNameList, _T("\r\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\r\n"),
-				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
-			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
-#else
-			_tcsncat(result->yakumanNameList, yName.c_str(), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			_tcsncat(result->yakumanNameList, _T("\n"), yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanNameList));
-			TCHAR hstr[16]; _sntprintf(hstr, 15, _T("%d\n"),
-				static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8));
-			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
-#endif
+			tcsCat(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
+			tcsCat(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
+			tcsCat(result->yakumanValList, yaku::YAKUSTAT::nameBufSize,
+				to_tstring(static_cast<int>((yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) * yaku::YAKUSTAT::SemiMangan * 8)).c_str());
+			tcsCat(result->yakumanValList, yaku::YAKUSTAT::nameBufSize, T_NEWLINE);
 		}
 #endif /* GUOBIAO */
 	}
@@ -752,30 +702,12 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 					yakuInfo.CoreHan = (RuleData::chkRule("shiisan_puutaa", "mangan")) ? 5 : 13;
 				else yakuInfo.CoreSemiMangan = (RuleData::chkRule("shiisan_puutaa", "mangan")) ? 2 : 8;
 				calculateScore(&yakuInfo);
-#if defined(_MSC_VER)
-				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
+				tcsCat((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
-					YAKUSTAT::nameBufSize, _T("十三不搭\r\n"));
+					YAKUSTAT::nameBufSize, _T("十三不搭") T_NEWLINE);
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("５飜\r\n") : _T("13飜\r\n"));
-#elif defined(_WIN32)
-				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
-					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("十三不搭\r\n"), YAKUSTAT::nameBufSize - _tcslen(target));
-				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcsncat(yakuInfo.yakuValList,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("５飜\r\n") : _T("13飜\r\n"),
-					YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
-#else
-				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
-					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("十三不搭\n"), YAKUSTAT::nameBufSize - _tcslen(target));
-				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcsncat(yakuInfo.yakuValList,
-					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("５飜\n") : _T("13飜\n"),
-					YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
-#endif
+					tcsCat(yakuInfo.yakuValList, YAKUSTAT::nameBufSize,
+					(RuleData::chkRule("shiisan_puutaa", "mangan")) ? _T("５飜") T_NEWLINE : _T("13飜") T_NEWLINE);
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラは数えてあげましょうね
 			}
 			/* 十四不塔 */
@@ -785,25 +717,11 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han")) yakuInfo.CoreHan = 13;
 				else yakuInfo.CoreSemiMangan = 8;
 				calculateScore(&yakuInfo);
-#if defined(_MSC_VER)
-				_tcscat_s((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
+				tcsCat((RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
 					yakuInfo.yakuNameList : yakuInfo.yakumanNameList,
-					YAKUSTAT::nameBufSize, _T("十三無靠\r\n"));
+					YAKUSTAT::nameBufSize, _T("十三無靠") T_NEWLINE);
 				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcscat_s(yakuInfo.yakuValList, YAKUSTAT::nameBufSize, _T("13飜\r\n"));
-#elif defined(_WIN32)
-				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
-					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("十三無靠\r\n"), YAKUSTAT::nameBufSize - _tcslen(target));
-				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcsncat(yakuInfo.yakuValList, _T("13飜\r\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
-#else
-				LPTSTR target = (RuleData::chkRule("limitless", "yakuman_considered_13han")) ?
-					yakuInfo.yakuNameList : yakuInfo.yakumanNameList;
-				_tcsncat(target, _T("十三無靠\n"), YAKUSTAT::nameBufSize - _tcslen(target));
-				if (RuleData::chkRule("limitless", "yakuman_considered_13han"))
-					_tcsncat(yakuInfo.yakuValList, _T("13飜\n"), YAKUSTAT::nameBufSize - _tcslen(yakuInfo.yakuValList));
-#endif
+					tcsCat(yakuInfo.yakuValList, YAKUSTAT::nameBufSize, _T("13飜") T_NEWLINE);
 				countDora(gameStat, nullptr, &yakuInfo, targetPlayer); // ドラを数えるのです
 			}
 		}
