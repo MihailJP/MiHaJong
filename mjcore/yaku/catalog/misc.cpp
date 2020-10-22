@@ -2,73 +2,78 @@
 
 extern GameTable GameStat;
 
+template <std::size_t kSize, std::size_t sSize> bool yaku::yakuCalculator::YakuCatalog::catalogInit::chktiles(const MentsuAnalysis* const analysis,
+	const std::array<TileCode, kSize> targetKez,
+	const std::array<TileCode, sSize> targetShunz, bool noDui) // 面子手・七対子兼用の判定関数
+{
+	if (analysis->shanten[ShantenType::regular] == -1)
+		return (yaku::countingFacility::countSpecMentzWithDup
+		(analysis->MianziDat, targetKez, targetShunz, noDui)
+			== SizeOfMeldBuffer - (noDui ? 1 : 0));
+	else if (analysis->shanten[ShantenType::pairs] == -1)
+		return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez)
+			== NumOfTilesInHand / 2);
+	else return false;
+}
+template <std::size_t kSize, std::size_t sSize> bool yaku::yakuCalculator::YakuCatalog::catalogInit::chktiles_nodup(const MentsuAnalysis* const analysis,
+	const std::array<TileCode, kSize> targetKez,
+	const std::array<TileCode, sSize> targetShunz, bool noDui) // 面子手・七対子兼用の判定関数
+{
+	if (analysis->shanten[ShantenType::regular] == -1)
+		return (yaku::countingFacility::countSpecMentz
+			(analysis->MianziDat, targetKez, targetShunz, noDui)
+			== SizeOfMeldBuffer - (noDui ? 1 : 0));
+	else if (analysis->shanten[ShantenType::pairs] == -1)
+		return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez)
+			== NumOfTilesInHand / 2);
+	else return false;
+}
+
+namespace {
+	constexpr std::array<TileCode, 0> empty = {};
+}
+
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
-	const auto chktiles = // 面子手・七対子兼用の判定関数オブジェクト
-		[](const MentsuAnalysis* const analysis, const TileCode* const targetKez, int numOfKez,
-		const TileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
-			if (analysis->shanten[shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentzWithDup
-					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
-					== SizeOfMeldBuffer - (noDui ? 1 : 0));
-			else if (analysis->shanten[shantenPairs] == -1)
-				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
-					== NumOfTilesInHand / 2);
-			else return false;
-		};
-	const auto chktiles_nodup = // 面子手・七対子兼用の判定関数オブジェクト
-		[](const MentsuAnalysis* const analysis, const TileCode* const targetKez, int numOfKez,
-		const TileCode* const targetShunz, int numOfShunz, bool noDui) -> bool {
-			if (analysis->shanten[shantenRegular] == -1)
-				return (yaku::countingFacility::countSpecMentz
-					(analysis->MianziDat, targetKez, numOfKez, targetShunz, numOfShunz, noDui)
-					== SizeOfMeldBuffer - (noDui ? 1 : 0));
-			else if (analysis->shanten[shantenPairs] == -1)
-				return (yaku::countingFacility::countPairs(analysis->TileCount, targetKez, numOfKez)
-					== NumOfTilesInHand / 2);
-			else return false;
-		};
-
-	// ---------------------------------------------------------------------
-
 	/* 緑一色 */
 	{
 		const auto allgrean =
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, GreenDragon};
-				return chktiles(analysis, kezi, 6, kezi, 1, false);
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 6> kezi = {TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight, TileCode::greenDragon};
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo};
+				return chktiles(analysis, kezi, shunzi, false);
 			};
 #ifdef GUOBIAO
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("緑一色"), yaku::yakuCalculator::Yaku::yval_88,
+			_T("緑一色"), 88_fenF,
 			allgrean
 		));
 #else /* GUOBIAO */
 		if (RuleData::chkRuleApplied("dragonless_all_green"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("茶一色"), _T("断紅和"), _T("混断紅"),
 				[allgrean](const MentsuAnalysis* const analysis) -> bool {
-					return allgrean(analysis) && (analysis->TileCount[GreenDragon] > 0);
+					return allgrean(analysis) && (analysis->TileCount[TileCode::greenDragon] > 0);
 				}
 			));
-		else if (GameStat.chkGameType(SanmaS))
+		else if (GameStat.chkGameType(GameTypeID::sanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("清一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"),
 				allgrean
 			));
 		else // 發なしでも良いルール
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("緑一色"), 1_yakumanF,
 				_T("混一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"), _T("混断紅"), // 清一色は複合可
 				allgrean
 			));
 		if (RuleData::chkRule("dragonless_all_green", "double_yakuman")) // 發なしがダブル役満になるルール
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				GameStat.chkGameType(SanmaS) ? _T("清緑一色") : _T("緑一色"), yaku::yakuCalculator::Yaku::yval_double_yakuman,
+				GameStat.chkGameType(GameTypeID::sanmaS) ? _T("清緑一色") : _T("緑一色"), 2_yakumanF,
 				_T("清一色"), _T("茶一色"), _T("断紅和"), _T("清断紅"),
 				[allgrean](const MentsuAnalysis* const analysis) -> bool {
-					return allgrean(analysis) && (analysis->TileCount[GreenDragon] == 0);
+					return allgrean(analysis) && (analysis->TileCount[TileCode::greenDragon] == 0);
 				}
 			));
 #endif /* GUOBIAO */
@@ -82,16 +87,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				int count = 0;
 				for (int i = 1; i < SizeOfMeldBuffer; i++)
-					if ((analysis->MianziDat[i].mstat != meldSequenceConcealed) &&
-						(analysis->MianziDat[i].mstat != meldTripletConcealed) &&
-						(analysis->MianziDat[i].mstat != meldQuadConcealed)) ++count;
+					if ((analysis->MianziDat[i].mstat != MeldStat::sequenceConcealed) &&
+						(analysis->MianziDat[i].mstat != MeldStat::tripletConcealed) &&
+						(analysis->MianziDat[i].mstat != MeldStat::quadConcealed)) ++count;
 				return (count == SizeOfMeldBuffer - 1);
 			};
 #ifndef GUOBIAO
 		if (RuleData::chkRuleApplied("shiiaru_raotai")) {
 			if (!RuleData::chkRule("shiiaru_raotai", "1han_ron_only"))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-					_T("全倒鋪"), yaku::yakuCalculator::Yaku::yval_1han,
+					_T("全倒鋪"), 1_hanF,
 					[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
 						return chkHadakaTanki(analysis) && analysis->GameStat->TsumoAgariFlag;
 					}
@@ -99,9 +104,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-				_T("全求人"), yaku::yakuCalculator::Yaku::yval_6,
+				_T("全求人"), 6_fenF,
 #else /* GUOBIAO */
-				_T("全求人"), yaku::yakuCalculator::Yaku::yval_1han,
+				_T("全求人"), 1_hanF,
 #endif /* GUOBIAO */
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
 					return chkHadakaTanki(analysis) && (!analysis->GameStat->TsumoAgariFlag);
@@ -115,7 +120,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("金鶏独立"), get_yaku_han("kinkei_dokuritsu"),
 				_T("全倒鋪"), _T("全求人"),
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
-					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == BambooOne);
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == TileCode::bambooOne);
 				}
 			));
 		// 独釣寒江雪…白待ち
@@ -124,7 +129,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("独釣寒江雪"), get_yaku_han("kankou_no_yuki"),
 				_T("全倒鋪"), _T("全求人"),
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
-					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == WhiteDragon);
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == TileCode::whiteDragon);
 				}
 			));
 #endif /* GUOBIAO */
@@ -138,18 +143,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("推不倒"), yaku::yakuCalculator::Yaku::yval_8,
+			_T("推不倒"), 8_fenF,
 			_T("缺一門"),
 #else /* GUOBIAO */
 			_T("推不倒"), get_yaku_han("toipuutao"),
 			_T("絶一門"),
 #endif /* GUOBIAO */
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleOne, CircleTwo, CircleThree, BambooFour, CircleFour, CircleFive, CircleEight,
-					CircleNine, BambooTwo, BambooFive, BambooSix, BambooEight, BambooNine, WhiteDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 14> kezi = {
+					TileCode::circleOne, TileCode::circleTwo, TileCode::circleThree, TileCode::bambooFour, TileCode::circleFour, TileCode::circleFive, TileCode::circleEight,
+					TileCode::circleNine, TileCode::bambooTwo, TileCode::bambooFive, TileCode::bambooSix, TileCode::bambooEight, TileCode::bambooNine, TileCode::whiteDragon,
 				};
-				return chktiles(analysis, kezi, 14, kezi, 4, false);
+				constexpr std::array<TileCode, 4> shunzi = {
+					TileCode::circleOne, TileCode::circleTwo, TileCode::circleThree, TileCode::bambooFour,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 #ifndef GUOBIAO
@@ -159,11 +167,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("紅孔雀"), get_yaku_han("benikujaku"),
 			_T("混一色"), _T("対々和"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooOne, BambooFive, BambooSeven, BambooNine, RedDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 5> kezi = {
+					TileCode::bambooOne, TileCode::bambooFive, TileCode::bambooSeven, TileCode::bambooNine, TileCode::redDragon,
 				};
-				return chktiles(analysis, kezi, 5, nullptr, 0, false);
+				return chktiles(analysis, kezi, empty, false);
 			}
 		));
 	/* 萬緑叢中一点紅 */
@@ -171,32 +179,34 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("紅一点"), get_yaku_han("kouitten"),
 			_T("混一色"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, RedDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 6> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight, TileCode::redDragon,
 				};
-				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
-					(analysis->TileCount[RedDragon] > 0);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo,};
+				return chktiles(analysis, kezi, shunzi, false) &&
+					(analysis->TileCount[TileCode::redDragon] > 0);
 			}
 		));
 	/* 白有り緑一色 */
 	if (RuleData::chkRuleApplied("all_green_with_white")) {
 		const auto allgreen_white =
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight, WhiteDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 6> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight, TileCode::whiteDragon,
 				};
-				return chktiles(analysis, kezi, 6, kezi, 1, false) &&
-					(analysis->TileCount[WhiteDragon] > 0);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo,};
+				return chktiles(analysis, kezi, shunzi, false) &&
+					(analysis->TileCount[TileCode::whiteDragon] > 0);
 			};
 		if (RuleData::chkRule("all_green_with_white", "2han"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("清二色"), yaku::yakuCalculator::Yaku::yval_2han,
+				_T("清二色"), 2_hanF,
 				allgreen_white
 			));
 		else if (RuleData::chkRule("all_green_with_white", "yakuman"))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				_T("白有り緑一色"), yaku::yakuCalculator::Yaku::yval_yakuman,
+				_T("白有り緑一色"), 1_yakumanF,
 				_T("混一色"),
 				allgreen_white
 			));
@@ -204,14 +214,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	/* 緑一色輪 */
 	if (RuleData::chkRuleApplied("ryuuiisohrin")) {
 		const auto allgreen_five =
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 5> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
 				};
-				return chktiles(analysis, kezi, 5, kezi, 1, true) &&
-					(analysis->MianziDat[0].tile == BambooFive);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo,};
+				return chktiles(analysis, kezi, shunzi, true) &&
+					(analysis->MianziDat[0].tile == TileCode::bambooFive);
 			};
-		if (GameStat.chkGameType(SanmaS))
+		if (GameStat.chkGameType(GameTypeID::sanmaS))
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("緑一色輪"), get_yaku_han("ryuuiisohrin"),
 				_T("清一色"),
@@ -228,12 +239,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("大草原"), get_yaku_han("daisougen"),
 			_T("清一色"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooFive,
-					BambooSix, BambooSeven, BambooNine,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 7> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
+					TileCode::bambooSix, TileCode::bambooSeven, TileCode::bambooNine,
 				};
-				return chktiles(analysis, kezi, 7, kezi, 4, false);
+				constexpr std::array<TileCode, 4> shunzi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 南大草原 */
@@ -241,13 +255,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("南大草原"), get_yaku_han("south_daisougen"),
 			_T("混一色"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooFive,
-					BambooSix, BambooSeven, BambooNine, SouthWind,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 8> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
+					TileCode::bambooSix, TileCode::bambooSeven, TileCode::bambooNine, TileCode::southWind,
 				};
-				return chktiles(analysis, kezi, 8, kezi, 4, false) &&
-					(analysis->TileCount[SouthWind] > 0);
+				constexpr std::array<TileCode, 4> shunzi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
+				};
+				return chktiles(analysis, kezi, shunzi, false) &&
+					(analysis->TileCount[TileCode::southWind] > 0);
 			}
 		));
 	/* 桃一色 */
@@ -255,18 +272,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("桃一色"), get_yaku_han("taoyise"),
 			_T("混一色"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->shanten[shantenRegular] == -1) && (analysis->KeziCount[RedDragon] >= 1))
+				if ((analysis->shanten[ShantenType::regular] == -1) && (analysis->KeziCount[TileCode::redDragon] >= 1))
 					yakuFlag = true;
-				else if ((analysis->shanten[shantenPairs] == -1) && (analysis->TileCount[RedDragon] >= 2))
+				else if ((analysis->shanten[ShantenType::pairs] == -1) && (analysis->TileCount[TileCode::redDragon] >= 2))
 					yakuFlag = true;
-				constexpr TileCode kezi[] = {
-					CircleFive, CircleOne, CircleThree, CircleSix,
-					CircleSeven, CircleNine, RedDragon,
+				constexpr std::array<TileCode, 7> kezi = {
+					TileCode::circleFive, TileCode::circleOne, TileCode::circleThree, TileCode::circleSix,
+					TileCode::circleSeven, TileCode::circleNine, TileCode::redDragon,
 				};
-				return chktiles(analysis, kezi, 7, kezi, 1, false) &&
-					((countRedTilesInHand(analysis->GameStat, analysis->player, AkaDora))[CircleFive] > 0) &&
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::circleFive};
+				return chktiles(analysis, kezi, shunzi, false) &&
+					((countRedTilesInHand(analysis->GameStat, analysis->player, DoraCol::akaDora))[TileCode::circleFive] > 0) &&
 					yakuFlag;
 			}
 		));
@@ -275,13 +293,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("茶一色"), get_yaku_han("chayise"),
 			_T("混一色"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
-					EastWind, SouthWind, WestWind, NorthWind,
-					WhiteDragon, GreenDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 11> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
+					TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+					TileCode::whiteDragon, TileCode::greenDragon,
 				};
-				return chktiles(analysis, kezi, 11, kezi, 1, false);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo,};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 黒一色 */
@@ -289,12 +308,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("黒一色"), get_yaku_han("heiiisoh"),
 			_T("混一色"), _T("対々和"), _T("青洞門"), _T("断紅和"), _T("混断紅"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleTwo, CircleFour, CircleEight,
-					EastWind, SouthWind, WestWind, NorthWind,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 7> kezi = {
+					TileCode::circleTwo, TileCode::circleFour, TileCode::circleEight,
+					TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
 				};
-				return chktiles(analysis, kezi, 7, nullptr, 0, false);
+				return chktiles(analysis, kezi, empty, false);
 			}
 		));
 	/* 反緑一色 */
@@ -303,16 +322,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("反緑一色"), get_yaku_han("reverse_green"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
-					constexpr TileCode kezi[] = {
-						BambooSeven,
-						BambooTwo, BambooFour, BambooSix, BambooEight,
-						GreenDragon,
+				if (analysis->shanten[ShantenType::regular] == -1) {
+					constexpr std::array<TileCode, 6> kezi = {
+						TileCode::bambooSeven,
+						TileCode::bambooTwo, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
+						TileCode::greenDragon,
 					};
-					return (yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 6, nullptr, 0, false) == SizeOfMeldBuffer) &&
-						(yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 1, nullptr, 0, false) == 1);
+					constexpr std::array<TileCode, 1> keziRqd = {TileCode::bambooSeven,};
+					return (yaku::countingFacility::countSpecMentz(analysis->MianziDat, kezi, empty, false) == SizeOfMeldBuffer) &&
+						(yaku::countingFacility::countSpecMentz(analysis->MianziDat, keziRqd, empty, false) == 1);
 				}
 				else return false;
 			}
@@ -323,16 +341,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("反緑一色輪"), get_yaku_han("reverse_ryuuiisohrin"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
-					constexpr TileCode kezi[] = {
-						BambooSeven,
-						BambooTwo, BambooFour, BambooSix, BambooEight,
+				if (analysis->shanten[ShantenType::regular] == -1) {
+					constexpr std::array<TileCode, 5> kezi = {
+						TileCode::bambooSeven,
+						TileCode::bambooTwo, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
 					};
+					constexpr std::array<TileCode, 1> keziRqd = {TileCode::bambooSeven,};
 					return (yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 5, nullptr, 0, false) == SizeOfMeldBuffer) &&
+						(analysis->MianziDat, kezi, empty, false) == SizeOfMeldBuffer) &&
 						(yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 1, nullptr, 0, false) == 1) &&
-						(analysis->MianziDat[0].tile == BambooFive);
+						(analysis->MianziDat, keziRqd, empty, false) == 1) &&
+						(analysis->MianziDat[0].tile == TileCode::bambooFive);
 				}
 				else return false;
 			}
@@ -343,15 +362,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("反黒一色"), get_yaku_han("reverse_black"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleSix,
-					CircleTwo, CircleEight,
-					EastWind, SouthWind, WestWind, NorthWind,
+				constexpr std::array<TileCode, 7> kezi = {
+					TileCode::circleSix,
+					TileCode::circleTwo, TileCode::circleEight,
+					TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
 				};
+				constexpr std::array<TileCode, 1> keziRqd = {TileCode::circleSix,};
 				return (yaku::countingFacility::countSpecMentz
-					(analysis->MianziDat, kezi, 7, nullptr, 0, false) == SizeOfMeldBuffer) &&
+					(analysis->MianziDat, kezi, empty, false) == SizeOfMeldBuffer) &&
 					(yaku::countingFacility::countSpecMentz
-					(analysis->MianziDat, kezi, 1, nullptr, 0, false) == 1);
+					(analysis->MianziDat, keziRqd, empty, false) == 1);
 			}
 		));
 	/* 青洞門 */
@@ -360,16 +380,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("青洞門"), get_yaku_han("ao_no_domon"),
 			_T("混一色"), _T("対々和"), _T("断紅和"), _T("混断紅"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1) {
-					constexpr TileCode kezi[] = {
-						EastWind, SouthWind, WestWind, NorthWind,
-						CircleTwo, CircleFour, CircleEight,
-						GreenDragon,
+				if (analysis->shanten[ShantenType::regular] == -1) {
+					constexpr std::array<TileCode, 8> kezi = {
+						TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+						TileCode::circleTwo, TileCode::circleFour, TileCode::circleEight,
+						TileCode::greenDragon,
+					};
+					constexpr std::array<TileCode, 4> keziRqd = {
+						TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
 					};
 					return (yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 8, nullptr, 0, false) == SizeOfMeldBuffer) &&
+						(analysis->MianziDat, kezi, empty, false) == SizeOfMeldBuffer) &&
 						(yaku::countingFacility::countSpecMentz
-						(analysis->MianziDat, kezi, 4, nullptr, 0, false) == 1);
+						(analysis->MianziDat, keziRqd, empty, false) == 1);
 				}
 				else return false;
 			}
@@ -377,31 +400,33 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	/* 断紅和 */
 	if (RuleData::chkRuleApplied("no_red")) {
 		const auto hontanhon =
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
-					CircleTwo, CircleFour, CircleEight,
-					EastWind, SouthWind, WestWind, NorthWind,
-					WhiteDragon, GreenDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 14> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
+					TileCode::circleTwo, TileCode::circleFour, TileCode::circleEight,
+					TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+					TileCode::whiteDragon, TileCode::greenDragon,
 				};
-				return chktiles(analysis, kezi, 14, kezi, 1, false);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo,};
+				return chktiles(analysis, kezi, shunzi, false);
 			};
 		const auto chintanhon =
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					BambooTwo, BambooThree, BambooFour, BambooSix, BambooEight,
-					CircleTwo, CircleFour, CircleEight,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 8> kezi = {
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooSix, TileCode::bambooEight,
+					TileCode::circleTwo, TileCode::circleFour, TileCode::circleEight,
 				};
-				return chktiles(analysis, kezi, 8, kezi, 1, false);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::bambooTwo,};
+				return chktiles(analysis, kezi, shunzi, false);
 			};
 		if (RuleData::chkRule("no_red", "hon3han_chin6han") || RuleData::chkRule("no_red", "6han")) {
-			if (!GameStat.chkGameType(SanmaS))
+			if (!GameStat.chkGameType(GameTypeID::sanmaS))
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-					_T("混断紅"), yaku::yakuCalculator::Yaku::yval_3han_kuisagari,
+					_T("混断紅"), 3_hanK,
 					hontanhon
 				));
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-				GameStat.chkGameType(SanmaS) ? _T("清断紅") : _T("断紅和"), yaku::yakuCalculator::Yaku::yval_6han_kuisagari,
+				GameStat.chkGameType(GameTypeID::sanmaS) ? _T("清断紅") : _T("断紅和"), 6_hanK,
 				_T("混断紅"),
 				chintanhon
 			));
@@ -417,15 +442,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("紅白饅頭"), get_yaku_han("kohaku_manju"),
 			_T("紅白七対"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterOne, CharacterTwo, CharacterThree, CharacterFour,
-					CharacterFive, CharacterSix, CharacterSeven, CharacterEight,
-					CharacterNine, WhiteDragon, RedDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 11> kezi = {
+					TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour,
+					TileCode::characterFive, TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight,
+					TileCode::characterNine, TileCode::whiteDragon, TileCode::redDragon,
 				};
-				return chktiles(analysis, kezi, 11, kezi, 7, false) &&
-					(analysis->TileCount[WhiteDragon] > 0) &&
-					(analysis->TileCount[RedDragon] > 0);
+				constexpr std::array<TileCode, 7> shunzi = {
+					TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour,
+					TileCode::characterFive, TileCode::characterSix, TileCode::characterSeven,
+				};
+				return chktiles(analysis, kezi, shunzi, false) &&
+					(analysis->TileCount[TileCode::whiteDragon] > 0) &&
+					(analysis->TileCount[TileCode::redDragon] > 0);
 			}
 		));
 	/* 素数役満 (triplet2.cppより移動) */
@@ -433,25 +462,25 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("素数役満"), get_yaku_han("prime_number"),
 			_T("対々和"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterTwo, CharacterThree, CharacterFive, CharacterSeven,
-					CircleTwo, CircleThree, CircleFive, CircleSeven,
-					BambooTwo, BambooThree, BambooFive, BambooSeven,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 12> kezi = {
+					TileCode::characterTwo, TileCode::characterThree, TileCode::characterFive, TileCode::characterSeven,
+					TileCode::circleTwo, TileCode::circleThree, TileCode::circleFive, TileCode::circleSeven,
+					TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFive, TileCode::bambooSeven,
 				};
-				return chktiles(analysis, kezi, 12, nullptr, 0, false);
+				return chktiles(analysis, kezi, empty, false);
 			}
 		));
 	/* 白一色 (triplet2.cppより移動) */
 	if (RuleData::chkRuleApplied("hakuiisoo"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("白一色"), get_yaku_han("hakuiisoo"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterEight, CharacterNine, CircleEight, CircleNine,
-					BambooEight, BambooNine, WhiteDragon,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 7> kezi = {
+					TileCode::characterEight, TileCode::characterNine, TileCode::circleEight, TileCode::circleNine,
+					TileCode::bambooEight, TileCode::bambooNine, TileCode::whiteDragon,
 				};
-				return chktiles(analysis, kezi, 7, nullptr, 0, false);
+				return chktiles(analysis, kezi, empty, false);
 			}
 		));
 #endif /* GUOBIAO */
@@ -463,26 +492,26 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		const auto suukuiyii =
 			[](const MentsuAnalysis* const analysis) -> int {
 				int count = 0;
-				for (int i = 1; i < TileNonflowerMax; ++i)
+				for (auto i : AllTiles)
 					if ((analysis->TileCount[i] == 4)&&(analysis->KangziCount[i] == 0))
 						++count;
 				return count;
 			};
 		/* 四帰一 */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四帰一"), yaku::yakuCalculator::Yaku::yval_2,
+			_T("四帰一"), 2_fenF,
 			[suukuiyii](const MentsuAnalysis* const analysis) -> bool {
 				return (suukuiyii(analysis) == 1);
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四帰一x2"), yaku::yakuCalculator::Yaku::yval_4,
+			_T("四帰一x2"), 4_fenF,
 			[suukuiyii](const MentsuAnalysis* const analysis) -> bool {
 				return (suukuiyii(analysis) == 2);
 			}
 		));
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四帰一x3"), yaku::yakuCalculator::Yaku::yval_6,
+			_T("四帰一x3"), 6_fenF,
 			[suukuiyii](const MentsuAnalysis* const analysis) -> bool {
 				return (suukuiyii(analysis) == 3);
 			}
@@ -507,30 +536,30 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("大四帰四"), get_yaku_han("great_four_into_four"),
 			_T("重四帰四"), _T("四帰四"), _T("四帰三一"), _T("四帰三"), _T("龍四帰一"), _T("虎四帰一"), _T("両四帰一"), _T("四帰一"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				for (int i = 1; i < TileSuitHonors; i++) {
+				for (auto i : NumberTiles) {
 					// 123 123 234 234: 牌式24420
-					if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 2) &&
-						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3))))
+					if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 2) &&
+						((analysis->MianziDat[0].tile == i) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3))))
 						return true;
 					// 123 123 234 345: 牌式23421
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 1) &&
-						(analysis->ShunziCount[i+2] >= 1) &&
-						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3))))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1) &&
+						((analysis->MianziDat[0].tile == i) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3))))
 						return true;
 					// 123 123 345 345: 牌式22422
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+2] >= 2) &&
-						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 1)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 4))))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 2) &&
+						((analysis->MianziDat[0].tile == i) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 1)) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3)) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 4))))
 						return true;
 					// 123 234 345 345: 牌式12432
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 1) &&
-						(analysis->ShunziCount[i+2] >= 2) &&
-						((analysis->MianziDat[0].tile == static_cast<TileCode>(i)) ||
-						(analysis->MianziDat[0].tile == static_cast<TileCode>(i + 3))))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i,  + 2)] >= 2) &&
+						((analysis->MianziDat[0].tile == i) ||
+						(analysis->MianziDat[0].tile == offsetTileNumber(i, 3))))
 						return true;
 				}
 				return false;
@@ -542,15 +571,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("重四帰四"), get_yaku_han("double_four_into_four"),
 			_T("四帰四"), _T("四帰三一"), _T("四帰三"), _T("龍四帰一"), _T("虎四帰一"), _T("両四帰一"), _T("四帰一"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				for (int i = 1; i < TileSuitHonors; i++) {
+				for (auto i : NumberTiles) {
 					// 123 123 123 234: 牌式34410
-					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[i+1] >= 1))
+					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1))
 						return true;
 					// 123 123 234 234: 牌式24420
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 2))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 2))
 						return true;
 					// 123 234 234 234: 牌式14430
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 3))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 3))
 						return true;
 				}
 				return false;
@@ -561,27 +590,27 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("四帰四"), get_yaku_han("four_into_four"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				for (int i = 1; i < TileSuitHonors; i++) {
+				for (auto i : NumberTiles) {
 					// 123 123 123 345: 牌式33411
-					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[i+2] >= 1))
+					if ((analysis->ShunziCount[i] >= 3) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1))
 						return true;
 					// 123 123 234 345: 牌式23421
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+1] >= 1) &&
-						(analysis->ShunziCount[i+2] >= 1))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1))
 						return true;
 					// 123 123 345 345: 牌式22422
-					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[i+2] >= 2))
+					else if ((analysis->ShunziCount[i] >= 2) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 2))
 						return true;
 					// 123 234 234 345: 牌式13431
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 2) &&
-						(analysis->ShunziCount[i+2] >= 1))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 2) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 1))
 						return true;
 					// 123 234 345 345: 牌式12432
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+1] >= 1) &&
-						(analysis->ShunziCount[i+2] >= 2))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->ShunziCount[offsetTileNumber(i, 2)] >= 2))
 						return true;
 					// 123 345 345 345: 牌式11433
-					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[i+2] >= 3))
+					else if ((analysis->ShunziCount[i] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, 2)] >= 3))
 						return true;
 				}
 				return false;
@@ -593,21 +622,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	{
 		const auto suukuisan =
 			[](const MentsuAnalysis* const analysis) -> bool {
-				for (int i = 1; i < TileSuitHonors; i++) {
-					if (analysis->MianziDat[0].tile == static_cast<TileCode>(i)) {
+				for (auto i : NumberTiles) {
+					if (analysis->MianziDat[0].tile == i) {
 						if (analysis->ShunziCount[i] >= 2)
 							return true;
-						else if (i < 1) continue;
-						else if ((analysis->ShunziCount[i-1] >= 1) && (analysis->ShunziCount[i] >= 1))
+						else if (static_cast<int>(i) < 1) continue;
+						else if ((analysis->ShunziCount[offsetTileNumber(i, -1)] >= 1) && (analysis->ShunziCount[i] >= 1))
 							return true;
-						else if (analysis->ShunziCount[i-1] >= 2)
+						else if (analysis->ShunziCount[offsetTileNumber(i, -1)] >= 2)
 							return true;
-						else if (i < 2) continue;
-						else if ((analysis->ShunziCount[i-2] >= 1) && (analysis->ShunziCount[i] >= 1))
+						else if (static_cast<int>(i) < 2) continue;
+						else if ((analysis->ShunziCount[offsetTileNumber(i, -2)] >= 1) && (analysis->ShunziCount[i] >= 1))
 							return true;
-						else if ((analysis->ShunziCount[i-2] >= 1) && (analysis->ShunziCount[i-1] >= 1))
+						else if ((analysis->ShunziCount[offsetTileNumber(i, -2)] >= 1) && (analysis->ShunziCount[offsetTileNumber(i, -1)] >= 1))
 							return true;
-						else if (analysis->ShunziCount[i-2] >= 2)
+						else if (analysis->ShunziCount[offsetTileNumber(i, -2)] >= 2)
 							return true;
 					}
 				}
@@ -620,11 +649,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("四帰三"), _T("四帰一"),
 				[suukuisan](const MentsuAnalysis* const analysis) -> bool {
 					bool yakuFlag = false;
-					for (int i = 1; i < TileSuitHonors; i++)
+					for (auto i : NumberTiles)
 						if ((analysis->ShunziCount[i] >= 1) &&
 							((analysis->KeziCount[i] >= 1) ||
-							(analysis->KeziCount[i+1] >= 1) ||
-							(analysis->KeziCount[i+2] >= 1))) yakuFlag = true;
+							(analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) ||
+							(analysis->KeziCount[offsetTileNumber(i, 2)] >= 1))) yakuFlag = true;
 					return suukuisan(analysis) && yakuFlag;
 				}
 			));
@@ -646,11 +675,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("三連刻"), _T("虎四帰一"), _T("両四帰一"), _T("四帰一"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < TileSuitHonors; i++)
+				for (auto i : NumberTiles)
 					if ((analysis->ShunziCount[i] >= 1) &&
 						(analysis->KeziCount[i] >= 1) &&
-						(analysis->KeziCount[i+1] >= 1) &&
-						(analysis->KeziCount[i+2] >= 1)) yakuFlag = true;
+						(analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) &&
+						(analysis->KeziCount[offsetTileNumber(i, 2)] >= 1)) yakuFlag = true;
 				return yakuFlag;
 			}
 		));
@@ -661,11 +690,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("両四帰一"), _T("四帰一"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 1; i < TileSuitHonors; i++) {
+				for (auto i : NumberTiles) {
 					if (analysis->ShunziCount[i] >= 1) {
-						if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i+1] >= 1)) yakuFlag = true;
-						else if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[i+2] >= 1)) yakuFlag = true;
-						else if ((analysis->KeziCount[i+1] >= 1) && (analysis->KeziCount[i+2] >= 1)) yakuFlag = true;
+						if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 1)] >= 1)) yakuFlag = true;
+						else if ((analysis->KeziCount[i] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1)) yakuFlag = true;
+						else if ((analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) && (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1)) yakuFlag = true;
 					}
 				}
 				return yakuFlag;
@@ -675,11 +704,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		const auto suukuiyii =
 			[](const MentsuAnalysis* const analysis) -> int {
 				int count = 0;
-				for (int i = 1; i < TileSuitHonors; i++) {
+				for (auto i : NumberTiles) {
 					if (analysis->ShunziCount[i] >= 1) {
 						if (analysis->KeziCount[i] >= 1) ++count;
-						else if (analysis->KeziCount[i+1] >= 1) ++count;
-						else if (analysis->KeziCount[i+2] >= 1) ++count;
+						else if (analysis->KeziCount[offsetTileNumber(i, 1)] >= 1) ++count;
+						else if (analysis->KeziCount[offsetTileNumber(i, 2)] >= 1) ++count;
 					}
 				}
 				return count;
@@ -714,9 +743,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				int count = 0;
 				for (int i = 1; i <= 9; i++)
-					if (analysis->TileCount[TileSuitCharacters + i] +
-						analysis->TileCount[TileSuitCircles + i] +
-						analysis->TileCount[TileSuitBamboos + i] >=
+					if (analysis->TileCount[composeNumberTile(TileSuit::characters, i)] +
+						analysis->TileCount[composeNumberTile(TileSuit::circles, i)] +
+						analysis->TileCount[composeNumberTile(TileSuit::bamboos, i)] >=
 						(((i == 1)||(i == 9)) ? 3 : 1) )
 						++count;
 				return (count == 9);
@@ -732,22 +761,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				// 鳴き面子も計算 槓子は無視
 				for (int i = 1; i < SizeOfMeldBuffer; i++) {
 					switch (analysis->MianziDat[i].mstat) {
-					case meldSequenceExposedLower: case meldSequenceExposedMiddle:
-					case meldSequenceExposedUpper:
+					case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle:
+					case MeldStat::sequenceExposedUpper:
 						++tiles[analysis->MianziDat[i].tile];
-						++tiles[analysis->MianziDat[i].tile + 1];
-						++tiles[analysis->MianziDat[i].tile + 2];
+						++tiles[offsetTileNumber(analysis->MianziDat[i].tile, 1)];
+						++tiles[offsetTileNumber(analysis->MianziDat[i].tile, 2)];
 						break;
-					case meldTripletExposedLeft: case meldTripletExposedCenter:
-					case meldTripletExposedRight:
+					case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter:
+					case MeldStat::tripletExposedRight:
 						tiles[analysis->MianziDat[i].tile] += 3;
 						break;
 					}
 				}
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
-					if ((tiles[i + 1] >= 3) && (tiles[i + 2] >= 1) && (tiles[i + 3] >= 1) &&
-						(tiles[i + 4] >= 1) && (tiles[i + 5] >= 1) && (tiles[i + 6] >= 1) &&
-						(tiles[i + 7] >= 1) && (tiles[i + 8] >= 1) && (tiles[i + 9] >= 3))
+				for (auto i : NumberTileSuits)
+					if ((tiles[composeNumberTile(i, 1)] >= 3) && (tiles[composeNumberTile(i, 2)] >= 1) && (tiles[composeNumberTile(i, 3)] >= 1) &&
+						(tiles[composeNumberTile(i, 4)] >= 1) && (tiles[composeNumberTile(i, 5)] >= 1) && (tiles[composeNumberTile(i, 6)] >= 1) &&
+						(tiles[composeNumberTile(i, 7)] >= 1) && (tiles[composeNumberTile(i, 8)] >= 1) && (tiles[composeNumberTile(i, 9)] >= 3))
 						yakuFlag = true;
 				return yakuFlag && (!(*analysis->MenzenFlag));
 			}
@@ -763,19 +792,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++) {
-					if ((analysis->KeziCount[TileSuitCharacters + i] >= 1) &&
-						(analysis->KeziCount[TileSuitCircles + i] >= 1) &&
-						(analysis->KeziCount[TileSuitBamboos + i] >= 1)) {
+					if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::circles, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::bamboos, i)] >= 1)) {
 							if (i <= 5)
-								for (int k = 0; k < TileSuitHonors; k += TileSuitStep)
-									if ((analysis->ShunziCount[k + i + 1] >= 1) &&
-										(analysis->MianziDat[0].tile == k + i + 4))
+								for (auto k : NumberTileSuits)
+									if ((analysis->ShunziCount[composeNumberTile(k, i + 1)] >= 1) &&
+										(analysis->MianziDat[0].tile == composeNumberTile(k, i + 4)))
 										yakuFlag = true;
 							/* ここにはelseをつけてはだめ */
 							if (i >= 5)
-								for (int k = 0; k < TileSuitHonors; k += TileSuitStep)
-									if ((analysis->ShunziCount[k + i - 3] >= 1) &&
-										(analysis->MianziDat[0].tile == k + i - 4))
+								for (auto k : NumberTileSuits)
+									if ((analysis->ShunziCount[composeNumberTile(k, i - 3)] >= 1) &&
+										(analysis->MianziDat[0].tile == composeNumberTile(k, i - 4)))
 										yakuFlag = true;
 					}
 				}
@@ -789,17 +818,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (RuleData::chkRuleApplied("uutaaran"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("武太郎売焼餅"), get_yaku_han("uutaaran"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterFive, CircleFive, BambooFive,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 3> kezi = {
+					TileCode::characterFive, TileCode::circleFive, TileCode::bambooFive,
 				};
-				constexpr TileCode shunzi[] = {
-					CharacterThree, CharacterFour, CharacterFive,
-					CircleThree, CircleFour, CircleFive,
-					BambooThree, BambooFour, BambooFive,
+				constexpr std::array<TileCode, 9> shunzi = {
+					TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+					TileCode::circleThree, TileCode::circleFour, TileCode::circleFive,
+					TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
 				};
-				return chktiles(analysis, kezi, 3, shunzi, 9, true) &&
-					(analysis->MianziDat[0].tile == CircleOne);
+				return chktiles(analysis, kezi, shunzi, true) &&
+					(analysis->MianziDat[0].tile == TileCode::circleOne);
 			}
 		));
 	/* 北の漁場 */
@@ -807,22 +836,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("北の漁場"), get_yaku_han("kitanogyojou"),
 			_T("四帰一"), _T("混一色"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
+			[](const MentsuAnalysis* const analysis) -> bool {
 				bool flag = false;
-				for (unsigned i = 0; i < TileSuitHonors; i += TileSuitStep) {
-					const TileCode kezi[] = {
-						static_cast<TileCode>(i + 3), static_cast<TileCode>(i + 6), NorthWind,
+				for (auto i : NumberTileSuits) {
+					const std::array<TileCode, 3> kezi = {
+						composeNumberTile(i, 3), composeNumberTile(i, 6), TileCode::northWind,
 					};
-					const TileCode shunzi[] = {
-						static_cast<TileCode>(i + 3),
-						static_cast<TileCode>(i + 4)
-					};
-					if (chktiles(analysis, kezi, 3, shunzi, 1, true) &&
-						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)) &&
+					const std::array<TileCode, 1> shunzi1 = {composeNumberTile(i, 3)};
+					const std::array<TileCode, 1> shunzi2 = {composeNumberTile(i, 4)};
+					if (chktiles(analysis, kezi, shunzi1, true) &&
+						(analysis->TsumoHai->tile == composeNumberTile(i, 3)) &&
 						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
-					if (chktiles(analysis, kezi, 3, shunzi + 1, 1, true) &&
-						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)) &&
+					if (chktiles(analysis, kezi, shunzi2, true) &&
+						(analysis->TsumoHai->tile == composeNumberTile(i, 6)) &&
 						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 				}
@@ -835,20 +862,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("愚濫怒苦露酢"), yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MentsuAnalysis* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
-					(analysis->TsumoHai->tile == CircleFive) ?
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
-					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
+					(analysis->TsumoHai->tile == TileCode::circleFive) ?
+					2_yakuman :
+					1_yakuman);
 			}),
 			_T("清一色"),
-			[chktiles_nodup](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleFour, CircleSix,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 2> kezi = {
+					TileCode::circleFour, TileCode::circleSix,
 				};
-				constexpr TileCode shunzi[] = {
-					CircleOne, CircleSeven,
+				constexpr std::array<TileCode, 2> shunzi = {
+					TileCode::circleOne, TileCode::circleSeven,
 				};
-				return chktiles_nodup(analysis, kezi, 2, shunzi, 2, true) &&
-					(analysis->MianziDat[0].tile == CircleFive) &&
+				return chktiles_nodup(analysis, kezi, shunzi, true) &&
+					(analysis->MianziDat[0].tile == TileCode::circleFive) &&
 					(*analysis->MenzenFlag);
 			}
 		));
@@ -856,34 +883,42 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (RuleData::chkRuleApplied("xique_naomei"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("喜鵲閙梅"), get_yaku_han("xique_naomei"),
-			[chktiles_nodup](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleFive, BambooOne,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 2> kezi = {
+					TileCode::circleFive, TileCode::bambooOne,
 				};
-				constexpr TileCode shunzi[] = {
-					CharacterOne, CircleOne,
+				constexpr std::array<TileCode, 2> shunzi = {
+					TileCode::characterOne, TileCode::circleOne,
 				};
-				return chktiles_nodup(analysis, kezi, 2, shunzi, 2, true) &&
-					(analysis->MianziDat[0].tile == BambooFive);
+				return chktiles_nodup(analysis, kezi, shunzi, true) &&
+					(analysis->MianziDat[0].tile == TileCode::bambooFive);
 			}
 		));
 	/* 花一色 */
 	if (RuleData::chkRuleApplied("huaiisoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("花一色"), get_yaku_han("huaiisoh"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
-					CharacterSix, CharacterSeven, CharacterEight, CharacterNine, RedDragon,
-					CircleOne, CircleThree, CircleFive, CircleSix, CircleSeven,
-					CircleNine, BambooOne, BambooFive, BambooSeven, BambooNine,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 20> kezi = {
+					TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+					TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine, TileCode::redDragon,
+					TileCode::circleOne, TileCode::circleThree, TileCode::circleFive, TileCode::circleSix, TileCode::circleSeven,
+					TileCode::circleNine, TileCode::bambooOne, TileCode::bambooFive, TileCode::bambooSeven, TileCode::bambooNine,
 				};
-				constexpr TileCode shunzi[] = {
-					CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
-					CharacterSix, CharacterSeven, CircleFive,
+				constexpr std::array<TileCode, 8> shunzi = {
+					TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+					TileCode::characterSix, TileCode::characterSeven, TileCode::circleFive,
 				};
-				return (chktiles(analysis, kezi, 20, shunzi, 8, false)) &&
-					(!chktiles(analysis, kezi, 10, shunzi, 7, false));
+				constexpr std::array<TileCode, 10> keziNeg = {
+					TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+					TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine, TileCode::redDragon,
+				};
+				constexpr std::array<TileCode, 7> shunziNeg = {
+					TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+					TileCode::characterSix, TileCode::characterSeven,
+				};
+				return (chktiles(analysis, kezi, shunzi, false)) &&
+					(!chktiles(analysis, keziNeg, shunziNeg, false));
 			}
 		));
 	/* 赤一色 */
@@ -891,12 +926,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("赤一色"), get_yaku_han("akaiisoh"),
 			_T("花一色"), _T("絶一門"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleFive, CircleOne, CircleThree, CircleSix, CircleSeven,
-					CircleNine, BambooOne, BambooFive, BambooSeven, BambooNine,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 10> kezi = {
+					TileCode::circleFive, TileCode::circleOne, TileCode::circleThree, TileCode::circleSix, TileCode::circleSeven,
+					TileCode::circleNine, TileCode::bambooOne, TileCode::bambooFive, TileCode::bambooSeven, TileCode::bambooNine,
 				};
-				return chktiles(analysis, kezi, 10, kezi, 1, false);
+				constexpr std::array<TileCode, 1> shunzi = {TileCode::circleFive,};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 赤眼青龍 */
@@ -904,10 +940,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("赤眼青龍"), get_yaku_han("sekigan_seiryuu"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->ShunziCount[CircleTwo] == 1) &&
-					(analysis->KeziCount[WhiteDragon] + analysis->KeziCount[EastWind] == 1) &&
-					(analysis->DuiziCount[CircleTwo] + analysis->DuiziCount[CircleFour] +
-					analysis->DuiziCount[CircleEight] >= 3));
+				return ((analysis->ShunziCount[TileCode::circleTwo] == 1) &&
+					(analysis->KeziCount[TileCode::whiteDragon] + analysis->KeziCount[TileCode::eastWind] == 1) &&
+					(analysis->DuiziCount[TileCode::circleTwo] + analysis->DuiziCount[TileCode::circleFour] +
+					analysis->DuiziCount[TileCode::circleEight] >= 3));
 			}
 		));
 	/* 合格祈願(東刻子) */
@@ -915,15 +951,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		for (int i = 1; i <= 4; ++i)
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("合格祈願 "), yaku::yakuCalculator::Yaku::FixedHan(
-				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, Han),
-				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_null),
+				yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(i, HanUnit::han),
+				0_han),
 				[i](const MentsuAnalysis* const analysis) -> bool {
-					unsigned tileCount = static_cast<unsigned>(analysis->TileCount[CircleFive]);
-					tileCount += 3 * (analysis->KeziCount[CircleFive] - analysis->AnKeziCount[CircleFive]);
-					tileCount += (analysis->KangziCount[CircleFive] - analysis->AnKangziCount[CircleFive]);
+					unsigned tileCount = static_cast<unsigned>(analysis->TileCount[TileCode::circleFive]);
+					tileCount += 3 * (analysis->KeziCount[TileCode::circleFive] - analysis->AnKeziCount[TileCode::circleFive]);
+					tileCount += (analysis->KangziCount[TileCode::circleFive] - analysis->AnKangziCount[TileCode::circleFive]);
 					for (unsigned int j = 3; j <= 5; ++j)
-						tileCount += (analysis->ShunziCount[static_cast<TileCode>(TileSuitCircles + j)] - analysis->AnShunziCount[static_cast<TileCode>(TileSuitCircles + j)]);
-					return ((analysis->KeziCount[EastWind] >= 1) && (tileCount == i));
+						tileCount += (analysis->ShunziCount[composeNumberTile(TileSuit::circles, j)] - analysis->AnShunziCount[composeNumberTile(TileSuit::circles, j)]);
+					return ((analysis->KeziCount[TileCode::eastWind] >= 1) && (tileCount == i));
 				}
 			));
 #endif /* GUOBIAO */
@@ -944,28 +980,28 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			if (RuleData::chkRuleApplied(ruleCodeList[i])) {
 #endif /* GUOBIAO */
 				const auto f =
-					[chktiles, i](const MentsuAnalysis* const analysis) -> bool {
-						const TileCode kezi[] = {
-							static_cast<TileCode>(i+TileSuitCharacters),
-							static_cast<TileCode>(i+TileSuitCircles),
-							static_cast<TileCode>(i+TileSuitBamboos),
+					[i](const MentsuAnalysis* const analysis) -> bool {
+						const std::array<TileCode, 3> kezi = {
+							composeNumberTile(TileSuit::characters, i),
+							composeNumberTile(TileSuit::circles,    i),
+							composeNumberTile(TileSuit::bamboos,    i),
 						};
-						const TileCode shunzi[] = {
-							static_cast<TileCode>(i+TileSuitCharacters), static_cast<TileCode>(i+TileSuitCircles),
-							static_cast<TileCode>(i+TileSuitBamboos),
-							static_cast<TileCode>(i+TileSuitCharacters-1), static_cast<TileCode>(i+TileSuitCircles-1),
-							static_cast<TileCode>(i+TileSuitBamboos-1),
-							static_cast<TileCode>(i+TileSuitCharacters-2), static_cast<TileCode>(i+TileSuitCircles-2),
-							static_cast<TileCode>(i+TileSuitBamboos-2),
+						const std::array<TileCode, 9> shunzi = {
+							(i > 7)          ? TileCode::noTile : composeNumberTile(TileSuit::characters, i),
+							(i > 7)          ? TileCode::noTile : composeNumberTile(TileSuit::circles,    i),
+							(i > 7)          ? TileCode::noTile : composeNumberTile(TileSuit::bamboos,    i),
+							(i < 2 || i > 8) ? TileCode::noTile : composeNumberTile(TileSuit::characters, i - 1),
+							(i < 2 || i > 8) ? TileCode::noTile : composeNumberTile(TileSuit::circles,    i - 1),
+							(i < 2 || i > 8) ? TileCode::noTile : composeNumberTile(TileSuit::bamboos,    i - 1),
+							(i < 3)          ? TileCode::noTile : composeNumberTile(TileSuit::characters, i - 2),
+							(i < 3)          ? TileCode::noTile : composeNumberTile(TileSuit::circles,    i - 2),
+							(i < 3)          ? TileCode::noTile : composeNumberTile(TileSuit::bamboos,    i - 2),
 						};
-						return chktiles(analysis, kezi, 3,
-							&shunzi[i <= 7 ? 0 : 3 * (i - 7)],
-							i > 7 ? 3 * (10 - i) : (i < 3 ? i * 3 : 9),
-							false);
+						return chktiles(analysis, kezi, shunzi, false);
 					};
 #ifdef GUOBIAO
 				yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-					_T("全帯五"), yaku::yakuCalculator::Yaku::yval_16, _T("断幺"), f));
+					_T("全帯五"), 16_fenF, _T("断幺"), f));
 #else /* GUOBIAO */
 				switch (i) {
 				case 4: case 5: case 6:
@@ -994,19 +1030,23 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("小于五"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("小于五"), 12_fenF,
 			_T("无字"),
 #else /* GUOBIAO */
 			_T("小於五"), get_yaku_han("xiaoyuwu"),
 #endif /* GUOBIAO */
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterOne, CircleOne, BambooOne,
-					CharacterTwo, CircleTwo, BambooTwo,
-					CharacterThree, CircleThree, BambooThree,
-					CharacterFour, CircleFour, BambooFour,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 12> kezi = {
+					TileCode::characterOne, TileCode::circleOne, TileCode::bambooOne,
+					TileCode::characterTwo, TileCode::circleTwo, TileCode::bambooTwo,
+					TileCode::characterThree, TileCode::circleThree, TileCode::bambooThree,
+					TileCode::characterFour, TileCode::circleFour, TileCode::bambooFour,
 				};
-				return chktiles(analysis, kezi, 12, kezi, 6, false);
+				constexpr std::array<TileCode, 6> shunzi = {
+					TileCode::characterOne, TileCode::circleOne, TileCode::bambooOne,
+					TileCode::characterTwo, TileCode::circleTwo, TileCode::bambooTwo,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 大於五 */
@@ -1015,19 +1055,23 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("大于五"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("大于五"), 12_fenF,
 			_T("无字"),
 #else /* GUOBIAO */
 			_T("大於五"), get_yaku_han("dayuwu"),
 #endif /* GUOBIAO */
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterSix, CircleSix, BambooSix,
-					CharacterSeven, CircleSeven, BambooSeven,
-					CharacterEight, CircleEight, BambooEight,
-					CharacterNine, CircleNine, BambooNine,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 12> kezi = {
+					TileCode::characterSix, TileCode::circleSix, TileCode::bambooSix,
+					TileCode::characterSeven, TileCode::circleSeven, TileCode::bambooSeven,
+					TileCode::characterEight, TileCode::circleEight, TileCode::bambooEight,
+					TileCode::characterNine, TileCode::circleNine, TileCode::bambooNine,
 				};
-				return chktiles(analysis, kezi, 12, kezi, 6, false);
+				constexpr std::array<TileCode, 6> shunzi = {
+					TileCode::characterSix, TileCode::circleSix, TileCode::bambooSix,
+					TileCode::characterSeven, TileCode::circleSeven, TileCode::bambooSeven,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 全小 */
@@ -1036,19 +1080,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全小"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全小"), 24_fenF,
 			_T("无字"), _T("小于五"),
 #else /* GUOBIAO */
 			_T("全小"), get_yaku_han("all_small"),
 			_T("小於五"),
 #endif /* GUOBIAO */
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterOne, CircleOne, BambooOne,
-					CharacterTwo, CircleTwo, BambooTwo,
-					CharacterThree, CircleThree, BambooThree,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 9> kezi = {
+					TileCode::characterOne, TileCode::circleOne, TileCode::bambooOne,
+					TileCode::characterTwo, TileCode::circleTwo, TileCode::bambooTwo,
+					TileCode::characterThree, TileCode::circleThree, TileCode::bambooThree,
 				};
-				return chktiles(analysis, kezi, 9, kezi, 3, false);
+				constexpr std::array<TileCode, 3> shunzi = {
+					TileCode::characterOne, TileCode::circleOne, TileCode::bambooOne,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 全中 */
@@ -1057,19 +1104,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全中"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全中"), 24_fenF,
 			_T("无字"), _T("断幺"),
 #else /* GUOBIAO */
 			_T("全中"), get_yaku_han("all_middle"),
 			_T("断幺九"), _T("上級断幺九"),
 #endif /* GUOBIAO */
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterFour, CircleFour, BambooFour,
-					CharacterFive, CircleFive, BambooFive,
-					CharacterSix, CircleSix, BambooSix,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 9> kezi = {
+					TileCode::characterFour, TileCode::circleFour, TileCode::bambooFour,
+					TileCode::characterFive, TileCode::circleFive, TileCode::bambooFive,
+					TileCode::characterSix, TileCode::circleSix, TileCode::bambooSix,
 				};
-				return chktiles(analysis, kezi, 9, kezi, 3, false);
+				constexpr std::array<TileCode, 3> shunzi = {
+					TileCode::characterFour, TileCode::circleFour, TileCode::bambooFour,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 全大 */
@@ -1078,19 +1128,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("全大"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("全大"), 24_fenF,
 			_T("无字"), _T("大于五"),
 #else /* GUOBIAO */
 			_T("全大"), get_yaku_han("all_large"),
 			_T("大於五"),
 #endif /* GUOBIAO */
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterSeven, CircleSeven, BambooSeven,
-					CharacterEight, CircleEight, BambooEight,
-					CharacterNine, CircleNine, BambooNine,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 9> shunzi = {
+					TileCode::characterSeven, TileCode::circleSeven, TileCode::bambooSeven,
+					TileCode::characterEight, TileCode::circleEight, TileCode::bambooEight,
+					TileCode::characterNine, TileCode::circleNine, TileCode::bambooNine,
 				};
-				return chktiles(analysis, kezi, 9, kezi, 3, false);
+				constexpr std::array<TileCode, 3> kezi = {
+					TileCode::characterSeven, TileCode::circleSeven, TileCode::bambooSeven,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 
@@ -1102,9 +1155,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("黒衣騎士"), get_yaku_han("blackjack"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->shanten[shantenRegular] == -1)
+				if (analysis->shanten[ShantenType::regular] == -1)
 					return yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 21;
-				else if (analysis->shanten[shantenPairs] == -1)
+				else if (analysis->shanten[ShantenType::pairs] == -1)
 					return yaku::countingFacility::countTileNumerals(analysis->TileCount) == 21;
 				else return false;
 			}
@@ -1115,7 +1168,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("白衣騎士"), get_yaku_han("white_knight"),
 			_T("黒衣騎士"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->KeziCount[WhiteDragon] >= 1)
+				if (analysis->KeziCount[TileCode::whiteDragon] >= 1)
 					return yaku::countingFacility::countMentzNumerals(analysis->MianziDat) == 21;
 				else return false;
 			}
@@ -1132,9 +1185,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			"univ_kyushu", "univ_kyushu", "univ_kyushu",
 		};
 		constexpr TileCode tileCodeList[rules] = {
-			EastWind, NorthWind, RedDragon, WhiteDragon,
-			CharacterEight, CircleEight, BambooEight,
-			CharacterNine, CircleNine, BambooNine,
+			TileCode::eastWind, TileCode::northWind, TileCode::redDragon, TileCode::whiteDragon,
+			TileCode::characterEight, TileCode::circleEight, TileCode::bambooEight,
+			TileCode::characterNine, TileCode::circleNine, TileCode::bambooNine,
 		};
 		constexpr TCHAR yakuNameList[rules][16] = {
 			_T("東大役満"), _T("北大役満"), _T("中大役満"), _T("白皇学院"),
@@ -1148,7 +1201,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					yakuNameList[i], get_yaku_han(ruleCodeList[i]),
 					[targetTile](const MentsuAnalysis* const analysis) -> bool {
 						return ((analysis->KangziCount[targetTile] >= 1) &&
-							(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
+							(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
 							(analysis->TotalKezi == 1) && (*analysis->MenzenFlag));
 					}
 				));
@@ -1159,9 +1212,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("東北大役満"), get_yaku_han("univ_tohoku"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KangziCount[EastWind] >= 1) &&
-					(analysis->KangziCount[NorthWind] >= 1) &&
-					(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
+				return ((analysis->KangziCount[TileCode::eastWind] >= 1) &&
+					(analysis->KangziCount[TileCode::northWind] >= 1) &&
+					(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
 					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
 			}
 		));
@@ -1171,13 +1224,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("名大役満"), get_yaku_han("univ_nagoya"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
-					for (int j = 0; j < TileSuitHonors; j += TileSuitStep)
-						if ((analysis->KangziCount[i + 5] >= 1) &&
-							(analysis->KangziCount[j + 8] >= 1))
+				for (auto i : NumberTileSuits)
+					for (auto j : NumberTileSuits)
+						if ((analysis->KangziCount[composeNumberTile(i, 5)] >= 1) &&
+							(analysis->KangziCount[composeNumberTile(j, 8)] >= 1))
 							yakuFlag = true;
 				return ((yakuFlag) &&
-					(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
+					(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
 					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
 			}
 		));
@@ -1190,14 +1243,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("冬のソナタ"), get_yaku_han("fuyusona"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->ShunziCount[CharacterOne] >= 1) &&
-					(analysis->ShunziCount[CircleOne] >= 1) && (analysis->ShunziCount[BambooOne] >= 1))
+				if ((analysis->ShunziCount[TileCode::characterOne] >= 1) &&
+					(analysis->ShunziCount[TileCode::circleOne] >= 1) && (analysis->ShunziCount[TileCode::bambooOne] >= 1))
 					yakuFlag = true;
-				else if ((analysis->ShunziCount[CharacterSeven] >= 1) &&
-					(analysis->ShunziCount[CircleSeven] >= 1) && (analysis->ShunziCount[BambooSeven] >= 1))
+				else if ((analysis->ShunziCount[TileCode::characterSeven] >= 1) &&
+					(analysis->ShunziCount[TileCode::circleSeven] >= 1) && (analysis->ShunziCount[TileCode::bambooSeven] >= 1))
 					yakuFlag = true;
-				return (yakuFlag && (analysis->KeziCount[RedDragon] >= 1) &&
-					(analysis->MianziDat[0].tile == NorthWind));
+				return (yakuFlag && (analysis->KeziCount[TileCode::redDragon] >= 1) &&
+					(analysis->MianziDat[0].tile == TileCode::northWind));
 			}
 		));
 	/* 冬のソナタ２ */
@@ -1206,16 +1259,16 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("冬のソナタ２"), get_yaku_han("fuyusona2"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->ShunziCount[CharacterOne] >= 1) && (analysis->ShunziCount[CircleOne] >= 1)) yakuFlag = true;
-				else if ((analysis->ShunziCount[CharacterOne] >= 1) && (analysis->ShunziCount[BambooOne] >= 1)) yakuFlag = true;
-				else if ((analysis->ShunziCount[CircleOne] >= 1) && (analysis->ShunziCount[BambooOne] >= 1)) yakuFlag = true;
-				else if ((analysis->ShunziCount[CharacterSeven] >= 1) && (analysis->ShunziCount[CircleSeven] >= 1)) yakuFlag = true;
-				else if ((analysis->ShunziCount[CharacterSeven] >= 1) && (analysis->ShunziCount[BambooSeven] >= 1)) yakuFlag = true;
-				else if ((analysis->ShunziCount[CircleSeven] >= 1) && (analysis->ShunziCount[BambooSeven] >= 1)) yakuFlag = true;
+				if ((analysis->ShunziCount[TileCode::characterOne] >= 1) && (analysis->ShunziCount[TileCode::circleOne] >= 1)) yakuFlag = true;
+				else if ((analysis->ShunziCount[TileCode::characterOne] >= 1) && (analysis->ShunziCount[TileCode::bambooOne] >= 1)) yakuFlag = true;
+				else if ((analysis->ShunziCount[TileCode::circleOne] >= 1) && (analysis->ShunziCount[TileCode::bambooOne] >= 1)) yakuFlag = true;
+				else if ((analysis->ShunziCount[TileCode::characterSeven] >= 1) && (analysis->ShunziCount[TileCode::circleSeven] >= 1)) yakuFlag = true;
+				else if ((analysis->ShunziCount[TileCode::characterSeven] >= 1) && (analysis->ShunziCount[TileCode::bambooSeven] >= 1)) yakuFlag = true;
+				else if ((analysis->ShunziCount[TileCode::circleSeven] >= 1) && (analysis->ShunziCount[TileCode::bambooSeven] >= 1)) yakuFlag = true;
 				return (yakuFlag &&
-					(analysis->KeziCount[CharacterTwo] + analysis->KeziCount[CircleTwo] + analysis->KeziCount[BambooTwo] >= 1) &&
-					(analysis->KeziCount[RedDragon] >= 1) &&
-					(analysis->MianziDat[0].tile == NorthWind));
+					(analysis->KeziCount[TileCode::characterTwo] + analysis->KeziCount[TileCode::circleTwo] + analysis->KeziCount[TileCode::bambooTwo] >= 1) &&
+					(analysis->KeziCount[TileCode::redDragon] >= 1) &&
+					(analysis->MianziDat[0].tile == TileCode::northWind));
 			}
 		));
 
@@ -1227,14 +1280,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("南西諸島"), get_yaku_han("nansei_islands"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->ShunziCount[CharacterOne] >= 1) &&
-					(analysis->ShunziCount[CircleOne] >= 1) && (analysis->ShunziCount[BambooOne] >= 1))
+				if ((analysis->ShunziCount[TileCode::characterOne] >= 1) &&
+					(analysis->ShunziCount[TileCode::circleOne] >= 1) && (analysis->ShunziCount[TileCode::bambooOne] >= 1))
 					yakuFlag = true;
-				else if ((analysis->ShunziCount[CharacterSeven] >= 1) &&
-					(analysis->ShunziCount[CircleSeven] >= 1) && (analysis->ShunziCount[BambooSeven] >= 1))
+				else if ((analysis->ShunziCount[TileCode::characterSeven] >= 1) &&
+					(analysis->ShunziCount[TileCode::circleSeven] >= 1) && (analysis->ShunziCount[TileCode::bambooSeven] >= 1))
 					yakuFlag = true;
-				return (yakuFlag && (analysis->DuiziCount[SouthWind] >= 1) &&
-					(analysis->DuiziCount[WestWind] >= 1));
+				return (yakuFlag && (analysis->DuiziCount[TileCode::southWind] >= 1) &&
+					(analysis->DuiziCount[TileCode::westWind] >= 1));
 			}
 		));
 
@@ -1245,15 +1298,20 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("上級断幺九"), get_yaku_han("high_tanyao"),
 			_T("断幺九"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CharacterThree, CircleThree, BambooThree,
-					CharacterFour, CircleFour, BambooFour,
-					CharacterFive, CircleFive, BambooFive,
-					CharacterSix, CircleSix, BambooSix,
-					CharacterSeven, CircleSeven, BambooSeven,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 15> kezi = {
+					TileCode::characterThree, TileCode::circleThree, TileCode::bambooThree,
+					TileCode::characterFour, TileCode::circleFour, TileCode::bambooFour,
+					TileCode::characterFive, TileCode::circleFive, TileCode::bambooFive,
+					TileCode::characterSix, TileCode::circleSix, TileCode::bambooSix,
+					TileCode::characterSeven, TileCode::circleSeven, TileCode::bambooSeven,
 				};
-				return chktiles(analysis, kezi, 15, kezi, 9, false);
+				constexpr std::array<TileCode, 9> shunzi = {
+					TileCode::characterThree, TileCode::circleThree, TileCode::bambooThree,
+					TileCode::characterFour, TileCode::circleFour, TileCode::bambooFour,
+					TileCode::characterFive, TileCode::circleFive, TileCode::bambooFive,
+				};
+				return chktiles(analysis, kezi, shunzi, false);
 			}
 		));
 	/* 金一色 */
@@ -1261,24 +1319,28 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("金一色"), get_yaku_han("allmoney"),
 			_T("絶一門"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				constexpr TileCode kezi[] = {
-					CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
-					CircleSix, CircleSeven, CircleEight, CircleNine, CharacterOne,
+			[](const MentsuAnalysis* const analysis) -> bool {
+				constexpr std::array<TileCode, 10> kezi = {
+					TileCode::circleOne, TileCode::circleTwo, TileCode::circleThree, TileCode::circleFour, TileCode::circleFive,
+					TileCode::circleSix, TileCode::circleSeven, TileCode::circleEight, TileCode::circleNine, TileCode::characterOne,
 				};
-				return chktiles(analysis, kezi, 10, kezi, 7, false) &&
-					(analysis->TileCount[CharacterOne] > 0);
+				constexpr std::array<TileCode, 7> shunzi = {
+					TileCode::circleOne, TileCode::circleTwo, TileCode::circleThree, TileCode::circleFour, TileCode::circleFive,
+					TileCode::circleSix, TileCode::circleSeven,
+				};
+				return chktiles(analysis, kezi, shunzi, false) &&
+					(analysis->TileCount[TileCode::characterOne] > 0);
 			}
 		));
 	/* 鳳子刻 */
 	if (RuleData::chkRuleApplied("fengzike"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("鳳子刻"), get_yaku_han("fengzike"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
-					if ((analysis->KeziCount[i + 1] >= 1) &&
-						(analysis->ShunziCount[i + 4] >= 1) &&
-						(analysis->KeziCount[i + 9] >= 1)) return true;
+			[](const MentsuAnalysis* const analysis) -> bool {
+				for (auto i : NumberTileSuits)
+					if ((analysis->KeziCount[composeNumberTile(i, 1)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 4)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(i, 9)] >= 1)) return true;
 				return false;
 			}
 		));
@@ -1286,11 +1348,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 	if (RuleData::chkRuleApplied("longzike"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("竜子刻"), get_yaku_han("longzike"),
-			[chktiles](const MentsuAnalysis* const analysis) -> bool {
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
-					if ((analysis->ShunziCount[i + 1] >= 1) &&
-						(analysis->KeziCount[i + 5] >= 1) &&
-						(analysis->ShunziCount[i + 7] >= 1)) return true;
+			[](const MentsuAnalysis* const analysis) -> bool {
+				for (auto i : NumberTileSuits)
+					if ((analysis->ShunziCount[composeNumberTile(i, 1)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(i, 5)] >= 1) &&
+						(analysis->ShunziCount[composeNumberTile(i, 7)] >= 1)) return true;
 				return false;
 			}
 		));

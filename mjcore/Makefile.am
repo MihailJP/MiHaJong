@@ -27,7 +27,7 @@ libmihajong_la_SOURCES = \
 	lzma/Alloc.h lzma/LzFind.h lzma/LzHash.h lzma/LzmaDec.h lzma/LzmaLib.h \
 	lzma/RotateDefs.h lzma/Sha256.h lzma/Types.h \
 	reader/csv2arry.h reader/ini2map.h reader/readrsrc.h \
-	yaku/catalog.h yaku/yaku.h yaku/yvalue.h yaku/ykclass.h yaku/yk_tools.h
+	yaku/catalog.h yaku/yaku.h yaku/ykclass.h yaku/yk_tools.h
 nodist_libmihajong_la_SOURCES = \
 	data/confitem_csv.cpp data/confitem_ini.cpp data/rankval_csv.cpp \
 	data/confitem_csv.h data/confitem_ini.h data/rankval_csv.h

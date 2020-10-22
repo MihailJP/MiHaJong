@@ -37,94 +37,92 @@ yaku::yakuCalculator::Yaku::HANFUNC
 	(const std::string& RuleTag)
 {
 	std::string currcnf = RuleData::chkRule(RuleTag);
-	if (currcnf == "1han") return yaku::yakuCalculator::Yaku::yval_1han;
-	else if (currcnf == "2han") return yaku::yakuCalculator::Yaku::yval_2han;
-	else if (currcnf == "3han") return yaku::yakuCalculator::Yaku::yval_3han;
-	else if (currcnf == "4han") return yaku::yakuCalculator::Yaku::yval_4han;
-	else if (currcnf == "5han") return yaku::yakuCalculator::Yaku::yval_5han;
-	else if (currcnf == "6han") return yaku::yakuCalculator::Yaku::yval_6han;
-	else if (currcnf == "8han")
-		return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han);
-	else if (currcnf == "2han_kuisagari") return yaku::yakuCalculator::Yaku::yval_2han_kuisagari;
-	else if (currcnf == "3han_kuisagari") return yaku::yakuCalculator::Yaku::yval_3han_kuisagari;
-	else if (currcnf == "4han_kuisagari") return yaku::yakuCalculator::Yaku::yval_4han_kuisagari;
-	else if (currcnf == "5han_kuisagari") return yaku::yakuCalculator::Yaku::yval_5han_kuisagari;
-	else if (currcnf == "6han_kuisagari") return yaku::yakuCalculator::Yaku::yval_6han_kuisagari;
-	else if (currcnf == "8han_kuisagari")
-		return yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_8han);
-	else if (currcnf == "1han_menzen") return yaku::yakuCalculator::Yaku::yval_1han_menzen;
-	else if (currcnf == "2han_menzen") return yaku::yakuCalculator::Yaku::yval_2han_menzen;
-	else if (currcnf == "3han_menzen") return yaku::yakuCalculator::Yaku::yval_3han_menzen;
-	else if (currcnf == "4han_menzen") return yaku::yakuCalculator::Yaku::yval_4han_menzen;
-	else if (currcnf == "5han_menzen") return yaku::yakuCalculator::Yaku::yval_5han_menzen;
-	else if (currcnf == "6han_menzen") return yaku::yakuCalculator::Yaku::yval_6han_menzen;
-	//else if (currcnf == "8han_menzen") return yaku::yakuCalculator::Yaku::yval_8han_menzen;
-	else if (currcnf == "1han_50fu") return yaku::yakuCalculator::Yaku::yval_1han;
-	else if (currcnf == "2han_25fu") return yaku::yakuCalculator::Yaku::yval_2han;
-	else if (currcnf == "3han_30fu") return yaku::yakuCalculator::Yaku::yval_3han;
-	else if (currcnf == "3han_40fu") return yaku::yakuCalculator::Yaku::yval_3han;
-	else if (currcnf == "4han_40fu") return yaku::yakuCalculator::Yaku::yval_4han;
-	else if (currcnf == "mangan") return yaku::yakuCalculator::Yaku::yval_mangan;
-	//else if (currcnf == "haneman") return yaku::yakuCalculator::Yaku::yval_haneman;
-	else if (currcnf == "baiman") return yaku::yakuCalculator::Yaku::yval_baiman;
-	else if (currcnf == "yakuman") return yaku::yakuCalculator::Yaku::yval_yakuman;
-	else if (currcnf == "double_yakuman") return yaku::yakuCalculator::Yaku::yval_double_yakuman;
-	else if (currcnf == "triple_yakuman") return yaku::yakuCalculator::Yaku::yval_triple_yakuman;
-	else if (currcnf == "quadruple_yakuman") return yaku::yakuCalculator::Yaku::yval_quad_yakuman;
-	else if (currcnf == "mangan_menzen") return yaku::yakuCalculator::Yaku::yval_mangan_menzen;
-	//else if (currcnf == "haneman_menzen") return yaku::yakuCalculator::Yaku::yval_haneman_menzen;
-	else if (currcnf == "baiman_menzen") return yaku::yakuCalculator::Yaku::yval_baiman_menzen;
-	else if (currcnf == "yakuman_menzen") return yaku::yakuCalculator::Yaku::yval_yakuman_menzen;
-	else if (currcnf == "double_yakuman_menzen") return yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen;
-	else if (currcnf == "yakuman_with_pao") return yaku::yakuCalculator::Yaku::yval_yakuman;
-	else if (currcnf == "double_yakuman_with_pao") return yaku::yakuCalculator::Yaku::yval_double_yakuman;
-	else if (currcnf == "1han_added") return yaku::yakuCalculator::Yaku::yval_1han_dependent;
-	else if (currcnf == "2han_added") return yaku::yakuCalculator::Yaku::yval_2han_dependent;
-	else if (currcnf == "4han_added") return yaku::yakuCalculator::Yaku::yval_4han_dependent;
-	else if (currcnf == "yakuman_unbound") return yaku::yakuCalculator::Yaku::yval_yakuman_dependent;
+	if (currcnf == "1han") return 1_hanF;
+	else if (currcnf == "2han") return 2_hanF;
+	else if (currcnf == "3han") return 3_hanF;
+	else if (currcnf == "4han") return 4_hanF;
+	else if (currcnf == "5han") return 5_hanF;
+	else if (currcnf == "6han") return 6_hanF;
+	else if (currcnf == "8han") return 8_hanF;
+	else if (currcnf == "2han_kuisagari") return 2_hanK;
+	else if (currcnf == "3han_kuisagari") return 3_hanK;
+	else if (currcnf == "4han_kuisagari") return 4_hanK;
+	else if (currcnf == "5han_kuisagari") return 5_hanK;
+	else if (currcnf == "6han_kuisagari") return 6_hanK;
+	else if (currcnf == "8han_kuisagari") return 8_hanK;
+	else if (currcnf == "1han_menzen") return 1_hanM;
+	else if (currcnf == "2han_menzen") return 2_hanM;
+	else if (currcnf == "3han_menzen") return 3_hanM;
+	else if (currcnf == "4han_menzen") return 4_hanM;
+	else if (currcnf == "5han_menzen") return 5_hanM;
+	else if (currcnf == "6han_menzen") return 6_hanM;
+	//else if (currcnf == "8han_menzen") return 8_hanM;
+	else if (currcnf == "1han_50fu") return 1_hanF;
+	else if (currcnf == "2han_25fu") return 2_hanF;
+	else if (currcnf == "3han_30fu") return 3_hanF;
+	else if (currcnf == "3han_40fu") return 3_hanF;
+	else if (currcnf == "4han_40fu") return 4_hanF;
+	else if (currcnf == "mangan") return 1_manganF;
+	//else if (currcnf == "haneman") return 1.5_manganF;
+	else if (currcnf == "baiman") return 2_manganF;
+	else if (currcnf == "yakuman") return 1_yakumanF;
+	else if (currcnf == "double_yakuman") return 2_yakumanF;
+	else if (currcnf == "triple_yakuman") return 3_yakumanF;
+	else if (currcnf == "quadruple_yakuman") return 4_yakumanF;
+	else if (currcnf == "mangan_menzen") return 1_manganM;
+	//else if (currcnf == "haneman_menzen") return 1.5_manganM;
+	else if (currcnf == "baiman_menzen") return 2_manganM;
+	else if (currcnf == "yakuman_menzen") return 1_yakumanM;
+	else if (currcnf == "double_yakuman_menzen") return 2_yakumanM;
+	else if (currcnf == "yakuman_with_pao") return 1_yakumanF;
+	else if (currcnf == "double_yakuman_with_pao") return 2_yakumanF;
+	else if (currcnf == "1han_added") return 1_hanD;
+	else if (currcnf == "2han_added") return 2_hanD;
+	else if (currcnf == "4han_added") return 4_hanD;
+	else if (currcnf == "yakuman_unbound") return 1_yakumanD;
 	else if (currcnf == "-4han")
 		return yaku::yakuCalculator::Yaku::FixedHan(
-		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_1han,
+		1_han,
 #ifdef _MSC_VER
 		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::HAN(-5)
 #else
 		yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(-5)
 #endif
 		);
-	else return yaku::yakuCalculator::Yaku::HANFUNC();
+	else return 0_hanF;
 }
 #endif /* GUOBIAO */
 
 /* 一色の判定 */
 bool yaku::yakuCalculator::YakuCatalog::catalogInit::isshoku (const MentsuAnalysis* const analysis, bool chin_itsu) {
-	if (analysis->shanten[shantenAll] >= 0) return false; // 足切り要件：和了ってない
+	if (analysis->shanten[ShantenType::all] >= 0) return false; // 足切り要件：和了ってない
 	constexpr TileCode Tiles[][9] = {
 		{
-			CharacterOne, CharacterTwo,   CharacterThree, CharacterFour, CharacterFive,
-			CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
+			TileCode::characterOne, TileCode::characterTwo,   TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+			TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
 		}, {
-			CircleOne,    CircleTwo,      CircleThree,    CircleFour,    CircleFive,
-			CircleSix,    CircleSeven,    CircleEight,    CircleNine,
+			TileCode::circleOne,    TileCode::circleTwo,      TileCode::circleThree,    TileCode::circleFour,    TileCode::circleFive,
+			TileCode::circleSix,    TileCode::circleSeven,    TileCode::circleEight,    TileCode::circleNine,
 		}, {
-			BambooOne,    BambooTwo,      BambooThree,    BambooFour,    BambooFive,
-			BambooSix,    BambooSeven,    BambooEight,    BambooNine,
+			TileCode::bambooOne,    TileCode::bambooTwo,      TileCode::bambooThree,    TileCode::bambooFour,    TileCode::bambooFive,
+			TileCode::bambooSix,    TileCode::bambooSeven,    TileCode::bambooEight,    TileCode::bambooNine,
 		}, {
-			EastWind,     SouthWind,      WestWind,       NorthWind,
-			WhiteDragon,  GreenDragon,    RedDragon,      NoTile,        NoTile,
+			TileCode::eastWind,     TileCode::southWind,      TileCode::westWind,       TileCode::northWind,
+			TileCode::whiteDragon,  TileCode::greenDragon,    TileCode::redDragon,      TileCode::noTile,        TileCode::noTile,
 		}
 	};
 	unsigned count[4] = {0};
 	for (unsigned k = 0; k < 4; k++) {
 		for (unsigned i = 0; i < 9; i++) {
-			if (Tiles[k][i] != NoTile) {
-				if (analysis->shanten[shantenRegular] == -1)
+			if (Tiles[k][i] != TileCode::noTile) {
+				if (analysis->shanten[ShantenType::regular] == -1)
 					count[k] += analysis->DuiziCount[Tiles[k][i]] + analysis->ShunziCount[Tiles[k][i]];
 				else
 					count[k] += analysis->TileCount[Tiles[k][i]];
 			}
 		}
 	}
-	if (analysis->shanten[shantenRegular] == -1) {
+	if (analysis->shanten[ShantenType::regular] == -1) {
 		assert(count[0] + count[1] + count[2] + count[3] == SizeOfMeldBuffer);
 	} else {
 		assert(count[0] + count[1] + count[2] + count[3] == NumOfTilesInHand);

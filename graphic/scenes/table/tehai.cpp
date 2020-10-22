@@ -14,12 +14,12 @@ using utils::playerRelative;
 void GameTableScreen::TehaiReconst::Reconstruct(const GameTable* gameStat, PlayerID targetPlayer) {
 	const unsigned int h = HandPosH, v = HandPosV;
 	ShowTehai::Reconstruct(gameStat, targetPlayer,
-		[h, v](seatRelative seat) -> std::tuple<int, int> {
+		[h, v](SeatRelative seat) -> std::tuple<int, int> {
 			switch (seat) {
-				case sOpposite: return std::make_tuple(            h,             v);
-				case sLeft:     return std::make_tuple(            v,             h);
-				case sRight:    return std::make_tuple(TableSize - v,             h);
-				case sSelf:     return std::make_tuple(            h, TableSize - v);
+				case SeatRelative::opposite: return std::make_tuple(            h,             v);
+				case SeatRelative::left:     return std::make_tuple(            v,             h);
+				case SeatRelative::right:    return std::make_tuple(TableSize - v,             h);
+				case SeatRelative::self:     return std::make_tuple(            h, TableSize - v);
 				default:        return std::make_tuple(0            , 0            );
 			}
 		}, playerRelative(targetPlayer, gameStat->PlayerID),

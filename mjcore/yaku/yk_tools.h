@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <type_traits>
+#include <array>
+#include <vector>
 #include "ykclass.h"
 #include "../../common/tilecode.h"
 
@@ -40,11 +42,10 @@ private:
 	static Int8ByTile countByMelds(
 		const MeldBuf MianziDat, uint8_t* const hits,
 		std::function<bool (MeldStat)> f);
-	static inline int countSpecMentz(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
-		const TileCode* const targetShunz, int numOfShunz, bool Mode, bool allowDup);
+	template<std::size_t kSize, std::size_t sSize> static int countSpecMentz(const MeldBuf MianziDat,
+		const std::array<TileCode, kSize>& targetKez, const std::array<TileCode, sSize>& targetShunz, bool Mode, bool allowDup);
 public:
-	static int countPairs(
-		const Int8ByTile tileCount, const TileCode* const targetTiles, int numOfTiles);
+	template<std::size_t dSize> static int countPairs(const Int8ByTile tileCount, const std::array<TileCode, dSize>& targetTiles);
 	static int countTileNumerals(const Int8ByTile tileCount);
 
 	static Int8ByTile countKez(const MeldBuf MianziDat, uint8_t* const Kezi);
@@ -58,10 +59,19 @@ public:
 	static Int8ByTile countAnKangz(const MeldBuf MianziDat, uint8_t* const Kangzi);
 	static Int8ByTile countKaKangz(const MeldBuf MianziDat, uint8_t* const Kangzi);
 
-	static int countSpecMentz(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
-		const TileCode* const targetShunz, int numOfShunz, bool Mode);
-	static int countSpecMentzWithDup(const MeldBuf MianziDat, const TileCode* const targetKez, int numOfKez,
-		const TileCode* const targetShunz, int numOfShunz, bool Mode);
+	template<std::size_t kSize, std::size_t sSize> static int countSpecMentz(const MeldBuf MianziDat,
+		const std::array<TileCode, kSize>& targetKez,
+		const std::array<TileCode, sSize>& targetShunz, bool Mode)
+	{
+		return countSpecMentz(MianziDat, targetKez, targetShunz, Mode, false);
+	}
+	template<std::size_t kSize, std::size_t sSize> static int countSpecMentzWithDup(const MeldBuf MianziDat,
+		const std::array<TileCode, kSize>& targetKez,
+		const std::array<TileCode, sSize>& targetShunz, bool Mode)
+	{
+		return countSpecMentz(MianziDat, targetKez, targetShunz, Mode, true);
+	}
+
 	static int countMentzNumerals(const MeldBuf MianziDat);
 public: /* Monostate class: cannot be instantiated */
 	countingFacility() = delete;

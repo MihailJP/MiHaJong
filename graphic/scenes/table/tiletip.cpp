@@ -33,13 +33,13 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		tmpGameStat.statOfMine().Tsumohai() = Tile();
 		/*  */
 		CodeConv::tostringstream o;
-		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::shantenAll);
+		utils::Shanten shanten = utils::calcShanten(&tmpGameStat, tmpGameStat.PlayerID, utils::ShantenType::all);
 		if (shanten > 0) { // 不聴の時は向聴表示
 			o << static_cast<int>(shanten) << _T("向聴");
 		} else {
 			/* 待ち牌の数を表示 */
 			MachihaiInfo machiInfo = utils::chkFuriten(&tmpGameStat, tmpGameStat.PlayerID);
-			if ((tmpGameStat.gameType & RichiMJ) && (machiInfo.FuritenFlag))
+			if (tmpGameStat.chkGameType(GameTypeID::richiMJ) && (machiInfo.FuritenFlag))
 				o << _T("[振聴]");
 			if (machiInfo.MachihaiTotal == 0)
 				o << _T("純 カ ラ");
@@ -49,10 +49,10 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 			int i = 0;
 			for (int j = 1; j < TileNonflowerMax; ++j) {
 				if (machiInfo.Machihai[j].MachihaiFlag) {
-					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), Normal),
+					myTileRenderer->NewTile(i, Tile(static_cast<TileCode>(j), DoraCol::normal),
 						TipX + myTextRenderer->strWidthByPix(o.str()) + 20 + i * (ShowTile::VertTileWidth + 2),
 						TipY + (ShowTile::VertTileHeight / 2) - 6,
-						Portrait, Obverse,
+						TileDirection::portrait, TileSide::obverse,
 						(machiInfo.Machihai[j].MachihaiCount > 0) ? 0xffffffff : 0xff7f7f7f);
 					++i;
 				}
@@ -61,17 +61,17 @@ void GameTableScreen::TileTipReconst::reconstruct() {
 		tipText = o.str();
 	} else { // 牌選択時以外のフリテン表示
 		MachihaiInfo machiInfo = utils::chkFuriten(GameStatus::gameStat(), GameStatus::gameStat()->PlayerID);
-		if ((GameStatus::gameStat()->gameType & RichiMJ) && (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten))
+		if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && (machiInfo.FuritenFlag || GameStatus::gameStat()->statOfMine().DoujunFuriten))
 			tipText = _T("[振聴]");
-		if (caller->buttonReconst->getButtonSet() == ButtonReconst::btnSetNormal) {
+		if (caller->buttonReconst->getButtonSet() == ButtonSet::normal) {
 			TileCode discardTile = GameStatus::gameStat()->CurrentDiscard.tile;
 			auto render = [this, &tipText] (unsigned tileID, TileCode tileCode) -> void {
 				myTileRenderer->NewTile(tileID, Tile(tileCode),
 					TipX + myTextRenderer->strWidthByPix(tipText) + 20 + tileID * (ShowTile::VertTileWidth + 2),
 					TipY + (ShowTile::VertTileHeight / 2) - 6,
-					Portrait, Obverse, 0xffffffff);
+					TileDirection::portrait, TileSide::obverse, 0xffffffff);
 			};
-			auto chkCursor = [this](ButtonReconst::ButtonID buttonID) -> bool {
+			auto chkCursor = [this](ButtonID buttonID) -> bool {
 				return (caller->buttonReconst->isEnabled(buttonID) &&
 					(caller->buttonReconst->getCursor() == buttonID));
 			};

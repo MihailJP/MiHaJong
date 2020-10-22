@@ -416,9 +416,6 @@
     <ClInclude Include="..\mjcore\yaku\ykclass.h">
       <Filter>ヘッダー ファイル\yaku</Filter>
     </ClInclude>
-    <ClInclude Include="..\mjcore\yaku\yvalue.h">
-      <Filter>ヘッダー ファイル\yaku</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\bgmid.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>

@@ -53,4 +53,4 @@ public: /* Monostate class: cannot be instantiated */
 int getRule(int RuleID);
 #endif
 
-MJCORE void getWindowSize(unsigned* width, unsigned* height, ScreenMode::ScreenMode* fullscreen, unsigned* monitor);
+MJCORE void getWindowSize(unsigned* width, unsigned* height, Screen_Mode::ScreenMode* fullscreen, unsigned* monitor);

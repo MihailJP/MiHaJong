@@ -39,12 +39,13 @@ public:
 #endif /*_WIN32*/
 };
 
+enum class ScoreMode {points, diff, chip};
 class TableProtoScene::ScoreBoard {
 private:
 	Timer myTimer;
 private:
 	DevicePtr myDevice;
-	seatRelative relativePlayerID;
+	SeatRelative relativePlayerID;
 	int xpos, ypos; float wScale;
 	TexturePtr texture;
 	static const unsigned int PanelWidth = 175, PanelHeight = 120;
@@ -53,7 +54,6 @@ private:
 	static const ArgbColor ledColorRed = 0xffff0000, // 昔ながらの3色LED風の色
 		ledColorOrange = 0xffff9900,
 		ledColorGreen = 0xffccff00;
-	enum ScoreMode {scorePoints, scoreDiff, scoreChip};
 	ScoreMode getScoreMode();
 private:
 	static const unsigned int WindPosX = 9, WindPosY = 30;
@@ -83,7 +83,7 @@ private:
 	SmallTextRenderer* nameText;
 	void renderName();
 public:
-	ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale);
+	ScoreBoard(DevicePtr device, SeatRelative relativePos, int x, int y, float widthScale);
 	ScoreBoard(const ScoreBoard&) = delete; // Delete unexpected copy constructor
 	ScoreBoard& operator= (const ScoreBoard&) = delete; // Delete unexpected assign operator
 	~ScoreBoard();

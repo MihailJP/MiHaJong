@@ -28,10 +28,55 @@ PlayerID* tobePlayed(const GameTable* const gameStat);
 PlayerID tobePlayed(const GameTable* const gameStat, int id);
 
 constexpr std::array<TileCode, 13> Honor_Major_Tiles = {
-	CharacterOne, CharacterNine, CircleOne, CircleNine, BambooOne, BambooNine,
-	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon
+	TileCode::characterOne, TileCode::characterNine,
+	TileCode::circleOne, TileCode::circleNine,
+	TileCode::bambooOne, TileCode::bambooNine,
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+	TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
+};
+constexpr std::array<TileCode, 7> Honor_Tiles = {
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,
+	TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon
+};
+constexpr std::array<TileCode, 6> Major_Tiles = {
+	TileCode::characterOne, TileCode::characterNine,
+	TileCode::circleOne, TileCode::circleNine,
+	TileCode::bambooOne, TileCode::bambooNine,
 };
 bool isYaojiu(TileCode code);
+
+constexpr std::array<TileCode, 34> AllTiles = {
+	TileCode::characterOne,   TileCode::characterTwo,   TileCode::characterThree,
+	TileCode::characterFour,  TileCode::characterFive,  TileCode::characterSix,
+	TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
+	TileCode::circleOne,      TileCode::circleTwo,      TileCode::circleThree,
+	TileCode::circleFour,     TileCode::circleFive,     TileCode::circleSix,
+	TileCode::circleSeven,    TileCode::circleEight,    TileCode::circleNine,
+	TileCode::bambooOne,      TileCode::bambooTwo,      TileCode::bambooThree,
+	TileCode::bambooFour,     TileCode::bambooFive,     TileCode::bambooSix,
+	TileCode::bambooSeven,    TileCode::bambooEight,    TileCode::bambooNine,
+	TileCode::eastWind,       TileCode::southWind,      TileCode::westWind,       TileCode::northWind,
+	TileCode::whiteDragon,    TileCode::greenDragon,    TileCode::redDragon,
+};
+constexpr std::array<TileCode, 27> NumberTiles = {
+	TileCode::characterOne,   TileCode::characterTwo,   TileCode::characterThree,
+	TileCode::characterFour,  TileCode::characterFive,  TileCode::characterSix,
+	TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
+	TileCode::circleOne,      TileCode::circleTwo,      TileCode::circleThree,
+	TileCode::circleFour,     TileCode::circleFive,     TileCode::circleSix,
+	TileCode::circleSeven,    TileCode::circleEight,    TileCode::circleNine,
+	TileCode::bambooOne,      TileCode::bambooTwo,      TileCode::bambooThree,
+	TileCode::bambooFour,     TileCode::bambooFive,     TileCode::bambooSix,
+	TileCode::bambooSeven,    TileCode::bambooEight,    TileCode::bambooNine,
+};
+constexpr std::array<TileCode, 7> HonorTiles = {
+	TileCode::eastWind,       TileCode::southWind,      TileCode::westWind,       TileCode::northWind,
+	TileCode::whiteDragon,    TileCode::greenDragon,    TileCode::redDragon,
+};
+
+constexpr std::array<TileSuit, 3> NumberTileSuits = {
+	TileSuit::characters, TileSuit::circles, TileSuit::bamboos,
+};
 
 void lipai(GameTable* const gameStat, PlayerID targetPlayer);
 namespace MoveTile {
@@ -47,7 +92,7 @@ MJCORE Int8ByTile countseentiles(const GameTable* const gameStat);
 
 MJCORE Int8ByTile countTilesInHand(const GameTable* const gameStat, PlayerID playerID);
 
-MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, int doraCol);
+MJCORE Int8ByTile countRedTilesInHand(const GameTable* const gameStat, PlayerID playerID, DoraCol doraCol);
 
 MJCORE TileStatus gettilestatus(
 	const GameTable* const gameStat, PlayerID targetPlayer, int targetTile, bool CheckMode);

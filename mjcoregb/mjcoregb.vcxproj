@@ -363,7 +363,6 @@
     <ClInclude Include="..\mjcore\tileutil.h" />
     <ClInclude Include="..\mjcore\yaku\catalog.h" />
     <ClInclude Include="..\mjcore\yaku\yaku.h" />
-    <ClInclude Include="..\mjcore\yaku\yvalue.h" />
     <ClInclude Include="..\mjcore\yaku\ykclass.h" />
     <ClInclude Include="..\mjcore\yaku\yk_tools.h" />
   </ItemGroup>

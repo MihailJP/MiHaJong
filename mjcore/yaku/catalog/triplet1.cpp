@@ -4,18 +4,33 @@
 #include "../../../common/strcode.h"
 
 void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
+	const auto liankeSuit = [](const char suitNum) -> TileSuit {
+		switch (suitNum) {
+		case '0':
+			return TileSuit::characters;
+		case '1':
+			return TileSuit::circles;
+		case '2':
+			return TileSuit::bamboos;
+		default:
+			return TileSuit::invalid;
+		}
+	};
+
+	// ---------------------------------------------------------------------
+
 	/* 四暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("四暗刻"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("四暗刻"), 64_fenF,
 		PengPengHu, _T("三暗刻"), _T("双暗刻"), _T("門前清"),
 #else /* GUOBIAO */
-		_T("四暗刻"), yaku::yakuCalculator::Yaku::yval_yakuman_menzen,
+		_T("四暗刻"), 1_yakumanM,
 		_T("対々和"), _T("三暗刻"),
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 4);
 		}
 	));
@@ -23,14 +38,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 四暗刻単騎 */
 	if (RuleData::chkRuleApplied("double_yakuman"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四暗刻単騎"), yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
+			_T("四暗刻単騎"), 2_yakumanM,
 			_T("四暗刻"), _T("対々和"), _T("三暗刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
 					1 : 0) == 4) && (
 					(analysis->GameStat->TianHuFlag) ||
-					((analysis->Machi == yaku::yakuCalculator::machiTanki) && (!analysis->MachiInfo.FuritenFlag))
+					((analysis->Machi == yaku::yakuCalculator::MachiType::tanki) && (!analysis->MachiInfo.FuritenFlag))
 					);
 			}
 		));
@@ -38,24 +53,24 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 三暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("三暗刻"), yaku::yakuCalculator::Yaku::yval_16,
+		_T("三暗刻"), 16_fenF,
 		_T("双暗刻"),
 #else /* GUOBIAO */
-		_T("三暗刻"), yaku::yakuCalculator::Yaku::yval_2han,
+		_T("三暗刻"), 2_hanF,
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 3);
 		}
 	));
 #ifdef GUOBIAO
 	/* 双暗刻 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双暗刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("双暗刻"), 2_fenF,
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
 				1 : 0) == 2);
 		}
 	));
@@ -66,31 +81,31 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #ifndef GUOBIAO
 	/* 五連刻 */
 	const auto wulianke =
-		[](const MentsuAnalysis* const analysis,
+		[liankeSuit](const MentsuAnalysis* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (9 - step * 4); k++)
-					if ((analysis->DuiziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1) &&
-						(analysis->DuiziCount[static_cast<int>(parsedat[i * fldsize + 4] - _T('0')) * TileSuitStep + k + step * 4] >= 1) )
+					if ((analysis->DuiziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 0]), k + step * 0)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 1]), k + step * 1)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 2]), k + step * 2)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 3]), k + step * 3)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 4]), k + step * 4)] >= 1) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
 		};
 #endif /* GUOBIAO */
 	const auto lianke =
-		[](const MentsuAnalysis* const analysis,
+		[liankeSuit](const MentsuAnalysis* const analysis,
 		const char* const parsedat, int pdsize, int fldsize, int step, bool suurnkoh) -> bool {
 			bool yakuFlag = false;
 			for (int i = 0; i < pdsize; i++) {
 				for (int k = 1; k <= (9 - step * (suurnkoh ? 3 : 2)); k++)
-					if ((analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 0] - _T('0')) * TileSuitStep + k + step * 0] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 1] - _T('0')) * TileSuitStep + k + step * 1] >= 1) &&
-						(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 2] - _T('0')) * TileSuitStep + k + step * 2] >= 1) &&
-						((!suurnkoh)||(analysis->KeziCount[static_cast<int>(parsedat[i * fldsize + 3] - _T('0')) * TileSuitStep + k + step * 3] >= 1)) )
+					if ((analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 0]), k + step * 0)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 1]), k + step * 1)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 2]), k + step * 2)] >= 1) &&
+						((!suurnkoh)||(analysis->KeziCount[composeNumberTile(liankeSuit(parsedat[i * fldsize + 3]), k + step * 3)] >= 1)) )
 						yakuFlag = true;
 			}
 			return yakuFlag;
@@ -112,14 +127,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		};
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("一色四節高"), yaku::yakuCalculator::Yaku::yval_48,
+		_T("一色四節高"), 48_fenF,
 		PengPengHu, _T("一色三節高"),
 		suurenkoh
 	));
 #else /* GUOBIAO */
 	if (RuleData::chkRule("suurenkoh", "8han_incl_toitoi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("四連刻"), yaku::yakuCalculator::Yaku::yval_6han /* 対々和込み8飜 */,
+			_T("四連刻"), 6_hanF /* 対々和込み8飜 */,
 			_T("小四連刻"), _T("三連刻"), _T("小三連刻"),
 			suurenkoh
 		));
@@ -134,17 +149,17 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("四連刻両面待ち"), get_yaku_han("suurenkoh_double"),
 			_T("清一色"), _T("対々和"), _T("金梯"), _T("四連刻"), _T("小四連刻"), _T("三連刻"), _T("小三連刻"),
-			[](const MentsuAnalysis* const analysis) -> bool {
+			[liankeSuit](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (auto i = parsedat_monochrome5.begin(); i != parsedat_monochrome5.end(); i++) {
 					for (int k = 1; k <= 5; k++)
-						if ((analysis->DuiziCount[static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0] >= 1) &&
-							(analysis->KeziCount[static_cast<int>((*i)[1] - _T('0')) * TileSuitStep + k + 1] >= 1) &&
-							(analysis->KeziCount[static_cast<int>((*i)[2] - _T('0')) * TileSuitStep + k + 2] >= 1) &&
-							(analysis->KeziCount[static_cast<int>((*i)[3] - _T('0')) * TileSuitStep + k + 3] >= 1) &&
-							(analysis->DuiziCount[static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4] >= 1) &&
-							((analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0)) ||
-							(analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4)))
+						if ((analysis->DuiziCount[composeNumberTile(liankeSuit((*i)[0]), k + 0)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[1]), k + 1)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[2]), k + 2)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[3]), k + 3)] >= 1) &&
+							(analysis->DuiziCount[composeNumberTile(liankeSuit((*i)[4]), k + 4)] >= 1) &&
+							((analysis->TsumoHai->tile == composeNumberTile(liankeSuit((*i)[0]), k + 0)) ||
+							(analysis->TsumoHai->tile == composeNumberTile(liankeSuit((*i)[4]), k + 4)))
 							)
 							yakuFlag = true;
 				}
@@ -162,7 +177,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("一色三節高"), yaku::yakuCalculator::Yaku::yval_24,
+			_T("一色三節高"), 24_fenF,
 #else /* GUOBIAO */
 			_T("三連刻"), get_yaku_han("sanrenkoh"),
 			_T("小三連刻"),
@@ -177,10 +192,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("三連刻"), _T("小三連刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
+				for (auto i : NumberTileSuits) {
 					for (int k = 1; k <= 6; k++)
-						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->KeziCount[i + k + 1] >= 1) &&
-							(analysis->KeziCount[i + k + 2] >= 1) && (analysis->DuiziCount[i + k + 3] >= 1))
+						if ((analysis->DuiziCount[composeNumberTile(i, k + 0)] >= 1) && (analysis->KeziCount[composeNumberTile(i, k + 1)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(i, k + 2)] >= 1) && (analysis->DuiziCount[composeNumberTile(i, k + 3)] >= 1))
 							yakuFlag = true;
 				}
 				return yakuFlag;
@@ -192,10 +207,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("小三連刻"), get_yaku_han("shou_sanrenkoh"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				for (int i = 0; i < TileSuitHonors; i += TileSuitStep) {
+				for (auto i : NumberTileSuits) {
 					for (int k = 1; k <= 7; k++)
-						if ((analysis->DuiziCount[i + k + 0] >= 1) && (analysis->DuiziCount[i + k + 1] >= 1) &&
-							(analysis->DuiziCount[i + k + 2] >= 1))
+						if ((analysis->DuiziCount[composeNumberTile(i, k + 0)] >= 1) && (analysis->DuiziCount[composeNumberTile(i, k + 1)] >= 1) &&
+							(analysis->DuiziCount[composeNumberTile(i, k + 2)] >= 1))
 							yakuFlag = true;
 				}
 				return yakuFlag;
@@ -207,7 +222,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("鏡音レン"), get_yaku_han("kagamine_len"),
 			/* 三連刻に追加する役 */
 			[sanrenkoh](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[WhiteDragon] >= 1) && sanrenkoh(analysis));
+				return ((analysis->KeziCount[TileCode::whiteDragon] >= 1) && sanrenkoh(analysis));
 			}
 		));
 #endif /* GUOBIAO */
@@ -217,7 +232,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* レアな方の三色 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("三同刻"), yaku::yakuCalculator::Yaku::yval_16,
+		_T("三同刻"), 16_fenF,
 		_T("双同刻"),
 #else /* GUOBIAO */
 		_T("三色同刻"), get_yaku_han("sanshoku_doukoh"),
@@ -226,9 +241,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		[](const MentsuAnalysis* const analysis) -> bool {
 			bool yakuFlag = false;
 			for (int i = 1; i <= 9; i++)
-				if ((analysis->KeziCount[i + TileSuitCharacters] >= 1) &&
-					(analysis->KeziCount[i + TileSuitCircles] >= 1) &&
-					(analysis->KeziCount[i + TileSuitBamboos] >= 1))
+				if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+					(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+					(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1))
 					yakuFlag = true;
 			return yakuFlag;
 		}
@@ -242,10 +257,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->KeziCount[i + TileSuitCharacters] >= 1) &&
-						(analysis->KeziCount[i + TileSuitCircles] >= 1) &&
-						(analysis->KeziCount[i + TileSuitBamboos] >= 1) &&
-						(analysis->KeziCount[WhiteDragon] >= 1))
+					if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1) &&
+						(analysis->KeziCount[TileCode::whiteDragon] >= 1))
 						yakuFlag = true;
 				return yakuFlag;
 			}
@@ -257,9 +272,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->DuiziCount[i + TileSuitCharacters] >= 1) &&
-						(analysis->DuiziCount[i + TileSuitCircles] >= 1) &&
-						(analysis->DuiziCount[i + TileSuitBamboos] >= 1))
+					if ((analysis->DuiziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+						(analysis->DuiziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1))
 						yakuFlag = true;
 				return yakuFlag;
 			}
@@ -271,24 +286,24 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 三元和・四喜和判定用 */
 	const auto WindCnt =
 		[](const MentsuAnalysis* const analysis) -> int {
-			return analysis->DuiziCount[EastWind] + analysis->KeziCount[EastWind] +
-				 analysis->DuiziCount[SouthWind] + analysis->KeziCount[SouthWind] +
-				  analysis->DuiziCount[WestWind] + analysis->KeziCount[WestWind] +
-				  analysis->DuiziCount[NorthWind] + analysis->KeziCount[NorthWind];
+			return analysis->DuiziCount[TileCode::eastWind] + analysis->KeziCount[TileCode::eastWind] +
+				 analysis->DuiziCount[TileCode::southWind] + analysis->KeziCount[TileCode::southWind] +
+				  analysis->DuiziCount[TileCode::westWind] + analysis->KeziCount[TileCode::westWind] +
+				  analysis->DuiziCount[TileCode::northWind] + analysis->KeziCount[TileCode::northWind];
 		};
 	const auto DragonCnt =
 		[](const MentsuAnalysis* const analysis) -> int {
-			return analysis->DuiziCount[WhiteDragon] + analysis->KeziCount[WhiteDragon] +
-				 analysis->DuiziCount[GreenDragon] + analysis->KeziCount[GreenDragon] +
-				  analysis->DuiziCount[RedDragon] + analysis->KeziCount[RedDragon];
+			return analysis->DuiziCount[TileCode::whiteDragon] + analysis->KeziCount[TileCode::whiteDragon] +
+				 analysis->DuiziCount[TileCode::greenDragon] + analysis->KeziCount[TileCode::greenDragon] +
+				  analysis->DuiziCount[TileCode::redDragon] + analysis->KeziCount[TileCode::redDragon];
 		};
 	/* 小三元 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("小三元"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("小三元"), 64_fenF,
 		_T("箭刻"), _T("双箭刻"),
 #else /* GUOBIAO */
-		_T("小三元"), yaku::yakuCalculator::Yaku::yval_2han,
+		_T("小三元"), 2_hanF,
 		_T("青春に悔いなし"), _T("青春に悔いあり"), /* 役牌2つは必ず複合する */
 #endif /* GUOBIAO */
 		[DragonCnt](const MentsuAnalysis* const analysis) -> bool {
@@ -298,10 +313,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 大三元 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("大三元"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("大三元"), 88_fenF,
 		_T("箭刻"), _T("双箭刻"),
 #else /* GUOBIAO */
-		_T("大三元"), yaku::yakuCalculator::Yaku::yval_yakuman,
+		_T("大三元"), 1_yakumanF,
 		_T("役牌・白"), _T("役牌・發"), _T("役牌・中"), _T("青春に悔いなし"), _T("青春に悔いあり"),
 #endif /* GUOBIAO */
 		[DragonCnt](const MentsuAnalysis* const analysis) -> bool {
@@ -312,7 +327,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 門前大三元 */
 	if (RuleData::chkRuleApplied("menzen_daisangen"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("門前大三元"), yaku::yakuCalculator::Yaku::yval_double_yakuman_menzen,
+			_T("門前大三元"), 2_yakumanM,
 			_T("大三元"),
 			[DragonCnt](const MentsuAnalysis* const analysis) -> bool {
 				return (DragonCnt(analysis) == 6);
@@ -322,10 +337,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 小四喜 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("小四風会"), yaku::yakuCalculator::Yaku::yval_64,
+		_T("小四風会"), 64_fenF,
 		_T("三風刻"), _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"),
 #else /* GUOBIAO */
-		_T("小四喜"), yaku::yakuCalculator::Yaku::yval_yakuman,
+		_T("小四喜"), 1_yakumanF,
 		_T("混一色"), _T("盗難車"),
 #endif /* GUOBIAO */
 		[WindCnt](const MentsuAnalysis* const analysis) -> bool {
@@ -339,7 +354,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("天虎"), get_yaku_han("heaven_tiger"),
 			_T("混一色"), _T("小四喜"), _T("字一色"), _T("役牌・發"), _T("盗難車"),
 			[WindCnt](const MentsuAnalysis* const analysis) -> bool {
-				return ((WindCnt(analysis) == 7)&&(analysis->KeziCount[GreenDragon] >= 1));
+				return ((WindCnt(analysis) == 7)&&(analysis->KeziCount[TileCode::greenDragon] >= 1));
 			}
 		));
 	/* 大怪湖 */
@@ -348,7 +363,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("大怪湖"), get_yaku_han("daikaiko"),
 			_T("混一色"), _T("小四喜"), _T("字一色"), _T("役牌・白"), _T("盗難車"),
 			[WindCnt](const MentsuAnalysis* const analysis) -> bool {
-				return ((WindCnt(analysis) == 7)&&(analysis->KeziCount[WhiteDragon] >= 1));
+				return ((WindCnt(analysis) == 7)&&(analysis->KeziCount[TileCode::whiteDragon] >= 1));
 			}
 		));
 	/* 千年虫 */
@@ -358,18 +373,18 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("混一色"), _T("小四喜"), _T("混老頭"), _T("盗難車"),
 			[WindCnt](const MentsuAnalysis* const analysis) -> bool {
 				return ((WindCnt(analysis) == 7)&&
-					(analysis->KeziCount[CharacterNine] >= 1)&&(analysis->KeziCount[SouthWind] == 1));
+					(analysis->KeziCount[TileCode::characterNine] >= 1)&&(analysis->KeziCount[TileCode::southWind] == 1));
 			}
 		));
 #endif /* GUOBIAO */
 	/* 大四喜 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("大四風会"), yaku::yakuCalculator::Yaku::yval_88,
+		_T("大四風会"), 88_fenF,
 		_T("圏風刻"), _T("門風刻"), _T("三風刻"), PengPengHu, _T("幺九刻"), _T("幺九刻x2"), _T("幺九刻x3"), _T("幺九刻x4"),
 #else /* GUOBIAO */
 		_T("大四喜"), (RuleData::chkRuleApplied("double_yakuman")) ?
-		yaku::yakuCalculator::Yaku::yval_double_yakuman : yaku::yakuCalculator::Yaku::yval_yakuman,
+		2_yakumanF : 1_yakumanF,
 		_T("混一色"), _T("対々和"), _T("役牌・場風"), _T("役牌・自風"), _T("役牌・開門風"), _T("役牌・裏風"), _T("盗難車"),
 #endif /* GUOBIAO */
 		[WindCnt](const MentsuAnalysis* const analysis) -> bool {
@@ -383,7 +398,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("弾葯"), get_yaku_han("dan_yaku"),
 			_T("混一色"), _T("対々和"), _T("役牌・場風"), _T("役牌・自風"), _T("役牌・開門風"), _T("役牌・裏風"), _T("大四喜"), _T("混老頭"), _T("盗難車"),
 			[WindCnt](const MentsuAnalysis* const analysis) -> bool {
-				return ((WindCnt(analysis) == 8)&&(analysis->DuiziCount[CharacterNine] >= 1));
+				return ((WindCnt(analysis) == 8)&&(analysis->DuiziCount[TileCode::characterNine] >= 1));
 			}
 		));
 	/* 仙人掌 */
@@ -392,7 +407,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("仙人掌"), get_yaku_han("cactus"),
 			_T("混一色"), _T("対々和"), _T("役牌・場風"), _T("役牌・自風"), _T("役牌・開門風"), _T("役牌・裏風"), _T("大四喜"), _T("字一色"), _T("盗難車"),
 			[WindCnt](const MentsuAnalysis* const analysis) -> bool {
-				return ((WindCnt(analysis) == 8)&&(analysis->DuiziCount[RedDragon] >= 1));
+				return ((WindCnt(analysis) == 8)&&(analysis->DuiziCount[TileCode::redDragon] >= 1));
 			}
 		));
 #endif /* GUOBIAO */
@@ -402,9 +417,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 対々和 */
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		PengPengHu, yaku::yakuCalculator::Yaku::yval_6,
+		PengPengHu, 6_fenF,
 #else /* GUOBIAO */
-		_T("対々和"), yaku::yakuCalculator::Yaku::yval_2han,
+		_T("対々和"), 2_hanF,
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalKezi == SizeOfMeldBuffer - 1);
@@ -426,43 +441,43 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 	const auto bakaze =
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->GameRound / 4)] >= 1);
+			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->prevailingwind())] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("圏風刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("圏風刻"), 2_fenF,
 #else /* GUOBIAO */
-		_T("役牌・場風"), yaku::yakuCalculator::Yaku::yval_1han,
+		_T("役牌・場風"), 1_hanF,
 #endif /* GUOBIAO */
 		bakaze
 	));
 	const auto jikaze =
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->player)))] >= 1);
+			return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(analysis->player))] >= 1);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-		_T("門風刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("門風刻"), 2_fenF,
 #else /* GUOBIAO */
-		_T("役牌・自風"), yaku::yakuCalculator::Yaku::yval_1han,
+		_T("役牌・自風"), 1_hanF,
 #endif /* GUOBIAO */
 		jikaze
 	));
 #ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双箭刻"), yaku::yakuCalculator::Yaku::yval_6,
+		_T("双箭刻"), 6_fenF,
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return chkYakuhai(analysis)[WhiteDragon] +
-				chkYakuhai(analysis)[GreenDragon] +
-				chkYakuhai(analysis)[RedDragon] == 2;
+			return chkYakuhai(analysis)[TileCode::whiteDragon] +
+				chkYakuhai(analysis)[TileCode::greenDragon] +
+				chkYakuhai(analysis)[TileCode::redDragon] == 2;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("箭刻"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("箭刻"), 2_fenF,
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return chkYakuhai(analysis)[WhiteDragon] +
-				chkYakuhai(analysis)[GreenDragon] +
-				chkYakuhai(analysis)[RedDragon] == 1;
+			return chkYakuhai(analysis)[TileCode::whiteDragon] +
+				chkYakuhai(analysis)[TileCode::greenDragon] +
+				chkYakuhai(analysis)[TileCode::redDragon] == 1;
 		}
 	));
 #else /* GUOBIAO */
@@ -470,7 +485,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("kaimenkaze")) {
 		kaimenkaze =
 			[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer)))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(analysis->GameStat->WaremePlayer))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・開門風"), get_yaku_han("kaimenkaze"),
@@ -485,8 +500,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	if (RuleData::chkRuleApplied("urakaze")) {
 		urakaze =
 			[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-				return (chkYakuhai(analysis)[Wind2Tile(static_cast<uint8_t>(analysis->GameStat->playerwind(
-					RelativePositionOf(analysis->player, sOpposite))))] >= 1);
+				return (chkYakuhai(analysis)[Wind2Tile(analysis->GameStat->playerwind(
+					RelativePositionOf(analysis->player, SeatRelative::opposite)))] >= 1);
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("役牌・裏風"), get_yaku_han("urakaze"),
@@ -499,21 +514,21 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			};
 	}
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("役牌・白"), yaku::yakuCalculator::Yaku::yval_1han,
+		_T("役牌・白"), 1_hanF,
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return (chkYakuhai(analysis)[WhiteDragon] >= 1);
+			return (chkYakuhai(analysis)[TileCode::whiteDragon] >= 1);
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("役牌・發"), yaku::yakuCalculator::Yaku::yval_1han,
+		_T("役牌・發"), 1_hanF,
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return (chkYakuhai(analysis)[GreenDragon] >= 1);
+			return (chkYakuhai(analysis)[TileCode::greenDragon] >= 1);
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("役牌・中"), yaku::yakuCalculator::Yaku::yval_1han,
+		_T("役牌・中"), 1_hanF,
 		[chkYakuhai](const MentsuAnalysis* const analysis) -> bool {
-			return (chkYakuhai(analysis)[RedDragon] >= 1);
+			return (chkYakuhai(analysis)[TileCode::redDragon] >= 1);
 		}
 	));
 #endif /* GUOBIAO */
@@ -522,33 +537,33 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 	/* 幺九刻 */
 	const auto YaoJiuKe =
 		[chkYakuhai, bakaze, jikaze](const MentsuAnalysis* const analysis) -> int {
-			return chkYakuhai(analysis)[CharacterOne] + chkYakuhai(analysis)[CharacterNine] +
-				chkYakuhai(analysis)[CircleOne] + chkYakuhai(analysis)[CircleNine] +
-				chkYakuhai(analysis)[BambooOne] + chkYakuhai(analysis)[BambooNine] +
-				chkYakuhai(analysis)[EastWind] + chkYakuhai(analysis)[SouthWind] +
-				chkYakuhai(analysis)[WestWind] + chkYakuhai(analysis)[NorthWind] -
+			return chkYakuhai(analysis)[TileCode::characterOne] + chkYakuhai(analysis)[TileCode::characterNine] +
+				chkYakuhai(analysis)[TileCode::circleOne] + chkYakuhai(analysis)[TileCode::circleNine] +
+				chkYakuhai(analysis)[TileCode::bambooOne] + chkYakuhai(analysis)[TileCode::bambooNine] +
+				chkYakuhai(analysis)[TileCode::eastWind] + chkYakuhai(analysis)[TileCode::southWind] +
+				chkYakuhai(analysis)[TileCode::westWind] + chkYakuhai(analysis)[TileCode::northWind] -
 				(bakaze(analysis) ? 1 : 0) - (jikaze(analysis) ? 1 : 0);
 		};
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻"), yaku::yakuCalculator::Yaku::yval_1,
+		_T("幺九刻"), 1_fenF,
 		[YaoJiuKe](const MentsuAnalysis* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 1;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻x2"), yaku::yakuCalculator::Yaku::yval_2,
+		_T("幺九刻x2"), 2_fenF,
 		[YaoJiuKe](const MentsuAnalysis* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 2;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻x3"), yaku::yakuCalculator::Yaku::yval_3,
+		_T("幺九刻x3"), 3_fenF,
 		[YaoJiuKe](const MentsuAnalysis* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 3;
 		}
 	));
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("幺九刻x4"), yaku::yakuCalculator::Yaku::yval_4,
+		_T("幺九刻x4"), 4_fenF,
 		[YaoJiuKe](const MentsuAnalysis* const analysis) -> bool {
 			return YaoJiuKe(analysis) == 4;
 		}
@@ -563,7 +578,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("新沼けんじ"), get_yaku_han("niinuma_kenji"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return (analysis->KeziCount[BambooOne] >= 1);
+				return (analysis->KeziCount[TileCode::bambooOne] >= 1);
 			}
 		));
 	/* 陣太鼓 */
@@ -571,7 +586,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("陣太鼓"), get_yaku_han("jindaiko"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return (analysis->KeziCount[CircleOne] >= 1);
+				return (analysis->KeziCount[TileCode::circleOne] >= 1);
 			}
 		));
 
@@ -590,7 +605,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("三風刻"), yaku::yakuCalculator::Yaku::yval_12,
+			_T("三風刻"), 12_fenF,
 #else /* GUOBIAO */
 			_T("三風刻"), get_yaku_han("three_winds"),
 #endif /* GUOBIAO */
@@ -637,15 +652,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("役牌・場風"), _T("役牌・自風"), _T("役牌・中"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->GameStat->GameRound / 4 == sWest) &&
-					(analysis->GameStat->playerwind(analysis->player) == sSouth))
+				if ((analysis->GameStat->prevailingwind() == SeatAbsolute::west) &&
+					(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::south))
 					yakuFlag = true;
-				if ((analysis->GameStat->GameRound / 4 == sSouth) &&
-					(analysis->GameStat->playerwind(analysis->player) == sWest))
+				if ((analysis->GameStat->prevailingwind() == SeatAbsolute::south) &&
+					(analysis->GameStat->playerwind(analysis->player) == SeatAbsolute::west))
 					yakuFlag = true;
-				return ((analysis->KeziCount[SouthWind] >= 1) &&
-					(analysis->KeziCount[WestWind] >= 1) &&
-					(analysis->KeziCount[RedDragon] >= 1) &&
+				return ((analysis->KeziCount[TileCode::southWind] >= 1) &&
+					(analysis->KeziCount[TileCode::westWind] >= 1) &&
+					(analysis->KeziCount[TileCode::redDragon] >= 1) &&
 					(yakuFlag));
 			}
 		));
@@ -655,9 +670,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("雪月花"), get_yaku_han("setsugetsuka"),
 			_T("役牌・白"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[WhiteDragon] >= 1) &&
-					(analysis->KeziCount[CircleOne] >= 1) &&
-					(analysis->KeziCount[CircleFive] >= 1));
+				return ((analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
+					(analysis->KeziCount[TileCode::circleOne] >= 1) &&
+					(analysis->KeziCount[TileCode::circleFive] >= 1));
 			}
 		));
 	/* 風花雪月 */
@@ -666,9 +681,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("風花雪月"), get_yaku_han("fuuka_setsugetsu"),
 			_T("雪月花"), _T("対々和"), _T("役牌・場風"), _T("役牌・自風"),
 			[bakaze, jikaze](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[WhiteDragon] >= 1) &&
-					(analysis->KeziCount[CircleOne] >= 1) &&
-					(analysis->KeziCount[CircleFive] >= 1) &&
+				return ((analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
+					(analysis->KeziCount[TileCode::circleOne] >= 1) &&
+					(analysis->KeziCount[TileCode::circleFive] >= 1) &&
 					(bakaze(analysis) || jikaze(analysis)));
 			}
 		));
@@ -678,9 +693,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("花鳥風月"), get_yaku_han("kachou_fuugetsu"),
 			_T("雪月花"), _T("対々和"), _T("役牌・場風"), _T("役牌・自風"),
 			[bakaze, jikaze](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[BambooOne] >= 1) &&
-					(analysis->KeziCount[CircleOne] >= 1) &&
-					(analysis->KeziCount[CircleFive] >= 1) &&
+				return ((analysis->KeziCount[TileCode::bambooOne] >= 1) &&
+					(analysis->KeziCount[TileCode::circleOne] >= 1) &&
+					(analysis->KeziCount[TileCode::circleFive] >= 1) &&
 					(bakaze(analysis) || jikaze(analysis)));
 			}
 		));
@@ -690,11 +705,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("東北自動車道"), get_yaku_han("tohoku_expwy"),
 			_T("対々和"), _T("混一色"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->DuiziCount[CircleTwo] >= 1) &&
-					(analysis->DuiziCount[CircleFour] >= 1) &&
-					(analysis->DuiziCount[CircleSix] >= 1) &&
-					(analysis->DuiziCount[EastWind] >= 1) &&
-					(analysis->DuiziCount[NorthWind] >= 1));
+				return ((analysis->DuiziCount[TileCode::circleTwo] >= 1) &&
+					(analysis->DuiziCount[TileCode::circleFour] >= 1) &&
+					(analysis->DuiziCount[TileCode::circleSix] >= 1) &&
+					(analysis->DuiziCount[TileCode::eastWind] >= 1) &&
+					(analysis->DuiziCount[TileCode::northWind] >= 1));
 			}
 		));
 	/* 東関東自動車道 */
@@ -703,11 +718,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("東関東自動車道"), get_yaku_han("higashikanto_expwy"),
 			_T("対々和"), _T("混一色"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->DuiziCount[CircleTwo] >= 1) &&
-					(analysis->DuiziCount[CircleFour] >= 1) &&
-					(analysis->DuiziCount[CircleSix] >= 1) &&
-					(analysis->DuiziCount[EastWind] >= 1) &&
-					(analysis->DuiziCount[WestWind] >= 1));
+				return ((analysis->DuiziCount[TileCode::circleTwo] >= 1) &&
+					(analysis->DuiziCount[TileCode::circleFour] >= 1) &&
+					(analysis->DuiziCount[TileCode::circleSix] >= 1) &&
+					(analysis->DuiziCount[TileCode::eastWind] >= 1) &&
+					(analysis->DuiziCount[TileCode::westWind] >= 1));
 			}
 		));
 	/* 中国系のおめでたい役 */
@@ -716,11 +731,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("紅鶏報暁"), get_yaku_han("koukei_hougyou"),
 			_T("対々和"), _T("混一色"), _T("絶一門"), _T("役牌・白"), _T("役牌・中"), _T("金鶏報暁"), _T("銀鶏報春"), _T("白鳥"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->MianziDat[0].tile == CircleOne) &&
-					(analysis->KeziCount[BambooOne] >= 1) &&
-					(analysis->KeziCount[EastWind] >= 1) &&
-					(analysis->KeziCount[WhiteDragon] >= 1) &&
-					(analysis->KeziCount[RedDragon] >= 1));
+				return ((analysis->MianziDat[0].tile == TileCode::circleOne) &&
+					(analysis->KeziCount[TileCode::bambooOne] >= 1) &&
+					(analysis->KeziCount[TileCode::eastWind] >= 1) &&
+					(analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
+					(analysis->KeziCount[TileCode::redDragon] >= 1));
 			}
 		));
 	if (RuleData::chkRuleApplied("kinkei_hougyou"))
@@ -728,9 +743,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("金鶏報暁"), get_yaku_han("kinkei_hougyou"),
 			_T("役牌・中"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[BambooOne] >= 1) &&
-					(analysis->KeziCount[EastWind] >= 1) &&
-					(analysis->KeziCount[RedDragon] >= 1));
+				return ((analysis->KeziCount[TileCode::bambooOne] >= 1) &&
+					(analysis->KeziCount[TileCode::eastWind] >= 1) &&
+					(analysis->KeziCount[TileCode::redDragon] >= 1));
 			}
 		));
 	if (RuleData::chkRuleApplied("ginkei_houshun"))
@@ -738,9 +753,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("銀鶏報春"), get_yaku_han("ginkei_houshun"),
 			_T("役牌・白"), _T("白鳥"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[BambooOne] >= 1) &&
-					(analysis->KeziCount[EastWind] >= 1) &&
-					(analysis->KeziCount[WhiteDragon] >= 1) &&
+				return ((analysis->KeziCount[TileCode::bambooOne] >= 1) &&
+					(analysis->KeziCount[TileCode::eastWind] >= 1) &&
+					(analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
 					(analysis->PlayerStat->FlowerFlag.Spring));
 			}
 		));
@@ -868,7 +883,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("三色三節高"), yaku::yakuCalculator::Yaku::yval_8,
+			_T("三色三節高"), 8_fenF,
 #else /* GUOBIAO */
 			_T("三色連刻"), get_yaku_han("sanshoku_renkoh"),
 #endif /* GUOBIAO */
@@ -918,22 +933,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 #ifdef GUOBIAO
-			_T("双同刻"), yaku::yakuCalculator::Yaku::yval_2,
+			_T("双同刻"), 2_fenF,
 #else /* GUOBIAO */
 			_T("二同刻"), get_yaku_han("ryandoukoh"),
 #endif /* GUOBIAO */
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				constexpr int suit[3][2] = {
-					{TileSuitCharacters, TileSuitCircles},
-					{TileSuitCharacters, TileSuitBamboos},
-					{TileSuitCircles, TileSuitBamboos},
+				constexpr std::array<std::pair<TileSuit, TileSuit>, 3> suit = {
+					std::make_pair(TileSuit::characters, TileSuit::circles),
+					std::make_pair(TileSuit::characters, TileSuit::bamboos),
+					std::make_pair(TileSuit::circles, TileSuit::bamboos),
 				};
-				for (int k = 0; k < 3; k++) {
+				for (auto& k : suit) {
 					int j = 0;
 					for (int i = 1; i <= 9; i++)
-						if ((analysis->KeziCount[i + suit[k][0]] >= 1) &&
-							(analysis->KeziCount[i + suit[k][1]] >= 1)) ++j;
+						if ((analysis->KeziCount[composeNumberTile(k.first,  i)] >= 1) &&
+							(analysis->KeziCount[composeNumberTile(k.second, i)] >= 1)) ++j;
 					if (j == 2) yakuFlag = true;
 				}
 				return yakuFlag;
@@ -948,15 +963,15 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				for (int i = 1; i <= 9; i++)
-					if ((analysis->KeziCount[i + TileSuitCharacters] >= 1) &&
-						(analysis->KeziCount[i + TileSuitCircles] >= 1) &&
-						(analysis->KeziCount[i + TileSuitBamboos] >= 1))
-						if ((analysis->KeziCount[i + TileSuitCharacters + 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitCircles + 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitBamboos + 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitCharacters - 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitCircles - 1] >= 1) ||
-							(analysis->KeziCount[i + TileSuitBamboos - 1] >= 1))
+					if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i)] >= 1))
+						if ((analysis->KeziCount[composeNumberTile(TileSuit::characters, i + 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i + 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i + 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::characters, i - 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::circles,    i - 1)] >= 1) ||
+							(analysis->KeziCount[composeNumberTile(TileSuit::bamboos,    i - 1)] >= 1))
 							yakuFlag = true;
 				return yakuFlag;
 			}
@@ -970,12 +985,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("八仙乗風過海"), get_yaku_han("baxian_chengfeng"),
 			_T("対々和"), _T("三色同刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->KeziCount[CircleEight] >= 1) &&
-					(analysis->KeziCount[BambooEight] >= 1) &&
-					(analysis->KeziCount[WhiteDragon] >= 1) &&
-					((analysis->KeziCount[EastWind] >= 1) ||
-					(analysis->KeziCount[SouthWind] >= 1)) );
+				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
+					(analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
+					((analysis->KeziCount[TileCode::eastWind] >= 1) ||
+					(analysis->KeziCount[TileCode::southWind] >= 1)) );
 			}
 		));
 	/* 八仙戯鳳 */
@@ -984,11 +999,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("八仙戯鳳"), get_yaku_han("baxian_xifeng"),
 			_T("対々和"), _T("三色同刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->KeziCount[CircleEight] >= 1) &&
-					(analysis->KeziCount[BambooEight] >= 1) &&
-					(analysis->KeziCount[BambooOne] >= 1) &&
-					(analysis->KeziCount[WestWind] >= 1) );
+				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooOne] >= 1) &&
+					(analysis->KeziCount[TileCode::westWind] >= 1) );
 			}
 		));
 	/* 八仙戯四鳳 */
@@ -997,11 +1012,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("八仙戯四鳳"), get_yaku_han("baxian_xisifeng"),
 			_T("対々和"), _T("三色同刻"), _T("八仙戯鳳"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->KeziCount[CircleEight] >= 1) &&
-					(analysis->KeziCount[BambooEight] >= 1) &&
-					(analysis->KangziCount[BambooOne] >= 1) &&
-					(analysis->KeziCount[WestWind] >= 1) );
+				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
+					(analysis->KangziCount[TileCode::bambooOne] >= 1) &&
+					(analysis->KeziCount[TileCode::westWind] >= 1) );
 			}
 		));
 	/* 八仙戯金亀 */
@@ -1010,11 +1025,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("八仙戯金亀"), get_yaku_han("baxian_xijingui"),
 			_T("対々和"), _T("三色同刻"), _T("茴香") PON,
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->KeziCount[CircleEight] >= 1) &&
-					(analysis->KeziCount[BambooEight] >= 1) &&
-					(analysis->KeziCount[BambooSeven] >= 1) &&
-					(analysis->KeziCount[WestWind] >= 1) );
+				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooSeven] >= 1) &&
+					(analysis->KeziCount[TileCode::westWind] >= 1) );
 			}
 		));
 	/* 八仙闘北斗 */
@@ -1023,10 +1038,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("八仙闘北斗"), get_yaku_han("baxian_dou_beidou"),
 			_T("対々和"), _T("三色同刻"), _T("茴香") PON,
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->KeziCount[CircleEight] >= 1) &&
-					(analysis->KeziCount[BambooEight] >= 1) &&
-					(analysis->KeziCount[CircleSeven] >= 1) );
+				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleSeven] >= 1) );
 			}
 		));
 	/* 八仙聚首 */
@@ -1035,13 +1050,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("八仙聚首"), get_yaku_han("baxian_jushou"),
 			_T("対々和"), _T("三色同刻"), _T("八仙過海"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->KeziCount[CircleEight] >= 1) &&
-					(analysis->KeziCount[BambooEight] >= 1) &&
+				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
+					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
+					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
 					analysis->PlayerStat->FlowerFlag.Spring && analysis->PlayerStat->FlowerFlag.Summer &&
 					analysis->PlayerStat->FlowerFlag.Autumn && analysis->PlayerStat->FlowerFlag.Winter &&
 					analysis->PlayerStat->FlowerFlag.Plum && analysis->PlayerStat->FlowerFlag.Orchid &&
-					analysis->PlayerStat->FlowerFlag.Chrys && analysis->PlayerStat->FlowerFlag.Bamboo );
+					analysis->PlayerStat->FlowerFlag.Chrys && analysis->PlayerStat->FlowerFlag.Bamboo);
 			}
 		));
 #endif /* GUOBIAO */

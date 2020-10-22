@@ -8,7 +8,7 @@
 #include "../logging.h"
 #include "../../common/strcode.h"
 
-constexpr DiscardTileNum aiscript::DiscardThrough = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
+constexpr DiscardTileNum aiscript::DiscardThrough = {DiscardType::normal, NumOfTilesInHand - 1};
 
 aiscript::ScriptStates aiscript::status[Players] = {{nullptr, false}};
 constexpr char aiscript::fncname_discard[8] = "ontsumo"; // 捨牌決定用関数の名前
@@ -155,7 +155,7 @@ DiscardTileNum aiscript::compdahai(const GameTable* const gameStat) {
 	return determine_discard(gameStat);
 }
 DiscardTileNum aiscript::determine_discard(const GameTable* const gameStat) {
-	DiscardTileNum discard = {DiscardTileNum::Normal, NumOfTilesInHand - 1};
+	DiscardTileNum discard = {DiscardType::normal, NumOfTilesInHand - 1};
 	std::thread myThread(calcDiscard_threaded, std::ref(discard), gameStat);
 	myThread.join();
 	return discard;
@@ -170,16 +170,16 @@ void aiscript::calcDiscard_threaded(DiscardTileNum& answer, const GameTable* gam
 	} else {
 		/* 実行完了 */
 		int flag;
-		answer.type = (DiscardTileNum::discardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
+		answer.type = (DiscardType)lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -2, &flag);
 		if (!flag) {
 			warn(_T("1番目の返り値が数値ではありません。通常の打牌とみなします。"));
-			answer.type = DiscardTileNum::Normal; // fallback
-		} else if ((answer.type < DiscardTileNum::Normal) || (answer.type > DiscardTileNum::Disconnect)) {
+			answer.type = DiscardType::normal; // fallback
+		} else if ((answer.type < DiscardType::normal) || (answer.type > DiscardType::disconnect)) {
 			warn(_T("1番目の返り値が正しくありません。通常の打牌とみなします。"));
-			answer.type = DiscardTileNum::Normal; // fallback
+			answer.type = DiscardType::normal; // fallback
 		}
-		if ((answer.type == DiscardTileNum::Agari) || (answer.type == DiscardTileNum::Kyuushu) ||
-			(answer.type == DiscardTileNum::Disconnect)) { // 番号指定が不要な場合
+		if ((answer.type == DiscardType::agari) || (answer.type == DiscardType::kyuushu) ||
+			(answer.type == DiscardType::disconnect)) { // 番号指定が不要な場合
 				answer.id = static_cast<uint8_t>(NumOfTilesInHand - 1); // 2番めの返り値は無視
 		} else {
 			lua_Integer i = lua_tointegerx(status[gameStat->CurrentPlayer.Active].state, -1, &flag);
@@ -214,11 +214,11 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 	CodeConv::tostringstream o;
 	o << _T("AIの副露判定に入ります。プレイヤー [") << static_cast<int>(gameStat->CurrentPlayer.Passive) << _T("]");
 	info(o.str().c_str());
-	gameStat->statOfPassive().DeclarationFlag.Chi = chiiNone; // リセット
+	gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::none; // リセット
 	gameStat->statOfPassive().DeclarationFlag.Pon =
 		gameStat->statOfPassive().DeclarationFlag.Kan =
 		gameStat->statOfPassive().DeclarationFlag.Ron = false;
-	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[gameStat->KangFlag.chankanFlag], (gameStat->KangFlag.chankanFlag == 0))) {
+	if (callFunc(gameStat, gameStat->CurrentPlayer.Passive, fncname_call[static_cast<int>(gameStat->KangFlag.chankanFlag)], (gameStat->KangFlag.chankanFlag == ChankanStat::none))) {
 		return;
 	} else {
 		/* 実行完了 */
@@ -228,13 +228,13 @@ void aiscript::calcCall_threaded(GameTable* gameStat) {
 			warn(_T("1番目の返り値が数値ではありません。無視します。"));
 		} else {
 			switch (meldtype) {
-				case meldNone: break;
-				case meldRon: gameStat->statOfPassive().DeclarationFlag.Ron = true; break;
-				case meldKan: gameStat->statOfPassive().DeclarationFlag.Kan = true; break;
-				case meldPon: gameStat->statOfPassive().DeclarationFlag.Pon = true; break;
-				case meldChiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = chiiLower; break;
-				case meldChiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = chiiMiddle; break;
-				case meldChiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = chiiUpper; break;
+				case MeldCallID::none: break;
+				case MeldCallID::ron: gameStat->statOfPassive().DeclarationFlag.Ron = true; break;
+				case MeldCallID::kan: gameStat->statOfPassive().DeclarationFlag.Kan = true; break;
+				case MeldCallID::pon: gameStat->statOfPassive().DeclarationFlag.Pon = true; break;
+				case MeldCallID::chiiLower: gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::lower; break;
+				case MeldCallID::chiiMiddle: gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::middle; break;
+				case MeldCallID::chiiUpper: gameStat->statOfPassive().DeclarationFlag.Chi = ChiiType::upper; break;
 				default: warn(_T("1番目の返り値が正しくありません。無視します。")); break;
 			}
 		}

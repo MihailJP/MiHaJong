@@ -11,8 +11,8 @@ namespace utils {
 
 using namespace mihajong_structs;
 
-typedef seatRelative (*playerRelative_type)(PlayerID, PlayerID);
-typedef PlayerID (*RelativePositionOf_type)(PlayerID, seatRelative);
+typedef SeatRelative (*playerRelative_type)(PlayerID, PlayerID);
+typedef PlayerID (*RelativePositionOf_type)(PlayerID, SeatRelative);
 typedef PlayerRankList (*calcRank_type)(const GameTable*);
 typedef MachihaiInfo (*chkFuriten_type)(const GameTable*, PlayerID);
 typedef bool (*isTenpai_type)(const GameTable*, PlayerID);

@@ -59,22 +59,22 @@ void TableProtoScene::ShowSidebar() {
 void TableProtoScene::InitScorePanel() {
 	const float widthScale = Geometry::SidebarWidth() / (Geometry::BaseSize / 0.75f - Geometry::BaseSize);
 	if (widthScale >= 1.5f) {
-		scorePanel[0] = new ScoreBoard(caller->getDevice(), sOpposite,
+		scorePanel[0] = new ScoreBoard(caller->getDevice(), SeatRelative::opposite,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3     + 3, panelPosY +  62, widthScale / 1.5f);
-		scorePanel[1] = new ScoreBoard(caller->getDevice(), sLeft,
+		scorePanel[1] = new ScoreBoard(caller->getDevice(), SeatRelative::left,
 			Geometry::BaseSize                                    + 3, panelPosY + 125, widthScale / 1.5f);
-		scorePanel[2] = new ScoreBoard(caller->getDevice(), sRight,
+		scorePanel[2] = new ScoreBoard(caller->getDevice(), SeatRelative::right,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3 * 2 + 3, panelPosY + 125, widthScale / 1.5f);
-		scorePanel[3] = new ScoreBoard(caller->getDevice(), sSelf,
+		scorePanel[3] = new ScoreBoard(caller->getDevice(), SeatRelative::self,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 3     + 3, panelPosY + 188, widthScale / 1.5f);
 	} else {
-		scorePanel[0] = new ScoreBoard(caller->getDevice(), sOpposite,
+		scorePanel[0] = new ScoreBoard(caller->getDevice(), SeatRelative::opposite,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 4    , panelPosY      , widthScale);
-		scorePanel[1] = new ScoreBoard(caller->getDevice(), sLeft,
+		scorePanel[1] = new ScoreBoard(caller->getDevice(), SeatRelative::left,
 			Geometry::BaseSize                                + 3, panelPosY + 125, widthScale);
-		scorePanel[2] = new ScoreBoard(caller->getDevice(), sRight,
+		scorePanel[2] = new ScoreBoard(caller->getDevice(), SeatRelative::right,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 2 + 3, panelPosY + 125, widthScale);
-		scorePanel[3] = new ScoreBoard(caller->getDevice(), sSelf,
+		scorePanel[3] = new ScoreBoard(caller->getDevice(), SeatRelative::self,
 			Geometry::BaseSize + Geometry::SidebarWidth() / 4    , panelPosY + 250, widthScale);
 	}
 }
@@ -173,7 +173,7 @@ PlayerID TableProtoScene::ScoreBoard::playerID() {
 	return utils::RelativePositionOf(GameStatus::gameStat()->PlayerID, relativePlayerID);
 }
 
-TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, seatRelative relativePos, int x, int y, float widthScale) {
+TableProtoScene::ScoreBoard::ScoreBoard(DevicePtr device, SeatRelative relativePos, int x, int y, float widthScale) {
 	myDevice = device; relativePlayerID = relativePos; xpos = x; ypos = y; wScale = widthScale;
 	mihajong_graphic::LoadTexture(myDevice, &texture, MAKEINTRESOURCE(IDB_PNG_SCORE_INDICATOR));
 	nameText = new SmallTextRenderer(device);
@@ -186,8 +186,8 @@ TableProtoScene::ScoreBoard::~ScoreBoard() {
 	delete nameText;
 }
 
-TableProtoScene::ScoreBoard::ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
-	return static_cast<ScoreMode>((myTimer.currTime() / 2000000) % (((GameStatus::gameStat()->gameType & GuobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
+ScoreMode TableProtoScene::ScoreBoard::getScoreMode() {
+	return static_cast<ScoreMode>((myTimer.currTime() / 2000000) % ((GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) || rules::chkRule("chip", "no")) ? 2 : 3));
 }
 
 void TableProtoScene::ScoreBoard::Render() {
@@ -196,7 +196,7 @@ void TableProtoScene::ScoreBoard::Render() {
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		PanelWidth, PanelHeight, 0xffffffff, &rect, 0, 0, &myMatrix);
-	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4))) {
+	if ((playerID() >= 0) && (playerID() < (GameStatus::gameStat()->chkGameType(GameTypeID::sanmaT) ? 3 : 4))) {
 		renderWind();
 		renderRank();
 		renderScore();
@@ -206,8 +206,8 @@ void TableProtoScene::ScoreBoard::Render() {
 
 void TableProtoScene::ScoreBoard::renderWind() {
 	if ((myTimer.currTime() % 1000000 >= 500000) && (GameStatus::gameStat()->CurrentPlayer.Active == playerID())) return; // ツモ番の時は表示を点滅させる
-	const seatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
-	if (GameStatus::gameStat()->chkGameType(Sanma4) && (wind == sNorth)) return; // 四人三麻の時の抜け番は何も表示しないようにする
+	const SeatAbsolute wind = GameStatus::gameStat()->playerwind(playerID());
+	if (GameStatus::gameStat()->chkGameType(GameTypeID::sanma4) && (wind == SeatAbsolute::north)) return; // 四人三麻の時の抜け番は何も表示しないようにする
 	const RECT rect = {
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
@@ -216,7 +216,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		WindCharWidth, WindCharHeight,
-		(wind == sEast) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
+		(wind == SeatAbsolute::east) ? ledColorRed : ledColorGreen, // 「東」のみ赤で、それ以外を緑で表示すればわかりやすいと思うのでそうする
 		&rect, 0, 0, &myMatrix);
 }
 
@@ -235,7 +235,7 @@ void TableProtoScene::ScoreBoard::renderRank() {
 	PlayerRankList rankList = utils::calcRank(GameStatus::gameStat());
 	const ArgbColor color =
 		(rankList[playerID()] == 1) ? ledColorRed : // トップは赤
-		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(SanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
+		(rankList[playerID()] == (GameStatus::gameStat()->chkGameType(GameTypeID::sanmaT) ? 3 : 4) ? ledColorOrange : // ラスはオレンジ
 		ledColorGreen); // その他は緑で表示
 
 	renderNumeral(RankPosX, RankPosY, rankList[playerID()], color); // その他は緑で表示
@@ -251,12 +251,12 @@ int TableProtoScene::ScoreBoard::getScoreSign() {
 }
 
 std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scoreInfo(ScoreMode scoreMode) {
-	if (scoreMode == scoreChip) {
+	if (scoreMode == ScoreMode::chip) {
 		const int& chipAmount = GameStatus::gameStat()->Player[playerID()].playerChip;
 		return std::make_tuple(abs(chipAmount), 0, 0, (chipAmount > 0) ? 1 : (chipAmount < 0) ? -1 : 0);
 	} else {
 		const LargeNum playerScoreDiff = GameStatus::gameStat()->Player[playerID()].PlayerScore - GameStatus::gameStat()->statOfMine().PlayerScore;
-		const LargeNum* const score = (scoreMode == scoreDiff) ?
+		const LargeNum* const score = (scoreMode == ScoreMode::diff) ?
 			&playerScoreDiff :
 			&(GameStatus::gameStat()->Player[playerID()].PlayerScore);
 		constexpr int digit[10] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
@@ -266,10 +266,10 @@ std::tuple<unsigned, unsigned, signed, signed> TableProtoScene::ScoreBoard::scor
 		else                 sign =  0;
 		for (int i = DigitGroups - 1; i >= 0; --i) {
 			for (int j = ((i == DigitGroups - 1) ? 9 : 7); j >= 0; --j) {
-				if ((GameStatus::gameStat()->gameType & RichiMJ) && (i == 0) && (j == 4)) {
+				if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && (i == 0) && (j == 4)) {
 					return std::make_tuple(abs(score->digitGroup[0] / 100), 0, 0, sign);
 				}
-				else if ((GameStatus::gameStat()->gameType & GuobiaoMJ) && (i == 0) && (j == 2)) {
+				else if (GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) && (i == 0) && (j == 2)) {
 					return std::make_tuple(abs(score->digitGroup[0]), 0, 0, sign);
 				}
 				else if (score->digitGroup[i] / digit[j]) {
@@ -298,13 +298,13 @@ void TableProtoScene::ScoreBoard::renderScore() {
 
 	std::tie(digits, unitcode, decimalPos, sign) = scoreInfo(scoreMode);
 	switch (scoreMode) {
-	case scorePoints:
+	case ScoreMode::points:
 		if (utils::isAboveBase(GameStatus::gameStat(), playerID()))
 			color = ledColorRed; // 浮いていれば赤
 		else
 			color = ledColorGreen; // 沈みは緑
 		break;
-	case scoreDiff: case scoreChip:
+	case ScoreMode::diff: case ScoreMode::chip:
 		if      (sign ==  1) color = ledColorRed;
 		else if (sign == -1) color = ledColorGreen;
 		else                 color = ledColorOrange;
@@ -313,7 +313,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		color = ledColorGreen; // 一応
 	}
 
-	if ((scoreMode != scoreDiff) || (playerID() != GameStatus::gameStat()->PlayerID)) {
+	if ((scoreMode != ScoreMode::diff) || (playerID() != GameStatus::gameStat()->PlayerID)) {
 		if (sign == 1)
 			renderNumeral(ScorePosX - NumCharWidth    , ScorePosY, digitPlus         , color);
 		else if (sign == -1)
@@ -325,7 +325,7 @@ void TableProtoScene::ScoreBoard::renderScore() {
 		renderNumeral(    ScorePosX + NumCharWidth * 2, ScorePosY, digits % 10       , color);
 		if (unitcode != 0)
 			renderNumeral(ScorePosX + NumCharWidth * decimalPos, ScorePosY, digitDecimal, color);
-		if ((GameStatus::gameStat()->gameType & RichiMJ) && (scoreMode != scoreChip))
+		if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && (scoreMode != ScoreMode::chip))
 			renderScoreUnit(unitcode, color);
 	}
 }
@@ -345,7 +345,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 	const CodeConv::tstring pName(utils::getName(playerID()));
 	const unsigned tmpWidth = nameText->strWidthByCols(pName);
 	nameText->NewText(0,
-		(getScoreMode() == scoreDiff) ? _T("点差表示") : ((getScoreMode() == scoreChip) ? _T("チップ表示") : pName),
+		(getScoreMode() == ScoreMode::diff) ? _T("点差表示") : ((getScoreMode() == ScoreMode::chip) ? _T("チップ表示") : pName),
 		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / static_cast<float>(tmpWidth)) : 1.0f) * wScale);
 	nameText->Render();
 }

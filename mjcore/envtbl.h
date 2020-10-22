@@ -4,6 +4,11 @@
 #include <string>
 #include "gametbl.h"
 
+enum class ClientType : int32_t {
+	unavailable = (-1),
+	standalone, server, client,
+};
+
 class EnvTable { // 卓には直接関係ないデータ [singleton]
 private: // singleton
 	EnvTable();
@@ -19,10 +24,6 @@ public:
 		PlayerLabel() : RemotePlayerFlag(0) {}
 	};
 
-	enum ClientType : int32_t {
-		Unavailable = (-1),
-		Standalone, Server, Client,
-	};
 	static EnvTable* Instantiate(); // Singleton instance accessor
 
 	// データ

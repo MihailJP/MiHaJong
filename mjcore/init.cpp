@@ -32,19 +32,19 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 	/* Vista以降、Program Files以下にファイルを作れないので自分で調整する */
 	std::string configFile;
 	switch (gameType) {
-	case Yonma:
+	case GameTypeID::yonma:
 		configFile = confpath::confPath() + "mihajong.ini";
 		break;
-	case Sanma:
+	case GameTypeID::sanma:
 		configFile = confpath::confPath() + "mihasanm.ini";
 		break;
-	case Sanma4:
+	case GameTypeID::sanma4:
 		configFile = confpath::confPath() + "mihaysnm.ini";
 		break;
-	case SanmaS:
+	case GameTypeID::sanmaS:
 		configFile = confpath::confPath() + "mihassnm.ini";
 		break;
-	case SanmaSeto:
+	case GameTypeID::sanmaSeto:
 		configFile = confpath::confPath() + "mihastsm.ini";
 		break;
 	}
@@ -182,7 +182,7 @@ MJCORE void initapp(GameTypeID gameType, Window hwnd)
 }
 
 MJCORE void testInit() {
-	setGameType(Yonma);
+	setGameType(GameTypeID::yonma);
 	RuleData::configinit();
 	ShantenAnalyzer::initMentsuAnalysisDat();
 }

@@ -137,21 +137,21 @@ void ConfigFile::playerName(const CodeConv::tstring& val) {
 }
 
 /* フルスクリーン/ウィンドウ設定 */
-ScreenMode::ScreenMode ConfigFile::scrMode() {
-	using namespace ScreenMode;
-	return configMap[_T("preferences")][_T("screen")] == _T("borderless") ? scrModeBorderless
-		: configMap[_T("preferences")][_T("screen")] == _T("fullscreen") ? scrModeFullscreen : scrModeWindowed;
+Screen_Mode::ScreenMode ConfigFile::scrMode() {
+	using namespace Screen_Mode;
+	return configMap[_T("preferences")][_T("screen")] == _T("borderless") ? ScreenMode::borderless
+		: configMap[_T("preferences")][_T("screen")] == _T("fullscreen") ? ScreenMode::fullscreen : ScreenMode::windowed;
 }
-void ConfigFile::scrMode(ScreenMode::ScreenMode val) {
-	using namespace ScreenMode;
+void ConfigFile::scrMode(Screen_Mode::ScreenMode val) {
+	using namespace Screen_Mode;
 	switch (val) {
-	case scrModeBorderless:
+	case ScreenMode::borderless:
 		configMap[_T("preferences")][_T("screen")] = _T("borderless");
 		break;
-	case scrModeFullscreen:
+	case ScreenMode::fullscreen:
 		configMap[_T("preferences")][_T("screen")] = _T("fullscreen");
 		break;
-	case scrModeWindowed:
+	case ScreenMode::windowed:
 		configMap[_T("preferences")][_T("screen")] = _T("windowed");
 		break;
 	}
@@ -160,52 +160,52 @@ void ConfigFile::scrMode(ScreenMode::ScreenMode val) {
 /* 解像度設定 */
 ScreenConfig ConfigFile::screenResolution() {
 	const std::map<CodeConv::tstring, ScreenConfig> scrConfList = {
-		{_T("scr_800_600"),   screenSVGA},   {_T("svga"),   screenSVGA},
-		{_T("scr_1024_768"),  screenXGA},    {_T("xga"),    screenXGA},
-		{_T("scr_1366_768"),  screenFWXGA},  {_T("fwxga"),  screenFWXGA},
-		{_T("scr_1280_1024"), screenSXGA},   {_T("sxga"),   screenSXGA},
-		{_T("scr_1600_1200"), screenUXGA},   {_T("uxga"),   screenUXGA},
-		{_T("scr_1920_1080"), screenFullHD}, {_T("fullhd"), screenFullHD},
-		{_T("scr_1920_1200"), screenWUXGA},  {_T("wuxga"),  screenWUXGA},
+		{_T("scr_800_600"),   ScreenConfig::svga},   {_T("svga"),   ScreenConfig::svga},
+		{_T("scr_1024_768"),  ScreenConfig::xga},    {_T("xga"),    ScreenConfig::xga},
+		{_T("scr_1366_768"),  ScreenConfig::fwxga},  {_T("fwxga"),  ScreenConfig::fwxga},
+		{_T("scr_1280_1024"), ScreenConfig::sxga},   {_T("sxga"),   ScreenConfig::sxga},
+		{_T("scr_1600_1200"), ScreenConfig::uxga},   {_T("uxga"),   ScreenConfig::uxga},
+		{_T("scr_1920_1080"), ScreenConfig::fullHD}, {_T("fullhd"), ScreenConfig::fullHD},
+		{_T("scr_1920_1200"), ScreenConfig::wuxga},  {_T("wuxga"),  ScreenConfig::wuxga},
 #ifdef WITH_4K_PICS
-		{_T("wqhd"),  screenWQHD},
-		{_T("4k"),  screen4K},
+		{_T("wqhd"),  ScreenConfig::wqhd},
+		{_T("4k"),  ScreenConfig::uhd4K},
 #endif /* WITH_4K_PICS */
 	};
 	try {
 		return scrConfList.at(configMap[_T("preferences")][_T("scrsize")]);
 	} catch (std::out_of_range&) {
-		return screenDefaultRes;
+		return ScreenConfig::defaultRes;
 	}
 }
 void ConfigFile::screenResolution(ScreenConfig val) {
 	switch (val) {
-	case screenSVGA:
+	case ScreenConfig::svga:
 		configMap[_T("preferences")][_T("scrsize")] = _T("svga");
 		break;
-	case screenXGA:
+	case ScreenConfig::xga:
 		configMap[_T("preferences")][_T("scrsize")] = _T("xga");
 		break;
-	case screenFWXGA:
+	case ScreenConfig::fwxga:
 		configMap[_T("preferences")][_T("scrsize")] = _T("fwxga");
 		break;
-	case screenSXGA:
+	case ScreenConfig::sxga:
 		configMap[_T("preferences")][_T("scrsize")] = _T("sxga");
 		break;
-	case screenUXGA:
+	case ScreenConfig::uxga:
 		configMap[_T("preferences")][_T("scrsize")] = _T("uxga");
 		break;
-	case screenFullHD:
+	case ScreenConfig::fullHD:
 		configMap[_T("preferences")][_T("scrsize")] = _T("fullhd");
 		break;
-	case screenWUXGA:
+	case ScreenConfig::wuxga:
 		configMap[_T("preferences")][_T("scrsize")] = _T("wuxga");
 		break;
 #ifdef WITH_4K_PICS
-	case screenWQHD:
+	case ScreenConfig::wqhd:
 		configMap[_T("preferences")][_T("scrsize")] = _T("wqhd");
 		break;
-	case screen4K:
+	case ScreenConfig::uhd4K:
 		configMap[_T("preferences")][_T("scrsize")] = _T("4k");
 		break;
 #endif /* WITH_4K_PICS */
@@ -216,7 +216,7 @@ void ConfigFile::screenResolution(ScreenConfig val) {
 
 unsigned int ConfigFile::screenResolutionX() {
 #ifdef _WIN32
-	if (scrMode() == ScreenMode::scrModeBorderless) {
+	if (scrMode() == Screen_Mode::ScreenMode::borderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
 		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
@@ -235,13 +235,13 @@ unsigned int ConfigFile::screenResolutionX() {
 	} else {
 #endif /* WIN32 */
 		switch (screenResolution()) {
-		case screenSVGA:   return  800u;
-		case screenXGA:    return 1024u;
-		case screenFWXGA:  return 1366u;
-		case screenSXGA:   return 1280u;
-		case screenUXGA:   return 1600u;
-		case screenFullHD: return 1920u;
-		case screenWUXGA:  return 1920u;
+		case ScreenConfig::svga:   return  800u;
+		case ScreenConfig::xga:    return 1024u;
+		case ScreenConfig::fwxga:  return 1366u;
+		case ScreenConfig::sxga:   return 1280u;
+		case ScreenConfig::uxga:   return 1600u;
+		case ScreenConfig::fullHD: return 1920u;
+		case ScreenConfig::wuxga:  return 1920u;
 		default:           return    0u;
 		}
 #ifdef _WIN32
@@ -250,7 +250,7 @@ unsigned int ConfigFile::screenResolutionX() {
 }
 unsigned int ConfigFile::screenResolutionY() {
 #ifdef _WIN32
-	if (scrMode() == ScreenMode::scrModeBorderless) {
+	if (scrMode() == Screen_Mode::ScreenMode::borderless) {
 		DISPLAY_DEVICE device; memset(&device, 0, sizeof device), device.cb = sizeof(DISPLAY_DEVICE);
 		EnumDisplayDevices(nullptr, monitorNumber() - 1u, &device, 0);
 		HDC hdc = CreateDC(device.DeviceName, device.DeviceName, nullptr, nullptr);
@@ -269,13 +269,13 @@ unsigned int ConfigFile::screenResolutionY() {
 	} else {
 #endif /* WIN32 */
 		switch (screenResolution()) {
-		case screenSVGA:   return  600u;
-		case screenXGA:    return  768u;
-		case screenFWXGA:  return  768u;
-		case screenSXGA:   return 1024u;
-		case screenUXGA:   return 1200u;
-		case screenFullHD: return 1080u;
-		case screenWUXGA:  return 1200u;
+		case ScreenConfig::svga:   return  600u;
+		case ScreenConfig::xga:    return  768u;
+		case ScreenConfig::fwxga:  return  768u;
+		case ScreenConfig::sxga:   return 1024u;
+		case ScreenConfig::uxga:   return 1200u;
+		case ScreenConfig::fullHD: return 1080u;
+		case ScreenConfig::wuxga:  return 1200u;
 		default:           return    0u;
 		}
 #ifdef _WIN32

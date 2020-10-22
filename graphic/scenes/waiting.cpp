@@ -42,7 +42,7 @@ void ConnectionWaitingProto::waiting_desc() {
 // -------------------------------------------------------------------------
 
 ServerWait::ServerWait(ScreenManipulator* const manipulator) : ConnectionWaitingProto(manipulator) {
-	subsceneID = srvwSubsceneNone;
+	subsceneID = ServerWaitingSubsceneID::none;
 }
 ServerWait::~ServerWait() {
 }
@@ -54,8 +54,8 @@ void ServerWait::Render() {
 	showCentered(2, _T("XキーまたはESCキーを押すと現在の面子にCOMプレイヤーを入れて開始します"), 900, 1.0f, false);
 	myTextRenderer->Render();
 }
-void ServerWait::SetSubscene(unsigned int scene_ID) {
-	subsceneID = static_cast<ServerWaitingSubsceneID>(scene_ID);
+void ServerWait::SetSubscene(SubSceneID scene_ID) {
+	subsceneID = scene_ID.serverWaitingSubsceneID;
 };
 #ifdef _WIN32
 void ServerWait::KeyboardInput(LPDIDEVICEOBJECTDATA od)
@@ -83,19 +83,19 @@ void ServerWait::KeyboardInput(const XEvent* od)
 }
 CodeConv::tstring ServerWait::waiting_desc_str() {
 	switch (subsceneID) {
-	case srvwSubscene1of4:
+	case ServerWaitingSubsceneID::oneOfFour:
 		return _T("現在の待機人数：１/４人");
-	case srvwSubscene1of3:
+	case ServerWaitingSubsceneID::oneOfThree:
 		return _T("現在の待機人数：１/３人");
-	case srvwSubscene2of4:
+	case ServerWaitingSubsceneID::twoOfFour:
 		return _T("現在の待機人数：２/４人");
-	case srvwSubscene2of3:
+	case ServerWaitingSubsceneID::twoOfThree:
 		return _T("現在の待機人数：２/３人");
-	case srvwSubscene3of4:
+	case ServerWaitingSubsceneID::threeOfFour:
 		return _T("現在の待機人数：３/４人");
-	case srvwSubscene3of3:
+	case ServerWaitingSubsceneID::threeOfThree:
 		return _T("現在の待機人数：３/３人");
-	case srvwSubscene4of4:
+	case ServerWaitingSubsceneID::fourOfFour:
 		return _T("現在の待機人数：４/４人");
 	default:
 		return _T("しばらくお待ちください");
@@ -105,7 +105,7 @@ CodeConv::tstring ServerWait::waiting_desc_str() {
 // -------------------------------------------------------------------------
 
 ClientWait::ClientWait(ScreenManipulator* const manipulator) : ConnectionWaitingProto(manipulator) {
-	subsceneID = cliwSubsceneNone;
+	subsceneID = ClientWaitingSubsceneID::none;
 }
 ClientWait::~ClientWait() {
 }
@@ -117,18 +117,18 @@ void ClientWait::Render() {
 	showCentered(2, _T("しばらくお待ちください"), 900, 1.0f, false);
 	myTextRenderer->Render();
 }
-void ClientWait::SetSubscene(unsigned int scene_ID) {
-	subsceneID = static_cast<ClientWaitingSubsceneID>(scene_ID);
+void ClientWait::SetSubscene(SubSceneID scene_ID) {
+	subsceneID = scene_ID.clientWaitingSubsceneID;
 };
 CodeConv::tstring ClientWait::waiting_desc_str() {
 	switch (subsceneID) {
-	case cliwSubsceneConnecting:
+	case ClientWaitingSubsceneID::connecting:
 		{
 			const std::string addr(preferences::serverIP());
 			const CodeConv::tstring msg(CodeConv::EnsureTStr(addr) + _T("に接続しています"));
 			return msg;
 		}
-	case cliwSubsceneWaiting:
+	case ClientWaitingSubsceneID::waiting:
 		return _T("面子が揃うのを待っています");
 	default:
 		return _T("処理中です");

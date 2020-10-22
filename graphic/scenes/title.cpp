@@ -133,12 +133,12 @@ void TitleScreen::versionInfo() {
 	CodeConv::tstring gameTypeText;
 
 	switch (GameStatus::gameStat()->gameType) {
-		case Yonma:     color = 0x0080ff80; gameTypeText = _T(""); break;
-		case Sanma:     color = 0x008080ff; gameTypeText = _T("三人打ち"); break;
-		case Sanma4:    color = 0x0080ffff; gameTypeText = _T("四人三麻"); break;
-		case SanmaS:    color = 0x00ff80ff; gameTypeText = _T("数牌三麻"); break;
-		case SanmaSeto: color = 0x00ffffff; gameTypeText = _T("瀬戸内三麻"); break;
-		case GuobiaoMJ: color = 0x00ffff80; gameTypeText = _T("国標麻将"); break;
+		case GameTypeID::yonma:     color = 0x0080ff80; gameTypeText = _T(""); break;
+		case GameTypeID::sanma:     color = 0x008080ff; gameTypeText = _T("三人打ち"); break;
+		case GameTypeID::sanma4:    color = 0x0080ffff; gameTypeText = _T("四人三麻"); break;
+		case GameTypeID::sanmaS:    color = 0x00ff80ff; gameTypeText = _T("数牌三麻"); break;
+		case GameTypeID::sanmaSeto: color = 0x00ffffff; gameTypeText = _T("瀬戸内三麻"); break;
+		case GameTypeID::guobiaoMJ: color = 0x00ffff80; gameTypeText = _T("国標麻将"); break;
 		default: throw InvalidGameType("GameTypeが正しくありません"); // This may not occur.
 	}
 	myTextRenderer->NewText(6, versionText,
@@ -197,7 +197,7 @@ void TitleScreen::KeyboardInput(const XEvent* od)
 	case DIK_RETURN: case DIK_Z: case DIK_SPACE: // 決定
 		if (flag) {
 			sound::Play(sound::IDs::sndButton);
-			if ((GameStatus::gameStat()->gameType != GuobiaoMJ) || (menuCursor != 4))
+			if ((GameStatus::gameStat()->gameType != GameTypeID::guobiaoMJ) || (menuCursor != 4))
 				ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 			else
 				sound::Play(sound::IDs::sndCuohu);
@@ -280,7 +280,7 @@ void TitleScreen::MouseInput(const XEvent* od, int X, int Y)
 		{
 			if ((flag1) && (region != -1))  {
 				sound::Play(sound::IDs::sndButton);
-				if ((GameStatus::gameStat()->gameType != GuobiaoMJ) || (region != 3))
+				if ((GameStatus::gameStat()->gameType != GameTypeID::guobiaoMJ) || (region != 3))
 					ui::UIEvent->set(menuCursor); // イベントをセット、カーソル番号をメッセージとする
 				else
 					sound::Play(sound::IDs::sndCuohu);

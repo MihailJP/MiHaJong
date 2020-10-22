@@ -14,12 +14,12 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 	const int dicePlayerOffset = ((gameStat->Dice[2].Number != 0) && (gameStat->Dice[3].Number != 0) && (gameStat->TilePointer == 0)) ?
 		(gameStat->Dice[0].Number + gameStat->Dice[1].Number - 1) % Players : 0;
 	const PlayerID dicePlayer = (gameStat->GameRound + dicePlayerOffset) %
-		(gameStat->chkGameType(SanmaT) ? 3 : 4) +
-		(gameStat->chkGameType(Sanma4) ? ((gameStat->Dice[0].Number + gameStat->Dice[1].Number - 1) / 3) : 0);
-	const unsigned int diceFace1 = ((gameStat->gameType & GuobiaoMJ) && (gameStat->Dice[diceID + 0].Number == 4)) ? 7 : gameStat->Dice[diceID + 0].Number;
-	const unsigned int diceFace2 = ((gameStat->gameType & GuobiaoMJ) && (gameStat->Dice[diceID + 1].Number == 4)) ? 7 : gameStat->Dice[diceID + 1].Number;
-	const unsigned int diceDirection1 = ((gameStat->gameType & GuobiaoMJ) && (gameStat->Dice[diceID + 0].Direction == 3)) ? 4 : gameStat->Dice[diceID + 0].Direction;
-	const unsigned int diceDirection2 = ((gameStat->gameType & GuobiaoMJ) && (gameStat->Dice[diceID + 1].Direction == 3)) ? 4 : gameStat->Dice[diceID + 1].Direction;
+		(gameStat->chkGameType(GameTypeID::sanmaT) ? 3 : 4) +
+		(gameStat->chkGameType(GameTypeID::sanma4) ? ((gameStat->Dice[0].Number + gameStat->Dice[1].Number - 1) / 3) : 0);
+	const unsigned int diceFace1 = (gameStat->chkGameType(GameTypeID::guobiaoMJ) && (gameStat->Dice[diceID + 0].Number == 4)) ? 7 : gameStat->Dice[diceID + 0].Number;
+	const unsigned int diceFace2 = (gameStat->chkGameType(GameTypeID::guobiaoMJ) && (gameStat->Dice[diceID + 1].Number == 4)) ? 7 : gameStat->Dice[diceID + 1].Number;
+	const unsigned int diceDirection1 = (gameStat->chkGameType(GameTypeID::guobiaoMJ) && (gameStat->Dice[diceID + 0].Direction == 3)) ? 4 : gameStat->Dice[diceID + 0].Direction;
+	const unsigned int diceDirection2 = (gameStat->chkGameType(GameTypeID::guobiaoMJ) && (gameStat->Dice[diceID + 1].Direction == 3)) ? 4 : gameStat->Dice[diceID + 1].Direction;
 	const RECT rect1 = {
 		static_cast<int32_t>((DiceWidth + DicePadding) * (diceFace1 - 1)), static_cast<int32_t>((DiceHeight + DicePadding) * (diceDirection1    )),
 		static_cast<int32_t>((DiceWidth + DicePadding) * (diceFace1    )), static_cast<int32_t>((DiceHeight + DicePadding) * (diceDirection1 + 1)),
@@ -29,7 +29,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 		static_cast<int32_t>((DiceWidth + DicePadding) * (diceFace2    )), static_cast<int32_t>((DiceHeight + DicePadding) * (diceDirection2 + 1)),
 	};
 	switch (playerRelative(dicePlayer, gameStat->PlayerID)) {
-	case sSelf:
+	case SeatRelative::self:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, DicePosH - (DiceWidth + DicePosInterstice) / 2, DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
@@ -37,7 +37,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 			tDice, DicePosH + (DiceWidth + DicePosInterstice) / 2, DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
-	case sOpposite:
+	case SeatRelative::opposite:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, TableSize - DicePosH + (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
@@ -45,7 +45,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 			tDice, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2, TableSize - DicePosV,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
-	case sLeft:
+	case SeatRelative::left:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, TableSize - DicePosV, DicePosH - (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect1, DiceWidth / 2, DiceHeight / 2);
@@ -53,7 +53,7 @@ void GameTableScreen::DiceReconst::ShowDice(const GameTable* gameStat) {
 			tDice, TableSize - DicePosV, DicePosH + (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);
 		break;
-	case sRight:
+	case SeatRelative::right:
 		SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 			tDice, DicePosV, TableSize - DicePosH - (DiceWidth + DicePosInterstice) / 2,
 			DiceWidth, DiceHeight, 0xffffffff, &rect2, DiceWidth / 2, DiceHeight / 2);

@@ -21,8 +21,8 @@ using mihajong_structs::InfoByPlayer;
 using mihajong_structs::PlayerID;
 using mihajong_structs::TileCode;
 
-using mihajong_structs::seatAbsolute;
-using mihajong_structs::seatRelative;
+using mihajong_structs::SeatAbsolute;
+using mihajong_structs::SeatRelative;
 using mihajong_structs::PlayerRank;
 using mihajong_structs::PlayerRankList;
 
@@ -30,12 +30,12 @@ using mihajong_structs::PlayerRankList;
 
 #ifdef MJCORE_EXPORTS
 /* あるプレイヤーに対して指定したプレイヤーがどこ(下家、対面、上家)にいるか調べる */
-seatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
-	return static_cast<seatRelative>((Players + targetPlayer - basePlayer) % Players);
+SeatRelative inline playerRelative(PlayerID targetPlayer, PlayerID basePlayer) {
+	return static_cast<SeatRelative>((Players + targetPlayer - basePlayer) % Players);
 }
 
 /* あるプレイヤーの(下家、対面、上家)を調べる */
-PlayerID inline RelativePositionOf(PlayerID targetPlayer, seatRelative relative) {
+PlayerID inline RelativePositionOf(PlayerID targetPlayer, SeatRelative relative) {
 	return static_cast<PlayerID>((static_cast<int>(targetPlayer) + static_cast<int>(relative)) % Players);
 }
 
@@ -62,12 +62,12 @@ PlayerID getPaoPlayer(const GameTable* const gameStat, PlayerID agariPlayer);
 int RonPlayers(const GameTable* const gameStat);
 
 /* 「東家」「南家」「西家」「北家」の文字列を返す */
-CodeConv::tstring inline windName(seatAbsolute wind) {
+CodeConv::tstring inline windName(SeatAbsolute wind) {
 	switch (wind) {
-		case sEast: return CodeConv::tstring(_T("東家"));
-		case sSouth: return CodeConv::tstring(_T("南家"));
-		case sWest: return CodeConv::tstring(_T("西家"));
-		case sNorth: return CodeConv::tstring(_T("北家"));
+		case SeatAbsolute::east: return CodeConv::tstring(_T("東家"));
+		case SeatAbsolute::south: return CodeConv::tstring(_T("南家"));
+		case SeatAbsolute::west: return CodeConv::tstring(_T("西家"));
+		case SeatAbsolute::north: return CodeConv::tstring(_T("北家"));
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です"));
 			return CodeConv::tstring(_T("????")); break;
@@ -124,47 +124,47 @@ CodeConv::tstring inline roundName(int roundNum, const GameTable* const gameStat
 /* 牌の名前の文字列を返す */
 CodeConv::tstring inline TileName(TileCode tile) {
 	switch (tile) {
-		case CharacterOne:   return CodeConv::tstring(_T("一萬"));
-		case CharacterTwo:   return CodeConv::tstring(_T("二萬"));
-		case CharacterThree: return CodeConv::tstring(_T("三萬"));
-		case CharacterFour:  return CodeConv::tstring(_T("四萬"));
-		case CharacterFive:  return CodeConv::tstring(_T("五萬"));
-		case CharacterSix:   return CodeConv::tstring(_T("六萬"));
-		case CharacterSeven: return CodeConv::tstring(_T("七萬"));
-		case CharacterEight: return CodeConv::tstring(_T("八萬"));
-		case CharacterNine:  return CodeConv::tstring(_T("九萬"));
-		case CircleOne:      return CodeConv::tstring(_T("一筒"));
-		case CircleTwo:      return CodeConv::tstring(_T("二筒"));
-		case CircleThree:    return CodeConv::tstring(_T("三筒"));
-		case CircleFour:     return CodeConv::tstring(_T("四筒"));
-		case CircleFive:     return CodeConv::tstring(_T("五筒"));
-		case CircleSix:      return CodeConv::tstring(_T("六筒"));
-		case CircleSeven:    return CodeConv::tstring(_T("七筒"));
-		case CircleEight:    return CodeConv::tstring(_T("八筒"));
-		case CircleNine:     return CodeConv::tstring(_T("九筒"));
-		case BambooOne:      return CodeConv::tstring(_T("一索"));
-		case BambooTwo:      return CodeConv::tstring(_T("二索"));
-		case BambooThree:    return CodeConv::tstring(_T("三索"));
-		case BambooFour:     return CodeConv::tstring(_T("四索"));
-		case BambooFive:     return CodeConv::tstring(_T("五索"));
-		case BambooSix:      return CodeConv::tstring(_T("六索"));
-		case BambooSeven:    return CodeConv::tstring(_T("七索"));
-		case BambooEight:    return CodeConv::tstring(_T("八索"));
-		case BambooNine:     return CodeConv::tstring(_T("九索"));
-		case EastWind:       return CodeConv::tstring(_T("東"));
-		case SouthWind:      return CodeConv::tstring(_T("南"));
-		case WestWind:       return CodeConv::tstring(_T("西"));
-		case NorthWind:      return CodeConv::tstring(_T("北"));
-		case WhiteDragon:    return CodeConv::tstring(_T("白"));
-		case GreenDragon:    return CodeConv::tstring(_T("發"));
-		case RedDragon:      return CodeConv::tstring(_T("中"));
+		case TileCode::characterOne:   return CodeConv::tstring(_T("一萬"));
+		case TileCode::characterTwo:   return CodeConv::tstring(_T("二萬"));
+		case TileCode::characterThree: return CodeConv::tstring(_T("三萬"));
+		case TileCode::characterFour:  return CodeConv::tstring(_T("四萬"));
+		case TileCode::characterFive:  return CodeConv::tstring(_T("五萬"));
+		case TileCode::characterSix:   return CodeConv::tstring(_T("六萬"));
+		case TileCode::characterSeven: return CodeConv::tstring(_T("七萬"));
+		case TileCode::characterEight: return CodeConv::tstring(_T("八萬"));
+		case TileCode::characterNine:  return CodeConv::tstring(_T("九萬"));
+		case TileCode::circleOne:      return CodeConv::tstring(_T("一筒"));
+		case TileCode::circleTwo:      return CodeConv::tstring(_T("二筒"));
+		case TileCode::circleThree:    return CodeConv::tstring(_T("三筒"));
+		case TileCode::circleFour:     return CodeConv::tstring(_T("四筒"));
+		case TileCode::circleFive:     return CodeConv::tstring(_T("五筒"));
+		case TileCode::circleSix:      return CodeConv::tstring(_T("六筒"));
+		case TileCode::circleSeven:    return CodeConv::tstring(_T("七筒"));
+		case TileCode::circleEight:    return CodeConv::tstring(_T("八筒"));
+		case TileCode::circleNine:     return CodeConv::tstring(_T("九筒"));
+		case TileCode::bambooOne:      return CodeConv::tstring(_T("一索"));
+		case TileCode::bambooTwo:      return CodeConv::tstring(_T("二索"));
+		case TileCode::bambooThree:    return CodeConv::tstring(_T("三索"));
+		case TileCode::bambooFour:     return CodeConv::tstring(_T("四索"));
+		case TileCode::bambooFive:     return CodeConv::tstring(_T("五索"));
+		case TileCode::bambooSix:      return CodeConv::tstring(_T("六索"));
+		case TileCode::bambooSeven:    return CodeConv::tstring(_T("七索"));
+		case TileCode::bambooEight:    return CodeConv::tstring(_T("八索"));
+		case TileCode::bambooNine:     return CodeConv::tstring(_T("九索"));
+		case TileCode::eastWind:       return CodeConv::tstring(_T("東"));
+		case TileCode::southWind:      return CodeConv::tstring(_T("南"));
+		case TileCode::westWind:       return CodeConv::tstring(_T("西"));
+		case TileCode::northWind:      return CodeConv::tstring(_T("北"));
+		case TileCode::whiteDragon:    return CodeConv::tstring(_T("白"));
+		case TileCode::greenDragon:    return CodeConv::tstring(_T("發"));
+		case TileCode::redDragon:      return CodeConv::tstring(_T("中"));
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です"));
 			return CodeConv::tstring(_T("????"));
 	}
 }
 
-TileCode Wind2Tile(uint8_t wind);
+TileCode Wind2Tile(SeatAbsolute wind);
 
 LargeNum BasePoint();
 bool isAboveBase(const GameTable* const gameStat, PlayerID player);

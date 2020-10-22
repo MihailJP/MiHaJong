@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-namespace ScreenMode {
+namespace Screen_Mode {
 
-enum ScreenMode : unsigned int {
-	scrModeWindowed = 0, // ウィンドウモード
-	scrModeFullscreen,   // フルスクリーン
-	scrModeBorderless,   // 全画面表示
+enum class ScreenMode : unsigned int {
+	windowed = 0, // ウィンドウモード
+	fullscreen,   // フルスクリーン
+	borderless,   // 全画面表示
 };
 
 }

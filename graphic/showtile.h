@@ -17,8 +17,8 @@ namespace mihajong_graphic {
 
 using namespace mihajong_structs;
 
-enum TileSide {Obverse, Upright, Reverse,};
-enum TileDirection {Portrait, Withershins, UpsideDown, Clockwise,};
+enum class TileSide {obverse, upright, reverse,};
+enum class TileDirection {portrait, withershins, upsideDown, clockwise,};
 
 class ShowTile {
 public:

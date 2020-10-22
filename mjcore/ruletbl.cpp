@@ -241,7 +241,7 @@ const char* RuleData::ruleDigit() {
 
 // -------------------------------------------------------------------------
 
-MJCORE void getWindowSize(unsigned* width, unsigned* height, ScreenMode::ScreenMode* scrMode, unsigned* monitor) {
+MJCORE void getWindowSize(unsigned* width, unsigned* height, Screen_Mode::ScreenMode* scrMode, unsigned* monitor) {
 	*width = RuleData::confFile.screenResolutionX();
 	*height = RuleData::confFile.screenResolutionY();
 	*scrMode = RuleData::confFile.scrMode();

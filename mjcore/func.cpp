@@ -86,18 +86,18 @@ int RonPlayers(const GameTable* const gameStat) {
 }
 
 /* 場風牌のリスト */
-TileCode Wind2Tile(uint8_t wind) {
+TileCode Wind2Tile(SeatAbsolute wind) {
 	switch (wind) {
-		case 0: return EastWind;
-		case 1: return SouthWind;
-		case 2: return WestWind;
-		case 3: return NorthWind;
-		case 4: return WhiteDragon;
-		case 5: return GreenDragon;
-		case 6: return RedDragon;
+		case SeatAbsolute::east:  return TileCode::eastWind;
+		case SeatAbsolute::south: return TileCode::southWind;
+		case SeatAbsolute::west:  return TileCode::westWind;
+		case SeatAbsolute::north: return TileCode::northWind;
+		case SeatAbsolute::white: return TileCode::whiteDragon;
+		case SeatAbsolute::green: return TileCode::greenDragon;
+		case SeatAbsolute::red:   return TileCode::redDragon;
 		default:
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_ARGUMENT, _T("異常な引数です"));
-			return NoTile;
+			return TileCode::noTile;
 	}
 }
 
@@ -118,7 +118,7 @@ LargeNum BasePoint() {
 		for (int j = 0; j < exponent; ++j)
 			basePoint *= 10;
 		return basePoint;
-	} else if (GameStat.chkGameType(SanmaT)) {
+	} else if (GameStat.chkGameType(GameTypeID::sanmaT)) {
 		constexpr char rulestat[6][16] = {
 			"35000pts_oka15", "40000pts_oka0", "45000pts_oka-15", "50000pts_oka-30", "25000pts_oka45", "30000pts_oka30",
 		};
@@ -285,7 +285,7 @@ bool isTeppen (const GameTable* const gameStat, PlayerID targetPlayer) {
 }
 
 MJCORE void cleanup() {
-	mihajong_graphic::Transit(mihajong_graphic::sceneNull);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::null);
 	info(_T("グラフィックDLLの後始末をしました。"));
 	sound::Cleanup();
 	info(_T("サウンドDLLを解放しました。"));

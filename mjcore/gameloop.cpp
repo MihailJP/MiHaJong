@@ -40,33 +40,33 @@ EndType doTableTurn(GameTable* const gameStat) {
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 	/* 摸打の処理 */
 	DiscardTileNum DiscardTileIndex = getdahai(gameStat);
-	if (DiscardTileIndex.type == DiscardTileNum::Disconnect)
-		return Disconnect;
+	if (DiscardTileIndex.type == DiscardType::disconnect)
+		return EndType::disconnect;
 	/* ウェイトを入れる */
 	threadYield();
 	threadYield();
 	EndType RoundEndType = procdahai(gameStat, DiscardTileIndex);
-	if (RoundEndType != Continuing)
+	if (RoundEndType != EndType::continuing)
 		return RoundEndType;
 	threadSleep(80);
 	/* リアクションを問い合わせる */
 	askReaction(gameStat);
 	/* 栄和の処理 */
 	RoundEndType = ronhuproc(gameStat); // 栄和の処理
-	if (RoundEndType != Continuing) return RoundEndType;
+	if (RoundEndType != EndType::continuing) return RoundEndType;
 	threadYield();
 	/* 途中流局の判定 */
 	EndType round_abort_type = endround::checkroundabort(gameStat);
-	if (round_abort_type != Continuing) return round_abort_type;
+	if (round_abort_type != EndType::continuing) return round_abort_type;
 	/* 捨牌をポン、または大明槓する場合の処理 */
 	if (executeFuuro(gameStat, DiscardTileIndex))
-		return Continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
+		return EndType::continuing; /* 鳴きがあった場合、鳴いたプレーヤーに順番を移して戻る */
 	/* ウェイトを入れる */
 	threadSleep(100);
 	/* 次のプレイヤーが牌を自摸る */
 	tsumoproc(gameStat);
 	// 打牌へ戻る
-	return Continuing;
+	return EndType::continuing;
 }
 
 /* 半荘の進行 */
@@ -83,29 +83,29 @@ bool doTableRound(GameTable* const gameStat, int& OrigTurn, int& OrigHonba) {
 	tableinit(gameStat);
 	/* 配牌終了時の処理 */
 	for (PlayerID i = 0; i < Players; i++) {
-		gameStat->Player[i].HandStat = handUpright;
+		gameStat->Player[i].HandStat = HandStatCode::upright;
 		lipai(gameStat, i);
 	}
 	gameStat->CurrentPlayer.Active = gameStat->GameRound % Players; // 最初に親から捨牌を行なう
 	info(_T("配牌を完了しました。"));
 	gameStat->TurnRound = 1; // 配牌が終わったら1巡目
 	/* 摸打ループ */
-	volatile EndType roundEndType = Continuing;
+	volatile EndType roundEndType = EndType::continuing;
 	do {
 		do {
 			roundEndType = doTableTurn(gameStat);
-		} while ((roundEndType == DrawRinshan) || (roundEndType == Continuing));
+		} while ((roundEndType == EndType::drawRinshan) || (roundEndType == EndType::continuing));
 		OrigHonba = gameStat->Honba; OrigTurn = gameStat->GameRound;
 		endround::endround(gameStat, roundEndType, OrigTurn, OrigHonba);
 #ifdef GUOBIAO
-		if (roundEndType == Chonbo) {
-			roundEndType = Continuing;
+		if (roundEndType == EndType::chonbo) {
+			roundEndType = EndType::continuing;
 			tsumoproc(gameStat);
 		}
 #endif /* GUOBIAO */
 	}
 #ifdef GUOBIAO
-	while ((roundEndType == Chonbo) || (roundEndType == Continuing));
+	while ((roundEndType == EndType::chonbo) || (roundEndType == EndType::continuing));
 #else /* GUOBIAO */
 	while (false);
 #endif /* GUOBIAO */
@@ -121,7 +121,7 @@ DWORD titlescreen() {
 #else /*_WIN32*/
 uint32_t titlescreen() {
 #endif /*_WIN32*/
-	mihajong_graphic::Transit(mihajong_graphic::sceneTitle);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::title);
 	return mihajong_graphic::ui::WaitUI();
 }
 
@@ -137,17 +137,17 @@ void startgame(GameTypeID gameType) {
 		sound::util::bgmplay(sound::IDs::musTitle); // タイトル曲を流す
 		unsigned ClientNumber = 0u;
 	start:
-		EnvTable::Instantiate()->GameMode = EnvTable::Unavailable;
+		EnvTable::Instantiate()->GameMode = ClientType::unavailable;
 		for (int i = 0; i < Players; ++i)
 			EnvTable::Instantiate()->PlayerDat[i].RemotePlayerFlag = 0;
 		std::string serverAddr;
 		const unsigned short gamePort =
-			gameStat->chkGameType(Sanma) ? 50010 :
-			gameStat->chkGameType(Sanma4) ? 50030 :
-			gameStat->chkGameType(SanmaS) ? 50060 : 50000;
+			gameStat->chkGameType(GameTypeID::sanma) ? 50010 :
+			gameStat->chkGameType(GameTypeID::sanma4) ? 50030 :
+			gameStat->chkGameType(GameTypeID::sanmaS) ? 50060 : 50000;
 		switch (titlescreen()) { // タイトル画面
 		case 1:
-			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			EnvTable::Instantiate()->GameMode = ClientType::standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName =
 				CodeConv::tstring(_T("[A]")) + CodeConv::EnsureTStr(RuleData::confFile.playerName());
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM1");
@@ -160,17 +160,17 @@ void startgame(GameTypeID gameType) {
 			break;
 		case 3:
 			RemoteConnection::startClient(serverAddr, ClientNumber, gamePort);
-			if (EnvTable::Instantiate()->GameMode == EnvTable::Standalone)
+			if (EnvTable::Instantiate()->GameMode == ClientType::standalone)
 				goto start; // 接続失敗の時は戻る
 			break;
 		case 4:
-			mihajong_graphic::Transit(mihajong_graphic::sceneConfig);
+			mihajong_graphic::Transit(mihajong_graphic::SceneID::config);
 			mihajong_graphic::ui::WaitUI();
 			goto start;
 		case 5:
 			return;
 		case 99: // デモ画面
-			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			EnvTable::Instantiate()->GameMode = ClientType::standalone;
 			EnvTable::Instantiate()->PlayerDat[0].PlayerName = _T("[a]COM1");
 			EnvTable::Instantiate()->PlayerDat[1].PlayerName = _T("[b]COM2");
 			EnvTable::Instantiate()->PlayerDat[2].PlayerName = _T("[c]COM3");
@@ -198,7 +198,7 @@ void startgame(GameTypeID gameType) {
 		} while (!endFlag);
 		// 半荘終了時
 		gameResult(gameStat, OrigTurn, OrigHonba);
-		if (EnvTable::Instantiate()->GameMode != EnvTable::Standalone) {
+		if (EnvTable::Instantiate()->GameMode != ClientType::standalone) {
 			// 一度閉じてやり直す
 			mihajong_socket::bye();
 			mihajong_socket::init();

@@ -13,7 +13,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 	bool r1, bool r2, bool r3, bool r4)
 {
 	switch (playerRelative(targetPlayer, gameStat->PlayerID)) {
-	case sOpposite:
+	case SeatRelative::opposite:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 15 - i - IDOffset;},
 			[=](unsigned i) -> int {
@@ -34,8 +34,8 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			Clockwise, UpsideDown, Withershins);
-	case sLeft:
+			TileDirection::clockwise, TileDirection::upsideDown, TileDirection::withershins);
+	case SeatRelative::left:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 31 - i - IDOffset;},
 			[=](unsigned i) -> int {
@@ -56,9 +56,9 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			Portrait, Clockwise, UpsideDown);
+			TileDirection::portrait, TileDirection::clockwise, TileDirection::upsideDown);
 		break;
-	case sRight:
+	case SeatRelative::right:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 32 + i + IDOffset;},
 			[=](unsigned i) -> int {
@@ -79,9 +79,9 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			UpsideDown, Withershins, Portrait);
+			TileDirection::upsideDown, TileDirection::withershins, TileDirection::portrait);
 		break;
-	case sSelf:
+	case SeatRelative::self:
 		return std::make_tuple(
 			[=](unsigned i) -> unsigned {return 48 + i + IDOffset;},
 			[=](unsigned i) -> int {
@@ -102,7 +102,7 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 					default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 				}
 			},
-			Withershins, Portrait, Clockwise);
+			TileDirection::withershins, TileDirection::portrait, TileDirection::clockwise);
 		break;
 	default:
 		throw InvalidArgument("牌の方向に異常なものが指定されました");
@@ -112,7 +112,7 @@ void GameTableScreen::NakihaiReconst::Reconstruct(const GameTable* gameStat, Pla
 	unsigned posOffset[5] = {0,};
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i) {
 		switch (gameStat->Player[targetPlayer].Meld[i].mstat) {
-		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+		case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 2;
 			break;
 		default:

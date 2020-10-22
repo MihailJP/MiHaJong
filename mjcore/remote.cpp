@@ -29,7 +29,7 @@ void proc_abrupt_disconnect(GameTable* const gameStat, PlayerID player) {
 }
 RemoteDahai::RemoteDahai (GameTable* const gStat) {
 	gameStat = gStat; finished = false;
-	remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = 0;
+	remoteDahai.type = DiscardType::normal; remoteDahai.id = 0;
 	myThread = std::thread(startthread, this);
 }
 RemoteDahai::~RemoteDahai() {
@@ -42,7 +42,7 @@ void RemoteDahai::thread () {
 	int ReceivedMsg;
 	int lipaiFrom = 0;
 begin:
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client) {
+	if (EnvTable::Instantiate()->GameMode == ClientType::client) {
 		volatile int ClientReceived = 0;
 		while (true) {
 			//chatrecv GameStat, GameEnv
@@ -67,7 +67,7 @@ begin:
 			(!gameStat->statOfActive().ConnectionLost))
 			proc_abrupt_disconnect(gameStat, gameStat->CurrentPlayer.Active);
 	}
-	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server) {
+	else if (EnvTable::Instantiate()->GameMode == ClientType::server) {
 		volatile int ServerReceived = 0;
 		while (true) {
 			//chatrecv GameStat, GameEnv
@@ -92,7 +92,7 @@ begin:
 				((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag == i + 2) ||
 				(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag == i + 2) ||
 				(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag == i + 2) ||
-				((!gameStat->chkGameType(SanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == i + 2)))) {
+				((!gameStat->chkGameType(GameTypeID::sanmaT)) && (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag == i + 2)))) {
 					int stat = mihajong_socket::putc(i + 1, ReceivedMsg);
 					CodeConv::tostringstream o;
 					if (stat) {
@@ -121,23 +121,23 @@ begin:
 			lipai(gameStat, gameStat->CurrentPlayer.Active);
 			goto begin;
 		} else if ((ReceivedMsg >= Dahai_Type_Normal_Offset) && (ReceivedMsg < (Dahai_Type_Normal_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
+			remoteDahai.type = DiscardType::normal; remoteDahai.id = ReceivedMsg - Dahai_Type_Normal_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Ankan_Offset) && (ReceivedMsg < (Dahai_Type_Ankan_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
+			remoteDahai.type = DiscardType::ankan; remoteDahai.id = ReceivedMsg - Dahai_Type_Ankan_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Kakan_Offset) && (ReceivedMsg < (Dahai_Type_Kakan_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Kakan; remoteDahai.id = ReceivedMsg - Dahai_Type_Kakan_Offset;
+			remoteDahai.type = DiscardType::kakan; remoteDahai.id = ReceivedMsg - Dahai_Type_Kakan_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Riichi_Offset) && (ReceivedMsg < (Dahai_Type_Riichi_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Riichi; remoteDahai.id = ReceivedMsg - Dahai_Type_Riichi_Offset;
+			remoteDahai.type = DiscardType::riichi; remoteDahai.id = ReceivedMsg - Dahai_Type_Riichi_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_ORiichi_Offset) && (ReceivedMsg < (Dahai_Type_ORiichi_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::OpenRiichi; remoteDahai.id = ReceivedMsg - Dahai_Type_ORiichi_Offset;
+			remoteDahai.type = DiscardType::openRiichi; remoteDahai.id = ReceivedMsg - Dahai_Type_ORiichi_Offset;
 		} else if ((ReceivedMsg >= Dahai_Type_Flower_Offset) && (ReceivedMsg < (Dahai_Type_Flower_Offset + NumOfTilesInHand))) {
-			remoteDahai.type = DiscardTileNum::Flower; remoteDahai.id = ReceivedMsg - Dahai_Type_Flower_Offset;
+			remoteDahai.type = DiscardType::flower; remoteDahai.id = ReceivedMsg - Dahai_Type_Flower_Offset;
 		} else if (ReceivedMsg == Dahai_Kyuushu) {
-			remoteDahai.type = DiscardTileNum::Kyuushu; remoteDahai.id = 0;
+			remoteDahai.type = DiscardType::kyuushu; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Tsumo) {
-			remoteDahai.type = DiscardTileNum::Agari; remoteDahai.id = 0;
+			remoteDahai.type = DiscardType::agari; remoteDahai.id = 0;
 		} else if (ReceivedMsg == Dahai_Remote_Disconnect) {
-			remoteDahai.type = DiscardTileNum::Normal; remoteDahai.id = TsumohaiIndex;
+			remoteDahai.type = DiscardType::normal; remoteDahai.id = TsumohaiIndex;
 		}
 	}
 	finished = true;
@@ -197,13 +197,13 @@ begin:
 				gameStat->Player[tmp].DeclarationFlag.Kan = true;
 				break;
 			case Naki_Chii_Lower:
-				gameStat->Player[tmp].DeclarationFlag.Chi = chiiLower;
+				gameStat->Player[tmp].DeclarationFlag.Chi = ChiiType::lower;
 				break;
 			case Naki_Chii_Middle:
-				gameStat->Player[tmp].DeclarationFlag.Chi = chiiMiddle;
+				gameStat->Player[tmp].DeclarationFlag.Chi = ChiiType::middle;
 				break;
 			case Naki_Chii_Upper:
-				gameStat->Player[tmp].DeclarationFlag.Chi = chiiUpper;
+				gameStat->Player[tmp].DeclarationFlag.Chi = ChiiType::upper;
 				break;
 			case Naki_Remote_Disconnect:
 				if (!gameStat->Player[tmp].ConnectionLost)
@@ -220,9 +220,9 @@ void RemoteNaki::thread_server() {
 		if (((EnvTable::Instantiate()->PlayerDat[0].RemotePlayerFlag != i + 2) &&
 			(EnvTable::Instantiate()->PlayerDat[1].RemotePlayerFlag != i + 2) &&
 			(EnvTable::Instantiate()->PlayerDat[2].RemotePlayerFlag != i + 2) &&
-			(gameStat->chkGameType(SanmaT) || (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 2))))
+			(gameStat->chkGameType(GameTypeID::sanmaT) || (EnvTable::Instantiate()->PlayerDat[3].RemotePlayerFlag != i + 2))))
 			Received[i] = true;
-	if (gameStat->chkGameType(SanmaT))
+	if (gameStat->chkGameType(GameTypeID::sanmaT))
 		Received[2] = true;
 	while (true) {
 		//chatrecv GameStat, GameEnv
@@ -237,7 +237,7 @@ void RemoteNaki::thread_server() {
 				}
 			}
 		}
-		if ((Received[0]) && (Received[1]) && (gameStat->chkGameType(SanmaT) || Received[2]))
+		if ((Received[0]) && (Received[1]) && (gameStat->chkGameType(GameTypeID::sanmaT) || Received[2]))
 			break;
 		threadYield();
 	}
@@ -250,17 +250,17 @@ void RemoteNaki::thread_server() {
 		if (gameStat->Player[i].DeclarationFlag.Ron) mihajong_socket::server::send(Naki_Ron);
 		else if (gameStat->Player[i].DeclarationFlag.Pon) mihajong_socket::server::send(Naki_Pon);
 		else if (gameStat->Player[i].DeclarationFlag.Kan) mihajong_socket::server::send(Naki_Kan);
-		else if (gameStat->Player[i].DeclarationFlag.Chi == 1) mihajong_socket::server::send(Naki_Chii_Lower);
-		else if (gameStat->Player[i].DeclarationFlag.Chi == 2) mihajong_socket::server::send(Naki_Chii_Middle);
-		else if (gameStat->Player[i].DeclarationFlag.Chi == 3) mihajong_socket::server::send(Naki_Chii_Upper);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == ChiiType::lower) mihajong_socket::server::send(Naki_Chii_Lower);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == ChiiType::middle) mihajong_socket::server::send(Naki_Chii_Middle);
+		else if (gameStat->Player[i].DeclarationFlag.Chi == ChiiType::upper) mihajong_socket::server::send(Naki_Chii_Upper);
 		else if (gameStat->Player[i].ConnectionLost) mihajong_socket::server::send(Naki_Remote_Disconnect);
 		else mihajong_socket::server::send(Naki_Ignore);
 	}
 }
 void RemoteNaki::thread() {
-	if (EnvTable::Instantiate()->GameMode == EnvTable::Client)
+	if (EnvTable::Instantiate()->GameMode == ClientType::client)
 		thread_client();
-	else if (EnvTable::Instantiate()->GameMode == EnvTable::Server)
+	else if (EnvTable::Instantiate()->GameMode == ClientType::server)
 		thread_server();
 	for (int i = 0; i < Players; i++)
 		if (gameStat->Player[i].DeclarationFlag.Ron) // ロンしたら自摸牌位置にロン牌を設定(実装上の都合)
@@ -286,13 +286,13 @@ void RemoteNaki::checkremotenaki(PlayerID player, int& ReceivedMsg) {
 		gameStat->Player[player].DeclarationFlag.Kan = true;
 		break;
 	case Naki_Chii_Lower:
-		gameStat->Player[player].DeclarationFlag.Chi = chiiLower;
+		gameStat->Player[player].DeclarationFlag.Chi = ChiiType::lower;
 		break;
 	case Naki_Chii_Middle:
-		gameStat->Player[player].DeclarationFlag.Chi = chiiMiddle;
+		gameStat->Player[player].DeclarationFlag.Chi = ChiiType::middle;
 		break;
 	case Naki_Chii_Upper:
-		gameStat->Player[player].DeclarationFlag.Chi = chiiUpper;
+		gameStat->Player[player].DeclarationFlag.Chi = ChiiType::upper;
 		break;
 	}
 	return;
@@ -310,13 +310,13 @@ void remotenaki (GameTable* const gameStat) {
 namespace RemoteConnection {
 
 void startServer(std::string& serverAddr, unsigned short gamePort) {
-	mihajong_graphic::Transit(mihajong_graphic::sceneServerWaiting);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::serverWaiting);
 
 	char RuleConf[RULE_LINES][RULE_IN_LINE + 4];
 	char* RuleConfPtr[RULE_LINES];
 	for (int i = 0; i < RULE_LINES; i++) RuleConfPtr[i] = RuleConf[i];
 
-	EnvTable::Instantiate()->GameMode = EnvTable::Server;
+	EnvTable::Instantiate()->GameMode = ClientType::server;
 	serverAddr = "";
 	RuleData::exportRule(RuleConfPtr);
 
@@ -328,16 +328,16 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 		numOfClients = mihajong_socket::server::chkCurrentConnection();
 		if (numOfClients != numOfClientsPrev) {
 			if (ACTUAL_PLAYERS == 3) {
-				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of3);
-				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of3);
-				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of3);
-				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::oneOfThree);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::twoOfThree);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::threeOfThree);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::none);
 			} else {
-				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene1of4);
-				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene2of4);
-				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene3of4);
-				else if (numOfClients == 4) mihajong_graphic::Subscene(mihajong_graphic::srvwSubscene4of4);
-				else                        mihajong_graphic::Subscene(mihajong_graphic::srvwSubsceneNone);
+				if      (numOfClients == 1) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::oneOfFour);
+				else if (numOfClients == 2) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::twoOfFour);
+				else if (numOfClients == 3) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::threeOfFour);
+				else if (numOfClients == 4) mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::fourOfFour);
+				else                        mihajong_graphic::Subscene(mihajong_graphic::ServerWaitingSubsceneID::none);
 			}
 			numOfClientsPrev = numOfClients;
 		}
@@ -357,22 +357,22 @@ void startServer(std::string& serverAddr, unsigned short gamePort) {
 
 void startClient(std::string& serverAddr, unsigned& ClientNumber, unsigned short gamePort) {
 	auto tmpAddr(RuleData::confFile.serverAddress());
-	mihajong_graphic::Transit(mihajong_graphic::sceneClientWaiting);
+	mihajong_graphic::Transit(mihajong_graphic::SceneID::clientWaiting);
 	serverAddr = CodeConv::toANSI(tmpAddr);
-	EnvTable::Instantiate()->GameMode = EnvTable::Client;
+	EnvTable::Instantiate()->GameMode = ClientType::client;
 
 	const CodeConv::tstring Nomen(RuleData::confFile.playerName());
 
-	mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneConnecting);
+	mihajong_graphic::Subscene(mihajong_graphic::ClientWaitingSubsceneID::connecting);
 	mihajong_socket::client::start(Nomen.c_str(), serverAddr.c_str(), gamePort, ACTUAL_PLAYERS);
 
 	while (true) {
 		if (mihajong_socket::client::isConnectionSucceded()) {
-			mihajong_graphic::Subscene(mihajong_graphic::cliwSubsceneWaiting);
+			mihajong_graphic::Subscene(mihajong_graphic::ClientWaitingSubsceneID::waiting);
 			break;
 		} else if (mihajong_socket::client::isConnectionFailed()) {
-			mihajong_graphic::Transit(mihajong_graphic::sceneWaitingError);
-			EnvTable::Instantiate()->GameMode = EnvTable::Standalone;
+			mihajong_graphic::Transit(mihajong_graphic::SceneID::waitingError);
+			EnvTable::Instantiate()->GameMode = ClientType::standalone;
 			threadSleep(1500);
 			return;
 		}

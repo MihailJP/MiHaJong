@@ -9,9 +9,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("銅鑼和"), get_yaku_han("dorahoh"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					((analysis->GameStat->DoraFlag.Omote[analysis->TsumoHai->tile] > 0) || // ツモ牌が表ドラになっている(裏ドラは対象外)
-					(analysis->TsumoHai->red != Normal))); // 赤ドラか青ドラになっている
+					(analysis->TsumoHai->red != DoraCol::normal))); // 赤ドラか青ドラになっている
 			}
 		));
 	/* 北四枚抜き */
@@ -19,7 +19,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("北四枚抜き"), get_yaku_han("four_northes"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->NorthFlag == 4)); // 北4枚
 			}
 		));
@@ -29,7 +29,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			_T("八仙過海"), get_yaku_han("eight_flowers"),
 			_T("春夏秋冬"), _T("四華開嶺"), _T("本花季節牌"), _T("本花草木牌"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->FlowerFlag.Spring) && (analysis->PlayerStat->FlowerFlag.Summer) &&
 					(analysis->PlayerStat->FlowerFlag.Autumn) && (analysis->PlayerStat->FlowerFlag.Winter) &&
 					(analysis->PlayerStat->FlowerFlag.Plum) && (analysis->PlayerStat->FlowerFlag.Orchid) &&
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			_T("春夏秋冬"), get_yaku_han("four_seasons"),
 			_T("本花季節牌"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->FlowerFlag.Spring) && (analysis->PlayerStat->FlowerFlag.Summer) &&
 					(analysis->PlayerStat->FlowerFlag.Autumn) && (analysis->PlayerStat->FlowerFlag.Winter));
 			}
@@ -53,7 +53,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			_T("四華開嶺"), get_yaku_han("four_flowers"),
 			_T("本花草木牌"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 					(analysis->PlayerStat->FlowerFlag.Plum) && (analysis->PlayerStat->FlowerFlag.Orchid) &&
 					(analysis->PlayerStat->FlowerFlag.Chrys) && (analysis->PlayerStat->FlowerFlag.Bamboo));
 			}
@@ -63,13 +63,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("本花季節牌"), get_yaku_han("own_flower"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->shanten[shantenAll] != -1) return false; // 和了ってないなら戻る
+				if (analysis->shanten[ShantenType::all] != -1) return false; // 和了ってないなら戻る
 				switch (analysis->GameStat->playerwind(analysis->player)) {
-					case sEast: return analysis->PlayerStat->FlowerFlag.Spring;
-					case sSouth: return analysis->PlayerStat->FlowerFlag.Summer;
-					case sWest: return analysis->PlayerStat->FlowerFlag.Autumn;
-					case sNorth: return analysis->PlayerStat->FlowerFlag.Winter;
-					default:
+				case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Spring;
+				case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Summer;
+				case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Autumn;
+				case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Winter;
+				default:
 						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("自風が東南西北のどれでもありません"));
 						return false;
 				}
@@ -78,13 +78,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("本花草木牌"), get_yaku_han("own_flower"),
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->shanten[shantenAll] != -1) return false; // 和了ってないなら戻る
+				if (analysis->shanten[ShantenType::all] != -1) return false; // 和了ってないなら戻る
 				switch (analysis->GameStat->playerwind(analysis->player)) {
-					case sEast: return analysis->PlayerStat->FlowerFlag.Plum;
-					case sSouth: return analysis->PlayerStat->FlowerFlag.Orchid;
-					case sWest: return analysis->PlayerStat->FlowerFlag.Chrys;
-					case sNorth: return analysis->PlayerStat->FlowerFlag.Bamboo;
-					default:
+				case SeatAbsolute::east: return analysis->PlayerStat->FlowerFlag.Plum;
+				case SeatAbsolute::south: return analysis->PlayerStat->FlowerFlag.Orchid;
+				case SeatAbsolute::west: return analysis->PlayerStat->FlowerFlag.Chrys;
+				case SeatAbsolute::north: return analysis->PlayerStat->FlowerFlag.Bamboo;
+				default:
 						RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("自風が東南西北のどれでもありません"));
 						return false;
 				}
@@ -96,14 +96,14 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 		const auto countRed = [](const MentsuAnalysis* const analysis) -> unsigned {
 			unsigned red = 0;
 			for (int i = 0; i < NumOfTilesInHand; i++) {
-				if (analysis->PlayerStat->Hand[i].tile == NoTile) continue;
-				else if (analysis->PlayerStat->Hand[i].tile >= TileNonflowerMax) continue;
-				else if (analysis->PlayerStat->Hand[i].red == AkaDora) ++red;
+				if (analysis->PlayerStat->Hand[i].tile == TileCode::noTile) continue;
+				else if (static_cast<int>(analysis->PlayerStat->Hand[i].tile) >= TileNonflowerMax) continue;
+				else if (analysis->PlayerStat->Hand[i].red == DoraCol::akaDora) ++red;
 			}
 			for (int i = 1; i < analysis->PlayerStat->MeldPointer; i++) {
 				const auto k = &analysis->PlayerStat->Meld[i];
-				for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
-					if (analysis->PlayerStat->Meld[i].red[j] == AkaDora) ++red;
+				for (int j = 0; j < (k->mstat >= MeldStat::quadConcealed ? 4 : 3); j++) {
+					if (analysis->PlayerStat->Meld[i].red[j] == DoraCol::akaDora) ++red;
 				}
 			}
 			return red;
@@ -118,7 +118,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("赤ドラ三色"), get_yaku_han("akadora_all"),
 				[countRed](const MentsuAnalysis* const analysis) -> bool {
-					return (analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					return (analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 						(countRed(analysis) == 3u); // 赤ドラが3枚である
 				}
 			));
@@ -132,7 +132,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_dora() {
 			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 				_T("門泥公"), get_yaku_han("akadora_all"),
 				[countRed](const MentsuAnalysis* const analysis) -> bool {
-					return (analysis->shanten[shantenAll] == -1) && // 何かの手で和了になっている
+					return (analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
 						(countRed(analysis) == 4u); // 赤ドラが4枚である
 				}
 			));

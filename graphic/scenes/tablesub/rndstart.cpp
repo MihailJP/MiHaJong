@@ -57,7 +57,7 @@ void TableSubsceneBeginning::Render() {
 			ZoomChar(3, L"ス",  336, 0, 250000);
 		}
 	} else {
-		if ((GameStatus::gameStat()->gameType & RichiMJ) && (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game"))) {
+		if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && (rules::chkRule("game_length", "twice_east_game") || rules::chkRule("game_length", "east_only_game"))) {
 			// 東場のみのルール
 			ZoomChar(    0, WindName.substr(0                 , 1), -256,      0 + timeOffset, 250000 + timeOffset);
 			if (roundnum < 10) {

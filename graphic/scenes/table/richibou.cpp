@@ -15,22 +15,22 @@ void GameTableScreen::RichibouReconst::ShowRiichibou(const GameTable* gameStat) 
 	for (PlayerID i = 0; i < Players; ++i) {
 		if (!gameStat->Player[i].RichiFlag.RichiFlag) continue;
 		switch (playerRelative(i, gameStat->PlayerID)) {
-		case sSelf:
+		case SeatRelative::self:
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 				tRichi, RiichiPosH, RiichiPosV, 144, 12,
 				0xffffffff, &rectH, 72, 6);
 			break;
-		case sOpposite:
+		case SeatRelative::opposite:
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 				tRichi, RiichiPosH, TableSize - RiichiPosV, 144, 12,
 				0xffffffff, &rectH, 72, 6);
 			break;
-		case sLeft:
+		case SeatRelative::left:
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 				tRichi, TableSize - RiichiPosV, RiichiPosH, 12, 144,
 				0xffffffff, &rectV, 6, 72);
 			break;
-		case sRight:
+		case SeatRelative::right:
 			SpriteRenderer::instantiate(caller->caller->getDevice())->ShowSprite(
 				tRichi, RiichiPosV, RiichiPosH, 12, 144,
 				0xffffffff, &rectV, 6, 72);

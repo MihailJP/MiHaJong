@@ -121,24 +121,24 @@ void ConfigDialog::initWrapper(HWND hWnd) {
 	controls.emplace(IDC_COMBO2, new ComboBox(hWnd, IDC_COMBO2, monitorList));
 	controls.emplace(IDC_COMBO3, new ComboBox(hWnd, IDC_COMBO3, midiDeviceList));
 
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.scrMode() == ScreenMode::scrModeFullscreen);
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set(confFile.scrMode() == ScreenMode::scrModeWindowed);
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->set(confFile.scrMode() == Screen_Mode::ScreenMode::fullscreen);
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO2])->set(confFile.scrMode() == Screen_Mode::ScreenMode::windowed);
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO3])->set(!confFile.blackTile());
 	dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->set(confFile.blackTile());
-	dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->set(confFile.scrMode() == ScreenMode::scrModeBorderless);
+	dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->set(confFile.scrMode() == Screen_Mode::ScreenMode::borderless);
 	dynamic_cast<TextBox*>(controls[IDC_EDIT2])->set(confFile.playerName());
 	dynamic_cast<Slider*>(controls[IDC_SLIDER1])->set(confFile.bgmVolume() / 5);
 	dynamic_cast<Slider*>(controls[IDC_SLIDER2])->set(confFile.soundVolume() / 5);
-	if (confFile.screenResolution() == ConfigFile::screenInvalid)
-		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(ConfigFile::screenXGA);
+	if (confFile.screenResolution() == ConfigFile::ScreenConfig::invalid)
+		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(static_cast<int>(ConfigFile::ScreenConfig::xga));
 	else
-		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(confFile.screenResolution());
+		dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->set(static_cast<int>(confFile.screenResolution()));
 	if (!confFile.serverAddress().empty())
 		dynamic_cast<TextBox*>(controls[IDC_EDIT3])->set(confFile.serverAddress());
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->set(confFile.monitorNumber() - 1);
 
-	controls[IDC_COMBO1]->enable(confFile.scrMode() != ScreenMode::scrModeBorderless);
-	controls[IDC_COMBO2]->enable(confFile.scrMode() != ScreenMode::scrModeFullscreen);
+	controls[IDC_COMBO1]->enable(confFile.scrMode() != Screen_Mode::ScreenMode::borderless);
+	controls[IDC_COMBO2]->enable(confFile.scrMode() != Screen_Mode::ScreenMode::fullscreen);
 
 	dynamic_cast<ComboBox*>(controls[IDC_COMBO3])->set(0);
 	for (size_t i = 0; i < midiDeviceList.size(); ++i) {
@@ -153,11 +153,11 @@ void ConfigDialog::okButtonPressed() {
 	const auto midiDeviceList(midiDevices());
 
 	if (dynamic_cast<RadioButton*>(controls[IDC_RADIO1])->get())
-		confFile.scrMode(ScreenMode::scrModeFullscreen);
+		confFile.scrMode(Screen_Mode::ScreenMode::fullscreen);
 	else if (dynamic_cast<RadioButton*>(controls[IDC_RADIO5])->get())
-		confFile.scrMode(ScreenMode::scrModeBorderless);
+		confFile.scrMode(Screen_Mode::ScreenMode::borderless);
 	else
-		confFile.scrMode(ScreenMode::scrModeWindowed);
+		confFile.scrMode(Screen_Mode::ScreenMode::windowed);
 	confFile.blackTile(dynamic_cast<RadioButton*>(controls[IDC_RADIO4])->get());
 	confFile.playerName(dynamic_cast<TextBox*>(controls[IDC_EDIT2])->get());
 	try {
@@ -168,7 +168,7 @@ void ConfigDialog::okButtonPressed() {
 	confFile.bgmVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER1])->get() * 5);
 	confFile.soundVolume(dynamic_cast<Slider*>(controls[IDC_SLIDER2])->get() * 5);
 	confFile.screenResolution(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO1])->get()));
-	confFile.monitorNumber(static_cast<ConfigFile::ScreenConfig>(dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->get() + 1));
+	confFile.monitorNumber(dynamic_cast<ComboBox*>(controls[IDC_COMBO2])->get() + 1);
 	confFile.serverAddress(dynamic_cast<TextBox*>(controls[IDC_EDIT3])->get());
 
 	confFile.save();

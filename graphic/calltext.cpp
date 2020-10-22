@@ -12,7 +12,7 @@ namespace {
 namespace calltext {
 
 namespace {
-	CallType callStatus[Players] = {None, None, None, None,};
+	CallType callStatus[Players] = {CallType::none, CallType::none, CallType::none, CallType::none,};
 }
 
 EXPORT CallType getCall(PlayerID playerID) {

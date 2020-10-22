@@ -44,28 +44,28 @@ void aiscript::table::functable::lockTable(lua_State* const L) { // テーブル
 /* 捨牌番号の付帯情報 */
 inline void aiscript::table::functable::discardTileCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "Normal", static_cast<lua_Integer>(DiscardTileNum::Normal));
-	TableAdd(L, "Ankan", static_cast<lua_Integer>(DiscardTileNum::Ankan));
-	TableAdd(L, "Kakan", static_cast<lua_Integer>(DiscardTileNum::Kakan));
-	TableAdd(L, "Riichi", static_cast<lua_Integer>(DiscardTileNum::Riichi));
-	TableAdd(L, "Flower", static_cast<lua_Integer>(DiscardTileNum::Flower));
-	TableAdd(L, "OpenRiichi", static_cast<lua_Integer>(DiscardTileNum::OpenRiichi));
-	TableAdd(L, "Agari", static_cast<lua_Integer>(DiscardTileNum::Agari));
-	TableAdd(L, "Kyuushu", static_cast<lua_Integer>(DiscardTileNum::Kyuushu));
+	TableAdd(L, "Normal", static_cast<lua_Integer>(DiscardType::normal));
+	TableAdd(L, "Ankan", static_cast<lua_Integer>(DiscardType::ankan));
+	TableAdd(L, "Kakan", static_cast<lua_Integer>(DiscardType::kakan));
+	TableAdd(L, "Riichi", static_cast<lua_Integer>(DiscardType::riichi));
+	TableAdd(L, "Flower", static_cast<lua_Integer>(DiscardType::flower));
+	TableAdd(L, "OpenRiichi", static_cast<lua_Integer>(DiscardType::openRiichi));
+	TableAdd(L, "Agari", static_cast<lua_Integer>(DiscardType::agari));
+	TableAdd(L, "Kyuushu", static_cast<lua_Integer>(DiscardType::kyuushu));
 	lockTable(L); lua_setfield(L, -2, "DiscardType");
 }
 
 /* 鳴きの種別コード */
 inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "None", static_cast<lua_Integer>(meldNone));
-	TableAdd(L, "Ron", static_cast<lua_Integer>(meldRon));
-	TableAdd(L, "Kan", static_cast<lua_Integer>(meldKan));
-	TableAdd(L, "Pon", static_cast<lua_Integer>(meldPon));
+	TableAdd(L, "None", static_cast<lua_Integer>(MeldCallID::none));
+	TableAdd(L, "Ron", static_cast<lua_Integer>(MeldCallID::ron));
+	TableAdd(L, "Kan", static_cast<lua_Integer>(MeldCallID::kan));
+	TableAdd(L, "Pon", static_cast<lua_Integer>(MeldCallID::pon));
 	lua_newtable(L);
-	TableAdd(L, "Lower", static_cast<lua_Integer>(meldChiiLower));
-	TableAdd(L, "Middle", static_cast<lua_Integer>(meldChiiMiddle));
-	TableAdd(L, "Upper", static_cast<lua_Integer>(meldChiiUpper));
+	TableAdd(L, "Lower", static_cast<lua_Integer>(MeldCallID::chiiLower));
+	TableAdd(L, "Middle", static_cast<lua_Integer>(MeldCallID::chiiMiddle));
+	TableAdd(L, "Upper", static_cast<lua_Integer>(MeldCallID::chiiUpper));
 	lockTable(L); lua_setfield(L, -2, "Chii");
 	lockTable(L); lua_setfield(L, -2, "Call");
 }
@@ -73,9 +73,9 @@ inline void aiscript::table::functable::meldCallCode(lua_State* const L) {
 /* ドラの色コード */
 inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 	lua_newtable(L);
-	TableAdd(L, "Normal", static_cast<lua_Integer>(Normal));
-	TableAdd(L, "Red", static_cast<lua_Integer>(AkaDora));
-	TableAdd(L, "Blue", static_cast<lua_Integer>(AoDora));
+	TableAdd(L, "Normal", static_cast<lua_Integer>(DoraCol::normal));
+	TableAdd(L, "Red", static_cast<lua_Integer>(DoraCol::akaDora));
+	TableAdd(L, "Blue", static_cast<lua_Integer>(DoraCol::aoDora));
 	lockTable(L); lua_setfield(L, -2, "DoraColor");
 }
 
@@ -83,26 +83,26 @@ inline void aiscript::table::functable::doraColorCode(lua_State* const L) {
 inline void aiscript::table::functable::meldTypeCode(lua_State* const L) {
 	lua_newtable(L); // MeldType
 	lua_newtable(L); // Sequence
-	TableAdd(L, "Lower", static_cast<lua_Integer>(meldSequenceExposedLower));
-	TableAdd(L, "Middle", static_cast<lua_Integer>(meldSequenceExposedMiddle));
-	TableAdd(L, "Upper", static_cast<lua_Integer>(meldSequenceExposedUpper));
+	TableAdd(L, "Lower", static_cast<lua_Integer>(MeldStat::sequenceExposedLower));
+	TableAdd(L, "Middle", static_cast<lua_Integer>(MeldStat::sequenceExposedMiddle));
+	TableAdd(L, "Upper", static_cast<lua_Integer>(MeldStat::sequenceExposedUpper));
 	lockTable(L); lua_setfield(L, -2, "Sequence");
 	lua_newtable(L); // Triplet
-	TableAdd(L, "Kamicha", static_cast<lua_Integer>(meldTripletExposedLeft));
-	TableAdd(L, "Toimen", static_cast<lua_Integer>(meldTripletExposedCenter));
-	TableAdd(L, "Shimocha", static_cast<lua_Integer>(meldTripletExposedRight));
+	TableAdd(L, "Kamicha", static_cast<lua_Integer>(MeldStat::tripletExposedLeft));
+	TableAdd(L, "Toimen", static_cast<lua_Integer>(MeldStat::tripletExposedCenter));
+	TableAdd(L, "Shimocha", static_cast<lua_Integer>(MeldStat::tripletExposedRight));
 	lockTable(L); lua_setfield(L, -2, "Triplet");
 	lua_newtable(L); // Quad
-	TableAdd(L, "Concealed", static_cast<lua_Integer>(meldQuadConcealed));
+	TableAdd(L, "Concealed", static_cast<lua_Integer>(MeldStat::quadConcealed));
 	lua_newtable(L); // Exposed
-	TableAdd(L, "Kamicha", static_cast<lua_Integer>(meldQuadExposedLeft));
-	TableAdd(L, "Toimen", static_cast<lua_Integer>(meldQuadExposedCenter));
-	TableAdd(L, "Shimocha", static_cast<lua_Integer>(meldQuadExposedRight));
+	TableAdd(L, "Kamicha", static_cast<lua_Integer>(MeldStat::quadExposedLeft));
+	TableAdd(L, "Toimen", static_cast<lua_Integer>(MeldStat::quadExposedCenter));
+	TableAdd(L, "Shimocha", static_cast<lua_Integer>(MeldStat::quadExposedRight));
 	lockTable(L); lua_setfield(L, -2, "Exposed");
 	lua_newtable(L); // Added
-	TableAdd(L, "Kamicha", static_cast<lua_Integer>(meldQuadAddedLeft));
-	TableAdd(L, "Toimen", static_cast<lua_Integer>(meldQuadAddedCenter));
-	TableAdd(L, "Shimocha", static_cast<lua_Integer>(meldQuadAddedRight));
+	TableAdd(L, "Kamicha", static_cast<lua_Integer>(MeldStat::quadAddedLeft));
+	TableAdd(L, "Toimen", static_cast<lua_Integer>(MeldStat::quadAddedCenter));
+	TableAdd(L, "Shimocha", static_cast<lua_Integer>(MeldStat::quadAddedRight));
 	lockTable(L); lua_setfield(L, -2, "Added");
 	lockTable(L); lua_setfield(L, -2, "Quad");
 	lockTable(L); lua_setfield(L, -2, "MeldType");
@@ -113,7 +113,7 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 	constexpr char suitname[3][16] = {"Character","Circle","Bamboo",};
 	constexpr char numeral[9][8] = {"One","Two","Three","Four","Five","Six","Seven","Eight","Nine",};
 	lua_newtable(L);
-	for (int suit = 0; suit < TileSuitHonors; suit += TileSuitStep) { // 数牌(ループ)
+	for (int suit = 0; suit < static_cast<int>(TileSuit::honors); suit += TileSuitStep) { // 数牌(ループ)
 		lua_newtable(L);
 		for (int num = 1; num <= 9; num++) {
 			TableAdd(L, numeral[num - 1], static_cast<lua_Integer>(suit + num));
@@ -122,32 +122,32 @@ inline void aiscript::table::functable::tileCode(lua_State* const L) {
 		lockTable(L); lua_setfield(L, -2, suitname[suit / TileSuitStep]);
 	}
 	lua_newtable(L);
-	TableAdd(L, "East", static_cast<lua_Integer>(EastWind)); TableAdd(L, "South", static_cast<lua_Integer>(SouthWind));
-	TableAdd(L, "West", static_cast<lua_Integer>(WestWind)); TableAdd(L, "North", static_cast<lua_Integer>(NorthWind));
+	TableAdd(L, "East", static_cast<lua_Integer>(TileCode::eastWind)); TableAdd(L, "South", static_cast<lua_Integer>(TileCode::southWind));
+	TableAdd(L, "West", static_cast<lua_Integer>(TileCode::westWind)); TableAdd(L, "North", static_cast<lua_Integer>(TileCode::northWind));
 	lockTable(L); lua_setfield(L, -2, "Wind");
 	lua_newtable(L);
-	TableAdd(L, "White", static_cast<lua_Integer>(WhiteDragon)); TableAdd(L, "Green", static_cast<lua_Integer>(GreenDragon));
-	TableAdd(L, "Red", static_cast<lua_Integer>(RedDragon));
+	TableAdd(L, "White", static_cast<lua_Integer>(TileCode::whiteDragon)); TableAdd(L, "Green", static_cast<lua_Integer>(TileCode::greenDragon));
+	TableAdd(L, "Red", static_cast<lua_Integer>(TileCode::redDragon));
 	lockTable(L); lua_setfield(L, -2, "Dragon");
 	lua_newtable(L);
-	TableAdd(L, "Spring", static_cast<lua_Integer>(Spring)); TableAdd(L, "Summer", static_cast<lua_Integer>(Summer));
-	TableAdd(L, "Autumn", static_cast<lua_Integer>(Autumn)); TableAdd(L, "Winter", static_cast<lua_Integer>(Winter));
-	TableAdd(L, "Plum", static_cast<lua_Integer>(Plum)); TableAdd(L, "Orchid", static_cast<lua_Integer>(Orchid));
-	TableAdd(L, "Chrysanthemum", static_cast<lua_Integer>(Chrysanthemum)); TableAdd(L, "Bamboo", static_cast<lua_Integer>(Bamboo));
-	TableAdd(L, "Fall", static_cast<lua_Integer>(Autumn)); TableAdd(L, "Chrys", static_cast<lua_Integer>(Chrysanthemum));
-	TableAdd(L, "Flower", static_cast<lua_Integer>(Flower));
+	TableAdd(L, "Spring", static_cast<lua_Integer>(TileCode::spring)); TableAdd(L, "Summer", static_cast<lua_Integer>(TileCode::summer));
+	TableAdd(L, "Autumn", static_cast<lua_Integer>(TileCode::autumn)); TableAdd(L, "Winter", static_cast<lua_Integer>(TileCode::winter));
+	TableAdd(L, "Plum", static_cast<lua_Integer>(TileCode::plum)); TableAdd(L, "Orchid", static_cast<lua_Integer>(TileCode::orchid));
+	TableAdd(L, "Chrysanthemum", static_cast<lua_Integer>(TileCode::chrysanthemum)); TableAdd(L, "Bamboo", static_cast<lua_Integer>(TileCode::bamboo));
+	TableAdd(L, "Fall", static_cast<lua_Integer>(TileCode::autumn)); TableAdd(L, "Chrys", static_cast<lua_Integer>(TileCode::chrysanthemum));
+	TableAdd(L, "Flower", static_cast<lua_Integer>(TileCode::flower));
 	lockTable(L); lua_setfield(L, -2, "Flower");
 	lockTable(L); lua_setfield(L, -2, "Tile");
 }
 
 /* 卓の種別 */
 inline void aiscript::table::functable::gametype(lua_State* const L) {
-	if (GameStat.chkGameType(Yonma)) lua_pushstring(L, "yonma");
-	else if (GameStat.chkGameType(Sanma)) lua_pushstring(L, "sanma");
-	else if (GameStat.chkGameType(Sanma4)) lua_pushstring(L, "sanma_with_four_players");
-	else if (GameStat.chkGameType(SanmaS)) lua_pushstring(L, "sanma_without_honors");
-	else if (GameStat.chkGameType(SanmaSeto)) lua_pushstring(L, "sanma_setouchi");
-	else if (GameStat.chkGameType(GuobiaoMJ)) lua_pushstring(L, "guobiao");
+	if (GameStat.chkGameType(GameTypeID::yonma)) lua_pushstring(L, "yonma");
+	else if (GameStat.chkGameType(GameTypeID::sanma)) lua_pushstring(L, "sanma");
+	else if (GameStat.chkGameType(GameTypeID::sanma4)) lua_pushstring(L, "sanma_with_four_players");
+	else if (GameStat.chkGameType(GameTypeID::sanmaS)) lua_pushstring(L, "sanma_without_honors");
+	else if (GameStat.chkGameType(GameTypeID::sanmaSeto)) lua_pushstring(L, "sanma_setouchi");
+	else if (GameStat.chkGameType(GameTypeID::guobiaoMJ)) lua_pushstring(L, "guobiao");
 	else lua_pushnil(L);
 	lua_setfield(L, -2, "gametype");
 }
@@ -307,18 +307,18 @@ inline void aiscript::table::functable::gametbl::makeprototype(lua_State* const 
 /* 鳴きの種別コード */
 inline void aiscript::table::functable::agariTypeCode(lua_State* const L) {
 	lua_newtable(L); // AgariType
-	TableAdd(L, "All", static_cast<lua_Integer>(shantenAll));
-	TableAdd(L, "Regular", static_cast<lua_Integer>(shantenRegular));
-	TableAdd(L, "Pairs", static_cast<lua_Integer>(shantenPairs));
-	TableAdd(L, "Orphans", static_cast<lua_Integer>(shantenOrphans));
-	TableAdd(L, "Stellar", static_cast<lua_Integer>(shantenStellar));
-	TableAdd(L, "CivilWar", static_cast<lua_Integer>(shantenCivilWar));
-	TableAdd(L, "TohokuGreen", static_cast<lua_Integer>(shantenTohokuGreen));
-	TableAdd(L, "Syzygy", static_cast<lua_Integer>(shantenSyzygy));
-	TableAdd(L, "Quanbukao", static_cast<lua_Integer>(shantenQuanbukao));
-	TableAdd(L, "SevenUp", static_cast<lua_Integer>(shantenSevenup));
-	TableAdd(L, "ZuheLong", static_cast<lua_Integer>(shantenZuhelong));
-	TableAdd(L, "Ninnaji", static_cast<lua_Integer>(shantenNinnaji));
+	TableAdd(L, "All", static_cast<lua_Integer>(ShantenType::all));
+	TableAdd(L, "Regular", static_cast<lua_Integer>(ShantenType::regular));
+	TableAdd(L, "Pairs", static_cast<lua_Integer>(ShantenType::pairs));
+	TableAdd(L, "Orphans", static_cast<lua_Integer>(ShantenType::orphans));
+	TableAdd(L, "Stellar", static_cast<lua_Integer>(ShantenType::stellar));
+	TableAdd(L, "CivilWar", static_cast<lua_Integer>(ShantenType::civilWar));
+	TableAdd(L, "TohokuGreen", static_cast<lua_Integer>(ShantenType::tohokuGreen));
+	TableAdd(L, "Syzygy", static_cast<lua_Integer>(ShantenType::syzygy));
+	TableAdd(L, "Quanbukao", static_cast<lua_Integer>(ShantenType::quanbukao));
+	TableAdd(L, "SevenUp", static_cast<lua_Integer>(ShantenType::sevenup));
+	TableAdd(L, "ZuheLong", static_cast<lua_Integer>(ShantenType::zuhelong));
+	TableAdd(L, "Ninnaji", static_cast<lua_Integer>(ShantenType::ninnaji));
 	lockTable(L); lua_setfield(L, -2, "AgariType");
 }
 

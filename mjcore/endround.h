@@ -3,6 +3,7 @@
 #include "../common/largenum.h"
 #include "endtype.h"
 #include "gametbl.h"
+#include "../graphic/graphic.h"
 
 namespace endround {
 	EndType checkroundabort(GameTable* gameStat); // 局終了条件の判定
@@ -17,7 +18,7 @@ namespace endround {
 		void negateDelta();
 		void doubleDelta(PlayerID player);
 		void doubleDelta();
-		void transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait);
-		void transferChip(GameTable* gameStat, unsigned subscene, unsigned wait);
+		void transferPoints(GameTable* gameStat, mihajong_graphic::TableSubsceneID subscene, unsigned wait);
+		void transferChip(GameTable* gameStat, mihajong_graphic::TableSubsceneID subscene, unsigned wait);
 	}
 }

@@ -20,14 +20,14 @@ PlayerID aiscript::table::functable::gametbl::getPlayerID(lua_State* const L, in
 
 /* 牌の種類ごとの表をスタックに積む */
 constexpr std::array<TileCode, 35> aiscript::table::functable::gametbl::validTiles = {
-	CharacterOne, CharacterTwo, CharacterThree, CharacterFour, CharacterFive,
-	CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
-	CircleOne, CircleTwo, CircleThree, CircleFour, CircleFive,
-	CircleSix, CircleSeven, CircleEight, CircleNine,
-	BambooOne, BambooTwo, BambooThree, BambooFour, BambooFive,
-	BambooSix, BambooSeven, BambooEight, BambooNine,
-	EastWind, SouthWind, WestWind, NorthWind, WhiteDragon, GreenDragon, RedDragon,
-	Flower,
+	TileCode::characterOne, TileCode::characterTwo, TileCode::characterThree, TileCode::characterFour, TileCode::characterFive,
+	TileCode::characterSix, TileCode::characterSeven, TileCode::characterEight, TileCode::characterNine,
+	TileCode::circleOne, TileCode::circleTwo, TileCode::circleThree, TileCode::circleFour, TileCode::circleFive,
+	TileCode::circleSix, TileCode::circleSeven, TileCode::circleEight, TileCode::circleNine,
+	TileCode::bambooOne, TileCode::bambooTwo, TileCode::bambooThree, TileCode::bambooFour, TileCode::bambooFive,
+	TileCode::bambooSix, TileCode::bambooSeven, TileCode::bambooEight, TileCode::bambooNine,
+	TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind, TileCode::whiteDragon, TileCode::greenDragon, TileCode::redDragon,
+	TileCode::flower,
 };
 void aiscript::table::functable::gametbl::pushTileTable(lua_State* const L, Int8ByTile& tptr) {
 	lua_newtable(L); // テーブル
@@ -69,7 +69,7 @@ void aiscript::table::functable::gametbl::setHand(lua_State* const L, GameTable*
 				tmpGameStat->Player[player].Hand[i].tile = static_cast<TileCode>(lua_tointeger(L, -1));
 				lua_pop(L, 1);
 				lua_getfield(L, -1, "red");
-				tmpGameStat->Player[player].Hand[i].red = static_cast<doraCol>(lua_tointeger(L, -1));
+				tmpGameStat->Player[player].Hand[i].red = static_cast<DoraCol>(lua_tointeger(L, -1));
 				lua_pop(L, 1);
 			} // 変なことになっていたら無視
 			lua_pop(L, 1);
@@ -124,7 +124,7 @@ int aiscript::table::functable::gametbl::luafunc::getbakaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, static_cast<int>(Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))));
+	lua_pushinteger(L, static_cast<int>(Wind2Tile(gameStat->prevailingwind())));
 	return 1;
 }
 
@@ -182,10 +182,10 @@ int aiscript::table::functable::gametbl::luafunc::getdiscard(lua_State* const L)
 		TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Discard[i].tcode.tile));
 		TableAdd(L, "red", static_cast<lua_Integer>(gameStat->Player[player].Discard[i].tcode.red));
 		TableAdd(L, "through", gameStat->Player[player].Discard[i].isDiscardThrough);
-		TableAdd(L, "riichi", (gameStat->Player[player].Discard[i].dstat == discardRiichi) ||
-			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
-		TableAdd(L, "taken", (gameStat->Player[player].Discard[i].dstat == discardTaken) ||
-			(gameStat->Player[player].Discard[i].dstat == discardRiichiTaken));
+		TableAdd(L, "riichi", (gameStat->Player[player].Discard[i].dstat == DiscardStat::riichi) ||
+			(gameStat->Player[player].Discard[i].dstat == DiscardStat::riichiTaken));
+		TableAdd(L, "taken", (gameStat->Player[player].Discard[i].dstat == DiscardStat::taken) ||
+			(gameStat->Player[player].Discard[i].dstat == DiscardStat::riichiTaken));
 		lua_settable(L, -3);
 	}
 	return 1;
@@ -213,7 +213,7 @@ int aiscript::table::functable::gametbl::luafunc::getflower(lua_State* const L) 
 	int n = chkargnum(L, 1, 2);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 2);
-	if (gameStat->chkGameType(Yonma)) { // 四麻は花牌
+	if (gameStat->chkGameType(GameTypeID::yonma)) { // 四麻は花牌
 		int k = 0;
 		if (gameStat->Player[player].FlowerFlag.Spring) ++k;
 		if (gameStat->Player[player].FlowerFlag.Summer) ++k;
@@ -254,7 +254,7 @@ int aiscript::table::functable::gametbl::luafunc::getjikaze(lua_State* const L) 
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
-	lua_pushinteger(L, static_cast<int>(Wind2Tile(static_cast<uint8_t>(gameStat->playerwind(player)))));
+	lua_pushinteger(L, static_cast<int>(Wind2Tile(gameStat->playerwind(player))));
 	return 1;
 }
 
@@ -268,7 +268,7 @@ int aiscript::table::functable::gametbl::luafunc::getmeld(lua_State* const L) {
 		lua_pushinteger(L, i); lua_newtable(L);
 		TableAdd(L, "tile", static_cast<lua_Integer>(gameStat->Player[player].Meld[i].tile));
 		lua_newtable(L);
-		for (int k = 0; k < (gameStat->Player[player].Meld[i].mstat >= meldQuadConcealed ? 4 : 3); k++)
+		for (int k = 0; k < (gameStat->Player[player].Meld[i].mstat >= MeldStat::quadConcealed ? 4 : 3); k++)
 			TableAdd(L, k + 1, static_cast<lua_Integer>(gameStat->Player[player].Meld[i].red[k]));
 		lua_setfield(L, -2, "red");
 		TableAdd(L, "type", static_cast<lua_Integer>(gameStat->Player[player].Meld[i].mstat));
@@ -289,8 +289,12 @@ int aiscript::table::functable::gametbl::luafunc::getopenwait(lua_State* const L
 int aiscript::table::functable::gametbl::luafunc::getpreviousdiscard(lua_State* const L) {
 	int n = chkargnum(L, 1, 1);
 	GameTable* gameStat = getGameStatAddr(L);
-	if (gameStat->PreviousMeld.Discard != NoTile) lua_pushinteger(L, gameStat->PreviousMeld.Discard); else lua_pushnil(L);
-	if (gameStat->PreviousMeld.Stepped != NoTile) lua_pushinteger(L, gameStat->PreviousMeld.Stepped); else lua_pushnil(L);
+	if (gameStat->PreviousMeld.Discard != TileCode::noTile)
+		lua_pushinteger(L, static_cast<lua_Integer>(gameStat->PreviousMeld.Discard));
+	else lua_pushnil(L);
+	if (gameStat->PreviousMeld.Stepped != TileCode::noTile)
+		lua_pushinteger(L, static_cast<lua_Integer>(gameStat->PreviousMeld.Stepped));
+	else lua_pushnil(L);
 	return 2;
 }
 
@@ -348,7 +352,7 @@ int aiscript::table::functable::gametbl::luafunc::getshanten(lua_State* const L)
 	const GameTable* gameStat = getGameStatAddr(L); GameTable tmpGameStat = *gameStat;
 	PlayerID player = getPlayerID(L, 0);
 	setHand(L, &tmpGameStat, 2);
-	ShantenType type = shantenAll;
+	ShantenType type = ShantenType::all;
 	if ((n >= 3) && (lua_isnumber(L, 3))) type = static_cast<ShantenType>(lua_tointeger(L, 3));
 	Shanten s = ShantenAnalyzer::calcShanten(&tmpGameStat, player, type);
 	if (s == ShantenImpossible) lua_pushnil(L);
@@ -417,9 +421,9 @@ int aiscript::table::functable::gametbl::luafunc::gettilerisk(lua_State* const L
 			{
 				static const char tblname[3][16] = {"kamicha", "toimen", "shimocha",};
 				const PlayerID targetP[3] = {
-					RelativePositionOf(player, sLeft),
-					RelativePositionOf(player, sOpposite),
-					RelativePositionOf(player, sRight),
+					RelativePositionOf(player, SeatRelative::left),
+					RelativePositionOf(player, SeatRelative::opposite),
+					RelativePositionOf(player, SeatRelative::right),
 				};
 				for (int k = 0; k < 3; k++) {
 					lua_newtable(L);
@@ -472,12 +476,12 @@ int aiscript::table::functable::gametbl::luafunc::getyakuhaiwind(lua_State* cons
 	GameTable* gameStat = getGameStatAddr(L);
 	PlayerID player = getPlayerID(L, 0);
 	lua_newtable(L); // 返り値を格納
-	constexpr TileCode windtiles[4] = {EastWind, SouthWind, WestWind, NorthWind,};
+	constexpr TileCode windtiles[4] = {TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,};
 	constexpr char windname[4][8] = {"East", "South", "West", "North",};
 	for (int i = 0; i < 4; i++) {
 		bool flag = false;
 		if (windtiles[i] ==
-			Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))) // 場風牌
+			Wind2Tile(gameStat->prevailingwind())) // 場風牌
 			flag = true;
 		else if (windtiles[i] ==
 			Wind2Tile(gameStat->playerwind(player))) // 自風牌

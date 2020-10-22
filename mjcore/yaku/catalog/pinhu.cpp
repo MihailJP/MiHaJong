@@ -4,7 +4,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 {
 #ifndef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("平和"), yaku::yakuCalculator::Yaku::yval_1han /* 門前であるかどうかの判定は既に行なっているので不要 */,
+		_T("平和"), 1_hanF /* 門前であるかどうかの判定は既に行なっているので不要 */,
 		[](const MentsuAnalysis* const analysis) {
 			return analysis->isPinfu;
 		}
@@ -15,7 +15,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_pinhu()
 			_T("平和"),
 			[](const MentsuAnalysis* const analysis) {
 				return (analysis->isPinfu &&
-					(analysis->TsumoHai->tile == CircleOne));
+					(analysis->TsumoHai->tile == TileCode::circleOne));
 			}
 		));
 #endif /* GUOBIAO */

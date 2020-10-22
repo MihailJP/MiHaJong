@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <type_traits>
 #include <functional>
+#include <array>
 #include "tilecode.h"
 #include "gametype.h"
 #include "largenum.h"
@@ -16,52 +17,32 @@ namespace mihajong_structs {
 
 // -------------------------------------------------------------------------
 
-enum doraCol : uint8_t { Normal, AkaDora, AoDora };
+enum class DoraCol : uint8_t { normal, akaDora, aoDora };
 struct Tile { // 赤ドラデータを含めた牌のデータ
 	TileCode tile;
-	doraCol red;
-	constexpr explicit operator bool() const {return tile != NoTile;}
-	constexpr bool operator ! () const {return tile == NoTile;}
+	DoraCol red;
+	constexpr explicit operator bool() const {return tile != TileCode::noTile;}
+	constexpr bool operator ! () const {return tile == TileCode::noTile;}
 	constexpr bool operator == (const Tile& otherTile) const {return (tile == otherTile.tile) && (red == otherTile.red);}
 	constexpr bool operator != (const Tile& otherTile) const {return !(*this == otherTile);}
 	constexpr bool operator < (const Tile& otherTile) const {
 		if (tile < otherTile.tile) return true;
 		else if (tile > otherTile.tile) return false;
 		else if (red == otherTile.red) return false;
-		else if (red == Normal) return false;
-		else if (otherTile.red == Normal) return true;
+		else if (red == DoraCol::normal) return false;
+		else if (otherTile.red == DoraCol::normal) return true;
 		else return red < otherTile.red;
 	}
 	constexpr bool operator > (const Tile& otherTile) const {return otherTile < *this;}
 	constexpr bool operator <= (const Tile& otherTile) const {return !(otherTile < *this);}
 	constexpr bool operator >= (const Tile& otherTile) const {return !(*this < otherTile);}
-	constexpr TileSuit getSuit() const {
-		switch (tile) {
-		case CharacterOne: case CharacterTwo: case CharacterThree: case CharacterFour: case CharacterFive:
-		case CharacterSix: case CharacterSeven: case CharacterEight: case CharacterNine:
-			return TileSuitCharacters;
-		case CircleOne: case CircleTwo: case CircleThree: case CircleFour: case CircleFive:
-		case CircleSix: case CircleSeven: case CircleEight: case CircleNine:
-			return TileSuitCircles;
-		case BambooOne: case BambooTwo: case BambooThree: case BambooFour: case BambooFive:
-		case BambooSix: case BambooSeven: case BambooEight: case BambooNine:
-			return TileSuitBamboos;
-		case EastWind: case SouthWind: case WestWind: case NorthWind:
-		case WhiteDragon: case GreenDragon: case RedDragon:
-			return TileSuitHonors;
-		case Spring: case Summer: case Autumn: case Winter:
-		case Plum: case Orchid: case Chrysanthemum: case Bamboo:
-			return TileSuitFlowers;
-		default:
-			return TileSuitInvalid;
-		}
-	}
+	constexpr TileSuit getSuit() const {return getTileSuit(tile);}
 	constexpr bool isNumber() const {
-		return (tile != NoTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuitHonors));		
+		return (tile != TileCode::noTile) && (static_cast<unsigned int>(tile) < static_cast<unsigned int>(TileSuit::honors));		
 	}
-	constexpr bool isHonor() const {return getSuit() == TileSuitHonors;}
-	constexpr bool isFlower() const {return getSuit() == TileSuitFlowers;}
-	constexpr explicit Tile(TileCode tile = NoTile, doraCol red = Normal) : tile(tile), red(red) {}
+	constexpr bool isHonor() const {return getSuit() == TileSuit::honors;}
+	constexpr bool isFlower() const {return getSuit() == TileSuit::flowers;}
+	constexpr explicit Tile(TileCode tile = TileCode::noTile, DoraCol red = DoraCol::normal) : tile(tile), red(red) {}
 };
 static_assert(std::is_trivially_copyable<Tile>::value, "Tile is not trivially copyable");
 static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout");
@@ -70,7 +51,7 @@ static_assert(std::is_standard_layout<Tile>::value, "Tile is not standard layout
 
 constexpr unsigned int Players = 4;
 #ifdef MJCORE_EXPORTS
-#define ACTUAL_PLAYERS (GameStat.chkGameType(SanmaT) ? 3 : 4)
+#define ACTUAL_PLAYERS (GameStat.chkGameType(GameTypeID::sanmaT) ? 3 : 4)
 #endif
 constexpr unsigned int NumOfTilesInHand = 14;
 constexpr unsigned int TsumohaiIndex = NumOfTilesInHand - 1;
@@ -131,20 +112,20 @@ typedef Tile HandTiles[NumOfTilesInHand];
 // -------------------------------------------------------------------------
 
 constexpr unsigned int SutehaiTypeStep = 200;
-enum DiscardStat : uint8_t {
-	discardNormal,
-	discardTaken,
-	discardRiichi,
-	discardRiichiTaken,
+enum class DiscardStat : uint8_t {
+	normal,
+	taken,
+	riichi,
+	riichiTaken,
 };
 struct DiscardTile {
 	Tile tcode;
 	DiscardStat dstat;
 	bool isDiscardThrough; // ツモ切りフラグ
-	explicit operator bool() const {return tcode.tile != NoTile;}
-	bool operator !() const {return tcode.tile == NoTile;}
-	DiscardTile(Tile tile = Tile(), DiscardStat dStat = discardNormal, bool discardThrough = false)
-		: tcode(tile), dstat(dStat), isDiscardThrough(discardNormal) {}
+	explicit operator bool() const {return tcode.tile != TileCode::noTile;}
+	bool operator !() const {return tcode.tile == TileCode::noTile;}
+	DiscardTile(Tile tile = Tile(), DiscardStat dStat = DiscardStat::normal, bool discardThrough = false)
+		: tcode(tile), dstat(dStat), isDiscardThrough(false) {}
 };
 typedef DiscardTile DiscardBuf[SizeOfDiscardBuffer];
 static_assert(std::is_trivially_copyable<DiscardTile>::value, "DiscardTile is not trivially copyable");
@@ -154,28 +135,28 @@ static_assert(std::is_standard_layout<DiscardTile>::value, "DiscardTile is not s
 
 constexpr unsigned int SizeOfMeldBuffer = 5;
 constexpr unsigned int MeldTypeStep = 1000;
-enum MeldStat : uint8_t {
-	meldSequenceConcealed,      // 手の内の順子
-	meldSequenceExposedLower,   // 小さい方をチー
-	meldSequenceExposedMiddle,  // 嵌張をチー
-	meldSequenceExposedUpper,   // 大きい方をチー
-	meldTripletConcealed,       // 暗刻
-	meldTripletExposedLeft,     // 上家からポン
-	meldTripletExposedCenter,   // 対面からポン
-	meldTripletExposedRight,    // 下家からポン
-	meldQuadConcealed,          // 暗槓
-	meldQuadExposedLeft,        // 上家から明槓
-	meldQuadExposedCenter,      // 対面から明槓
-	meldQuadExposedRight,       // 下家から明槓
-	meldQuadAddedLeft,          // 上家からポンの後カン
-	meldQuadAddedCenter,        // 対面からポンの後カン
-	meldQuadAddedRight,         // 下家からポンの後カン
+enum class MeldStat : uint8_t {
+	sequenceConcealed,      // 手の内の順子
+	sequenceExposedLower,   // 小さい方をチー
+	sequenceExposedMiddle,  // 嵌張をチー
+	sequenceExposedUpper,   // 大きい方をチー
+	tripletConcealed,       // 暗刻
+	tripletExposedLeft,     // 上家からポン
+	tripletExposedCenter,   // 対面からポン
+	tripletExposedRight,    // 下家からポン
+	quadConcealed,          // 暗槓
+	quadExposedLeft,        // 上家から明槓
+	quadExposedCenter,      // 対面から明槓
+	quadExposedRight,       // 下家から明槓
+	quadAddedLeft,          // 上家からポンの後カン
+	quadAddedCenter,        // 対面からポンの後カン
+	quadAddedRight,         // 下家からポンの後カン
 };
 struct MeldCode {
 	TileCode tile;
-	doraCol red[4];
+	DoraCol red[4];
 	MeldStat mstat;
-	explicit operator bool() const {return tile != NoTile;}
+	explicit operator bool() const {return tile != TileCode::noTile;}
 };
 typedef MeldCode MeldBuf[SizeOfMeldBuffer];
 static_assert(std::is_trivially_copyable<MeldCode>::value, "MeldCode is not trivially copyable");
@@ -189,8 +170,8 @@ static_assert(std::is_standard_layout<RichiStat>::value, "RichiStat is not stand
 
 // -------------------------------------------------------------------------
 
-enum ChankanStat : uint8_t {
-	chankanNone, chankanRegular, chankanOfAnkan, chankanOfNorth,
+enum class ChankanStat : uint8_t {
+	none, regular, ankan, north,
 };
 struct KangStat { bool kangFlag, topFlag; uint8_t chainFlag; ChankanStat chankanFlag; };
 static_assert(std::is_trivially_copyable<KangStat>::value, "KangStat is not trivially copyable");
@@ -198,10 +179,19 @@ static_assert(std::is_standard_layout<KangStat>::value, "KangStat is not standar
 
 // -------------------------------------------------------------------------
 
-enum PaoYakuPage : uint8_t {pyDaisangen, pyDaisixi, pySikang, pyMinkan, PaoYakuPages};
+enum class PaoYakuPage : uint8_t {daisangen, daisixi, sikang, minkan, pages};
+constexpr auto PaoYakuPages = static_cast<unsigned int>(PaoYakuPage::pages);
 
 struct PaoStat { PlayerID paoPlayer, agariPlayer; };
-typedef PaoStat PaoStatBook[PaoYakuPages];
+struct PaoStatBook : public std::array<PaoStat, PaoYakuPages> {
+	constexpr PaoStat operator[] (PaoYakuPage p) const { return std::array<PaoStat, PaoYakuPages>::operator[](static_cast<std::size_t>(p)); }
+	reference operator[] (PaoYakuPage p) { return std::array<PaoStat, PaoYakuPages>::operator[](static_cast<std::size_t>(p)); }
+	constexpr PaoStat operator[] (std::size_t p) const { return std::array<PaoStat, PaoYakuPages>::operator[](p); }
+	reference operator[] (std::size_t p) { return std::array<PaoStat, PaoYakuPages>::operator[](p); }
+	PaoStatBook() = default;
+	PaoStatBook(const PaoStatBook&) = default;
+	PaoStatBook& operator = (const PaoStatBook&) = default;
+};
 static_assert(std::is_trivially_copyable<PaoStat>::value, "PaoStat is not trivially copyable");
 static_assert(std::is_standard_layout<PaoStat>::value, "PaoStat is not standard layout");
 
@@ -225,8 +215,8 @@ static_assert(std::is_standard_layout<DoraStatBook>::value, "DoraStatBook is not
 
 // -------------------------------------------------------------------------
 
-enum ChiiType : int8_t {
-	chiiNone, chiiLower, chiiMiddle, chiiUpper,
+enum class ChiiType : int8_t {
+	none, lower, middle, upper,
 };
 struct DeclFlag {
 	bool Ron, Kan, Pon;
@@ -262,8 +252,8 @@ static_assert(std::is_standard_layout<Dice>::value, "Dice is not standard layout
 
 // -------------------------------------------------------------------------
 
-enum handStatCode : int8_t {
-	handUpright, handExposed, handHidden, handOpenRiichi,
+enum class HandStatCode : int8_t {
+	upright, exposed, hidden, openRiichi,
 };
 struct PlayerTable { // プレイヤーの状態を格納
 	LargeNum PlayerScore;
@@ -274,7 +264,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 	uint8_t DiscardPointer;
 	uint8_t MeldPointer;
 	bool MenzenFlag; // 門前フラグ
-	handStatCode HandStat; // 手牌の状態（立てる・見せる・伏せる）
+	HandStatCode HandStat; // 手牌の状態（立てる・見せる・伏せる）
 	int8_t NumberOfQuads; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
 	bool FirstDrawFlag; // １巡目である（地和、ダブル立直の判定に使う）
 	bool DoujunFuriten; // 同順振聴である
@@ -300,8 +290,8 @@ static_assert(std::is_standard_layout<PlayerTable>::value, "PlayerTable is not s
 
 // -------------------------------------------------------------------------
 
-enum seatAbsolute : uint8_t { sEast, sSouth, sWest, sNorth };
-enum seatRelative : uint8_t { sSelf, sRight, sOpposite, sLeft };
+enum class SeatAbsolute : uint8_t { east, south, west, north, white, green, red };
+enum class SeatRelative : uint8_t { self, right, opposite, left };
 
 // -------------------------------------------------------------------------
 
@@ -354,7 +344,7 @@ struct GameTable { // 卓の情報を格納する
 	const PlayerTable& statOfMine   () const {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (immutable) */
 	      PlayerTable& statOfMine   ()       {return Player[PlayerID             ];} /* 自分のプレイヤーの情報 (mutable) */
 
-	bool chkGameType(GameTypeID gameType) const {return ((this->gameType) & gameType);}
+	bool chkGameType(GameTypeID gameType) const {return (static_cast<int>(this->gameType) & static_cast<int>(gameType));}
 	uint8_t diceSum() { // サイコロの出目を取得
 		return Dice[0].Number + Dice[1].Number;
 	}
@@ -362,12 +352,16 @@ struct GameTable { // 卓の情報を格納する
 		return Dice[2].Number + Dice[3].Number;
 	}
 
-	seatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
-		if (chkGameType(SanmaT))
-			return static_cast<seatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
-		else return static_cast<seatAbsolute>((player + 32 - currentRound) % 4);
+	SeatAbsolute prevailingwind() const { // 場風
+		return static_cast<SeatAbsolute>(GameRound / 4);
 	}
-	seatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
+
+	SeatAbsolute playerwind(Player_ID player, int currentRound) const { // プレイヤーの自風がどれか調べる
+		if (chkGameType(GameTypeID::sanmaT))
+			return static_cast<SeatAbsolute>((player + 24 - (currentRound - ( currentRound / 4))) % 3);
+		else return static_cast<SeatAbsolute>((player + 32 - currentRound) % 4);
+	}
+	SeatAbsolute playerwind(Player_ID player) const { // プレイヤーの自風がどれか調べる
 		return playerwind(player, GameRound);
 	}
 

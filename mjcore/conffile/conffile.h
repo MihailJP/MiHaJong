@@ -26,20 +26,20 @@ inline bool exist(const char* filename) {
 }
 #endif /* _WIN32 */
 
-enum ScreenConfig : int {
-	screenInvalid = -1,
-	screenSVGA,   //  800 x  600
-	screenXGA,    // 1024 x  768
-	screenFWXGA,  // 1366 x  768
-	screenSXGA,   // 1280 x 1024
-	screenUXGA,   // 1600 x 1200
-	screenFullHD, // 1920 x 1080
-	screenWUXGA,  // 1920 x 1200
+enum class ScreenConfig : int {
+	invalid = -1,
+	svga,   //  800 x  600
+	xga,    // 1024 x  768
+	fwxga,  // 1366 x  768
+	sxga,   // 1280 x 1024
+	uxga,   // 1600 x 1200
+	fullHD, // 1920 x 1080
+	wuxga,  // 1920 x 1200
 #ifdef WITH_4K_PICS
-	screenWQHD,   // 2560 x 1440
-	screen4K,     // 3840 x 2160
+	wqhd,   // 2560 x 1440
+	uhd4K,  // 3840 x 2160
 #endif /* WITH_4K_PICS */
-	screenDefaultRes = screenXGA,
+	defaultRes = xga,
 };
 
 class ConfigFile {
@@ -56,7 +56,7 @@ public:
 	void save();
 public:
 	CodeConv::tstring playerName(); void playerName(const CodeConv::tstring&);
-	ScreenMode::ScreenMode scrMode(); void scrMode(ScreenMode::ScreenMode);
+	Screen_Mode::ScreenMode scrMode(); void scrMode(Screen_Mode::ScreenMode);
 	bool blackTile(); void blackTile(bool);
 	unsigned int bgmVolume(); void bgmVolume(unsigned int);
 	unsigned int soundVolume(); void soundVolume(unsigned int);

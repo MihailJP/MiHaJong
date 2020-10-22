@@ -47,33 +47,33 @@ TableSubsceneAgariScreenProto::~TableSubsceneAgariScreenProto() {
 #endif
 }
 
-TableSubsceneAgariScreenProto::AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
+AgariStyle TableSubsceneAgariScreenProto::getAgariStyle() {
 	const GameTable* const gameStat = GameStatus::gameStat();
 	if (gameStat->CurrentPlayer.Agari == gameStat->PlayerID) {
-		return agariMine;
+		return AgariStyle::mine;
 	} else {
 		if (utils::isPaoAgari(gameStat, gameStat->CurrentPlayer.Agari)) {
 			if (utils::isPao(gameStat, gameStat->CurrentPlayer.Agari, gameStat->PlayerID))
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else if (gameStat->CurrentPlayer.Furikomi == gameStat->PlayerID)
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else
-				return agariOthers;
+				return AgariStyle::others;
 		} else {
 			if (gameStat->TsumoAgariFlag)
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else if (gameStat->CurrentPlayer.Furikomi == gameStat->PlayerID)
-				return agariFurikomi;
+				return AgariStyle::furikomi;
 			else
-				return agariOthers;
+				return AgariStyle::others;
 		}
 	}
 }
 ArgbColor TableSubsceneAgariScreenProto::baseColor() {
 	switch (getAgariStyle()) {
-		case agariMine:     return 0xffffdf00;
-		case agariFurikomi: return 0xffff7f7f;
-		case agariOthers:   return 0xffffffff;
+		case AgariStyle::mine:     return 0xffffdf00;
+		case AgariStyle::furikomi: return 0xffff7f7f;
+		case AgariStyle::others:   return 0xffffffff;
 		default:            return 0x00000000;
 	}
 }
@@ -95,23 +95,23 @@ bool TableSubsceneAgariScreenProto::renderYakuName(unsigned yakuNum) {
 		return false;
 	} else {
 		if (bgmFlag) {
-			if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 24 : 2000)) {
+			if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) ? 24 : 2000)) {
 				switch (getAgariStyle()) {
-					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
-					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
-					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
+					case AgariStyle::mine:     sound::util::bgmplay(sound::IDs::musAgariSelf1); break;
+					case AgariStyle::furikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi1); break;
+					case AgariStyle::others:   sound::util::bgmplay(sound::IDs::musAgariOther1); break;
 				}
-			} else if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GuobiaoMJ) ? 64 : 8000)) {
+			} else if (YakuResult::getYakuStat().AgariPoints < (GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ) ? 64 : 8000)) {
 				switch (getAgariStyle()) {
-					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
-					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
-					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther2); break;
+					case AgariStyle::mine:     sound::util::bgmplay(sound::IDs::musAgariSelf2); break;
+					case AgariStyle::furikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi2); break;
+					case AgariStyle::others:   sound::util::bgmplay(sound::IDs::musAgariOther2); break;
 				}
 			} else {
 				switch (getAgariStyle()) {
-					case agariMine:     sound::util::bgmplay(sound::IDs::musAgariSelf3); break;
-					case agariFurikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi3); break;
-					case agariOthers:   sound::util::bgmplay(sound::IDs::musAgariOther3); break;
+					case AgariStyle::mine:     sound::util::bgmplay(sound::IDs::musAgariSelf3); break;
+					case AgariStyle::furikomi: sound::util::bgmplay(sound::IDs::musAgariFurikomi3); break;
+					case AgariStyle::others:   sound::util::bgmplay(sound::IDs::musAgariOther3); break;
 				}
 			}
 			bgmFlag = false;
@@ -191,12 +191,12 @@ TableSubsceneAgariScreenProto::AgariTehai::~AgariTehai() {
 
 void TableSubsceneAgariScreenProto::AgariTehai::Reconstruct(const GameTable* gameStat) {
 	ShowTehai::Reconstruct(gameStat, gameStat->CurrentPlayer.Agari,
-		[this](seatRelative) -> std::tuple<int, int> {
+		[this](SeatRelative) -> std::tuple<int, int> {
 			const double Zeit = myCaller->seconds();
 			const int yOffset = (Zeit >= 1.0) ? 0 : static_cast<int>(pow(1.0 - Zeit, 2) * static_cast<double>(Geometry::BaseSize));
 			return std::make_tuple(BaseX + 28, handPosY - yOffset);
 		},
-		sSelf, [](int){return static_cast<ArgbColor>(0xffffffff);},
+		SeatRelative::self, [](int){return static_cast<ArgbColor>(0xffffffff);},
 		[](const int*, const int*, int){});
 }
 
@@ -235,17 +235,17 @@ std::tuple<std::function<unsigned (unsigned)>, std::function<int (unsigned)>, st
 				default: throw InvalidPlayerCode("プレイヤー番号の指定が正しくありません");
 			}
 		},
-		Withershins, Portrait, Clockwise);
+		TileDirection::withershins, TileDirection::portrait, TileDirection::clockwise);
 }
 void TableSubsceneAgariScreenProto::AgariNaki::Reconstruct(const GameTable* gameStat) {
 	const PlayerID targetPlayer = gameStat->CurrentPlayer.Agari;
 	unsigned posOffset[5] = {0,};
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; ++i) {
 		switch (gameStat->Player[targetPlayer].Meld[i].mstat) {
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 3 + ShowTile::HoriTileWidth;
 			break;
-		case meldQuadConcealed:
+		case MeldStat::quadConcealed:
 			posOffset[i] = posOffset[i - 1] + ShowTile::VertTileWidth * 4;
 			break;
 		default:
@@ -284,9 +284,9 @@ TableSubsceneAgariScreenProto::DoraTiles::~DoraTiles() {
 }
 void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 	const GameTable* const gameStat = GameStatus::gameStat();
-	if (gameStat->chkGameType(GuobiaoMJ)) return;
+	if (gameStat->chkGameType(GameTypeID::guobiaoMJ)) return;
 	const int numberOfTiles = [gameStat]() -> int {
-		if (gameStat->chkGameType(AllSanma))
+		if (gameStat->chkGameType(GameTypeID::allSanma))
 			return 108;
 		else if (rules::chkRule("flower_tiles", "no"))
 			return 136;
@@ -297,7 +297,7 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 	}();
 	const int DoraPosStart = numberOfTiles - tileIdOffset() - 4 - gameStat->ExtraRinshan -
 		[gameStat]() -> int {
-			if (gameStat->chkGameType(AllSanma))
+			if (gameStat->chkGameType(GameTypeID::allSanma))
 				return 0;
 			else if (rules::chkRule("flower_tiles", "no"))
 				return 0;
@@ -313,8 +313,8 @@ void TableSubsceneAgariScreenProto::DoraTiles::Reconstruct() {
 		if (Zeit >= 0.0) {
 			const ArgbColor color = (Zeit >= 0.325) ? 0xffffffff : ((255 - static_cast<int>((0.325 - Zeit) * 700)) << 24 | 0x00ffffff);
 			tileObj->NewTile(tileIndex,
-				(gameStat->DoraPointer <= i) ? gameStat->Deck[i] : Tile(BackSide),
-				xPos() + ShowTile::VertTileWidth * tileIndex, yPos(), Portrait, Obverse, color);
+				(gameStat->DoraPointer <= i) ? gameStat->Deck[i] : Tile(TileCode::backSide),
+				xPos() + ShowTile::VertTileWidth * tileIndex, yPos(), TileDirection::portrait, TileSide::obverse, color);
 		}
 	}
 }
@@ -356,7 +356,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreFuHan() {
 		soundFlag = false;
 	}
 	if (YakuResult::getYakuStat().isYakuman) return;
-	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return; // 中国ルールでは不要な情報なので
+	if (GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ)) return; // 中国ルールでは不要な情報なので
 	constexpr double anmTime = 0.75;
 	CodeConv::tostringstream o;
 	o << std::setw(3) << std::setfill(_T(' ')) << YakuResult::getYakuStat().BasePoints << _T("符") <<
@@ -390,7 +390,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreTxt() {
 	}
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
-	if ((GameStatus::gameStat()->gameType & RichiMJ) && rules::chkRule("limitless", "no")) {
+	if (GameStatus::gameStat()->chkGameType(GameTypeID::richiMJ) && rules::chkRule("limitless", "no")) {
 		const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 		if (Zeit <= 0.0) return;
 		constexpr double anmTime = 0.75;
@@ -437,7 +437,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructScoreRank() {
 	}
 }
 void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
-	if (GameStatus::gameStat()->gameType & GuobiaoMJ) return;
+	if (GameStatus::gameStat()->chkGameType(GameTypeID::guobiaoMJ)) return;
 	if (rules::chkRule("chip", "no")) return;
 	const double Zeit = myCaller->seconds() - (yakuAnimStartSecond + yakuInterval * myCaller->yakuList.size());
 	if (Zeit <= 0.0) return;
@@ -446,7 +446,7 @@ void TableSubsceneAgariScreenProto::ShowScore::ReconstructChipAmount() {
 	CodeConv::tostringstream o;
 	o << _T("チップ") << std::setw(2) << std::setfill(_T(' ')) << YakuResult::getChipVal();
 	if (GameStatus::gameStat()->TsumoAgariFlag) {
-		if (GameStatus::gameStat()->chkGameType(SanmaT))
+		if (GameStatus::gameStat()->chkGameType(GameTypeID::sanmaT))
 			o << _T("ｘ２");
 		else
 			o << _T("ｘ３");

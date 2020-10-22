@@ -27,7 +27,7 @@ ConfigMenuProto::~ConfigMenuProto() {
 }
 
 void ConfigMenuProto::CreateButton(unsigned btnID, int X, int Y, unsigned Width, unsigned Height, const CodeConv::tstring& caption) {
-	myButtonPic->setButton(btnID, ButtonPic::clear,
+	myButtonPic->setButton(btnID, ButtonStat::clear,
 		scaleX(X), scaleY(Y), scaleW(Width), scaleH(Height),
 		0xffffffff, caption, true);
 	setRegion(btnID + btnRegionStart, X, Y, X + Width, Y + Height);
@@ -55,7 +55,7 @@ void ConfigMenuProto::BtnEvent_OK_Down() {
 	if (buttonCursor != -1) {
 		sound::Play(sound::IDs::sndButton);
 		buttonDown = buttonCursor;
-		myButtonPic->setButton(buttonCursor, ButtonPic::sunken);
+		myButtonPic->setButton(buttonCursor, ButtonStat::sunken);
 		redrawItems();
 	}
 }
@@ -67,7 +67,7 @@ void ConfigMenuProto::BtnEvent_Cancel_Down() {
 		buttonCursor = -1;
 	}
 	for (unsigned i = 0; i < numberOfButtons(); i++)
-		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
+		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonStat::raised : ButtonStat::clear);
 	myTimer.skipTo(0); redrawItems();
 }
 
@@ -105,14 +105,14 @@ void ConfigMenuProto::BtnEvent_Button_Prev() {
 	sound::Play(sound::IDs::sndCursor);
 	if ((--buttonCursor) < 0) buttonCursor = numberOfButtons() - 1;
 	for (unsigned i = 0; i < numberOfButtons(); i++)
-		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
+		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonStat::raised : ButtonStat::clear);
 	myTimer.skipTo(0); redrawItems();
 }
 void ConfigMenuProto::BtnEvent_Button_Next() {
 	sound::Play(sound::IDs::sndCursor);
 	if (static_cast<unsigned>(++buttonCursor) >= numberOfButtons()) buttonCursor = 0;
 	for (unsigned i = 0; i < numberOfButtons(); i++)
-		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
+		myButtonPic->setButton(i, (i == buttonCursor) ? ButtonStat::raised : ButtonStat::clear);
 	myTimer.skipTo(0); redrawItems();
 }
 
@@ -203,7 +203,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 				sound::Play(sound::IDs::sndCursor);
 				menuCursor = menuCursor / itemsPerPage() * itemsPerPage() + region;
 				buttonCursor = -1;
-				for (unsigned i = 0; i < numberOfButtons(); i++) myButtonPic->setButton(i, ButtonPic::clear);
+				for (unsigned i = 0; i < numberOfButtons(); i++) myButtonPic->setButton(i, ButtonStat::clear);
 				myTimer.skipTo(0); redrawItems();
 			}
 		}
@@ -212,7 +212,7 @@ void ConfigMenuProto::MouseInput(const XEvent* od, int X, int Y)
 				sound::Play(sound::IDs::sndCursor);
 				buttonCursor = region - btnRegionStart;
 				for (unsigned i = 0; i < numberOfButtons(); i++)
-					myButtonPic->setButton(i, (i == buttonCursor) ? ButtonPic::raised : ButtonPic::clear);
+					myButtonPic->setButton(i, (i == buttonCursor) ? ButtonStat::raised : ButtonStat::clear);
 				myTimer.skipTo(0); redrawItems();
 			}
 		}

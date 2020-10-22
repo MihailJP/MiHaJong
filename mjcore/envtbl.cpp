@@ -11,7 +11,7 @@ EnvTable::EnvTable() {
 		PlayerDat[i].PlayerName = _T("");
 		PlayerDat[i].RemotePlayerFlag = false;
 	}
-	GameMode = Unavailable;
+	GameMode = ClientType::unavailable;
 	WatchModeFlag = false;
 	bgColorR = bgColorG = bgColorB = 0;
 }
@@ -21,7 +21,7 @@ LPCTSTR getName(PlayerID playerID) {
 }
 
 bool isStandAlone() {
-	return EnvTable::Instantiate()->GameMode == EnvTable::Standalone;
+	return EnvTable::Instantiate()->GameMode == ClientType::standalone;
 }
 
 bool isWatchMode() {

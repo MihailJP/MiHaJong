@@ -20,7 +20,6 @@
 #include "../../common/strcode.h"
 #include "../func.h"
 #include "../haifu.h"
-#include "yvalue.h"
 #include "../ruletbl.h"
 
 /* 翻を計算する */
@@ -119,9 +118,9 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 	/* 雀頭加符(役牌のみ２符) */
 	switch (analysis->MianziDat[0].tile) { /* 風牌は条件によって役牌 */
-	case EastWind: case SouthWind: case WestWind: case NorthWind:
+	case TileCode::eastWind: case TileCode::southWind: case TileCode::westWind: case TileCode::northWind:
 		if (analysis->MianziDat[0].tile ==
-			Wind2Tile(static_cast<uint8_t>(gameStat->GameRound / 4))) // 場風牌
+			Wind2Tile(gameStat->prevailingwind())) // 場風牌
 			fu += 2;
 		if (analysis->MianziDat[0].tile ==
 			Wind2Tile(gameStat->playerwind(analysis->player))) // 自風牌
@@ -134,7 +133,7 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 			fu += 2;
 		if ((!RuleData::chkRuleApplied("double_yaku_wind_pair")) && (fu > 22)) fu = 22; // ダブ風雀頭を2符と見なすルールの場合
 		break;
-	case WhiteDragon: case GreenDragon: case RedDragon: /* 三元牌は常に役牌 */
+	case TileCode::whiteDragon: case TileCode::greenDragon: case TileCode::redDragon: /* 三元牌は常に役牌 */
 		fu += 2;
 		break;
 	}
@@ -142,17 +141,17 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	/* 面子加符 */
 	for (int i = 1; i < SizeOfMeldBuffer; i++) {
 		switch (analysis->MianziDat[i].mstat) {
-		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight:
+		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 4 : 2; /* 明刻子 */
 			break;
-		case meldTripletConcealed:
+		case MeldStat::tripletConcealed:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 8 : 4; /* 暗刻子 */
 			break;
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight:
-		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight:
+		case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 16 : 8; /* 明槓子 */
 			break;
-		case meldQuadConcealed:
+		case MeldStat::quadConcealed:
 			fu += isYaojiu(analysis->MianziDat[i].tile) ? 32 : 16; /* 暗槓子 */
 			break;
 		}
@@ -162,39 +161,39 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 
 #endif /* GUOBIAO */
 	/* 聴牌形加符 */
-	analysis->Machi = machiInvalid; // 初期化
+	analysis->Machi = MachiType::invalid; // 初期化
 #ifdef GUOBIAO
 	bool LiangMianFlag; // ダミー
 #endif /* GUOBIAO */
 	const TileCode* tsumoTile = &(gameStat->Player[analysis->player].Tsumohai().tile); // shorthand
-	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = machiTanki; // 単騎待ち
+	if (analysis->MianziDat[0].tile == *tsumoTile) analysis->Machi = MachiType::tanki; // 単騎待ち
 	for (int i = 1; i < SizeOfMeldBuffer; i++) { // 待ちの種類を調べる……
 		switch (analysis->MianziDat[i].mstat) {
-		case meldSequenceConcealed: case meldSequenceExposedLower:
-		case meldSequenceExposedMiddle: case meldSequenceExposedUpper: /* 順子 */
-			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 1)) analysis->Machi = machiKanchan;
+		case MeldStat::sequenceConcealed: case MeldStat::sequenceExposedLower:
+		case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: /* 順子 */
+			if (analysis->MianziDat[i].tile == offsetTileNumber(*tsumoTile, -1)) analysis->Machi = MachiType::kanchan;
 			if (analysis->MianziDat[i].tile == *tsumoTile) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 7) analysis->Machi = machiPenchan; // 辺張待ち
-				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
+				if (getTileNumber(analysis->MianziDat[i].tile) == 7) analysis->Machi = MachiType::penchan; // 辺張待ち
+				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
-			if (analysis->MianziDat[i].tile == ((*tsumoTile) - 2)) {
-				if (analysis->MianziDat[i].tile % TileSuitStep == 1) analysis->Machi = machiPenchan; // 辺張待ち
-				else {analysis->Machi = machiRyanmen; LiangMianFlag = true;} // 両面待ち
+			if (analysis->MianziDat[i].tile == offsetTileNumber(*tsumoTile, -2)) {
+				if (getTileNumber(analysis->MianziDat[i].tile) == 1) analysis->Machi = MachiType::penchan; // 辺張待ち
+				else {analysis->Machi = MachiType::ryanmen; LiangMianFlag = true;} // 両面待ち
 			}
 			break;
 		default: /* それ以外 */
-			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = machiShanpon; // 双ポン待ち
+			if (analysis->MianziDat[i].tile == *tsumoTile) analysis->Machi = MachiType::shanpon; // 双ポン待ち
 			break;
 		}
 	}
 #ifndef GUOBIAO
 	/* 嵌張、辺張、単騎は＋２符「不利な待ちには２点付く」 */
 	switch (analysis->Machi) {
-	case machiKanchan: case machiPenchan: case machiTanki:
+	case MachiType::kanchan: case MachiType::penchan: case MachiType::tanki:
 		fu += 2; break;
 	}
 	/* 双ポン待ちでロンした場合の例外：明刻として扱うための減点 */
-	if ((analysis->Machi == machiShanpon)&&(!gameStat->TsumoAgariFlag))
+	if ((analysis->Machi == MachiType::shanpon)&&(!gameStat->TsumoAgariFlag))
 		fu -= isYaojiu(*tsumoTile) ? 4 : 2;
 
 	/* 平和が成立しうる場合 */
@@ -202,14 +201,14 @@ void yaku::yakuCalculator::CalculatorThread::calcbasepoints
 	if (NoTriplets && LiangMianFlag) {
 		if (gameStat->Player[analysis->player].MenzenFlag) {
 			/* 門前であれば、役として平和が成立する */
-			analysis->Machi = machiRyanmen; // 強制両面扱い
+			analysis->Machi = MachiType::ryanmen; // 強制両面扱い
 			if ((!(gameStat->TsumoAgariFlag) || (RuleData::chkRuleApplied("tsumo_pinfu")))) { // ツモピンありか、出和了の場合
 				analysis->isPinfu = true; fu = 20;
 			} else {
 				fu += 2; // ツモ符
 			}
 		} else {
-			analysis->Machi = machiRyanmen; // 強制両面扱い
+			analysis->Machi = MachiType::ryanmen; // 強制両面扱い
 			if (RuleData::chkRule("exposed_pinfu", "30fu")) {
 				fu = 30; /* 門前でなければ、３０符とする */
 			}
@@ -269,7 +268,7 @@ void yaku::yakuCalculator::countDora
 	int flower = 0; int north = 0;
 	/* ドラを計算する */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
+		if (gameStat->Player[targetPlayer].Hand[i].tile == TileCode::noTile) continue;
 		omote += gameStat->DoraFlag.Omote[gameStat->Player[targetPlayer].Hand[i].tile];
 		if (uradoraEnabled) // 裏ドラ適用
 			ura += gameStat->DoraFlag.Ura[gameStat->Player[targetPlayer].Hand[i].tile];
@@ -278,19 +277,19 @@ void yaku::yakuCalculator::countDora
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
 		switch (k->mstat) {
-		case meldSequenceExposedLower: case meldSequenceExposedMiddle: case meldSequenceExposedUpper: // 順子
-			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[k->tile + 1] +
-				gameStat->DoraFlag.Omote[k->tile + 2];
+		case MeldStat::sequenceExposedLower: case MeldStat::sequenceExposedMiddle: case MeldStat::sequenceExposedUpper: // 順子
+			omote += gameStat->DoraFlag.Omote[k->tile] + gameStat->DoraFlag.Omote[offsetTileNumber(k->tile, 1)] +
+				gameStat->DoraFlag.Omote[offsetTileNumber(k->tile, 2)];
 			if (uradoraEnabled)
-				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[k->tile + 1] +
-				gameStat->DoraFlag.Ura[k->tile + 2];
+				ura += gameStat->DoraFlag.Ura[k->tile] + gameStat->DoraFlag.Ura[offsetTileNumber(k->tile, 1)] +
+				gameStat->DoraFlag.Ura[offsetTileNumber(k->tile, 2)];
 			break;
-		case meldTripletExposedLeft: case meldTripletExposedCenter: case meldTripletExposedRight: // 刻子
+		case MeldStat::tripletExposedLeft: case MeldStat::tripletExposedCenter: case MeldStat::tripletExposedRight: // 刻子
 			omote += gameStat->DoraFlag.Omote[k->tile] * 3;
 			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 3;
 			break;
-		case meldQuadExposedLeft: case meldQuadExposedCenter: case meldQuadExposedRight: // 槓子
-		case meldQuadAddedLeft: case meldQuadAddedCenter: case meldQuadAddedRight: case meldQuadConcealed:
+		case MeldStat::quadExposedLeft: case MeldStat::quadExposedCenter: case MeldStat::quadExposedRight: // 槓子
+		case MeldStat::quadAddedLeft: case MeldStat::quadAddedCenter: case MeldStat::quadAddedRight: case MeldStat::quadConcealed:
 			omote += gameStat->DoraFlag.Omote[k->tile] * 4;
 			if (uradoraEnabled) ura += gameStat->DoraFlag.Ura[k->tile] * 4;
 			break;
@@ -298,19 +297,19 @@ void yaku::yakuCalculator::countDora
 	}
 	/* 赤ドラ・青ドラ */
 	for (int i = 0; i < NumOfTilesInHand; i++) {
-		if (gameStat->Player[targetPlayer].Hand[i].tile == NoTile) continue;
-		else if (gameStat->Player[targetPlayer].Hand[i].tile >= TileNonflowerMax) continue;
+		if (gameStat->Player[targetPlayer].Hand[i].tile == TileCode::noTile) continue;
+		else if (static_cast<int>(gameStat->Player[targetPlayer].Hand[i].tile) >= TileNonflowerMax) continue;
 		switch (gameStat->Player[targetPlayer].Hand[i].red) {
-			case AkaDora: ++red; break;
-			case AoDora: ++blue; break;
+			case DoraCol::akaDora: ++red; break;
+			case DoraCol::aoDora: ++blue; break;
 		}
 	}
 	for (int i = 1; i <= gameStat->Player[targetPlayer].MeldPointer; i++) {
 		auto k = &gameStat->Player[targetPlayer].Meld[i];
-		for (int j = 0; j < (k->mstat >= meldQuadConcealed ? 4 : 3); j++) {
+		for (int j = 0; j < (k->mstat >= MeldStat::quadConcealed ? 4 : 3); j++) {
 			switch (gameStat->Player[targetPlayer].Meld[i].red[j]) {
-				case AkaDora: ++red; break;
-				case AoDora: ++blue; break;
+				case DoraCol::akaDora: ++red; break;
+				case DoraCol::aoDora: ++blue; break;
 			}
 		}
 	}
@@ -337,10 +336,10 @@ void yaku::yakuCalculator::countDora
 	int omote = 0, flower = 0;
 #else /* GUOBIAO */
 	if (RuleData::chkRuleApplied("flower_tiles")) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			north = gameStat->Player[targetPlayer].NorthFlag;
-			omote += north * (gameStat->DoraFlag.Omote[NorthWind] + 1);
-			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[NorthWind];
+			omote += north * (gameStat->DoraFlag.Omote[TileCode::northWind] + 1);
+			if (uradoraEnabled) ura += north * gameStat->DoraFlag.Ura[TileCode::northWind];
 			result->FlowerQuantity = north;
 		} else {
 #endif /* GUOBIAO */
@@ -352,9 +351,9 @@ void yaku::yakuCalculator::countDora
 			if (gameStat->Player[targetPlayer].FlowerFlag.Orchid) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Chrys) ++flower;
 			if (gameStat->Player[targetPlayer].FlowerFlag.Bamboo) ++flower;
-			omote += flower * gameStat->DoraFlag.Omote[Flower];
+			omote += flower * gameStat->DoraFlag.Omote[TileCode::flower];
 #ifndef GUOBIAO
-			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[Flower];
+			if (uradoraEnabled) ura += flower * gameStat->DoraFlag.Ura[TileCode::flower];
 #endif /* GUOBIAO */
 			result->FlowerQuantity = flower;
 #ifndef GUOBIAO
@@ -422,43 +421,43 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #else /* GUOBIAO */
 		if (RuleData::chkRule("limitless", "yakuman_considered_13han")) { /* 青天ルールで役満を13飜扱いとする場合 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan:
+				case yaku::yakuCalculator::HanUnit::han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan:
 					switch (yakuHan[yName].coreHan.getHan()) {
 						case 2: totalHan += 5; break;   case 3: totalHan += 6; break;
 						case 4: totalHan += 8; break;   case 6: totalHan += 11; break;
 						case 8: totalHan += 13; break;  case 16: totalHan += 26; break;
 					}
 					break;
-				case yaku::yakuCalculator::Yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalHan += yakuHan[yName].coreHan.getHan() * 13; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan:
+				case yaku::yakuCalculator::HanUnit::han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan:
 					switch (yakuHan[yName].bonusHan.getHan()) {
 						case 2: totalBonusHan += 5; break;   case 3: totalBonusHan += 6; break;
 						case 4: totalBonusHan += 8; break;   case 6: totalBonusHan += 11; break;
 						case 8: totalBonusHan += 13; break;  case 16: totalBonusHan += 26; break;
 					}
 					break;
-				case yaku::yakuCalculator::Yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalBonusHan += yakuHan[yName].bonusHan.getHan() * 13; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 		} else { /* 通常の翻計算 */
 			switch (yakuHan[yName].coreHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalHan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
-				case yaku::yakuCalculator::Yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
+				case yaku::yakuCalculator::HanUnit::han: totalHan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan: totalSemiMangan += yakuHan[yName].coreHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalSemiMangan += yakuHan[yName].coreHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
 			switch (yakuHan[yName].bonusHan.getUnit()) {
-				case yaku::yakuCalculator::Han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::SemiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
-				case yaku::yakuCalculator::Yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
+				case yaku::yakuCalculator::HanUnit::han: totalBonusHan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::semiMangan: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan(); break;
+				case yaku::yakuCalculator::HanUnit::yakuman: totalBonusSemiMangan += yakuHan[yName].bonusHan.getHan() * 8; break;
 				default:
 					RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が異常です"));
 			}
@@ -472,16 +471,16 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 		{ /* 単位が混在！ */
 			RaiseTolerant(EXCEPTION_MJCORE_INVALID_DATA, _T("単位が混在しています"));
 		}
-		else if ( (((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Han) || (yakuHan[yName].bonusHan.getHan() == 0))) ||
+		else if ( (((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::han) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::HanUnit::han) || (yakuHan[yName].bonusHan.getHan() == 0))) ||
 			RuleData::chkRule("limitless", "yakuman_considered_13han") /* 青天ルールで役満を13飜扱いとする場合は強制的にここで処理 */ )
 		{ /* 普通の役の時 */
 #endif /* GUOBIAO */
 			int hanVal = yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan();
 #ifndef GUOBIAO
-			if (yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) {
+			if (yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::yakuman) {
 				hanVal *= 13;
-			} else if (yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) {
+			} else if (yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::semiMangan) {
 				switch (yakuHan[yName].coreHan.getHan() + yakuHan[yName].bonusHan.getHan()) {
 				case 2: hanVal = 5; break;   case 3: hanVal = 6; break;
 				case 4: hanVal = 8; break;   case 6: hanVal = 11; break;
@@ -519,8 +518,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 #endif
 #ifndef GUOBIAO
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::SemiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::semiMangan) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::HanUnit::semiMangan) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 満貫 */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
@@ -542,8 +541,8 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 			_tcsncat(result->yakumanValList, hstr, yaku::YAKUSTAT::nameBufSize - _tcslen(result->yakumanValList));
 #endif
 		}
-		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
-			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::Yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
+		else if ( ((yakuHan[yName].coreHan.getUnit() == yaku::yakuCalculator::HanUnit::yakuman) || (yakuHan[yName].coreHan.getHan() == 0)) &&
+			((yakuHan[yName].bonusHan.getUnit() == yaku::yakuCalculator::HanUnit::yakuman) || (yakuHan[yName].bonusHan.getHan() == 0)))
 		{ /* 役満 */
 #if defined(_MSC_VER)
 			_tcscat_s(result->yakumanNameList, yaku::YAKUSTAT::nameBufSize, yName.c_str());
@@ -572,7 +571,7 @@ void yaku::yakuCalculator::CalculatorThread::hanSummation(
 /* 計算ルーチン */
 void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const ParseMode* pMode, const GameTable* gameStat, MentsuAnalysis* analysis) {
 	/* 面子解析処理 */
-	if (analysis->shanten[shantenRegular] == -1) {
+	if (analysis->shanten[ShantenType::regular] == -1) {
 		int NumOfMelds = 0;
 		mentsuParser::makementsu(gameStat, analysis->player, *pMode, &NumOfMelds, analysis->MianziDat);
 		if (NumOfMelds < SizeOfMeldBuffer) { // 条件を満たしてないなら抜けます
@@ -590,19 +589,19 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 		analysis->KaKangziCount = countingFacility::countKaKangz(analysis->MianziDat, &analysis->TotalKaKangzi);
 	} else {
 #ifndef GUOBIAO
-		if (analysis->shanten[shantenPairs] == -1) { // 七対子
+		if (analysis->shanten[ShantenType::pairs] == -1) { // 七対子
 			if (RuleData::chkRule("seven_pairs", "1han_50fu")) analysis->BasePoint = 50; // 1翻50符
 			else analysis->BasePoint = 25; // 2翻25符
 		}
-		else if (analysis->shanten[shantenOrphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
-		else if ((analysis->shanten[shantenQuanbukao] == -1)&&(analysis->shanten[shantenStellar] > -1)) {
+		else if (analysis->shanten[ShantenType::orphans] == -1) analysis->BasePoint = 30; // 国士は役満なのでこれは青天ルール用
+		else if ((analysis->shanten[ShantenType::quanbukao] == -1)&&(analysis->shanten[ShantenType::stellar] > -1)) {
 			if (RuleData::chkRule("quanbukao", "3han_30fu"))
 				analysis->BasePoint = 30;
 			else if (RuleData::chkRule("quanbukao", "3han_40fu") || RuleData::chkRule("quanbukao", "4han_40fu"))
 				analysis->BasePoint = 40;
 		} else
 #endif /* GUOBIAO */
-		if (analysis->shanten[shantenZuhelong] == -1) { // 組合龍
+		if (analysis->shanten[ShantenType::zuhelong] == -1) { // 組合龍
 			mentsuParser::makementsu(gameStat, analysis->player, *pMode, nullptr, analysis->MianziDat);
 			calcbasepoints(gameStat, analysis); // 符を計算する
 		}
@@ -674,12 +673,12 @@ void yaku::yakuCalculator::CalculatorThread::calculator(YAKUSTAT* result, const 
 
 /* 引数の準備とか */
 void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-	Shanten* const shanten, YAKUSTAT* const yakuInfo)
+	const ShantenData shanten, YAKUSTAT* const yakuInfo)
 {
 	// 変数を用意
 	MentsuAnalysis analysis;
 	memset(&analysis, 0, sizeof(MentsuAnalysis));
-	memcpy(analysis.shanten, shanten, sizeof(Shanten[SHANTEN_PAGES]));
+	analysis.shanten = shanten;
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
@@ -690,7 +689,7 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
 	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	YAKUSTAT result;
-	constexpr ParseMode pMode = {NoTile, Ke_Shun};
+	constexpr ParseMode pMode = {TileCode::noTile, ParseOrder::Ke_Shun};
 	// 計算を実行
 	std::thread myThread(CalculatorThread::calculator, &result, &pMode, gameStat, &analysis);
 	myThread.join(); // 同期
@@ -698,12 +697,12 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	memcpy(yakuInfo, &result, sizeof(YAKUSTAT));
 }
 void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerID targetPlayer,
-	Shanten* const shanten, YAKUSTAT* const yakuInfo)
+	const ShantenData shanten, YAKUSTAT* const yakuInfo)
 {
 	// 変数を用意
 	MentsuAnalysis analysis;
 	memset(&analysis, 0, sizeof(MentsuAnalysis));
-	memcpy(analysis.shanten, shanten, sizeof(Shanten[SHANTEN_PAGES]));
+	analysis.shanten = shanten;
 	analysis.player = targetPlayer;
 	analysis.TileCount = countTilesInHand(gameStat, targetPlayer);
 	analysis.SeenTiles = countseentiles(gameStat);
@@ -722,7 +721,7 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 		memcpy(&calcprm[i].analysis, &analysis, sizeof(MentsuAnalysis));
 	}
 	// 計算を実行
-	for (int i = 4; i < 160; i++) { // 0〜3はNoTileなのでやらなくていい
+	for (int i = 4; i < 160; i++) { // 0〜3はTileCode::noTileなのでやらなくていい
 		myThreads.push_back(std::thread(CalculatorThread::calculator, &calcprm[i].result, &calcprm[i].pMode, gameStat, &calcprm[i].analysis));
 	}
 	for (auto& thread : myThreads)
@@ -745,11 +744,11 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 	// 初期化
 	YAKUSTAT yakuInfo;
 	// シャンテン数をチェック
-	Shanten shanten[SHANTEN_PAGES];
+	ShantenData shanten;
 	for (int i = 0; i < SHANTEN_PAGES; i++)
 		shanten[i] = ShantenAnalyzer::calcShanten(gameStat, targetPlayer, static_cast<ShantenType>(i));
 	// 和了ってるか判定(和了ってなかった場合十三不塔か判定する)
-	if (shanten[shantenAll] > -1) {
+	if (shanten[ShantenType::all] > -1) {
 #ifndef GUOBIAO
 		/* 十三不塔 */
 		if (gameStat->Player[targetPlayer].FirstDrawFlag) { // 鳴きがなくて一巡目の時だけ判定する
@@ -820,7 +819,7 @@ yaku::YAKUSTAT yaku::yakuCalculator::countyaku(const GameTable* const gameStat, 
 		return yakuInfo;
 	}
 	// 和了っているなら
-	if (shanten[shantenRegular] == -1) // 一般形の和了
+	if (shanten[ShantenType::regular] == -1) // 一般形の和了
 		analysisLoop(gameStat, targetPlayer, shanten, &yakuInfo);
 	else // 七対子、国士無双、その他特殊な和了
 		analysisNonLoop(gameStat, targetPlayer, shanten, &yakuInfo);
@@ -863,3 +862,79 @@ bool yaku::yakuCalculator::checkShibari(const GameTable* const gameStat, const Y
 	else return false; // 縛りを満たしていない場合
 #endif /* GUOBIAO */
 }
+
+#ifdef GUOBIAO
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _fen(unsigned long long fen) {
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(fen));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _fenF(unsigned long long fen) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(fen)));
+}
+#else /* GUOBIAO */
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _han(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han));
+}
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _mangan(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan);
+}
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _mangan(long double han) {
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan);
+}
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _yakuman(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman);
+}
+yaku::yakuCalculator::Yaku::YAKU_HAN::HAN operator"" _yakuman(long double han) {
+	return yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman);
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _hanF(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::KuisagariHan operator"" _hanK(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::KuisagariHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanM(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _hanD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _hanMD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han)));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _manganF(long double han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _manganM(long double han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han * 2), yaku::yakuCalculator::HanUnit::semiMangan));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanF(long double han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanM(long double han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::FixedHan operator"" _yakumanD(long double han) {
+	return yaku::yakuCalculator::Yaku::FixedHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(unsigned long long han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+yaku::yakuCalculator::Yaku::MenzenHan operator"" _yakumanMD(long double han) {
+	return yaku::yakuCalculator::Yaku::MenzenHan(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(), yaku::yakuCalculator::Yaku::YAKU_HAN::HAN(static_cast<int8_t>(han), yaku::yakuCalculator::HanUnit::yakuman));
+}
+#endif /* GUOBIAO */

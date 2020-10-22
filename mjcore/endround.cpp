@@ -20,10 +20,10 @@
 namespace { // 内部処理に使う関数
 	bool all_player(const GameTable* gameStat, std::function<bool (const PlayerTable*)> f) {
 		bool flag = true;
-		if (gameStat->chkGameType(Sanma4)) {
+		if (gameStat->chkGameType(GameTypeID::sanma4)) {
 			for (PlayerID i = 0; i < Players; ++i)
-				flag = flag && ((gameStat->playerwind(i) == sNorth) || f(&(gameStat->Player[i])));
-		} else if (gameStat->chkGameType(SanmaT)) {
+				flag = flag && ((gameStat->playerwind(i) == SeatAbsolute::north) || f(&(gameStat->Player[i])));
+		} else if (gameStat->chkGameType(GameTypeID::sanmaT)) {
 			for (PlayerID i = 0; i < 3; ++i)
 				flag = flag && f(&(gameStat->Player[i]));
 		} else {
@@ -35,17 +35,17 @@ namespace { // 内部処理に使う関数
 	bool chksifeng(const GameTable* gameStat) {
 		bool flag = false;
 #ifndef GUOBIAO
-		std::array<TileCode, 4> winds = {EastWind, SouthWind, WestWind, NorthWind,};
+		std::array<TileCode, 4> winds = {TileCode::eastWind, TileCode::southWind, TileCode::westWind, TileCode::northWind,};
 		for (const auto& k : winds) {
 			if ((RuleData::chkRule("four_wind_ryuukyoku", "same_dealer_west") ||
 				RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")) &&
-				(k != WestWind))
+				(k != TileCode::westWind))
 				continue; // 西以外は無視するルールの場合
 			bool tmpflag = true;
-			if (gameStat->chkGameType(Sanma4)) {
+			if (gameStat->chkGameType(GameTypeID::sanma4)) {
 				for (PlayerID i = 0; i < Players; ++i)
-					tmpflag = tmpflag && ((gameStat->playerwind(i) == sNorth) || (gameStat->Player[i].Discard[1].tcode.tile == k));
-			} else if (gameStat->chkGameType(SanmaT)) {
+					tmpflag = tmpflag && ((gameStat->playerwind(i) == SeatAbsolute::north) || (gameStat->Player[i].Discard[1].tcode.tile == k));
+			} else if (gameStat->chkGameType(GameTypeID::sanmaT)) {
 				for (PlayerID i = 0; i < 3; ++i)
 					tmpflag = tmpflag && (gameStat->Player[i].Discard[1].tcode.tile == k);
 			} else {
@@ -78,21 +78,21 @@ namespace { // 内部処理に使う関数
 					/* 和了り放棄とする設定 */
 					logKuikae(gameStat, false);
 					for (unsigned i = 0; i < 2; ++i) {
-						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Kuikae);
-						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
-						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
-						mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
+						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::kuikae);
+						mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
+						mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::agariHouki);
+						mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 					}
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
-					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::none);
+					mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
 					mihajong_graphic::GameStatus::updateGameStat(gameStat);
 					/* 和了り放棄は以降強制ツモ切り、強制不聴扱いとなります */
 					gameStat->statOfActive().AgariHouki = true;
 				} else if (RuleData::chkRule("kuikae", "chombo") || RuleData::chkRule("kuikae", "chombo_if_in_kind")) {
 					/* 直ちに錯和とする設定 */
 					logKuikae(gameStat, true);
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Chonbo);
-					mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::chonbo);
+					mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 					/* 局を打ち切り、満貫罰符の支払いに進む */
 					return true;
 				}
@@ -117,15 +117,15 @@ namespace { // 内部処理に使う関数
 			sound::Play(sound::IDs::sndCuohu);
 			for (unsigned i = 0; i < 2; ++i) {
 				if (tmptilecnt > (NumOfTilesInHand - 1))
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Tahai);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::tahai);
 				else
-					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::Shouhai);
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
-				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::AgariHouki);
-				mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
+					mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::shouhai);
+				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
+				mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::agariHouki);
+				mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade); mihajong_graphic::ui::WaitUIWithTimeout(1500);
 			}
-			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::None);
-			mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneNone);
+			mihajong_graphic::calltext::setCall(gameStat->CurrentPlayer.Active, mihajong_graphic::calltext::CallType::none);
+			mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::none);
 			mihajong_graphic::GameStatus::updateGameStat(gameStat);
 			gameStat->statOfActive().AgariHouki = true;
 		}
@@ -138,32 +138,32 @@ EndType endround::checkroundabort(GameTable* gameStat) { // 局終了条件の�
 	/* 四開槓なら流す */
 	if (RuleData::chkRuleApplied("four_kong_ryuukyoku") && (gameStat->KangNum == 4) &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->NumberOfQuads < 4;})))
-		return Suukaikan;
+		return EndType::suukaikan;
 	// 四人立直・三人立直の判定
 	if (RuleData::chkRuleApplied("four_riichi_ryuukyoku") &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->RichiFlag.RichiFlag;})))
-		return SuuchaRiichi;
+		return EndType::suuchaRiichi;
 	// 四風連打・三風連打の判定
 	if (RuleData::chkRuleApplied("four_wind_ryuukyoku") &&
 		(all_player(gameStat, [](const PlayerTable* plDat) {return plDat->DiscardPointer == 1;})) &&
 		(chksifeng(gameStat)))
-		return SuufonRenda;
+		return EndType::suufonRenda;
 #endif /* GUOBIAO */
 
 	for (PlayerID i = 0; i < Players; ++i) gameStat->Player[i].Tsumohai() = Tile(); // バグ防止のため
 #ifndef GUOBIAO
 	if (chkKuikae(gameStat)) { // 喰い替えの場合の処理
 		gameStat->AgariSpecialStat = agariKuikae;
-		return Chonbo;
+		return EndType::chonbo;
 	}
 #endif /* GUOBIAO */
 	/* 多牌や少牌をしていないかのチェック */
 	chkTahai(gameStat);
 	/* 荒牌の場合ここで終了する(河底牌は吃ポンできないがロンはできる) */
 	if (gameStat->TilePointer == (gameStat->RinshanPointer - (gameStat->DeadTiles - 1)))
-		return Ryuukyoku;
+		return EndType::ryuukyoku;
 	/* 何事もなかった場合 */
-	return Continuing;
+	return EndType::continuing;
 }
 
 // -------------------------------------------------------------------------
@@ -172,12 +172,12 @@ namespace {
 	std::array<bool, Players> chkNagashiMangan(const GameTable* gameStat, EndType& RoundEndType) { /* 流し満貫の判定 */
 		std::array<bool, Players> NagashiManganFlag = {false,};
 #ifndef GUOBIAO
-		if (RoundEndType == Ryuukyoku) {
+		if (RoundEndType == EndType::ryuukyoku) {
 			for (int i = 0; i < ACTUAL_PLAYERS; ++i) {
-				if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i) == sNorth))
+				if (gameStat->chkGameType(GameTypeID::sanma4) && (gameStat->playerwind(i) == SeatAbsolute::north))
 					continue; // 四人三麻の場合北家は無視
 				if (RuleData::chkRuleApplied("nagashi_mangan") && isNagashiMangan(gameStat, i)) {
-					NagashiManganFlag[i] = true; RoundEndType = NagashiMangan;
+					NagashiManganFlag[i] = true; RoundEndType = EndType::nagashiMangan;
 				}
 			}
 		}
@@ -185,7 +185,7 @@ namespace {
 		return NagashiManganFlag;
 	}
 
-	void ryuukyokuScreen(unsigned soundNum, CodeConv::tstring* ResultDesc, unsigned subsceneCode, unsigned waittime = 3000, unsigned bgmNum = sound::IDs::musRyuukyoku) {
+	void ryuukyokuScreen(unsigned soundNum, CodeConv::tstring* ResultDesc, mihajong_graphic::TableSubsceneID subsceneCode, unsigned waittime = 3000, unsigned bgmNum = sound::IDs::musRyuukyoku) {
 		using namespace mihajong_graphic;
 		using namespace CodeConv;
 		if (ResultDesc) {
@@ -194,24 +194,24 @@ namespace {
 			mihajong_graphic::ui::WaitUIWithTimeout(3000);
 		}
 		for (PlayerID i = 0; i < Players; ++i)
-			calltext::setCall(i, calltext::None);
+			calltext::setCall(i, calltext::CallType::none);
 		sound::Play(sound::IDs::sndPingju);
 		sound::util::bgmplay(bgmNum);
-		Subscene(tblSubsceneRyuukyoku);
+		Subscene(TableSubsceneID::ryuukyoku);
 		mihajong_graphic::ui::WaitUIWithTimeout(waittime);
 	}
 
 	unsigned checkTenpai(GameTable* gameStat, CodeConv::tstring& ResultDesc, unsigned OrigTurn) {
 		unsigned TenpaiCnt = 0;
 		for (PlayerID i = 0; i < Players; ++i) {
-			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i, OrigTurn) == sNorth))
+			if (gameStat->chkGameType(GameTypeID::sanma4) && (gameStat->playerwind(i, OrigTurn) == SeatAbsolute::north))
 				continue; // 四人三麻の北家は無視
 			if (isTenpai(gameStat, i)) { // 聴牌の時
-				++TenpaiCnt; gameStat->Player[i].HandStat = handExposed;
+				++TenpaiCnt; gameStat->Player[i].HandStat = HandStatCode::exposed;
 			} else if (gameStat->Player[i].RichiFlag.RichiFlag) { // 錯和(不聴)リーチの時
-				gameStat->Player[i].HandStat = handExposed;
+				gameStat->Player[i].HandStat = HandStatCode::exposed;
 			} else { // 不聴の時は伏せる
-				gameStat->Player[i].HandStat = handHidden;
+				gameStat->Player[i].HandStat = HandStatCode::hidden;
 			}
 		}
 		CodeConv::tstring TenpaiCountTxt;
@@ -224,7 +224,7 @@ namespace {
 		}
 		ResultDesc = _T("荒牌流局、") + TenpaiCountTxt;
 		mihajong_graphic::GameStatus::updateGameStat(gameStat);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneChkTenpai);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::chkTenpai);
 		mihajong_graphic::ui::WaitUIWithTimeout(5000);
 		return TenpaiCnt;
 	}
@@ -234,9 +234,9 @@ namespace {
 		using namespace endround::transfer;
 		resetDelta();
 		for (PlayerID i = 0; i < ACTUAL_PLAYERS; ++i) {
-			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(i, OrigTurn) == sNorth))
+			if (gameStat->chkGameType(GameTypeID::sanma4) && (gameStat->playerwind(i, OrigTurn) == SeatAbsolute::north))
 				continue; // 四人三麻の北家は無視
-			if (gameStat->chkGameType(AllSanma)) { // 三麻の場合
+			if (gameStat->chkGameType(GameTypeID::allSanma)) { // 三麻の場合
 				if ((TenpaiCnt > 0) && (TenpaiCnt < 3)) {
 					if (isTenpai(gameStat, i))
 						addDelta(i, 3000 / TenpaiCnt);
@@ -251,19 +251,19 @@ namespace {
 			}
 		}
 		if ((TenpaiCnt > 0u) && (TenpaiCnt < static_cast<unsigned>(ACTUAL_PLAYERS)))
-			transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNotenBappu, 2500);
+			transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValNotenBappu, 2500);
 	}
 
 	void showRenchanFlag(GameTable* gameStat, bool RenchanFlag) {
 		using namespace mihajong_graphic::calltext;
 		for (PlayerID cnt = 0; cnt < Players; ++cnt)
-			setCall(cnt, None);
+			setCall(cnt, CallType::none);
 		if (RenchanFlag)
-			setCall(gameStat->GameRound % Players, Renchan);
+			setCall(gameStat->GameRound % Players, CallType::renchan);
 		else
-			setCall(gameStat->GameRound % Players, Oyanagare);
+			setCall(gameStat->GameRound % Players, CallType::oyanagare);
 		sound::Play(sound::IDs::sndPage);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCallFade);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::callFade);
 		return;
 	}
 #endif /* GUOBIAO */
@@ -295,16 +295,16 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/************/
 	/* 和了処理 */
 	/************/
-	if ((RoundEndType == Agari) || (RoundEndType == Chonbo))
+	if ((RoundEndType == EndType::agari) || (RoundEndType == EndType::chonbo))
 		agari::agariproc(RoundEndType, gameStat, tmpUraFlag, tmpAliceFlag, ResultDesc);
 	bool RenchanFlag = false;
 	switch (RoundEndType) {
 	/**************/
 	/* 荒牌流局時 */
 	/**************/
-	case Ryuukyoku:
+	case EndType::ryuukyoku:
 		ResultDesc = _T("荒牌流局");
-		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
+		ryuukyokuScreen(0u, nullptr, mihajong_graphic::TableSubsceneID::none, 1500u);
 #ifndef GUOBIAO
 		transferNotenBappu(gameStat, OrigTurn,
 			checkTenpai(gameStat, ResultDesc, OrigTurn));
@@ -349,12 +349,12 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 和了成立時 */
 	/**************/
-	case Agari: {
+	case EndType::agari: {
 #ifdef GUOBIAO
 		constexpr bool RenchanFlag = false;
 #else /* GUOBIAO */
 		const bool RenchanFlag =
-			(gameStat->playerwind(gameStat->CurrentPlayer.Agari) == sEast) &&
+			(gameStat->playerwind(gameStat->CurrentPlayer.Agari) == SeatAbsolute::east) &&
 			(!RuleData::chkRule("round_continuation", "renchan_never"));
 #endif /* GUOBIAO */
 #ifndef GUOBIAO
@@ -376,24 +376,24 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 錯和発生時 */
 	/**************/
-	case Chonbo:
+	case EndType::chonbo:
 		gameStat->AgariChain = 0; gameStat->LastAgariPlayer = -1;
 		break;
 #ifndef GUOBIAO
 	/**************/
 	/* 九種流局時 */
 	/**************/
-	case KyuushuKyuuhai:
-		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sEast ) % Players))
+	case EndType::kyuushuKyuuhai:
+		if      (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + static_cast<int>(SeatAbsolute::east )) % Players))
 			ResultDesc = _T("東家の九種九牌");
-		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sSouth) % Players))
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + static_cast<int>(SeatAbsolute::south)) % Players))
 			ResultDesc = _T("南家の九種九牌");
-		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sWest ) % Players))
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + static_cast<int>(SeatAbsolute::west )) % Players))
 			ResultDesc = _T("西家の九種九牌");
-		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + sNorth) % Players))
+		else if (gameStat->CurrentPlayer.Active == ((gameStat->GameRound + static_cast<int>(SeatAbsolute::north)) % Players))
 			ResultDesc = _T("北家の九種九牌");
 		else ResultDesc = _T("九種九牌"); // ←決して実行されないはず
-		ryuukyokuScreen(0u, nullptr, 0u, 1500u);
+		ryuukyokuScreen(0u, nullptr, mihajong_graphic::TableSubsceneID::none, 1500u);
 
 		if (RuleData::chkRule("nine_terminals", "next_dealer") == 0)
 			RenchanFlag = ((!RuleData::chkRule("nine_terminals", "renchan_if_dealer_kyuushu")) || (gameStat->CurrentPlayer.Active == (gameStat->GameRound % Players)));
@@ -404,23 +404,24 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 四槓流局時 */
 	/**************/
-	case Suukaikan:
+	case EndType::suukaikan:
 		ResultDesc = _T("四開槓");
-		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
+		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::TableSubsceneID::sikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("four_kong_ryuukyoku", "next_dealer"));
 		break;
 	/**************/
 	/* 三家和の時 */
 	/**************/
-	case TripleRon:
+	case EndType::tripleRon:
 		mihajong_graphic::ui::WaitUIWithTimeout(1300);
-		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("二家和") : _T("三家和");
-		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::tblSubsceneTripleRon);
+		ResultDesc = gameStat->chkGameType(GameTypeID::allSanma) ? _T("二家和") : _T("三家和");
+		ryuukyokuScreen(sound::IDs::voxSanjiahu, &ResultDesc, mihajong_graphic::TableSubsceneID::tripleRon);
 
 		if (RuleData::chkRule("triple_mahjong", "renchan_if_nondealer_furikomi"))
 			RenchanFlag = (gameStat->CurrentPlayer.Furikomi != (gameStat->GameRound % Players));
 		else if (RuleData::chkRule("triple_mahjong", "renchan_if_north_furikomi") || RuleData::chkRule("triple_mahjong", "renchan_if_west_furikomi"))
-			RenchanFlag = (gameStat->CurrentPlayer.Furikomi == ((gameStat->GameRound + (gameStat->chkGameType(AllSanma) ? sWest : sNorth)) % Players));
+			RenchanFlag = (gameStat->CurrentPlayer.Furikomi ==
+				((gameStat->GameRound + static_cast<int>((gameStat->chkGameType(GameTypeID::allSanma) ? SeatAbsolute::west : SeatAbsolute::north))) % Players));
 		else if (RuleData::chkRule("triple_mahjong", "same_dealer"))
 			RenchanFlag = true;
 		else if (RuleData::chkRule("triple_mahjong", "next_dealer"))
@@ -430,20 +431,20 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 四風流局時 */
 	/**************/
-	case SuufonRenda:
-		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("三風連打") : _T("四風連打");
-		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneSifeng);
+	case EndType::suufonRenda:
+		ResultDesc = gameStat->chkGameType(GameTypeID::allSanma) ? _T("三風連打") : _T("四風連打");
+		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::TableSubsceneID::sifeng);
 		ryuukyokuProc(gameStat, !(RuleData::chkRule("four_wind_ryuukyoku", "next_dealer") || RuleData::chkRule("four_wind_ryuukyoku", "next_dealer_west")));
 		break;
 	/**************/
 	/* 四人立直時 */
 	/**************/
-	case SuuchaRiichi:
-		ResultDesc = gameStat->chkGameType(AllSanma) ? _T("三家立直") : _T("四家立直");
-		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::tblSubsceneFourRiichi, 1500u);
+	case EndType::suuchaRiichi:
+		ResultDesc = gameStat->chkGameType(GameTypeID::allSanma) ? _T("三家立直") : _T("四家立直");
+		ryuukyokuScreen(sound::IDs::voxSifeng, &ResultDesc, mihajong_graphic::TableSubsceneID::fourRiichi, 1500u);
 		checkTenpai(gameStat, ResultDesc, OrigTurn);
 		for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
-			if (gameStat->chkGameType(Sanma4) && (gameStat->playerwind(cnt) == sNorth))
+			if (gameStat->chkGameType(GameTypeID::sanma4) && (gameStat->playerwind(cnt) == SeatAbsolute::north))
 				continue;
 			// 錯和立直（不聴立直）の者がいた場合
 			if (!isTenpai(gameStat, cnt)) {
@@ -456,25 +457,25 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 	/**************/
 	/* 流し満貫時 */
 	/**************/
-	case NagashiMangan:
+	case EndType::nagashiMangan:
 	{
 		const bool agariBgmSet = NagashiManganFlag[gameStat->PlayerID] || EnvTable::Instantiate()->WatchModeFlag; // 自分の流し満貫ならtrue
 		const unsigned bgmNum =
 			RuleData::chkRule("nagashi_mangan", "yakuman") ? (agariBgmSet ? sound::IDs::musAgariSelf3 : sound::IDs::musAgariFurikomi3)
 			: (agariBgmSet ? sound::IDs::musAgariSelf2 : sound::IDs::musAgariFurikomi2);
-		ryuukyokuScreen(0u, nullptr, 0u, 1500u, bgmNum);
+		ryuukyokuScreen(0u, nullptr, mihajong_graphic::TableSubsceneID::none, 1500u, bgmNum);
 		transfer::resetDelta();
 		{
 			CodeConv::tstring ResultDesc(_T(""));
 			for (PlayerID cnt = 0; cnt < ACTUAL_PLAYERS; ++cnt) {
 				if (isNagashiMangan(gameStat, cnt)) {
-					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::NagashiMangan);
+					mihajong_graphic::calltext::setCall(cnt, mihajong_graphic::calltext::CallType::nagashiMangan);
 					if (!ResultDesc.empty()) ResultDesc += _T("、");
 					switch (gameStat->playerwind(cnt)) {
-						case sEast:  ResultDesc += _T("東家"); break;
-						case sSouth: ResultDesc += _T("南家"); break;
-						case sWest:  ResultDesc += _T("西家"); break;
-						case sNorth: ResultDesc += _T("北家"); break;
+						case SeatAbsolute::east:  ResultDesc += _T("東家"); break;
+						case SeatAbsolute::south: ResultDesc += _T("南家"); break;
+						case SeatAbsolute::west:  ResultDesc += _T("西家"); break;
+						case SeatAbsolute::north: ResultDesc += _T("北家"); break;
 					}
 					LargeNum AgariPointRaw = 0;
 					if      (RuleData::chkRule("nagashi_mangan", "mangan"))  AgariPointRaw = 2000;
@@ -488,24 +489,24 @@ void endround::endround(GameTable* gameStat, EndType roundEndType, unsigned Orig
 			ResultDesc += _T("の流し満貫");
 		}
 		sound::Play(sound::IDs::sndPage);
-		mihajong_graphic::Subscene(mihajong_graphic::tblSubsceneCall);
+		mihajong_graphic::Subscene(mihajong_graphic::TableSubsceneID::call);
 		mihajong_graphic::ui::WaitUIWithTimeout(5000);
-		transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValNagashiMangan, 1500);
+		transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValNagashiMangan, 1500);
 		ryuukyokuProc(gameStat, true);
 	}
 		break;
 	/**************/
 	/* 四槓流局時 */
 	/**************/
-	case Uukaikan:
+	case EndType::uukaikan:
 		ResultDesc = _T("四開槓(５回目の槓での流局)");
-		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::tblSubsceneSikang);
+		ryuukyokuScreen(sound::IDs::voxSikang, &ResultDesc, mihajong_graphic::TableSubsceneID::sikang);
 		ryuukyokuProc(gameStat, !RuleData::chkRule("fifth_kong", "next_dealer"));
 		break;
 #endif /* GUOBIAO */
 	}
 #ifdef GUOBIAO
-	if (RoundEndType != Chonbo)
+	if (RoundEndType != EndType::chonbo)
 #endif /* GUOBIAO */
 	haifu::haifuwritebuffer(gameStat, OrigTurn, OrigHonba, tmpUraFlag, tmpAliceFlag, ResultDesc.c_str(), RoundEndType);
 	return;
@@ -525,7 +526,7 @@ void endround::transferChonboPenalty(GameTable* gameStat, PlayerID targetPlayer)
 	/* なぜわざわざ一旦プラスで求めて符号を反転するという回りくどいことをしているのかというと
 	   点パネの計算時に天井函数(数値として大きい方に丸める)的な処理を行っているため、
 	   引数をマイナスで与えると(特に三麻で丸取り設定にしてるときとか)チョンボ料が減る虞があるからです */
-	transfer::transferPoints(gameStat, mihajong_graphic::tblSubsceneCallValChonboBappu, 1500);
+	transfer::transferPoints(gameStat, mihajong_graphic::TableSubsceneID::callValChonboBappu, 1500);
 	return;
 }
 
@@ -557,17 +558,17 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 #ifndef GUOBIAO
 	// ハコ割れ終了
 	if (RuleData::chkRuleApplied("buttobi_border"))
-		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (gameStat->chkGameType(GameTypeID::sanmaT) ? 3 : 4); ++i)
 			if (isDobon(gameStat, i)) return true;
 	// 天辺終了
 	if (RuleData::chkRuleApplied("teppen"))
-		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (gameStat->chkGameType(GameTypeID::sanmaT) ? 3 : 4); ++i)
 			if (isTeppen(gameStat, i)) return true;
 	// 和了り止め
 	if (RuleData::chkRuleApplied("agariyame")) {
 		if (((gameStat->GameRound + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
 			((OrigTurn + gameStat->LoopRound * roundLoopRate()) == gameStat->GameLength) &&
-			((RoundEndType == Agari) || (RuleData::chkRule("agariyame", "yes_also_ready")))) {
+			((RoundEndType == EndType::agari) || (RuleData::chkRule("agariyame", "yes_also_ready")))) {
 				PlayerRankList Rank = calcRank(gameStat);
 				if ((Rank[gameStat->GameRound % static_cast<int>(Players)] == 1) &&
 					(gameStat->Player[gameStat->GameRound % static_cast<int>(Players)].PlayerScore >= BasePoint()))
@@ -575,7 +576,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 		}
 	}
 	// 三麻の場合
-	if (gameStat->chkGameType(SanmaT) &&
+	if (gameStat->chkGameType(GameTypeID::sanmaT) &&
 		((gameStat->GameRound % Players) == 3))
 		++(gameStat->GameRound);
 #endif /* GUOBIAO */
@@ -611,7 +612,7 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 #ifdef GUOBIAO
 		return true;
 #else /* GUOBIAO */
-		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (gameStat->chkGameType(GameTypeID::sanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].PlayerScore >= BasePoint())
 				return true;
 		// 延長戦なし設定
@@ -647,10 +648,10 @@ bool endround::nextRound(GameTable* gameStat, EndType RoundEndType, unsigned int
 	// 焼き鳥復活ルールの場合
 	if (RuleData::chkRuleApplied("yakitori") && RuleData::chkRuleApplied("yakitori_again")) {
 		bool flag = true;
-		for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
+		for (PlayerID i = 0; i < (gameStat->chkGameType(GameTypeID::sanmaT) ? 3 : 4); ++i)
 			if (gameStat->Player[i].YakitoriFlag) flag = false;
 		if (flag)
-			for (PlayerID i = 0; i < (gameStat->chkGameType(SanmaT) ? 3 : 4); ++i)
+			for (PlayerID i = 0; i < (gameStat->chkGameType(GameTypeID::sanmaT) ? 3 : 4); ++i)
 				gameStat->Player[i].YakitoriFlag = true;
 	}
 #endif /* GUOBIAO */
@@ -726,7 +727,7 @@ void endround::transfer::doubleDelta() {
 	for (PlayerID i = 0; i < Players; ++i)
 		delta[i] *= 2;
 }
-void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, unsigned wait) {
+void endround::transfer::transferPoints(GameTable* gameStat, mihajong_graphic::TableSubsceneID subscene, unsigned wait) {
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);
 	sound::Play(sound::IDs::sndPage);
@@ -735,7 +736,7 @@ void endround::transfer::transferPoints(GameTable* gameStat, unsigned subscene, 
 		gameStat->Player[i].PlayerScore += delta[i];
 	mihajong_graphic::GameStatus::updateGameStat(gameStat);
 }
-void endround::transfer::transferChip(GameTable* gameStat, unsigned subscene, unsigned wait) {
+void endround::transfer::transferChip(GameTable* gameStat, mihajong_graphic::TableSubsceneID subscene, unsigned wait) {
 	setTransferParam();
 	mihajong_graphic::Subscene(subscene);
 	sound::Play(sound::IDs::sndPage);

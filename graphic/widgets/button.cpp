@@ -34,13 +34,13 @@ void ButtonPic::setText(unsigned ButtonID) {
 		(w < 8) ? xpos + static_cast<int>(9.0f * (8.0f - static_cast<float>(w)) * (static_cast<float>(Width) / 156.0f / Geometry::WindowScale())) : xpos, ypos,
 		Height / 48.0f / Geometry::WindowScale(),
 		((w > 8) ? 8.0f / static_cast<float>(w) : 1.0f) * (adjustWidth ? Scene::WidthRate() : 1.0f),
-		(std::get<0>(mySprites[ButtonID]) == clear) ? 0x3fffffff : 0xffffffff);
+		(std::get<0>(mySprites[ButtonID]) == ButtonStat::clear) ? 0x3fffffff : 0xffffffff);
 }
 
 void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat, int X, int Y, unsigned Width, unsigned Height, ArgbColor color, const CodeConv::tstring& caption, bool adjustWidth) {
 	if (mySprites.size() <= ButtonID)
-		mySprites.resize(static_cast<std::size_t>(ButtonID) + 1, std::make_tuple(absent, 0, 0, 0, 0, 0, _T(""), false));
-	assert(stat != absent);
+		mySprites.resize(static_cast<std::size_t>(ButtonID) + 1, std::make_tuple(ButtonStat::absent, 0, 0, 0, 0, 0, _T(""), false));
+	assert(stat != ButtonStat::absent);
 	mySprites[ButtonID] = std::make_tuple(stat, X, Y, Width, Height, color, CodeConv::tstring(caption), adjustWidth);
 	setText(ButtonID);
 }
@@ -58,7 +58,7 @@ void ButtonPic::setButton(unsigned ButtonID, ButtonStat stat) {
 
 void ButtonPic::Render() {
 	for (const auto& k : mySprites) {
-		if (std::get<0>(k) == absent) continue;
+		if (std::get<0>(k) == ButtonStat::absent) continue;
 		int X = std::get<1>(k), Y = std::get<2>(k);
 		unsigned width = std::get<3>(k), height = std::get<4>(k);
 		const TransformMatrix mat(getMatrix(
@@ -80,7 +80,7 @@ void ButtonPic::Render() {
 			1.0f / Geometry::WindowScale(),
 			1.0f / Geometry::WindowScale()
 		));
-		const RECT rect = {0, 52 * (std::get<0>(k) - 1), 156, 52 * (std::get<0>(k) - 1) + 48};
+		const RECT rect = {0, 52 * (static_cast<int>(std::get<0>(k)) - 1), 156, 52 * (static_cast<int>(std::get<0>(k)) - 1) + 48};
 		SpriteRenderer::instantiate(myDevice)->ShowSprite(myTexture, X, Y, width, height, std::get<5>(k) | 0xff000000, &rect, 0, 0, &mat);
 	}
 	myTextRenderer->Render();

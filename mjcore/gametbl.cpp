@@ -19,14 +19,14 @@ void calcWareme(GameTable* const gameStat) {
 #ifndef GUOBIAO
 	assert((gameStat == &GameStat)||(gameStat == &StatSandBox));
 	if (RuleData::chkRuleApplied("wareme") || RuleData::chkRuleApplied("kaimenkaze")) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			gameStat->WaremePlayer = ((gameStat->GameRound-(gameStat->GameRound/4))+24
 				+gameStat->diceSum()-1) % 3;
 		} else {
 			gameStat->WaremePlayer = ((gameStat->GameRound % 4)+32+gameStat->diceSum()-1) % 4;
 		}
 		if (RuleData::chkRule("dice_roll", "roll_twice")) { // 二度振り修正用
-			if (gameStat->chkGameType(AllSanma)) {
+			if (gameStat->chkGameType(GameTypeID::allSanma)) {
 				if (gameStat->diceSum() + gameStat->diceSum2() > 18)
 					gameStat->WaremePlayer = (gameStat->WaremePlayer + 24 - 1) % 3;
 			} else if (RuleData::chkRule("flower_tiles", "8tiles")) {
@@ -42,7 +42,7 @@ void calcWareme(GameTable* const gameStat) {
 					gameStat->WaremePlayer = (gameStat->WaremePlayer + 32 - 1) % 4;
 			}
 		}
-		if (gameStat->chkGameType(Sanma4))
+		if (gameStat->chkGameType(GameTypeID::sanma4))
 			gameStat->WaremePlayer = tobePlayed(gameStat, (24+gameStat->diceSum()-1) % 3);
 	}
 #endif /* GUOBIAO */
@@ -60,7 +60,7 @@ void resetDeclarationFlag(GameTable* const gameStat) {
 		gameStat->Player[pl].DeclarationFlag.Ron =
 			gameStat->Player[pl].DeclarationFlag.Pon =
 			gameStat->Player[pl].DeclarationFlag.Kan = false;
-		gameStat->Player[pl].DeclarationFlag.Chi = chiiNone;
+		gameStat->Player[pl].DeclarationFlag.Chi = ChiiType::none;
 	}
 	return;
 }
@@ -85,7 +85,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 #ifdef GUOBIAO
 	gameStat->DeadTiles = gameStat->ExtraRinshan = 0; // 王牌なんてあると思った？　残念！
 #else /* GUOBIAO */
-	if (gameStat->chkGameType(AllSanma)) {
+	if (gameStat->chkGameType(GameTypeID::allSanma)) {
 		gameStat->DeadTiles = 14; // 王牌の数
 		gameStat->ExtraRinshan = RuleData::chkRuleApplied("flower_tiles") ? 4 : 0;
 	} else {
@@ -95,11 +95,11 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 	}
 #endif /* GUOBIAO */
 
-	for (int i = 0; i < TileNonflowerMax; i++) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
+	for (auto i : AllTiles) // プンリーの待ち牌(ＣＯＭに意図的な放銃を起こさせないために使用)
 		gameStat->OpenRichiWait[i] = false;
 	gameStat->KangFlag.kangFlag = gameStat->KangFlag.topFlag = false; // 嶺上開花；頭槓和；連開花と槓振り；搶槓の判定に使う
 	gameStat->KangFlag.chainFlag = 0;
-	gameStat->KangFlag.chankanFlag = chankanNone;
+	gameStat->KangFlag.chankanFlag = ChankanStat::none;
 	gameStat->TurnRound =  // 現在の巡目
 		gameStat->KangNum = 0; // 四槓流局、四槓子などの判定に使う
 	gameStat->RichiCounter =
@@ -116,7 +116,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 #ifdef GUOBIAO
 	gameStat->RinshanPointer = 143;
 #else /* GUOBIAO */
-	if (gameStat->chkGameType(AllSanma)) {
+	if (gameStat->chkGameType(GameTypeID::allSanma)) {
 		gameStat->RinshanPointer = 107;
 	} else {
 		if (RuleData::chkRule("flower_tiles", "no")) gameStat->RinshanPointer = 135;
@@ -132,8 +132,8 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 
 	gameStat->TianHuFlag = true; // 親の第一打牌がまだ（天和の判定などに使う）
 	gameStat->PreviousMeld.Discard = // 先ほど鳴いた牌（喰い替えの判定に使う）
-		gameStat->PreviousMeld.Stepped = NoTile;
-	for (int i = 0; i < TileNonflowerMax; i++) // ドラ判定の配列
+		gameStat->PreviousMeld.Stepped = TileCode::noTile;
+	for (auto i : AllTiles) // ドラ判定の配列
 		gameStat->DoraFlag.Omote[i] = gameStat->DoraFlag.Ura[i] = 0;
 	gameStat->TsumoAgariFlag = false;
 	gameStat->AgariSpecialStat = 0;
@@ -151,16 +151,16 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 		for (int i = 0; i < SizeOfDiscardBuffer; i++) {
 			// 捨牌の配列(４人分)
 			gameStat->Player[pl].Discard[i].tcode = Tile();
-			gameStat->Player[pl].Discard[i].dstat = discardNormal;
+			gameStat->Player[pl].Discard[i].dstat = DiscardStat::normal;
 			gameStat->Player[pl].Discard[i].isDiscardThrough = false;
 		}
 		gameStat->Player[pl].MenzenFlag = true; // 門前フラグ
-		gameStat->Player[pl].HandStat = handUpright; // 手牌の状態（立てる・見せる・伏せる）
+		gameStat->Player[pl].HandStat = HandStatCode::upright; // 手牌の状態（立てる・見せる・伏せる）
 		gameStat->Player[pl].MeldPointer = 0; // 最初変な数字が入ってたりするんで……
 		for (int i = 0; i < SizeOfMeldBuffer; i++) {
 			// 鳴き面子を格納
-			gameStat->Player[pl].Meld[i].tile = NoTile;
-			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = Normal;
+			gameStat->Player[pl].Meld[i].tile = TileCode::noTile;
+			for (int j = 0; j < 4; j++) gameStat->Player[pl].Meld[i].red[j] = DoraCol::normal;
 			gameStat->Player[pl].Meld[i].mstat = static_cast<MeldStat>(0);
 		}
 		gameStat->Player[pl].NumberOfQuads = 0; // 槓子の数（四槓流局、三槓子、四槓子などの判定に使う）
@@ -222,23 +222,23 @@ void doInitializeGameTable(GameTable* const gameStat, GameTypeID gameType) { // 
 	}
 
 	if (RuleData::chkRule("game_length", "east_south_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 6 : 7;
 	else if (RuleData::chkRule("game_length", "east_wind_game") ||
 		RuleData::chkRule("game_length", "east_only_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 2 : 3;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 2 : 3;
 	else if (RuleData::chkRule("game_length", "full_round_game") ||
 		RuleData::chkRule("game_length", "east_north_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 14 : 15;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 14 : 15;
 	else if (RuleData::chkRule("game_length", "single_round_game"))
 		gameStat->GameLength = 0;
 	else if (RuleData::chkRule("game_length", "twice_east_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 18 : 19;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 18 : 19;
 	else if (RuleData::chkRule("game_length", "east_south_west_game") ||
 		RuleData::chkRule("game_length", "east_west_game"))
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 10 : 11;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 10 : 11;
 	else {
 		error(_T("game_length異常値。半荘戦とみなします。"));
-		gameStat->GameLength = GameStat.chkGameType(SanmaT) ? 6 : 7;
+		gameStat->GameLength = GameStat.chkGameType(GameTypeID::sanmaT) ? 6 : 7;
 	}
 #endif /* GUOBIAO */
 	gameStat->GameRound = gameStat->Honba = gameStat->PlayerID =
@@ -316,7 +316,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	sandbox->Deposit = gameStat->Deposit;
 	sandbox->AgariChain = gameStat->AgariChain;
 	sandbox->LastAgariPlayer = gameStat->LastAgariPlayer;
-	for (int i = 0; i < TileNonflowerMax; i++)
+	for (auto i : AllTiles)
 		sandbox->OpenRichiWait[i] = gameStat->OpenRichiWait[i];
 	sandbox->KangFlag.kangFlag = gameStat->KangFlag.kangFlag;
 	sandbox->KangFlag.chainFlag = gameStat->KangFlag.chainFlag;
@@ -335,7 +335,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->Dice[i].Direction = gameStat->Dice[i].Direction;
 	}
 	for (int i = 0; i < 6; i++) {
-		if (gameStat->chkGameType(AllSanma)) {
+		if (gameStat->chkGameType(GameTypeID::allSanma)) {
 			if (gameStat->DoraPointer <= (102 - gameStat->ExtraRinshan - i * 2))
 				sandbox->Deck[102 - gameStat->ExtraRinshan - i * 2] =
 				gameStat->Deck[102 - gameStat->ExtraRinshan - i * 2];
@@ -354,7 +354,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 	sandbox->Deposit = gameStat->Deposit;
 	sandbox->Deposit = gameStat->Deposit;
 	sandbox->Deposit = gameStat->Deposit;
-	for (int i = 0; i < TileNonflowerMax; i++) {
+	for (auto i : AllTiles) {
 		sandbox->DoraFlag.Omote[i] = gameStat->DoraFlag.Omote[i];
 		sandbox->DoraFlag.Ura[i] = gameStat->DoraFlag.Ura[i];
 	}
