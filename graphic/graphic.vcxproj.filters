@@ -470,6 +470,9 @@
     <ClInclude Include="except.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\safec.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="graphic.rc">

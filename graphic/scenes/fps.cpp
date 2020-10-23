@@ -4,6 +4,7 @@
 #if !defined(_MSC_VER)
 #include <stdio.h>
 #endif
+#include "../../common/safec.h"
 
 namespace mihajong_graphic {
 
@@ -29,14 +30,14 @@ void FPSIndicator::Render() {
 		LastRecalcTime = RedrawTime.back();
 		if ((RedrawTime.size() < 3) || (RedrawTime.back() == RedrawTime.front())) {
 			currentFPS = 0;
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(USE_LIBSAFEC) || (!defined(_UNICODE) && defined(HAVE_SPRINTF_S)) || (defined(_UNICODE) && defined(HAVE_SWPRINTF_S))
 			_stprintf_s(fpsstr, fpsstr_size, _T("--.-- FPS"));
 #else
 			_sntprintf(fpsstr, fpsstr_size, _T("--.-- FPS"));
 #endif
 		} else {
 			currentFPS = 1000000.0f / (static_cast<float>(RedrawTime.back() - RedrawTime.front()) / static_cast<float>(RedrawTime.size() - 1));
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(USE_LIBSAFEC) || (!defined(_UNICODE) && defined(HAVE_SPRINTF_S)) || (defined(_UNICODE) && defined(HAVE_SWPRINTF_S))
 			_stprintf_s(fpsstr, fpsstr_size, _T("%5.2f FPS"), currentFPS);
 #else
 			_sntprintf(fpsstr, fpsstr_size, _T("%5.2f FPS"), currentFPS);

@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="..\common\clock.h" />
     <ClInclude Include="..\common\nmrules.h" />
+    <ClInclude Include="..\common\safec.h" />
     <ClInclude Include="..\common\sleep.h" />
     <ClInclude Include="..\common\strcode.h" />
     <ClInclude Include="..\common\version.h" />

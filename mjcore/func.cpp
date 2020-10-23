@@ -15,6 +15,7 @@
 #endif /*_WIN32*/
 #include "../common/strcode.h"
 #include "../common/largenum.h"
+#include "../common/safec.h"
 #include "../sound/sound.h"
 #include "../socket/socket.h"
 #include "socknum.h"
@@ -169,14 +170,7 @@ namespace confpath {
 		if (isVista()) {
 			constexpr size_t bufSize = 1024u;
 			char* appdata = new char[bufSize] {};
-#if defined(_MSC_VER) || defined(HAVE_GETENV_S)
-			size_t sz = 0;
-			getenv_s(&sz, appdata, bufSize, "APPDATA");
-#else
-			if (getenv("APPDATA"))
-				strncpy(appdata, getenv("APPDATA"), bufSize - 1);
-			appdata[bufSize - 1] = '\0';
-#endif
+			getEnv(nullptr, appdata, bufSize, "APPDATA");
 
 			if (strstr(configpath.c_str(), appdata) != configpath.c_str()) {
 				// MakeSureDirectoryPathExistsがワイド文字対応してないので仕方なくANSI文字版

@@ -113,6 +113,7 @@ MihailJPの開発環境
 - GuruGuruSMF (http://gurugurusmf.migmig.net/) (Windowsのみ)
 - OpenAL (http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)
 - libpng (http://www.libpng.org/pub/png/libpng.html) (Linuxのみ)
+- (オプション) Safe C Library (https://rurban.github.io/safeclib/) (Visual C++では不要)
 
 
 Linux版の制限

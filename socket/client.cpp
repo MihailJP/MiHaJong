@@ -4,6 +4,7 @@
 #endif /* _WIN32 */
 #include <chrono>
 #include "../common/sleep.h"
+#include "../common/safec.h"
 
 namespace mihajong_socket {
 namespace client {
@@ -68,11 +69,7 @@ namespace client {
 			for (unsigned int i = 0; i < NumberOfPlayers; ++i)
 				playerName[i] = getString(0); // 名前を受信
 			for (unsigned i = 0; i < RULE_LINES; ++i)
-#if defined(_MSC_VER) /* For newer VC++ use strcpy_s */
-				strcpy_s(ruleConf[i], RULE_IN_LINE + 1, CodeConv::toANSI(getString(0)).c_str()); // ルールを受信
-#else /* For MinGW use strncpy */
-				strncpy(ruleConf[i], CodeConv::toANSI(getString(0)).c_str(), RULE_IN_LINE); // ルールを受信
-#endif
+				strCpy(ruleConf[i], RULE_IN_LINE + 1, CodeConv::toANSI(getString(0)).c_str()); // ルールを受信
 			break;
 		}
 		finished = true;
@@ -126,17 +123,10 @@ namespace client {
 		return starterThread->getClientNumber();
 	}
 	DLL void getPlayerNames (LPTSTR playerName1, LPTSTR playerName2, LPTSTR playerName3, LPTSTR playerName4, unsigned bufsz) {
-#if defined(_MSC_VER)
-		_tcscpy_s(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
-		_tcscpy_s(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
-		_tcscpy_s(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
-		_tcscpy_s(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
-#else
-		_tcsncpy(playerName1, starterThread->getPlayerName(0).c_str(), bufsz);
-		_tcsncpy(playerName2, starterThread->getPlayerName(1).c_str(), bufsz);
-		_tcsncpy(playerName3, starterThread->getPlayerName(2).c_str(), bufsz);
-		_tcsncpy(playerName4, starterThread->getPlayerName(3).c_str(), bufsz);
-#endif
+		tcsCpy(playerName1, bufsz, starterThread->getPlayerName(0).c_str());
+		tcsCpy(playerName2, bufsz, starterThread->getPlayerName(1).c_str());
+		tcsCpy(playerName3, bufsz, starterThread->getPlayerName(2).c_str());
+		tcsCpy(playerName4, bufsz, starterThread->getPlayerName(3).c_str());
 	}
 	DLL void checkout_rules (char** rules) { // ルールをチェックアウト
 		for (unsigned i = 0; i < RULE_LINES; ++i)

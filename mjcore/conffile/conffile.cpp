@@ -3,6 +3,7 @@
 #include <string>
 #include "../../common/strcode.h"
 #include "../../common/scrmode.h"
+#include "../../common/safec.h"
 #include <fstream>
 #include <regex>
 #include <cassert>
@@ -24,17 +25,8 @@ std::string ConfigFile::confPath() {
 	GetCurrentDirectoryA(bufSize, cur);
 	char* progfiles = new char[bufSize] {};
 	char* appdata = new char[bufSize] {};
-#if defined(_MSC_VER) || defined(HAVE_GETENV_S)
-	size_t len = 0;
-	getenv_s(&len, progfiles, bufSize, "ProgramFiles");
-	getenv_s(&len, appdata, bufSize, "APPDATA");
-#else
-	if (getenv("ProgramFiles"))
-		strncpy(progfiles, getenv("ProgramFiles"), bufSize - 1);
-	if (getenv("APPDATA"))
-		strncpy(appdata, getenv("APPDATA"), bufSize - 1);
-	progfiles[bufSize - 1] = appdata[bufSize - 1] = '\0';
-#endif
+	getEnv(nullptr, progfiles, bufSize, "ProgramFiles");
+	getEnv(nullptr, appdata, bufSize, "APPDATA");
 
 	if (strstr(cur, progfiles) == cur)
 		configpath = std::string(appdata) + std::string("\\MiHaJong\\");
@@ -42,14 +34,7 @@ std::string ConfigFile::confPath() {
 	delete[] cur; delete[] appdata; delete[] progfiles;
 #else /* _WIN32 */
 	char* homedir = new char[bufSize] {};
-#ifdef HAVE_GETENV_S
-	size_t len();
-	getenv_s(&len, homedir, bufSize, "HOME");
-#else
-	if (getenv("HOME"))
-		strncpy(homedir, getenv("HOME"), bufSize - 1);
-	homedir[bufSize - 1] = '\0';
-#endif
+	getEnv(nullptr, homedir, bufSize, "HOME");
 	configpath = std::string(homedir) + std::string("/.mihajong/");
 	delete[] homedir;
 #endif /* _WIN32 */

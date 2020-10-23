@@ -12,6 +12,7 @@
 #endif
 #include "mjexport.h"
 #include "../common/strcode.h"
+#include "../common/safec.h"
 
 #define STRINGBUF 1024u
 #define ADDRBUF 256u
@@ -38,15 +39,15 @@ extern const uintptr_t errorInfoPtr[1];
 #endif /*_WIN32*/
 #if defined(_MSC_VER)
 #define setStruct(message) {\
-	strcpy_s(errorInfo.msg, STRINGBUF, CodeConv::toANSI(message).c_str()); \
-	strcpy_s(errorInfo.file, STRINGBUF, __FILE__); errorInfo.line = __LINE__; \
-	strcpy_s(errorInfo.func, STRINGBUF, __FUNCTION__); \
+	strCpy(errorInfo.msg, STRINGBUF, CodeConv::toANSI(message).c_str()); \
+	strCpy(errorInfo.file, STRINGBUF, __FILE__); errorInfo.line = __LINE__; \
+	strCpy(errorInfo.func, STRINGBUF, __FUNCTION__); \
 	StackTraceToArray();}
 #else
 #define setStruct(message) {\
-	strncpy(errorInfo.msg, CodeConv::toANSI(message).c_str(), STRINGBUF); \
-	strncpy(errorInfo.file, __FILE__, STRINGBUF); errorInfo.line = __LINE__; \
-	strncpy(errorInfo.func, __FUNCTION__, STRINGBUF);}
+	strCpy(errorInfo.msg, STRINGBUF, CodeConv::toANSI(message).c_str()); \
+	strCpy(errorInfo.file, STRINGBUF, __FILE__); errorInfo.line = __LINE__; \
+	strCpy(errorInfo.func, STRINGBUF, __FUNCTION__);}
 #endif
 #ifdef _WIN32
 #define Raise(exceptionCode,message) {fatal(message); \

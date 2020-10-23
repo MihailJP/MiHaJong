@@ -9,12 +9,14 @@ extern "C" {
 #else /*_WIN32*/
 #include "../astro/astro.h"
 #include <ctime>
+#ifndef USE_LIBSAFEC
 #ifndef HAVE_LOCALTIME_S
 #define localtime_s localtime_r
 #endif /* HAVE_LOCALTIME_S */
 #ifndef HAVE_GMTIME_S
 #define gmtime_s gmtime_r
-#endif /* HAVE_LOCALTIME_S */
+#endif /* HAVE_GMTIME_S */
+#endif /* USE_LIBSAFEC */
 #endif /*_WIN32*/
 
 namespace DateTime {

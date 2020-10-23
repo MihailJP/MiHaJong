@@ -293,6 +293,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\datetime.h" />
+    <ClInclude Include="..\common\safec.h" />
     <ClInclude Include="..\common\scrmode.h" />
     <ClInclude Include="..\mjcore\conffile\conffile.h" />
     <ClInclude Include="..\common\bgmid.h" />

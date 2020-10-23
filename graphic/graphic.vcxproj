@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\datetime.h" />
+    <ClInclude Include="..\common\safec.h" />
     <ClInclude Include="..\common\scrmode.h" />
     <ClInclude Include="..\common\bgmid.h" />
     <ClInclude Include="..\common\clock.h" />

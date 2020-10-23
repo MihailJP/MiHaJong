@@ -14,6 +14,7 @@
 #else /*_WIN32*/
 #include <unistd.h>
 #endif /*_WIN32*/
+#include "../../common/safec.h"
 #include "../../common/largenum.h"
 #include "../except.h"
 #include "../logging.h"
@@ -27,16 +28,6 @@
 #else /* _WIN32 */
 #define T_NEWLINE _T("\n")
 #endif /* _WIN32 */
-namespace {
-	void tcsCat(LPTSTR dest, size_t destsz, LPCTSTR src) {
-#ifdef _MSC_VER
-		_tcscat_s(dest, destsz, src);
-#else
-		_tcsncat(dest, src, destsz - _tcslen(dest));
-		dest[destsz - 1] = _T('\0');
-#endif
-	}
-}
 
 /* 翻を計算する */
 #ifndef GUOBIAO

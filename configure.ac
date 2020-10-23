@@ -185,7 +185,7 @@ AC_ARG_ENABLE([large_pics],
 AM_CONDITIONAL(WITH_4K_PICS, test x$enable_large_pics != xno)
 
 
-AC_CHECK_FUNCS([clock_gettime floor getaddrinfo getenv_s gmtime_s localtime_s memmove memset mkdir pow setlocale socket sqrt strstr])
+AC_CHECK_FUNCS([clock_gettime floor getaddrinfo getenv_s gmtime_s localtime_s memcpy_s memmove memset mkdir pow setlocale socket sprintf_s swprintf_s sqrt strcat_s strcpy_s strstr wcscat_s wcscpy_s])
 
 
 AC_ARG_ENABLE([midi],
@@ -199,6 +199,8 @@ AM_CONDITIONAL(MIDI_SUPPORT, test x$enable_midi != xno)
 MH_OGG_VORBIS([], [
 	AC_MSG_WARN([libogg/libvorbis library not available: disabled])
 ])
+
+MH_LIBSAFEC([], [])
 
 AC_PATH_PROG([RUBY], [ruby])
 AX_PROG_RUBY_VERSION([1.9], [], [AC_MSG_ERROR([Ruby is unavailable or too old])])

@@ -1,5 +1,6 @@
 ﻿#include "socket.h"
 #include <mutex>
+#include "../common/safec.h"
 
 namespace mihajong_socket {
 
@@ -95,11 +96,7 @@ catch (socket_error& err) { // 受信失敗時
 DLL int gets (int sock_id, LPTSTR const stringline, int bufsize) try { // 1行受信
 	std::unique_lock<std::recursive_mutex> lock(socketExistenceMutex[sock_id]);
 	if (!sockets[sock_id]) return Error_NoSuchSocket;
-#if defined(_MSC_VER)
-	_tcscpy_s(stringline, bufsize, sockets[sock_id]->gets().c_str());
-#else
-	_tcsncpy(stringline, sockets[sock_id]->gets().c_str(), bufsize);
-#endif
+	tcsCpy(stringline, bufsize, sockets[sock_id]->gets().c_str());
 	return 0;
 }
 catch (queue_empty&) { // まだ受信するデータがない場合

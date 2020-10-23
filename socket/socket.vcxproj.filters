@@ -77,6 +77,9 @@
     <ClInclude Include="..\common\version.h">
       <Filter>Common\ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\safec.h">
+      <Filter>Common\ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ver.rc">
