@@ -77,13 +77,13 @@ public:
 	GameTableScreen(const GameTableScreen&) = delete; // Delete unexpected copy constructor
 	GameTableScreen& operator= (const GameTableScreen&) = delete; // Delete unexpected assign operator
 	~GameTableScreen();
-	void Render();
+	void Render() override;
 #ifdef _WIN32
-	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
-	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y);
+	void KeyboardInput(LPDIDEVICEOBJECTDATA od) override;
+	void MouseInput(LPDIDEVICEOBJECTDATA od, int X, int Y) override;
 #else /*_WIN32*/
-	void KeyboardInput(const XEvent* od);
-	void MouseInput(const XEvent* od, int X, int Y);
+	void KeyboardInput(const XEvent* od) override;
+	void MouseInput(const XEvent* od, int X, int Y) override;
 #endif /*_WIN32*/
 private:
 	void checkTimeout();

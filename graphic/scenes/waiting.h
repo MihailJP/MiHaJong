@@ -25,17 +25,17 @@ public:
 class ServerWait : public ConnectionWaitingProto {
 private:
 	ServerWaitingSubsceneID subsceneID;
-	CodeConv::tstring waiting_desc_str();
+	CodeConv::tstring waiting_desc_str() override;
 public:
 	ServerWait(ScreenManipulator* const manipulator);
 	ServerWait(const ServerWait&) = delete; // Delete unexpected copy constructor
 	ServerWait& operator= (const ServerWait&) = delete; // Delete unexpected assign operator
 	~ServerWait();
-	void Render();
+	void Render() override;
 #ifdef _WIN32
-	void KeyboardInput(LPDIDEVICEOBJECTDATA od);
+	void KeyboardInput(LPDIDEVICEOBJECTDATA od) override;
 #else /*_WIN32*/
-	void KeyboardInput(const XEvent* od);
+	void KeyboardInput(const XEvent* od) override;
 #endif /*_WIN32*/
 	void SetSubscene(SubSceneID scene_ID) override;
 };
@@ -43,25 +43,25 @@ public:
 class ClientWait : public ConnectionWaitingProto {
 private:
 	ClientWaitingSubsceneID subsceneID;
-	CodeConv::tstring waiting_desc_str();
+	CodeConv::tstring waiting_desc_str() override;
 public:
 	ClientWait(ScreenManipulator* const manipulator);
 	ClientWait(const ClientWait&) = delete; // Delete unexpected copy constructor
 	ClientWait& operator= (const ClientWait&) = delete; // Delete unexpected assign operator
 	~ClientWait();
-	void Render();
+	void Render() override;
 	void SetSubscene(SubSceneID scene_ID) override;
 };
 
 class ConnectionWaitFailed : public ConnectionWaitingProto {
 private:
-	CodeConv::tstring waiting_desc_str();
+	CodeConv::tstring waiting_desc_str() override;
 public:
 	ConnectionWaitFailed(ScreenManipulator* const manipulator);
 	ConnectionWaitFailed(const ConnectionWaitFailed&) = delete; // Delete unexpected copy constructor
 	ConnectionWaitFailed& operator= (const ConnectionWaitFailed&) = delete; // Delete unexpected assign operator
 	~ConnectionWaitFailed();
-	void Render();
+	void Render() override;
 };
 
 }
