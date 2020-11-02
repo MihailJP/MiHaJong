@@ -108,7 +108,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 				return ((analysis->KeziCount[WestWind] >= 1) &&
 					(analysis->KeziCount[WhiteDragon] >= 1) &&
 					(analysis->DuiziCount[CircleOne] >= 1) &&
-					(analysis->TsumoHai->tile == CircleOne) );
+					(analysis->TsumoHai().tile == CircleOne) );
 			}
 		));
 	/* 南無八幡 */
@@ -306,7 +306,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			_T("太公釣金亀"), get_yaku_han("taikou_turtle"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->KeziCount[BambooTwo] >= 1) &&
-					(analysis->TsumoHai->tile == BambooThree) &&
+					(analysis->TsumoHai().tile == BambooThree) &&
 					(analysis->Machi == yaku::yakuCalculator::machiTanki));
 			}
 		));
@@ -489,10 +489,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[CharacterEight] >= 1)) return true;
 				else if ((analysis->MianziDat[0].tile == CharacterEight) &&
 					(analysis->KeziCount[CharacterFour] >= 1) &&
-					(analysis->TsumoHai->tile == CharacterFour)) return true;
+					(analysis->TsumoHai().tile == CharacterFour)) return true;
 				else if ((analysis->MianziDat[0].tile == CharacterFour) &&
 					(analysis->KeziCount[CharacterEight] >= 1) &&
-					(analysis->TsumoHai->tile == CharacterEight)) return true;
+					(analysis->TsumoHai().tile == CharacterEight)) return true;
 				else return false;
 			}
 		));
@@ -692,13 +692,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			};
 		const auto newyrdrm =
 			[](const MentsuAnalysis* const analysis) -> bool {
-				if (analysis->PlayerStat->MeldPointer >= 3)
-					return ((analysis->PlayerStat->Meld[1].mstat > meldTripletConcealed) &&
-						(analysis->PlayerStat->Meld[1].tile == BambooThree) &&
-						(analysis->PlayerStat->Meld[2].mstat > meldTripletConcealed) &&
-						(analysis->PlayerStat->Meld[2].tile == BambooOne) &&
-						(analysis->PlayerStat->Meld[3].mstat > meldTripletConcealed) &&
-						(analysis->PlayerStat->Meld[3].tile == CircleEight));
+				if (analysis->PlayerStat()->MeldPointer >= 3)
+					return ((analysis->PlayerStat()->Meld[1].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat()->Meld[1].tile == BambooThree) &&
+						(analysis->PlayerStat()->Meld[2].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat()->Meld[2].tile == BambooOne) &&
+						(analysis->PlayerStat()->Meld[3].mstat > meldTripletConcealed) &&
+						(analysis->PlayerStat()->Meld[3].tile == CircleEight));
 				else return false;
 			};
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
@@ -844,7 +844,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return (analysis->KeziCount[RedDragon] >= 1) &&
 					(analysis->KeziCount[CharacterSix] >= 1) &&
-					(analysis->TsumoHai->tile == EastWind);
+					(analysis->TsumoHai().tile == EastWind);
 			}
 		));
 	/* Windows95 */
@@ -895,13 +895,13 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 			_T("Windows7"), get_yaku_han("windows7"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				if ((analysis->TsumoHai->tile == CharacterSeven) &&
+				if ((analysis->TsumoHai().tile == CharacterSeven) &&
 					((analysis->KeziCount[CircleSeven] >= 1) ||
 					(analysis->KeziCount[BambooSeven] >= 1))) yakuFlag = true;
-				else if ((analysis->TsumoHai->tile == CircleSeven) &&
+				else if ((analysis->TsumoHai().tile == CircleSeven) &&
 					((analysis->KeziCount[BambooSeven] >= 1) ||
 					(analysis->KeziCount[CharacterSeven] >= 1))) yakuFlag = true;
-				else if ((analysis->TsumoHai->tile == BambooSeven) &&
+				else if ((analysis->TsumoHai().tile == BambooSeven) &&
 					((analysis->KeziCount[CharacterSeven] >= 1) ||
 					(analysis->KeziCount[CircleSeven] >= 1))) yakuFlag = true;
 				return yakuFlag;
@@ -917,7 +917,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_2() {
 					(analysis->KeziCount[SouthWind] >= 1) ||
 					(analysis->KeziCount[WestWind] >= 1) ||
 					(analysis->KeziCount[NorthWind] >= 1)) &&
-					(analysis->PlayerStat->Tsumohai().tile == EastWind);
+					(analysis->PlayerStat()->Tsumohai().tile == EastWind);
 			}
 		));
 	/* 博麗霊夢 */

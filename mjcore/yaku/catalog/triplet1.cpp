@@ -15,7 +15,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!analysis->TsumoAgariFlag())) ?
 				1 : 0) == 4);
 		}
 	));
@@ -27,7 +27,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("四暗刻"), _T("対々和"), _T("三暗刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!analysis->TsumoAgariFlag())) ?
 					1 : 0) == 4) && (
 					(analysis->GameStat->TianHuFlag) ||
 					((analysis->Machi == yaku::yakuCalculator::machiTanki) && (!analysis->MachiInfo.FuritenFlag))
@@ -45,7 +45,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!analysis->TsumoAgariFlag())) ?
 				1 : 0) == 3);
 		}
 	));
@@ -55,7 +55,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		_T("双暗刻"), yaku::yakuCalculator::Yaku::yval_2,
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!analysis->TsumoAgariFlag())) ?
 				1 : 0) == 2);
 		}
 	));
@@ -143,8 +143,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 							(analysis->KeziCount[static_cast<int>((*i)[2] - _T('0')) * TileSuitStep + k + 2] >= 1) &&
 							(analysis->KeziCount[static_cast<int>((*i)[3] - _T('0')) * TileSuitStep + k + 3] >= 1) &&
 							(analysis->DuiziCount[static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4] >= 1) &&
-							((analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0)) ||
-							(analysis->TsumoHai->tile == static_cast<TileCode>(static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4)))
+							((analysis->TsumoHai().tile == static_cast<TileCode>(static_cast<int>((*i)[0] - _T('0')) * TileSuitStep + k + 0)) ||
+							(analysis->TsumoHai().tile == static_cast<TileCode>(static_cast<int>((*i)[4] - _T('0')) * TileSuitStep + k + 4)))
 							)
 							yakuFlag = true;
 				}
@@ -741,7 +741,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return ((analysis->KeziCount[BambooOne] >= 1) &&
 					(analysis->KeziCount[EastWind] >= 1) &&
 					(analysis->KeziCount[WhiteDragon] >= 1) &&
-					(analysis->PlayerStat->FlowerFlag.Spring));
+					(analysis->PlayerStat()->FlowerFlag.Spring));
 			}
 		));
 
@@ -1038,10 +1038,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return ((analysis->KeziCount[CharacterEight] >= 1) &&
 					(analysis->KeziCount[CircleEight] >= 1) &&
 					(analysis->KeziCount[BambooEight] >= 1) &&
-					analysis->PlayerStat->FlowerFlag.Spring && analysis->PlayerStat->FlowerFlag.Summer &&
-					analysis->PlayerStat->FlowerFlag.Autumn && analysis->PlayerStat->FlowerFlag.Winter &&
-					analysis->PlayerStat->FlowerFlag.Plum && analysis->PlayerStat->FlowerFlag.Orchid &&
-					analysis->PlayerStat->FlowerFlag.Chrys && analysis->PlayerStat->FlowerFlag.Bamboo );
+					analysis->PlayerStat()->FlowerFlag.Spring && analysis->PlayerStat()->FlowerFlag.Summer &&
+					analysis->PlayerStat()->FlowerFlag.Autumn && analysis->PlayerStat()->FlowerFlag.Winter &&
+					analysis->PlayerStat()->FlowerFlag.Plum && analysis->PlayerStat()->FlowerFlag.Orchid &&
+					analysis->PlayerStat()->FlowerFlag.Chrys && analysis->PlayerStat()->FlowerFlag.Bamboo );
 			}
 		));
 #endif /* GUOBIAO */

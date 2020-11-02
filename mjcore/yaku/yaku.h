@@ -65,10 +65,18 @@ private:
 		uint8_t TotalAnKangzi; // 暗槓合計
 		uint8_t TotalKaKangzi; // 加槓合計
 		const GameTable* GameStat; // 卓情報へのポインタ
-		const PlayerTable* PlayerStat; // プレイヤー情報へのポインタ
-		const Tile* TsumoHai; // 和了牌へのポインタ
-		const bool* MenzenFlag; // 門前かどうかのフラグ
-		const bool* TsumoAgariFlag; // ツモアガリどうかのフラグ
+		const PlayerTable* PlayerStat() const { // プレイヤー情報へのポインタ
+			return &(GameStat->Player[player]);
+		}
+		const Tile& TsumoHai() const { // 和了牌
+			return PlayerStat()->Tsumohai();
+		}
+		bool MenzenFlag() const { // 門前かどうかのフラグ
+			return PlayerStat()->MenzenFlag;
+		}
+		bool TsumoAgariFlag() const { // ツモアガリどうかのフラグ
+			return GameStat->TsumoAgariFlag;
+		}
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_trivially_copyable<MentsuAnalysis>::value, "MentsuAnalysis is not trivially copyable");

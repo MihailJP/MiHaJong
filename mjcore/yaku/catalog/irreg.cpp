@@ -111,7 +111,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_irregular()
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("北の大地"), yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MentsuAnalysis* const analysis) -> yaku::yakuCalculator::Yaku::YAKU_HAN {
-				switch (analysis->TsumoHai->tile) { /* 何で和了ったかで分岐 */
+				switch (analysis->TsumoHai().tile) { /* 何で和了ったかで分岐 */
 				case NorthWind: /* 北で和了るとダブル役満 */
 					return yaku::yakuCalculator::Yaku::YAKU_HAN(yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman);
 				case WhiteDragon: /* 白で和了るとトリプル役満 */

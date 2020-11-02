@@ -54,7 +54,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("九蓮宝燈"), _T("清一色"), _T("九蓮花燈"),
 			[chkHaishiki](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
-				const TileCode* tsumoTile = &(analysis->TsumoHai->tile);
+				const TileCode* tsumoTile = &(analysis->TsumoHai().tile);
 				if ((*tsumoTile % 10 == 1) || (*tsumoTile % 10 == 9)) {
 					if (analysis->TileCount[*tsumoTile] >= 4) yakuFlag = true;
 				} else {
@@ -247,7 +247,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("清一色"),
 			[chiffre](const MentsuAnalysis* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) > 100) &&
-					((analysis->TsumoHai->tile / TileSuitStep) ==
+					((analysis->TsumoHai().tile / TileSuitStep) ==
 					(TileSuitCharacters / TileSuitStep)));
 			}
 		));
@@ -257,7 +257,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("清一色"),
 			[chiffre](const MentsuAnalysis* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) == 100) &&
-					((analysis->TsumoHai->tile / TileSuitStep) ==
+					((analysis->TsumoHai().tile / TileSuitStep) ==
 					(TileSuitCharacters / TileSuitStep)));
 			}
 		));
@@ -269,7 +269,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("清一色"),
 			[chiffre](const MentsuAnalysis* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) >= 100) &&
-					((analysis->TsumoHai->tile / TileSuitStep) ==
+					((analysis->TsumoHai().tile / TileSuitStep) ==
 					(TileSuitCircles / TileSuitStep)));
 			}
 		));
@@ -280,7 +280,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("清一色"),
 			[chiffre](const MentsuAnalysis* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) == 55) &&
-					((analysis->TsumoHai->tile / TileSuitStep) ==
+					((analysis->TsumoHai().tile / TileSuitStep) ==
 					(TileSuitCharacters / TileSuitStep)));
 			}
 		));
@@ -291,7 +291,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 			_T("清一色"),
 			[chiffre](const MentsuAnalysis* const analysis) -> bool {
 				return (isshoku(analysis, true) && (chiffre(analysis) <= 35) &&
-					((analysis->TsumoHai->tile / TileSuitStep) ==
+					((analysis->TsumoHai().tile / TileSuitStep) ==
 					(TileSuitCharacters / TileSuitStep)));
 			}
 		));
@@ -339,7 +339,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 						yakuFlag = true;
 				}
 				return (isshoku(analysis, true) && (yakuFlag) &&
-					((analysis->TsumoHai->tile / TileSuitStep) ==
+					((analysis->TsumoHai().tile / TileSuitStep) ==
 					(TileSuitCharacters / TileSuitStep)));
 			}
 		));
@@ -519,7 +519,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_suit() {
 				for (unsigned int i = 0; i < ((analysis->shanten[shantenRegular] == -1) ?
 					SizeOfMeldBuffer : NumOfTilesInHand); i++) {
 						if (analysis->shanten[shantenRegular] == -1) tc = analysis->MianziDat[i].tile;
-						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat->Hand[i].tile;
+						else if (analysis->shanten[shantenPairs] == -1) tc = analysis->PlayerStat()->Hand[i].tile;
 						if (Tile(tc).isNumber()) ++mnzCount[tc / TileSuitStep];
 						else switch (tc) {
 						case EastWind: case SouthWind: case WestWind: case NorthWind:

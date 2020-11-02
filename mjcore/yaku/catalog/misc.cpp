@@ -115,7 +115,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("金鶏独立"), get_yaku_han("kinkei_dokuritsu"),
 				_T("全倒鋪"), _T("全求人"),
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
-					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == BambooOne);
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai().tile == BambooOne);
 				}
 			));
 		// 独釣寒江雪…白待ち
@@ -124,7 +124,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("独釣寒江雪"), get_yaku_han("kankou_no_yuki"),
 				_T("全倒鋪"), _T("全求人"),
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
-					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == WhiteDragon);
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai().tile == WhiteDragon);
 				}
 			));
 #endif /* GUOBIAO */
@@ -749,7 +749,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						(tiles[i + 4] >= 1) && (tiles[i + 5] >= 1) && (tiles[i + 6] >= 1) &&
 						(tiles[i + 7] >= 1) && (tiles[i + 8] >= 1) && (tiles[i + 9] >= 3))
 						yakuFlag = true;
-				return yakuFlag && (!(*analysis->MenzenFlag));
+				return yakuFlag && (!analysis->MenzenFlag());
 			}
 		));
 
@@ -818,11 +818,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						static_cast<TileCode>(i + 4)
 					};
 					if (chktiles(analysis, kezi, 3, shunzi, 1, true) &&
-						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)) &&
+						(analysis->TsumoHai().tile == static_cast<TileCode>(i + 3)) &&
 						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 					if (chktiles(analysis, kezi, 3, shunzi + 1, 1, true) &&
-						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)) &&
+						(analysis->TsumoHai().tile == static_cast<TileCode>(i + 6)) &&
 						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 				}
@@ -835,7 +835,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("愚濫怒苦露酢"), yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MentsuAnalysis* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
-					(analysis->TsumoHai->tile == CircleFive) ?
+					(analysis->TsumoHai().tile == CircleFive) ?
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_double_yakuman :
 					yaku::yakuCalculator::Yaku::YAKU_HAN::HAN::yv_yakuman);
 			}),
@@ -849,7 +849,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				};
 				return chktiles_nodup(analysis, kezi, 2, shunzi, 2, true) &&
 					(analysis->MianziDat[0].tile == CircleFive) &&
-					(*analysis->MenzenFlag);
+					(analysis->MenzenFlag());
 			}
 		));
 	/* 喜鵲閙梅 */
@@ -1149,7 +1149,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					[targetTile](const MentsuAnalysis* const analysis) -> bool {
 						return ((analysis->KangziCount[targetTile] >= 1) &&
 							(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
-							(analysis->TotalKezi == 1) && (*analysis->MenzenFlag));
+							(analysis->TotalKezi == 1) && (analysis->MenzenFlag()));
 					}
 				));
 		}
@@ -1162,7 +1162,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return ((analysis->KangziCount[EastWind] >= 1) &&
 					(analysis->KangziCount[NorthWind] >= 1) &&
 					(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
-					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
+					(analysis->TotalKezi == 2) && (analysis->MenzenFlag()));
 			}
 		));
 	/* 名大役満 */
@@ -1178,7 +1178,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 							yakuFlag = true;
 				return ((yakuFlag) &&
 					(analysis->Machi == yaku::yakuCalculator::machiRyanmen) &&
-					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
+					(analysis->TotalKezi == 2) && (analysis->MenzenFlag()));
 			}
 		));
 

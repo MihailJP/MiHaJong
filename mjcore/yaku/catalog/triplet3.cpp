@@ -112,7 +112,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 				return ((analysis->AnKeziCount[WhiteDragon] +
 					analysis->AnKeziCount[GreenDragon] +
 					analysis->AnKeziCount[RedDragon]) >= 1) &&
-					(analysis->TsumoHai->tile == BambooFive) &&
+					(analysis->TsumoHai().tile == BambooFive) &&
 					(analysis->Machi == yaku::yakuCalculator::machiTanki);
 			}
 		));
@@ -314,9 +314,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("四暗刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::machiShanpon) && (!analysis->TsumoAgariFlag())) ?
 					1 : 0) == 4) && // 四暗刻を
-					(analysis->TsumoHai->tile == CharacterOne); // 一萬で和了る
+					(analysis->TsumoHai().tile == CharacterOne); // 一萬で和了る
 			}
 		));
 	/* 激大三元 */
@@ -435,10 +435,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						(analysis->KeziCount[NorthWind] >= 1) &&
 						(pairIsHonor)) {
 							if ((analysis->ShunziCount[i + 4] >= 1) &&
-								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 6)))
+								(analysis->TsumoHai().tile == static_cast<TileCode>(i + 6)))
 								flag = true;
 							if ((analysis->ShunziCount[i + 3] >= 1) &&
-								(analysis->TsumoHai->tile == static_cast<TileCode>(i + 3)))
+								(analysis->TsumoHai().tile == static_cast<TileCode>(i + 3)))
 								flag = true;
 					}
 				}
@@ -533,7 +533,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 					(analysis->KeziCount[BambooEight] >= 1) &&
 					(analysis->TotalAnKezi - (
 					((analysis->Machi == yaku::yakuCalculator::machiShanpon) &&
-					(!*analysis->TsumoAgariFlag)) ? 1 : 0) >= 3);
+					(!analysis->TsumoAgariFlag())) ? 1 : 0) >= 3);
 			}
 		));
 	/* 侵略イカ娘 */
@@ -567,12 +567,12 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 			_T("西新井"), get_yaku_han("nishiarai"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return (analysis->KeziCount[WestWind] >= 1) &&
-					((analysis->TsumoHai->tile == CharacterOne) ||
-					(analysis->TsumoHai->tile == CircleOne) ||
-					(analysis->TsumoHai->tile == BambooOne) ||
-					(analysis->TsumoHai->tile == CharacterTwo) ||
-					(analysis->TsumoHai->tile == CircleTwo) ||
-					(analysis->TsumoHai->tile == BambooTwo));
+					((analysis->TsumoHai().tile == CharacterOne) ||
+					(analysis->TsumoHai().tile == CircleOne) ||
+					(analysis->TsumoHai().tile == BambooOne) ||
+					(analysis->TsumoHai().tile == CharacterTwo) ||
+					(analysis->TsumoHai().tile == CircleTwo) ||
+					(analysis->TsumoHai().tile == BambooTwo));
 			}
 		));
 	/* 金剛組 */
@@ -761,7 +761,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_3() {
 						flag1 = true;
 				for (int i = 0; i < TileSuitHonors; i += TileSuitStep)
 					if ((analysis->KeziCount[i + 8] >= 1) &&
-						(analysis->TsumoHai->tile == static_cast<TileCode>(i + 8)))
+						(analysis->TsumoHai().tile == static_cast<TileCode>(i + 8)))
 						flag2 = true;
 				return flag1 && flag2 &&
 					(analysis->MianziDat[0].tile == SouthWind);
