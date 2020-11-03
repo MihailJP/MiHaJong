@@ -120,7 +120,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("金鶏独立"), get_yaku_han("kinkei_dokuritsu"),
 				_T("全倒鋪"), _T("全求人"),
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
-					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == TileCode::bambooOne);
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai().tile == TileCode::bambooOne);
 				}
 			));
 		// 独釣寒江雪…白待ち
@@ -129,7 +129,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				_T("独釣寒江雪"), get_yaku_han("kankou_no_yuki"),
 				_T("全倒鋪"), _T("全求人"),
 				[chkHadakaTanki](const MentsuAnalysis* const analysis) -> bool {
-					return chkHadakaTanki(analysis) && (analysis->TsumoHai->tile == TileCode::whiteDragon);
+					return chkHadakaTanki(analysis) && (analysis->TsumoHai().tile == TileCode::whiteDragon);
 				}
 			));
 #endif /* GUOBIAO */
@@ -778,7 +778,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 						(tiles[composeNumberTile(i, 4)] >= 1) && (tiles[composeNumberTile(i, 5)] >= 1) && (tiles[composeNumberTile(i, 6)] >= 1) &&
 						(tiles[composeNumberTile(i, 7)] >= 1) && (tiles[composeNumberTile(i, 8)] >= 1) && (tiles[composeNumberTile(i, 9)] >= 3))
 						yakuFlag = true;
-				return yakuFlag && (!(*analysis->MenzenFlag));
+				return yakuFlag && (!analysis->MenzenFlag());
 			}
 		));
 
@@ -845,11 +845,11 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					const std::array<TileCode, 1> shunzi1 = {composeNumberTile(i, 3)};
 					const std::array<TileCode, 1> shunzi2 = {composeNumberTile(i, 4)};
 					if (chktiles(analysis, kezi, shunzi1, true) &&
-						(analysis->TsumoHai->tile == composeNumberTile(i, 3)) &&
+						(analysis->TsumoHai().tile == composeNumberTile(i, 3)) &&
 						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 					if (chktiles(analysis, kezi, shunzi2, true) &&
-						(analysis->TsumoHai->tile == composeNumberTile(i, 6)) &&
+						(analysis->TsumoHai().tile == composeNumberTile(i, 6)) &&
 						(Tile(analysis->MianziDat[0].tile).isHonor()))
 						flag = true;
 				}
@@ -862,7 +862,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 			_T("愚濫怒苦露酢"), yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MentsuAnalysis* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
-					(analysis->TsumoHai->tile == TileCode::circleFive) ?
+					(analysis->TsumoHai().tile == TileCode::circleFive) ?
 					2_yakuman :
 					1_yakuman);
 			}),
@@ -876,7 +876,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				};
 				return chktiles_nodup(analysis, kezi, shunzi, true) &&
 					(analysis->MianziDat[0].tile == TileCode::circleFive) &&
-					(*analysis->MenzenFlag);
+					(analysis->MenzenFlag());
 			}
 		));
 	/* 喜鵲閙梅 */
@@ -1202,7 +1202,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 					[targetTile](const MentsuAnalysis* const analysis) -> bool {
 						return ((analysis->KangziCount[targetTile] >= 1) &&
 							(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
-							(analysis->TotalKezi == 1) && (*analysis->MenzenFlag));
+							(analysis->TotalKezi == 1) && (analysis->MenzenFlag()));
 					}
 				));
 		}
@@ -1215,7 +1215,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 				return ((analysis->KangziCount[TileCode::eastWind] >= 1) &&
 					(analysis->KangziCount[TileCode::northWind] >= 1) &&
 					(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
-					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
+					(analysis->TotalKezi == 2) && (analysis->MenzenFlag()));
 			}
 		));
 	/* 名大役満 */
@@ -1231,7 +1231,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_misc() {
 							yakuFlag = true;
 				return ((yakuFlag) &&
 					(analysis->Machi == yaku::yakuCalculator::MachiType::ryanmen) &&
-					(analysis->TotalKezi == 2) && (*analysis->MenzenFlag));
+					(analysis->TotalKezi == 2) && (analysis->MenzenFlag()));
 			}
 		));
 

@@ -630,10 +630,6 @@ void yaku::yakuCalculator::analysisNonLoop(const GameTable* const gameStat, Play
 	analysis.SeenTiles = countseentiles(gameStat);
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	analysis.GameStat = gameStat;
-	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
-	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
-	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
-	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	YAKUSTAT result;
 	constexpr ParseMode pMode = {TileCode::noTile, ParseOrder::Ke_Shun};
 	// 計算を実行
@@ -654,10 +650,6 @@ void yaku::yakuCalculator::analysisLoop(const GameTable* const gameStat, PlayerI
 	analysis.SeenTiles = countseentiles(gameStat);
 	analysis.MachiInfo = chkFuriten(gameStat, targetPlayer);
 	analysis.GameStat = gameStat;
-	analysis.PlayerStat = &(gameStat->Player[targetPlayer]);
-	analysis.TsumoHai = &(gameStat->Player[targetPlayer].Tsumohai());
-	analysis.MenzenFlag = &(gameStat->Player[targetPlayer].MenzenFlag);
-	analysis.TsumoAgariFlag = &(gameStat->TsumoAgariFlag);
 	// 計算ルーチンに渡すパラメータの準備
 	CalculatorParam* calcprm = new CalculatorParam[160]; memset(calcprm, 0, sizeof(CalculatorParam[160]));
 	std::vector<std::thread> myThreads;

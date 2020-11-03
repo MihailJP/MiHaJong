@@ -162,7 +162,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("鳴き二盃口"), yaku::yakuCalculator::Yaku::HANFUNC(
 			[](const MentsuAnalysis* const analysis) {
 				return yaku::yakuCalculator::Yaku::YAKU_HAN(
-					(*analysis->MenzenFlag) ?
+					(analysis->MenzenFlag()) ?
 					0_han :
 					2_han,
 					0_han);
@@ -344,7 +344,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				ikki_tsuukan(analysis, &yakuFlag, &yakuCol);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) && // 嵌張待ちで
-					(analysis->PlayerStat->Hand[TsumohaiIndex].tile == composeNumberTile(yakuCol, 5)) // 和了牌が5
+					(analysis->PlayerStat()->Hand[TsumohaiIndex].tile == composeNumberTile(yakuCol, 5)) // 和了牌が5
 					);
 			}
 		));
@@ -448,7 +448,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->KeziCount[TileCode::northWind] >= 1) && // 北の刻子があり
 					(getTileSuit(analysis->MianziDat[0].tile) == yakuCol) && // 一色になっていて
-					(analysis->PlayerStat->Hand[TsumohaiIndex].tile == composeNumberTile(yakuCol, 5)) // 和了牌が5
+					(analysis->TsumoHai().tile == composeNumberTile(yakuCol, 5)) // 和了牌が5
 					);
 			}
 		));
@@ -539,9 +539,9 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				ikki_tsuukan(analysis, &yakuFlag, &yakuCol);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) && // 嵌張待ちで
-					((analysis->TsumoHai->tile == composeNumberTile(yakuCol, 2)) || // 2か
-					(analysis->TsumoHai->tile == composeNumberTile(yakuCol, 4)) || // 4か
-					(analysis->TsumoHai->tile == composeNumberTile(yakuCol, 6))) // 6で和了
+					((analysis->TsumoHai().tile == composeNumberTile(yakuCol, 2)) || // 2か
+					(analysis->TsumoHai().tile == composeNumberTile(yakuCol, 4)) || // 4か
+					(analysis->TsumoHai().tile == composeNumberTile(yakuCol, 6))) // 6で和了
 					);
 			}
 		));
@@ -1006,10 +1006,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 			_T("三色通貫"),
 			[sanshoku_tsuukan](const MentsuAnalysis* const analysis) -> bool {
 				return (sanshoku_tsuukan(analysis) && // 三色通貫で
-					(*analysis->MenzenFlag) && // 門前で
+					(analysis->MenzenFlag()) && // 門前で
 					(analysis->Machi == yaku::yakuCalculator::MachiType::tanki) && // 単騎待ちで
-					(analysis->TsumoHai->tile != TileCode::whiteDragon) && // 白待ちでなく
-					(analysis->TsumoHai->tile != TileCode::greenDragon) ); // 發待ちでない
+					(analysis->TsumoHai().tile != TileCode::whiteDragon) && // 白待ちでなく
+					(analysis->TsumoHai().tile != TileCode::greenDragon) ); // 發待ちでない
 			}
 		));
 	/* 三色通貫全帯幺九 */

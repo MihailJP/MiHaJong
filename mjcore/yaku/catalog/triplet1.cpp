@@ -30,7 +30,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!analysis->TsumoAgariFlag())) ?
 				1 : 0) == 4);
 		}
 	));
@@ -42,7 +42,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			_T("四暗刻"), _T("対々和"), _T("三暗刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return (analysis->TotalAnKezi - (
-					((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
+					((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!analysis->TsumoAgariFlag())) ?
 					1 : 0) == 4) && (
 					(analysis->GameStat->TianHuFlag) ||
 					((analysis->Machi == yaku::yakuCalculator::MachiType::tanki) && (!analysis->MachiInfo.FuritenFlag))
@@ -60,7 +60,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!analysis->TsumoAgariFlag())) ?
 				1 : 0) == 3);
 		}
 	));
@@ -70,7 +70,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		_T("双暗刻"), 2_fenF,
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!*analysis->TsumoAgariFlag)) ?
+				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!analysis->TsumoAgariFlag())) ?
 				1 : 0) == 2);
 		}
 	));
@@ -158,8 +158,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[2]), k + 2)] >= 1) &&
 							(analysis->KeziCount[composeNumberTile(liankeSuit((*i)[3]), k + 3)] >= 1) &&
 							(analysis->DuiziCount[composeNumberTile(liankeSuit((*i)[4]), k + 4)] >= 1) &&
-							((analysis->TsumoHai->tile == composeNumberTile(liankeSuit((*i)[0]), k + 0)) ||
-							(analysis->TsumoHai->tile == composeNumberTile(liankeSuit((*i)[4]), k + 4)))
+							((analysis->TsumoHai().tile == composeNumberTile(liankeSuit((*i)[0]), k + 0)) ||
+							(analysis->TsumoHai().tile == composeNumberTile(liankeSuit((*i)[4]), k + 4)))
 							)
 							yakuFlag = true;
 				}
@@ -756,7 +756,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return ((analysis->KeziCount[TileCode::bambooOne] >= 1) &&
 					(analysis->KeziCount[TileCode::eastWind] >= 1) &&
 					(analysis->KeziCount[TileCode::whiteDragon] >= 1) &&
-					(analysis->PlayerStat->FlowerFlag.Spring));
+					(analysis->PlayerStat()->FlowerFlag.Spring));
 			}
 		));
 
@@ -1053,10 +1053,10 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return ((analysis->KeziCount[TileCode::characterEight] >= 1) &&
 					(analysis->KeziCount[TileCode::circleEight] >= 1) &&
 					(analysis->KeziCount[TileCode::bambooEight] >= 1) &&
-					analysis->PlayerStat->FlowerFlag.Spring && analysis->PlayerStat->FlowerFlag.Summer &&
-					analysis->PlayerStat->FlowerFlag.Autumn && analysis->PlayerStat->FlowerFlag.Winter &&
-					analysis->PlayerStat->FlowerFlag.Plum && analysis->PlayerStat->FlowerFlag.Orchid &&
-					analysis->PlayerStat->FlowerFlag.Chrys && analysis->PlayerStat->FlowerFlag.Bamboo);
+					analysis->PlayerStat()->FlowerFlag.Spring && analysis->PlayerStat()->FlowerFlag.Summer &&
+					analysis->PlayerStat()->FlowerFlag.Autumn && analysis->PlayerStat()->FlowerFlag.Winter &&
+					analysis->PlayerStat()->FlowerFlag.Plum && analysis->PlayerStat()->FlowerFlag.Orchid &&
+					analysis->PlayerStat()->FlowerFlag.Chrys && analysis->PlayerStat()->FlowerFlag.Bamboo );
 			}
 		));
 #endif /* GUOBIAO */

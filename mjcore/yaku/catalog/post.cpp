@@ -53,7 +53,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 		if (((analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) ||
 			(analysis->Machi == yaku::yakuCalculator::MachiType::penchan) ||
 			(analysis->Machi == yaku::yakuCalculator::MachiType::tanki)) &&
-			(! analysis->PlayerStat->RichiFlag.RichiFlag) &&
+			(! analysis->PlayerStat()->RichiFlag.RichiFlag) &&
 			(totalHan <= 0) && (totalSemiMangan == 0)) {
 				LPCTSTR name = _T("カラス");
 				yakuHan[name] = 1_hanF(analysis);
@@ -65,7 +65,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 		if (((analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) ||
 			(analysis->Machi == yaku::yakuCalculator::MachiType::penchan) ||
 			(analysis->Machi == yaku::yakuCalculator::MachiType::tanki)) &&
-			(analysis->PlayerStat->RichiFlag.RichiFlag) &&
+			(analysis->PlayerStat()->RichiFlag.RichiFlag) &&
 			(totalHan == 1) && (totalSemiMangan == 0)) {
 				LPCTSTR name = _T("カラス立直");
 				yakuHan[name] = 1_hanF(analysis);
@@ -82,7 +82,7 @@ void yaku::yakuCalculator::CalculatorThread::checkPostponedYaku
 		if ((totalHan >= 2) && /* 2飜以上あるか？ */
 			(totalSemiMangan == 0) && /* 役満未満か？ */
 			(analysis->GameStat->DoraFlag.Omote[TileCode::northWind] == 0) && /* 北はドラではないか？ */
-			((!*analysis->MenzenFlag) || (!analysis->PlayerStat->RichiFlag.RichiFlag) ||
+			((!analysis->MenzenFlag()) || (!analysis->PlayerStat()->RichiFlag.RichiFlag) ||
 			(RuleData::chkRuleApplied("uradora")) ||
 			(analysis->GameStat->DoraFlag.Ura[TileCode::northWind] == 0)) && /* 北は裏ドラではないか？ */
 			(analysis->MianziDat[0].tile == TileCode::northWind)) { /* 雀頭が北か？ */

@@ -164,8 +164,8 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_quad() {
 			_T("暗中模索"), get_yaku_han("anchumosaku"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				return ((analysis->AnKangziCount[TileCode::redDragon] >= 1) &&
-					(getTileSuit(analysis->TsumoHai->tile) == TileSuit::bamboos) &&
-					(*analysis->TsumoAgariFlag));
+					(getTileSuit(analysis->TsumoHai().tile) == TileSuit::bamboos) &&
+					(analysis->TsumoAgariFlag()));
 			}
 		));
 	/* 戦車 */
