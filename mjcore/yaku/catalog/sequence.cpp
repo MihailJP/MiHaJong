@@ -344,7 +344,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_sequence() {
 				ikki_tsuukan(analysis, &yakuFlag, &yakuCol);
 				return (yakuFlag && // 一気通貫が成立していて
 					(analysis->Machi == yaku::yakuCalculator::MachiType::kanchan) && // 嵌張待ちで
-					(analysis->PlayerStat()->Hand[TsumohaiIndex].tile == composeNumberTile(yakuCol, 5)) // 和了牌が5
+					(analysis->TsumoHai().tile == composeNumberTile(yakuCol, 5)) // 和了牌が5
 					);
 			}
 		));
