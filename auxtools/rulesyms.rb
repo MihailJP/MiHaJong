@@ -3,12 +3,13 @@
 
 def gametype (type)
 	typecode = type.to_i
-	if typecode & 0x0f == 0x0f then return "" end
+	if typecode & 0x1f == 0x1f then return "" end
 	tmparr = []
 	if typecode & 0x01 != 0 then tmparr += ["四麻"] end
 	if typecode & 0x02 != 0 then tmparr += ["三麻"] end
 	if typecode & 0x04 != 0 then tmparr += ["四人三麻"] end
 	if typecode & 0x08 != 0 then tmparr += ["数牌三麻"] end
+	if typecode & 0x10 != 0 then tmparr += ["瀬戸内三麻"] end
 	return "〈" + tmparr.join(", ") + "〉"
 end
 
