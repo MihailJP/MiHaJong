@@ -112,3 +112,4 @@ compile
 !config/config.h
 *.Plo
 .dirstamp
+doc/pygments.css

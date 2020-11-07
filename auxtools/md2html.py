@@ -15,12 +15,18 @@ print("<!DOCTYPE html>")
 print("<html>")
 print("<head>")
 print("<link rel=\"stylesheet\" href=\"manual.css\" type=\"text/css\">")
+print("<link rel=\"stylesheet\" href=\"pygments.css\" type=\"text/css\">")
 print("<title>" + re.compile('\\r?\\n').split(mdText)[0] + "</title>")
 print("</head>")
 print("<body>")
 
 print(markdown.markdown(mdText.replace('.md', '.html'),
                         extensions=['tables', 'fenced_code', 'codehilite'],
+                        extension_configs={
+                            'codehilite': {
+                                'guess_lang': False,
+                            },
+                        },
                         output_format='html5'))
 
 print("</body>")

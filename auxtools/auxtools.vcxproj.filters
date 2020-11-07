@@ -22,5 +22,8 @@
     <None Include="md2html.py">
       <Filter>Python</Filter>
     </None>
+    <None Include="makecss.py">
+      <Filter>Python</Filter>
+    </None>
   </ItemGroup>
 </Project>
