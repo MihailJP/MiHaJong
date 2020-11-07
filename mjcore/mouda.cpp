@@ -335,6 +335,12 @@ namespace { /* 内部処理分割用 */
 			gameStat->statOfActive().PlayerScore -= 1000;
 			if (DiscardTileIndex.type == DiscardTileNum::OpenRiichi)
 				chkOpenMachi(gameStat, gameStat->CurrentPlayer.Active);
+			if (gameStat->statOfActive().RichiOrder == 0) { // 立直の順番を記録
+				for (int i = 0; i < ACTUAL_PLAYERS; ++i) {
+					if (gameStat->Player[i].RichiFlag.RichiFlag)
+						++gameStat->statOfActive().RichiOrder;
+				}
+			}
 		}
 		/* 天和や地和のフラグを降ろす */
 		gameStat->statOfActive().FirstDrawFlag =
