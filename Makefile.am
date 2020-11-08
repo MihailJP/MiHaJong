@@ -16,7 +16,7 @@ EXTRA_DIST = \
 	doc/addyaku.md doc/history.md doc/license.md doc/playing.md \
 	doc/readme.md doc/rulesyms.md doc/script.md
 dist_doc_DATA = \
-	readme.md doc/manual.css \
+	readme.md doc/manual.css doc/pygments.css \
 	doc/addyaku.html doc/history.html doc/license.html doc/playing.html \
 	doc/readme.html doc/rulesyms.html doc/script.html
 

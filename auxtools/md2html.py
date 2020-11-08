@@ -6,22 +6,41 @@ import codecs
 import sys
 import re
 
+def out(strDat):
+    if sys.version_info.major < 3:
+        print(strDat)
+    else:
+        sys.stdout.buffer.write(strDat.encode(encoding='utf-8') + b"\n")
+
+mdText = "" # pre-declaration
 if sys.version_info.major < 3:
     sys.stdin = codecs.getreader('utf-8')(sys.stdin)
     sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
-mdText = sys.stdin.read()
+    mdText = sys.stdin.read()
+else:
+    mdText = sys.stdin.buffer.read().decode(encoding='utf-8')
 
-print("<!DOCTYPE html>")
-print("<html>")
-print("<head>")
-print("<link rel=\"stylesheet\" href=\"manual.css\" type=\"text/css\">")
-print("<title>" + re.compile('\\r?\\n').split(mdText)[0] + "</title>")
-print("</head>")
-print("<body>")
+titleText = re.compile('\\r?\\n').split(mdText)[0]
 
-print(markdown.markdown(mdText.replace('.md', '.html'),
-                        extensions=['tables', 'fenced_code', 'codehilite'],
-                        output_format='html5'))
+mdText = mdText.replace('.md', '.html')
+mdText = markdown.markdown(mdText,
+    extensions=['tables', 'fenced_code', 'codehilite'],
+    extension_configs={
+        'codehilite': {
+            'guess_lang': False,
+        },
+    },
+    output_format='html5')
+mdText = mdText.replace("\ufdef ", "").replace("\ufdef", "")
 
-print("</body>")
-print("</html>")
+out("<!DOCTYPE html>")
+out("<html>")
+out("<head>")
+out("<link rel=\"stylesheet\" href=\"manual.css\" type=\"text/css\">")
+out("<link rel=\"stylesheet\" href=\"pygments.css\" type=\"text/css\">")
+out("<title>" + titleText + "</title>")
+out("</head>")
+out("<body>")
+out(mdText)
+out("</body>")
+out("</html>")

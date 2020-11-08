@@ -7,14 +7,18 @@ TARGETS_COMPRESS_RANKVAL_CSV=$(DATAPATH)rankval.csv.lzma $(DATAPATH)rankval_csv.
 TARGETS_PARSE_RULESYMS_TXT=$(DOCPATH)rulesyms.md
 TARGETS_PARSE_HTML=$(DOCPATH)addyaku.html $(DOCPATH)history.html $(DOCPATH)license.html $(DOCPATH)playing.html \
 	$(DOCPATH)readme.html $(DOCPATH)rulesyms.html $(DOCPATH)script.html
+TARGETS_PARSE_CSS=$(DOCPATH)pygments.css
 
 TARGETS=$(TARGETS_COMPRESS_CONFITEM_CSV) $(TARGETS_COMPRESS_CONFITEM_INI) \
 	$(TARGETS_COMPRESS_RANKVAL_CSV) $(TARGETS_PARSE_RULESYMS_TXT) \
-	$(TARGETS_PARSE_HTML)
+	$(TARGETS_PARSE_HTML) $(TARGETS_PARSE_CSS)
 all: $(TARGETS)
 
 $(DOCPATH)rulesyms.md: $(DATAPATH)confitem.csv
 	ruby rulesyms.rb
+
+$(DOCPATH)pygments.css:
+	python ./makecss.py > $@
 
 .SUFFIXES: .md .html
 .md.html:
