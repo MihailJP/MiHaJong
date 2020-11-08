@@ -50,17 +50,27 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_contextual() {
 			}
 		));
 		/* プンリー放銃 */
-		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-			_T("開立直栄和"), 11_hanM,
-			[](const MentsuAnalysis* const analysis) -> bool {
-				return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
-					(analysis->PlayerStat()->RichiFlag.RichiFlag) && // 立直している
-					(analysis->PlayerStat()->RichiFlag.OpenFlag) && // オープン立直フラグが立っている
-					(!analysis->TsumoAgariFlag()) && // ロン
-					(analysis->GameStat->CurrentPlayer.Furikomi >= 0) &&
-					(!analysis->GameStat->Player[analysis->GameStat->CurrentPlayer.Furikomi].RichiFlag.RichiFlag)); // 非リーチ者からの和了
-			}
-		));
+		if (!RuleData::chkRule("open_riichi", "yes_without_yakuman")) {
+			yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+				_T("開立直栄和"), 11_hanM,
+				RuleData::chkRule("open_riichi", "yes_okkake_yakuman") ? static_cast<YAKUFUNC>([](const MentsuAnalysis* const analysis) -> bool {
+					return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
+						(analysis->PlayerStat()->RichiFlag.RichiFlag) && // 立直している
+						(analysis->PlayerStat()->RichiFlag.OpenFlag) && // オープン立直フラグが立っている
+						(!analysis->TsumoAgariFlag()) && // ロン
+						(analysis->GameStat->CurrentPlayer.Furikomi >= 0) &&
+						((!analysis->GameStat->Player[analysis->GameStat->CurrentPlayer.Furikomi].RichiFlag.RichiFlag) || // 非リーチ者からの和了 or
+						(analysis->PlayerStat()->RichiOrder < analysis->GameStat->Player[analysis->GameStat->CurrentPlayer.Furikomi].RichiOrder))); // 追っかけリーチ者からの和了
+				}) : ([](const MentsuAnalysis* const analysis) -> bool {
+					return ((analysis->shanten[ShantenType::all] == -1) && // 何かの手で和了になっている
+						(analysis->PlayerStat()->RichiFlag.RichiFlag) && // 立直している
+						(analysis->PlayerStat()->RichiFlag.OpenFlag) && // オープン立直フラグが立っている
+						(!analysis->TsumoAgariFlag()) && // ロン
+						(analysis->GameStat->CurrentPlayer.Furikomi >= 0) &&
+						(!analysis->GameStat->Player[analysis->GameStat->CurrentPlayer.Furikomi].RichiFlag.RichiFlag)); // 非リーチ者からの和了
+				})
+			));
+		}
 	}
 	/* 一発(方言では即ともいう) */
 	if (RuleData::chkRuleApplied("riichi_ippatsu")&&(!RuleData::chkRule("riichi_ippatsu", "chip_only"))) { // 一発が役にならないルールを除外

@@ -270,6 +270,7 @@ struct PlayerTable { // プレイヤーの状態を格納
 	bool DoujunFuriten; // 同順振聴である
 	bool AgariHouki; // 和了り放棄の罰則中かどうか
 	RichiStat RichiFlag; // リーチしているかどうか
+	uint8_t RichiOrder; // リーチした順番（開立直栄和用）
 	DeclFlag DeclarationFlag; // 鳴きの宣言
 	Flowers FlowerFlag; // 晒している花牌を格納するフラグ
 	uint8_t NorthFlag; // 晒している北風牌を格納するフラグ

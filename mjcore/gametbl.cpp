@@ -168,6 +168,7 @@ void inittable(GameTable* const gameStat) { /* 局単位での初期化 */
 			gameStat->Player[pl].RichiFlag.IppatsuFlag =
 			gameStat->Player[pl].RichiFlag.DoubleFlag =
 			gameStat->Player[pl].RichiFlag.OpenFlag = false;
+		gameStat->Player[pl].RichiOrder = 0;
 		gameStat->Player[pl].FirstDrawFlag = true; // １巡目である（地和、ダブル立直の判定に使う）
 		gameStat->Player[pl].DoujunFuriten = // 同順振聴である
 			gameStat->Player[pl].AgariHouki = false; // 和了り放棄の罰則中かどうか
@@ -301,6 +302,7 @@ GameTable* makesandBox(const GameTable* const gameStat, PlayerID targetPlayer) {
 		sandbox->Player[p].RichiFlag.IppatsuFlag = gameStat->Player[p].RichiFlag.IppatsuFlag;
 		sandbox->Player[p].RichiFlag.DoubleFlag = gameStat->Player[p].RichiFlag.DoubleFlag;
 		sandbox->Player[p].RichiFlag.OpenFlag = gameStat->Player[p].RichiFlag.OpenFlag;
+		sandbox->Player[p].RichiOrder = gameStat->Player[p].RichiOrder;
 		sandbox->Player[p].FirstDrawFlag = gameStat->Player[p].FirstDrawFlag;
 		sandbox->Player[p].DoujunFuriten = gameStat->Player[p].DoujunFuriten;
 		sandbox->Player[p].AgariHouki = gameStat->Player[p].AgariHouki;

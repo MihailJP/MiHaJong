@@ -159,7 +159,7 @@
 172,31,0,,,,,,suukantsu,四槓子,四槓子の飜数と包の有無を設定します,yakuman,double_yakuman,yakuman_with_pao,double_yakuman_with_pao,,,,,,,,,,,,,,,,
 173,31,0,,,,,,tenhoh,天和,天和の飜数を設定します,yakuman,double_yakuman,,,,,,,,,,,,,,,,,,
 174,31,0,,,,,,exposed_pinfu,喰い平,鳴いた平和形の符を設定します,30fu,20fu,1han_30fu_unbound,1han_20fu_unbound,1han_30fu,1han_20fu,,,,,,,,,,,,,,
-175,31,0,,,,,,open_riichi,オープン立直,オープン立直の有無を設定します,no,yes,,,,,,,,,,,,,,,,,,
+175,31,0,,,,,,open_riichi,オープン立直,オープン立直の有無を設定します,no,yes_nonriichi_yakuman,yes_okkake_yakuman,yes_without_yakuman,,,,,,,,,,,,,,,,
 176,31,0,,,,,,daisharin,大車輪,大車輪の有無と価値を設定します(2～8の純正のみ),no,yakuman_menzen,double_yakuman_menzen,,,,,,,,,,,,,,,,,
 177,31,0,,,,,,sanrenkoh,三連刻,三連刻の有無と価値を設定します,no,2han,3han,,,,,,,,,,,,,,,,,
 178,31,0,,,,,,suurenkoh,四連刻,四連刻の有無と価値を設定します,no,yakuman,8han_incl_toitoi,,,,,,,,,,,,,,,,,
