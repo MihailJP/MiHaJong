@@ -33,7 +33,7 @@ private:
 		std::list<Yaku> catalog;
 	};
 
-	enum class MachiType : uint8_t { // 街の種類
+	enum class MachiType : uint8_t { // 待ちの種類
 		invalid, // 無効
 		ryanmen, // 両面
 		kanchan, // 嵌張

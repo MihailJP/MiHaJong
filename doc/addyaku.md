@@ -49,12 +49,13 @@ mjcore/data/confitem.csv
 
 　クライアントのマスクは、次のビット和の10進表記です。
 
-|ビット|数値|意味    |
-|-----:|---:|:-------|
-|     0|   1|四人打ち|
-|     1|   2|三人打ち|
-|     2|   4|四人三麻|
-|     3|   8|数牌三麻|
+|ビット|十進|十六進|意味      |
+|-----:|---:|-----:|:---------|
+|     0|   1|  0x01|四人打ち  |
+|     1|   2|  0x02|三人打ち  |
+|     2|   4|  0x04|四人三麻  |
+|     3|   8|  0x08|数牌三麻  |
+|     4|  16|  0x10|瀬戸内三麻|
 
 　レコード番号1には、適用するクライアントの種類を指定します。例えば、15を指定すると4種全てのクライアントで使用可能になります。  
 　レコード番号2には、適用不可能なクライアントの種類を指定します。例えば、10を指定すると、三人打ちと数牌三麻で N/A になります。
@@ -99,12 +100,12 @@ mjcore/yaku/catalog/sequence.cpp
 
 　なお、`get_yaku_han()` 関数は、コンフィグから飜数を取得するのに使います。
 
-### `MENTSU_ANALYSIS` 構造体 ###
+### `MentsuAnalysis` 構造体 ###
 
 ```c++
-struct yaku::yakuCalculator::MENTSU_ANALYSIS { // 面子解析結果
-    PlayerID player; // 向聴数
-    Shanten shanten[SHANTEN_PAGES]; // 向聴数
+struct yaku::yakuCalculator::MentsuAnalysis { // 面子解析結果
+    PlayerID player;
+    ShantenData shanten;
     MeldBuf MianziDat; // 面子パース結果
     uint8_t BasePoint; // 符
     MachiType Machi; // 待ちの種類
@@ -128,23 +129,37 @@ struct yaku::yakuCalculator::MENTSU_ANALYSIS { // 面子解析結果
     uint8_t TotalAnKangzi; // 暗槓合計
     uint8_t TotalKaKangzi; // 加槓合計
     const GameTable* GameStat; // 卓情報へのポインタ
-    const PlayerTable* PlayerStat; // プレイヤー情報へのポインタ
-    const Tile* TsumoHai; // 和了牌へのポインタ
-    const bool* MenzenFlag; // 門前かどうかのフラグ
-    const bool* TsumoAgariFlag; // ツモアガリどうかのフラグ
+    const PlayerTable* PlayerStat() const; // プレイヤー情報へのポインタ
+    const Tile& TsumoHai() const; // 和了牌
+    bool MenzenFlag() const; // 門前かどうかのフラグ
+    bool TsumoAgariFlag() const; // ツモアガリどうかのフラグ
+};
+```
+
+### `ShantenData` 構造体 ###
+
+```c++
+struct yaku::yakuCalculator::ShantenData : public std::array<Shanten, SHANTEN_PAGES> {
+    constexpr Shanten operator[] (ShantenType s) const;
+    reference operator[] (ShantenType s);
+    constexpr Shanten operator[] (std::size_t s) const;
+    reference operator[] (std::size_t s);
+    ShantenData() = default;
+    ShantenData(const ShantenData&) = default;
+    ShantenData& operator = (const ShantenData&) = default;
 };
 ```
 
 ### `MachiType` 列挙体 ###
 
 ```c++
-enum yaku::yakuCalculator::MachiType : uint8_t { // 街の種類
-    machiInvalid, // 無効
-    machiRyanmen, // 両面
-    machiKanchan, // 嵌張
-    machiPenchan, // 辺張
-    machiShanpon, // 双ポン
-    machiTanki    // 単騎
+enum class yaku::yakuCalculator::MachiType : uint8_t { // 待ちの種類
+    invalid, // 無効
+    ryanmen, // 両面
+    kanchan, // 嵌張
+    penchan, // 辺張
+    shanpon, // 双ポン
+    tanki    // 単騎
 };
 ```
 
@@ -162,8 +177,10 @@ struct MachihaiInfo { // 待ち牌とかの情報を格納(chkFuriten関数用)
 ### `InfoByTile` テンプレート ###
 
 ```c++
-template <class T> struct InfoByTile { // 牌ごとに指定した型による情報(テンプレート)
-    T val[40u];
+template <class T> class InfoByTile { // 牌ごとに指定した型による情報(テンプレート)
+private:
+    /* 略 */
+public:
     const T& operator[](const TileCode tile) const;
     const T& operator[](const int tile) const;
     T& operator[](const TileCode tile);
@@ -177,39 +194,52 @@ template <class T> struct InfoByTile { // 牌ごとに指定した型による�
 struct Tile { // 赤ドラデータを含めた牌のデータ
     TileCode tile;
     doraCol red;
+    constexpr explicit operator bool() const {return tile != TileCode::noTile;}
+    constexpr bool operator ! () const {return tile == TileCode::noTile;}
+    constexpr bool operator == (const Tile& otherTile) const;
+    constexpr bool operator != (const Tile& otherTile) const;
+    constexpr bool operator < (const Tile& otherTile) const;
+    constexpr bool operator > (const Tile& otherTile) const;
+    constexpr bool operator <= (const Tile& otherTile) const;
+    constexpr bool operator >= (const Tile& otherTile) const;
+    constexpr TileSuit getSuit() const;
+    constexpr bool isNumber() const;
+    constexpr bool isHonor() const;
+    constexpr bool isFlower() const;
+    constexpr explicit Tile(TileCode tile = TileCode::noTile, DoraCol red = DoraCol::normal);
 };
 ```
 
 ### `TileCode` 列挙体 ###
 
 ```c++
-enum TileCode : uint8_t { // 牌のコード
+enum class TileCode : uint8_t { // 牌のコード
     /* 萬子 */
-    CharacterOne =   1u, CharacterTwo, CharacterThree, CharacterFour, CharacterFive, CharacterSix, CharacterSeven, CharacterEight, CharacterNine,
+    characterOne =   1u, characterTwo, characterThree, characterFour, characterFive, characterSix, characterSeven, characterEight, characterNine,
     /* 筒子 */
-    CircleOne    =  11u, CircleTwo,    CircleThree,    CircleFour,    CircleFive,    CircleSix,    CircleSeven,    CircleEight,    CircleNine,
+    circleOne    =  11u, circleTwo,    circleThree,    circleFour,    circleFive,    circleSix,    circleSeven,    circleEight,    circleNine,
     /* 索子 */
-    BambooOne    =  21u, BambooTwo,    BambooThree,    BambooFour,    BambooFive,    BambooSix,    BambooSeven,    BambooEight,    BambooNine,
+    bambooOne    =  21u, bambooTwo,    bambooThree,    bambooFour,    bambooFive,    bambooSix,    bambooSeven,    bambooEight,    bambooNine,
     /* 字牌 */
-    EastWind     =  31u, SouthWind,    WestWind,       NorthWind,     WhiteDragon,   GreenDragon,  RedDragon,
+    eastWind     =  31u, southWind,    westWind,       northWind,     whiteDragon,   greenDragon,  redDragon,
     /* 花牌 */
-    Flower       =  38u, // 花牌(InfoByTileのインデックス用)
-    Spring       = 121u, Summer,       Autumn,         Winter, // 季節牌
-    Plum         = 126u, Orchid,       Chrysanthemum,  Bamboo, // 草木牌
+    flower       =  38u, // 花牌(InfoByTileのインデックス用)
+    spring       = 121u, summer,       autumn,         winter, // 季節牌
+    plum         = 126u, orchid,       chrysanthemum,  bamboo, // 草木牌
     /* 以下は役判定で使うことはありません */
-    NoTile       =   0u, // 牌なし
-    BackSide     =  39u, // 牌の裏側（画面表示時の内部処理用）
-    TilePad      = UCHAR_MAX, // 理牌時の内部処理用
+    noTile       =   0u, // 牌なし
+    backSide     =  39u, // 牌の裏側（画面表示時の内部処理用）
+    tilePad      = UCHAR_MAX, // 理牌時の内部処理用
 };
 ```
 
-### `doraCol` 列挙体 ###
+### `DoraCol` 列挙体 ###
 
 ```c++
-enum doraCol : uint8_t {
-    Normal, // 黒牌
-    AkaDora, // 赤牌
-    AoDora, // 青牌
+enum class DoraCol : uint8_t {
+    normal, // 黒牌
+    akaDora, // 赤牌
+    aoDora, // 青牌
 };
 ```
 
@@ -253,10 +283,10 @@ typedef InfoByTile<int8_t> Int8ByTile;
 common/shanten.h
 ----------------
 
-　ここでは、`ShantenType` 列挙体に定数を追加します。`ShantenPages,` と書いてある行のすぐ上に次のように追加します。
+　ここでは、`ShantenType` 列挙体に定数を追加します。`pages,` と書いてある行のすぐ上に次のように追加します。
 
 ```c++
-    shantenFugahoge, // ふがほげ
+    fugahoge, // ふがほげ
 ```
 
 
@@ -285,16 +315,16 @@ mjcore/shanten.cpp
 
 　次の2箇所を書き換えます。
 
-- 引数に `shantenFugahoge` が渡された場合の処理
+- 引数に `ShantenType::fugahoge` が渡された場合の処理
 
 　これは、「ふがほげ」に対する向聴数を求めよということです。`switch (mode)` のブロック内に、次のように追記します。
 
 ```c++
-case shantenFugahoge:
+case ShantenType::fugahoge:
     return calcShantenFugahoge(gameStat, playerID, tileCount);
 ```
 
-- 引数に `shantenAll` が渡された場合の処理
+- 引数に `ShantenType::all` が渡された場合の処理
 
 　これは、「ふがほげ」の他に面子手や七対子など可能なすべての和了形に対する向聴数を求めよということです。`default` ケース内で、 `return shanten;` と書かれている前の行に、次のように追加します。
 
@@ -330,7 +360,7 @@ mjcore/yaku/catalog/irreg.cpp
         yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
             _T("ふがほげ"), get_yaku_han("fugahoge"),
             [](const MENTSU_ANALYSIS* const analysis) -> bool {
-                return (analysis->shanten[shantenFugahoge] == -1);
+                return (analysis->shanten[ShantenType::fugahoge] == -1);
             }
         ));
 ```
@@ -339,7 +369,7 @@ mjcore/yaku/catalog/irreg.cpp
 mjcore/ai/functbl.cpp
 ---------------------
 
-　ここでは、AIから「符がほげ」の飜数を取得できるように、`aiscript::table::functable::agariTypeCode()` に追記します。
+　ここでは、AIから「ふがほげ」の飜数を取得できるように、`aiscript::table::functable::agariTypeCode()` に追記します。
 
 ```c++
     lockTable(L); lua_setfield(L, -2, "AgariType");
@@ -348,13 +378,13 @@ mjcore/ai/functbl.cpp
 と書かれている前の行に、次のように追加します。
 
 ```c++
-    TableAdd(L, "Fugahoge", (lua_Integer)shantenFugahoge);
+    TableAdd(L, "Fugahoge", (lua_Integer)ShantenType::fugahoge);
 ```
 
 
-doc/script.txt
---------------
+doc/script.md
+-------------
 
-　doc/script.txt には、AI用のスクリプトの説明が書かれています。750～760行目辺りにそれらしい解説があるので、そこにも忘れず追記してください。
+　doc/script.md には、AI用のスクリプトの説明が書かれています。750～760行目辺りにそれらしい解説があるので、そこにも忘れず追記してください。
 
 
