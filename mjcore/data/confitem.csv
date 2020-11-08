@@ -110,7 +110,7 @@
 126,16,0,,,,,,red_four,赤四,赤ドラ(４の牌)の有無を設定します,no,circle_suit,>>>,>>>,character_suit,character_circle_suit,,,,,,,,,,,,,,
 127,9,0,,,,,,red_five,赤五,赤ドラの有無を設定します,3tiles,4tiles,6tiles,2_circle_tiles,>>>,>>>,>>>,>>>,no,circle_suit,bamboo_suit,circle_bamboo_suit,character_suit,character_circle_suit,character_bamboo_suit,,,,,
 127,6,0,,,,,,red_five,赤五,赤ドラの有無を設定します,2tiles,>>>,4tiles,2_circle_tiles,>>>,>>>,>>>,>>>,no,circle_suit,bamboo_suit,,,,,,,,,
-127,16,0,,,,,,red_five,赤五,赤ドラの有無を設定します,2tiles,>>>,4tiles,2_circle_tiles,>>>,>>>,>>>,>>>,no,circle_suit,bamboo_suit,,,,,,,,,
+127,16,0,,,,,,red_five,赤五,赤ドラの有無を設定します,2tiles,>>>,4tiles,2_circle_tiles,>>>,>>>,>>>,>>>,no,circle_suit,>>>,>>>,character_suit,,,,,,,
 128,9,0,,,,,,red_six,赤六,赤ドラ(６の牌)の有無を設定します,no,circle_suit,bamboo_suit,circle_bamboo_suit,character_suit,character_circle_suit,character_bamboo_suit,all_three_suits,,,,,,,,,,,,
 128,6,0,,,,,,red_six,赤六,赤ドラ(６の牌)の有無を設定します,no,circle_suit,bamboo_suit,circle_bamboo_suit,,,,,,,,,,,,,,,,
 128,16,0,,,,,,red_six,赤六,赤ドラ(６の牌)の有無を設定します,no,circle_suit,>>>,>>>,character_suit,character_circle_suit,,,,,,,,,,,,,,

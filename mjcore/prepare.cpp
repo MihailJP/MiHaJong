@@ -92,7 +92,20 @@ inline void redtiles(GameTable* const gameStat, UInt8ByTile& tilepos) { // 赤�
 		}
 	}
 	// 5のドラは特殊
-	if (gameStat->chkGameType(SanmaX)) { // 三麻
+	if (gameStat->chkGameType(SanmaSeto)) { // 瀬戸内三麻
+		if (RuleData::chkRule("red_five", "2tiles")) {
+			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
+			gameStat->Deck[tilepos[CharacterFive]].red = AkaDora;
+		} else if (RuleData::chkRule("red_five", "4tiles")) {
+			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
+			gameStat->Deck[tilepos[CircleFive] + 1].red = AkaDora;
+			gameStat->Deck[tilepos[CharacterFive]].red = AkaDora;
+			gameStat->Deck[tilepos[CharacterFive] + 1].red = AkaDora;
+		} else if (RuleData::chkRule("red_five", "2_circle_tiles")) {
+			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
+			gameStat->Deck[tilepos[CircleFive] + 1].red = AkaDora;
+		}
+	} else if (gameStat->chkGameType(SanmaX)) { // 三麻
 		if (RuleData::chkRule("red_five", "2tiles")) {
 			gameStat->Deck[tilepos[CircleFive]].red = AkaDora;
 			gameStat->Deck[tilepos[BambooFive]].red = AkaDora;
