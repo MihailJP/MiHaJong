@@ -109,6 +109,7 @@ MihailJPの開発環境
 - Ruby 処理系 (http://www.ruby-lang.org/ja/downloads/)
 - Python 処理系 (http://www.python.jp/download/)
 - markdown_py (https://pypi.python.org/pypi/Markdown)
+- Pygments (https://pygments.org/)
 - libogg/libvorbis (http://www.xiph.org/downloads/) (Visual C++の場合はスタティックリンクします)
 - GuruGuruSMF (http://gurugurusmf.migmig.net/) (Windowsのみ)
 - OpenAL (http://connect.creativelabs.com/openal/default.aspx) (Linuxのみ)

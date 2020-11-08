@@ -224,6 +224,9 @@ MH_CHECK_RUBY_MODULE([lzma], [], [
 MH_CHECK_PYTHON_MODULE([markdown], [], [
 	AC_MSG_ERROR([Python module 'markdown' is unavailable])
 ])
+MH_CHECK_PYTHON_MODULE([pygments], [], [
+	AC_MSG_ERROR([Python module 'pygments' is unavailable])
+])
 
 AC_CONFIG_FILES([Makefile
                  astro/Makefile
