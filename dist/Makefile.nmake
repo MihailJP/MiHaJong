@@ -107,7 +107,16 @@ $(TMPPATH)haifu\haifu.xsd: $(DATAPATH)haifu\haifu.xsd
 $(TMPPATH)haifu\haifu.xsl: $(DATAPATH)haifu\haifu.xsl
 	- mkdir $(TMPPATH)haifu
 	copy $** $@
-	
+$(TMPPATH)haifu\GL-Antique-Dice.woff: $(DATAPATH)haifu\GL-Antique-Dice.woff
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+$(TMPPATH)haifu\GL-MahjongTile-Clr-WithFallback.woff: $(DATAPATH)haifu\GL-Antique-Dice.woff
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+$(TMPPATH)haifu\GL-MahjongTile-Subset.woff: $(DATAPATH)haifu\GL-Antique-Dice.woff
+	- mkdir $(TMPPATH)haifu
+	copy $** $@
+
 $(TMPPATH)mihajong.exe: $(OBJPATH)mihajong.exe
 	- mkdir $(TMPPATH)
 	copy $** $@
