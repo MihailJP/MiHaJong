@@ -25,6 +25,8 @@ SUFFIXES = .md .html
 	cd $(@D)&&make $(@F)
 doc/rulesyms.md:
 	cd $(@D)&&make $(@F)
+doc/pygments.css:
+	cd $(@D)&&make $(@F)
 
 aidir = $(pkgdatadir)/ai
 dist_ai_DATA = data/ai/default.lua
