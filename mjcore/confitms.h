@@ -133,7 +133,7 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 
 		if ((k[1].empty()) || (GameStat.chkGameType(static_cast<GameTypeID>(_ttoi(k[1].c_str()))))) { // GameType合致した場合
 			if ((_ttoi(k[0].c_str()) % PageBatch) == 0)
-				pageCaption[_ttoi(k[0].c_str()) / PageBatch] = tstring(k[4]);
+				pageCaption[_ttoi(k[0].c_str()) / PageBatch] = tstring(k[4]); // ページ名
 			ruletags[nomenPartisRegulae].clear(); inverse_ruletags[nomenPartisRegulae].clear();
 			for (unsigned int index = 11; index < k.size(); ++index) {
 				/*if (k[index] == _T(">>>")) { // 飛ばすように指定されているなら
@@ -147,6 +147,8 @@ CONFDAT_TEMPLATE void CONFDAT_CLASS::configinit_csv(Compressed::Data* csvfile) {
 		}
 		else if ((!k[1].empty()) && (GameStat.chkGameType(static_cast<GameTypeID>(_ttoi(k[2].c_str()))))) { // N/A指定があった場合
 			nonapplicable.insert(nomenPartisRegulae); // リストに追加
+			if ((_ttoi(k[0].c_str()) % PageBatch) == 0)
+				pageCaption[_ttoi(k[0].c_str()) / PageBatch] = tstring(k[4]); // ページ名
 		}
 
 		// ルール設定画面のマスクデータ
