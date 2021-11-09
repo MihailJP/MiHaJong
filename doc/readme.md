@@ -1,6 +1,6 @@
 MiHaJong: Japanese Mahjong with a lot of local rules implemented
 ================================================================
-Copyright (c) 2008-2013, 2019-2020 MihailJP
+Copyright (c) 2008-2013, 2019-2021 MihailJP
 
 
 はじめに
@@ -131,6 +131,7 @@ Mac版の制限
 -----------
 - X11に依存します。
 - Linux版と同じ制限があります。
+- Big Sur 以降での動作は未確認です。
 
 
 ライセンスについて

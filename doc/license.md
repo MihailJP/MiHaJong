@@ -1,6 +1,6 @@
 MiHaJong ライセンス
 ===================
-Copyright (c) 2008-2013, 2019-2020 MihailJP
+Copyright (c) 2008-2013, 2019-2021 MihailJP
 
 
 ライセンスについて
@@ -9,7 +9,7 @@ Copyright (c) 2008-2013, 2019-2020 MihailJP
 
 　ソフトウェア全体としては、MITライセンスで提供されるものとします。使用した素材などの利用条件は後述してあります。
 
-> Copyright (c) 2008-2013, 2019-2020 MihailJP
+> Copyright (c) 2008-2013, 2019-2021 MihailJP
 > 
 > MIT License
 > 
