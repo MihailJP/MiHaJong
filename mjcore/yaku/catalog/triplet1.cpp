@@ -57,6 +57,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		_T("双暗刻"),
 #else /* GUOBIAO */
 		_T("三暗刻"), 2_hanF,
+		_T("二暗刻"),
 #endif /* GUOBIAO */
 		[](const MentsuAnalysis* const analysis) -> bool {
 			return (analysis->TotalAnKezi - (
@@ -64,18 +65,22 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				1 : 0) == 3);
 		}
 	));
-#ifdef GUOBIAO
 	/* 双暗刻 */
-	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-		_T("双暗刻"), 2_fenF,
-		[](const MentsuAnalysis* const analysis) -> bool {
-			return (analysis->TotalAnKezi - (
-				((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!analysis->TsumoAgariFlag())) ?
-				1 : 0) == 2);
-		}
-	));
 #ifndef GUOBIAO
+	if (RuleData::chkRuleApplied("ryanankoh"))
 #endif /* GUOBIAO */
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+#ifdef GUOBIAO
+			_T("双暗刻"), 2_fenF,
+#else /* GUOBIAO */
+			_T("二暗刻"), get_yaku_han("ryanankoh"),
+#endif /* GUOBIAO */
+			[](const MentsuAnalysis* const analysis) -> bool {
+				return (analysis->TotalAnKezi - (
+					((analysis->Machi == yaku::yakuCalculator::MachiType::shanpon) && (!analysis->TsumoAgariFlag())) ?
+					1 : 0) == 2);
+			}
+		));
 
 	// ---------------------------------------------------------------------
 
@@ -930,7 +935,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 
 	// ---------------------------------------------------------------------
 
-#ifdef GUOBIAO
 	/* 二色同刻 */
 	const auto ShuangTongKe =
 		[](const MentsuAnalysis* const analysis) -> int {
@@ -947,6 +951,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 			}
 			return j;
 		};
+#ifdef GUOBIAO
 	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 		_T("双同刻"), 2_fenF,
 		[ShuangTongKe](const MentsuAnalysis* const analysis) -> bool {
@@ -960,10 +965,19 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 		}
 	));
 #else /* GUOBIAO */
+	if (RuleData::chkRuleApplied("nishoku_doukoh"))
+		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+			_T("二色同刻"), get_yaku_han("nishoku_doukoh"),
+			[ShuangTongKe](const MentsuAnalysis* const analysis) -> bool {
+				return ShuangTongKe(analysis) >= 1;
+			}
+	));
+
 	/* 二同刻 */
 	if (RuleData::chkRuleApplied("ryandoukoh"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
 			_T("二同刻"), get_yaku_han("ryandoukoh"),
+			_T("二色同刻"),
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				constexpr std::array<std::pair<TileSuit, TileSuit>, 3> suit = {
