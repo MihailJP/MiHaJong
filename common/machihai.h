@@ -19,6 +19,7 @@ struct MachihaiInfo { // 待ち牌とかの情報を格納(chkFuriten関数用)
 	InfoByTile<MachihaiTileInfo> Machihai; // 待ち牌情報
 	int8_t MachihaiTotal; // 待ち牌の合計枚数
 	int8_t MachiMen; // 何面待ち？
+	MachihaiInfo() : FuritenFlag(), Machihai(), MachihaiTotal(), MachiMen() {}
 };
 static_assert(std::is_trivially_copyable<MachihaiInfo>::value, "MachihaiInfo is not trivially copyable");
 static_assert(std::is_standard_layout<MachihaiInfo>::value, "MachihaiInfo is not standard layout");
@@ -27,6 +28,10 @@ struct TileStatus { // gettilestatus用
 	bool isExistent, canFormQuad,
 		seqMidWait, seqDoubleSideWait, seqSingleSideWait,
 		formsPair, formsSequence, formsTriplet;
+	TileStatus() : isExistent(), canFormQuad(),
+		seqMidWait(), seqDoubleSideWait(), seqSingleSideWait(),
+		formsPair(), formsSequence(), formsTriplet()
+	{}
 };
 static_assert(std::is_trivially_copyable<TileStatus>::value, "TileStatus is not trivially copyable");
 static_assert(std::is_standard_layout<TileStatus>::value, "TileStatus is not standard layout");

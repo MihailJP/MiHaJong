@@ -126,6 +126,7 @@ public:
 	T& operator[](const int tile) {
 		return InfoByTile::operator[](static_cast<TileCode>(tile));
 	}
+	InfoByTile() : val() {}
 };
 
 template class InfoByTile<bool>;

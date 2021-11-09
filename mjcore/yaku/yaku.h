@@ -88,6 +88,10 @@ private:
 		bool TsumoAgariFlag() const { // ツモアガリどうかのフラグ
 			return GameStat->TsumoAgariFlag;
 		}
+		MentsuAnalysis() :
+			player(), BasePoint(), GameStat(), Machi(), MianziDat(), isPinfu(),
+			TotalKezi(), TotalAnKezi(), TotalShunzi(), TotalAnShunzi(), TotalKangzi(), TotalAnKangzi(), TotalKaKangzi()
+		{}
 	};
 #ifdef MJCORE_EXPORTS
 	static_assert(std::is_trivially_copyable<MentsuAnalysis>::value, "MentsuAnalysis is not trivially copyable");
