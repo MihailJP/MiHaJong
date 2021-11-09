@@ -74,6 +74,7 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				1 : 0) == 2);
 		}
 	));
+#ifndef GUOBIAO
 #endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
@@ -925,18 +926,44 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return lianke(analysis, reinterpret_cast<const char*>(&parsedat_trichrome3[0]), 6, 4, 4, false);
 			}
 		));
+#endif /* GUOBIAO */
 
 	// ---------------------------------------------------------------------
 
+#ifdef GUOBIAO
+	/* 二色同刻 */
+	const auto ShuangTongKe =
+		[](const MentsuAnalysis* const analysis) -> int {
+			constexpr std::array<std::pair<TileSuit, TileSuit>, 3> suit = {
+				std::make_pair(TileSuit::characters, TileSuit::circles),
+				std::make_pair(TileSuit::characters, TileSuit::bamboos),
+				std::make_pair(TileSuit::circles, TileSuit::bamboos),
+			};
+			int j = 0;
+			for (auto& k : suit) {
+				for (int i = 1; i <= 9; i++)
+					if ((analysis->KeziCount[composeNumberTile(k.first, i)] >= 1) &&
+						(analysis->KeziCount[composeNumberTile(k.second, i)] >= 1)) ++j;
+			}
+			return j;
+		};
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("双同刻"), 2_fenF,
+		[ShuangTongKe](const MentsuAnalysis* const analysis) -> bool {
+			return ShuangTongKe(analysis) == 1;
+		}
+	));
+	yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
+		_T("双同刻x2"), 4_fenF,
+		[ShuangTongKe](const MentsuAnalysis* const analysis) -> bool {
+			return ShuangTongKe(analysis) == 2;
+		}
+	));
+#else /* GUOBIAO */
 	/* 二同刻 */
 	if (RuleData::chkRuleApplied("ryandoukoh"))
-#endif /* GUOBIAO */
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
-#ifdef GUOBIAO
-			_T("双同刻"), 2_fenF,
-#else /* GUOBIAO */
 			_T("二同刻"), get_yaku_han("ryandoukoh"),
-#endif /* GUOBIAO */
 			[](const MentsuAnalysis* const analysis) -> bool {
 				bool yakuFlag = false;
 				constexpr std::array<std::pair<TileSuit, TileSuit>, 3> suit = {
@@ -954,7 +981,6 @@ void yaku::yakuCalculator::YakuCatalog::catalogInit::yakulst_triplet_1() {
 				return yakuFlag;
 			}
 		));
-#ifndef GUOBIAO
 	/* 茴香ポン */
 	if (RuleData::chkRuleApplied("uikyou_toitoi"))
 		yaku::yakuCalculator::YakuCatalog::Instantiate()->catalog.push_back(Yaku(
