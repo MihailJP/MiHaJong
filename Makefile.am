@@ -22,11 +22,11 @@ dist_doc_DATA = \
 
 SUFFIXES = .md .html
 .md.html:
-	cd $(@D)&&make $(@F)
+	cd $(@D)&&PYTHON=$(PYTHON) $(MAKE) $(@F)
 doc/rulesyms.md:
-	cd $(@D)&&make $(@F)
+	cd $(@D)&&PYTHON=$(PYTHON) $(MAKE) $(@F)
 doc/pygments.css:
-	cd $(@D)&&make $(@F)
+	cd $(@D)&&PYTHON=$(PYTHON) $(MAKE) $(@F)
 
 aidir = $(pkgdatadir)/ai
 dist_ai_DATA = data/ai/default.lua

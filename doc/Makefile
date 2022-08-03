@@ -6,13 +6,13 @@ all: $(TARGETS)
 
 .SUFFIXES: .md .html
 .md.html:
-	cat $^ | python ../auxtools/md2html.py > $@
+	cat $^ | $(PYTHON) ../auxtools/md2html.py > $@
 
 rulesyms.md: ../mjcore/data/confitem.csv
 	ruby ../auxtools/rulesyms.rb
 
 pygments.css:
-	python ../auxtools/makecss.py > $@
+	$(PYTHON) ../auxtools/makecss.py > $@
 
 clean:
 	-rm -rf $(TARGETS)

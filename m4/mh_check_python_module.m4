@@ -5,7 +5,7 @@
 #
 AC_DEFUN([MH_CHECK_PYTHON_MODULE], [
 	AC_MSG_CHECKING([for Python module $1])
-	AS_IF([echo 'import $1' | python - 2>/dev/null], [
+	AS_IF([echo 'import $1' | $PYTHON - 2>/dev/null], [
 		AC_MSG_RESULT([yes])
 		$2
 	], [
