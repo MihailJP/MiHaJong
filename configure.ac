@@ -30,16 +30,12 @@ AM_CONDITIONAL(WITH_WINAPI, test x$using_winapi != xno)
 
 # Check for OSX
 AC_MSG_CHECKING([for Mac])
-AS_IF([test "x$build_vendor" = xapple], [
+AS_IF([test "x$host_vendor" = xapple], [
 	AC_MSG_RESULT([yes])
-	AS_IF([test "x$build_cpu" = xaarch64], [
-		AC_MSG_NOTICE([It seems we are using Apple silicon Mac.])
-		AC_MSG_NOTICE([Please make sure openal-soft and mesa are installed with Homebrew.])
-		AC_MSG_NOTICE([The framework shipped with Mac will not be used.])
-		CPPFLAGS="$CPPFLAGS -I/opt/homebrew/include -I/opt/homebrew/opt/openal-soft/include"
-		LDFLAGS="$LDFLAGS -L/opt/homebrew/lib -L/opt/homebrew/opt/openal-soft/lib"
+	AS_IF([test "x$host_cpu" = xaarch64], [
+		AC_MSG_ERROR([Apple silicon Mac is not supported.])
 	], [
-		AC_MSG_NOTICE([It seems we are using Intel Mac.])
+		AC_MSG_WARN([Will not run on Big Sur or newer versions of macOS.])
 		AC_MSG_NOTICE([Please make sure openal-soft and mesa are installed with Homebrew.])
 		AC_MSG_NOTICE([The framework shipped with Mac will not be used.])
 		CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openal-soft/include"

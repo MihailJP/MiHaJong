@@ -22,7 +22,7 @@ Copyright (c) 2008-2013, 2019-2021 MihailJP
 --------
 - Windows版はWindows 7/10、Direct X 9 (June 2010) 以降
 - Linux版はX11(xlib)、OpenGL(GLX)、OpenAL、libpng、libluaが必要
-  - MacのXQuartzでも一応動作可
+- macOS Big Sur以降のMacでは動作しません
 - XML形式の牌譜を閲覧する場合は別途フォントのインストールが必要
 
 
@@ -99,10 +99,6 @@ MihailJPの開発環境
   - OS：OpenSUSE Leap x86_64 on VMware Player
   - 割り当てメモリ：4GB
   - テキストエディタ：Kate
-- Mac OS X環境
-  - 機種：MacBook Air 11-inch, Early 2014
-  - OS：macOS 10.14 (Mojave)
-  - テキストエディタ：Atom
 
 
 ビルドに別途必要なもの
@@ -131,7 +127,7 @@ Mac版の制限
 -----------
 - X11に依存します。
 - Linux版と同じ制限があります。
-- Big Sur 以降での動作は未確認です。
+- Big Sur 以降では動作しません。
 
 
 ライセンスについて
