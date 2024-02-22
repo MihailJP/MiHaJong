@@ -32,16 +32,22 @@ AM_CONDITIONAL(WITH_WINAPI, test x$using_winapi != xno)
 AC_MSG_CHECKING([for Mac])
 AS_IF([test "x$host_vendor" = xapple], [
 	AC_MSG_RESULT([yes])
-	AS_IF([test "x$host_cpu" = xaarch64], [
-		AC_MSG_ERROR([Apple silicon Mac is not supported.])
+	using_mac=yes
+	AC_MSG_CHECKING([for Homebrew])
+	AS_IF([test -d /opt/homebrew], [
+		AC_MSG_RESULT([yes])
+		using_homebrew=yes
+		LDFLAGS="$LDFLAGS -L/opt/homebrew/lib -L/opt/homebrew/opt/openal-soft/lib"
+		CPPFLAGS="$LDFLAGS -I/opt/homebrew/include -I/opt/homebrew/opt/openal-soft/include"
 	], [
-		AC_MSG_WARN([Will not run on Big Sur or newer versions of macOS.])
-		AC_MSG_NOTICE([Please make sure openal-soft and mesa are installed with Homebrew.])
-		AC_MSG_NOTICE([The framework shipped with Mac will not be used.])
-		CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openal-soft/include"
-		LDFLAGS="$LDFLAGS -L/usr/local/opt/openal-soft/lib"
+		AC_MSG_RESULT([no])
+		using_homebrew=no
 	])
-], [AC_MSG_RESULT([no])])
+], [
+	AC_MSG_RESULT([no])
+	using_mac=no
+	using_homebrew=no
+])
 
 # Resource editor
 AS_IF([test "x$using_winapi" != xno],
@@ -64,6 +70,21 @@ AS_IF([test "x$using_winapi" = xno],
 AM_CONDITIONAL(WITH_DIRECTX, test x$with_directx != xno)
 
 # Checks for libraries.
+AS_IF([test "x$LUA_INCLUDE" != x], [], [
+	AC_MSG_CHECKING([for Lua include])
+	AS_IF([test -f /usr/include/lua.h], [
+		LUA_INCLUDE="-I/usr/include"
+	], [test -f /opt/homebrew/include/lua/lua.h], [
+		LUA_INCLUDE="-I/opt/homebrew/include/lua"
+	], [test -f /usr/include/lua/lua.h], [
+		LUA_INCLUDE="-I/usr/include/lua"
+	], [test -f /usr/local/include/lua.h], [
+		LUA_INCLUDE="-I/usr/local/include"
+	], [test -f /usr/local/include/lua/lua.h], [
+		LUA_INCLUDE="-I/usr/local/include/lua"
+	], [])
+	AS_IF([test "x$LUA_INCLUDE" != x], AC_MSG_RESULT([$LUA_INCLUDE]), AC_MSG_RESULT([no]))
+])
 AX_LUA_LIBS([], [AC_MSG_ERROR([liblua is not installed.])])
 
 AS_IF([test "x$using_winapi" != xno],
