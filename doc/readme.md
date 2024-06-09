@@ -76,7 +76,6 @@ MiHaJongでは、基本的に2006年版のルールに準拠していますが�
 ------------
 　バグレポートやパッチ、役満和了ったなどの報告は、次の連絡先にどうぞ。
 - メール： mihailjp@gmail.com
-- Twitter： @MihailJP
 
 　また、バグレポートや要望は[開発室(Wiki)](http://www14.atwiki.jp/mihajong/)でも受け付けています。
 
