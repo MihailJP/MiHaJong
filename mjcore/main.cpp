@@ -38,7 +38,6 @@ void GameThread::ThreadMain(GameThread* lpParam) {
 #endif /*_WIN32*/
 #ifndef WITH_DIRECTX
 	mihajong_graphic::WaitForWindowInit();
-	mihajong_graphic::Transit(mihajong_graphic::SceneID::splash);
 #endif /*WITH_DIRECTX*/
 	initapp(gameType, hwnd);
 	startgame(gameType);

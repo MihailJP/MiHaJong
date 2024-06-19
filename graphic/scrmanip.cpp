@@ -114,7 +114,34 @@ void ScreenManipulator::InitDevice(bool fullscreen) { // Direct3D オブジェ�
 }
 
 void ScreenManipulator::preloadTextures() { // テクスチャの先行読み込み
-	PreloadTextures(pDevice);
+	constexpr intptr_t textureList[] = {
+		IDB_PNG_TBLBAIZE,
+		IDB_PNG_TBLBORDER,
+		IDB_PNG_SDBAR,
+		IDB_PNG_TILE,
+		IDB_PNG_FONT,
+		IDB_PNG_TITLE,
+		IDB_PNG_BUTTON,
+		IDB_PNG_FONT_HUGE,
+		IDB_PNG_DICE,
+		IDB_PNG_FONT_SMALL,
+		IDB_PNG_TENBOU,
+		IDB_PNG_CHICHAMARK,
+		IDB_PNG_SCORE_INDICATOR,
+		IDB_PNG_CALL_TEXT,
+		IDB_PNG_CALL_DIGITS,
+		IDB_PNG_AGARI_WINDOW,
+		IDB_PNG_SCORE_DIGITS,
+		IDB_PNG_CHECKBOX,
+		IDB_PNG_TILE_BLACK,
+		IDB_PNG_MOON_CLOCK,
+		IDB_PNG_SPLASH_SCREEN,
+		IDB_PNG_TITLE_BACKGROUND,
+		0, // sentinel
+	};
+	TexturePtr dummyTexture;
+	for (const intptr_t* i = textureList; *i != 0; ++i)
+		LoadTexture(pDevice, &dummyTexture, MAKEINTRESOURCE(*i));
 }
 
 void ScreenManipulator::disposeTextures() {
@@ -130,11 +157,7 @@ ScreenManipulator::ScreenManipulator(HWND windowHandle, bool fullscreen) {
 	InitDevice(fullscreen);
 	SplashScreen::LoadTexture(pDevice);
 	myScene = new SplashScreen(this);
-#ifdef WITH_DIRECTX
 	myFPSIndicator = new FPSIndicator(this);
-#else /* WITH_DIRECTX */
-	myFPSIndicator = nullptr;
-#endif /* WITH_DIRECTX */
 	lastRedrawTime = 0;
 	redrawFlag = true;
 }
@@ -146,8 +169,7 @@ ScreenManipulator::ScreenManipulator(Display* displayPtr, Window windowHandle, b
 	pDevice = nullptr; disp = displayPtr; hWnd = windowHandle;
 	InitDevice(fullscreen);
 	myScene = new SplashScreen(this);
-	//myFPSIndicator = new FPSIndicator(this);
-	myFPSIndicator = nullptr;
+	myFPSIndicator = new FPSIndicator(this);
 	lastRedrawTime = 0;
 	redrawFlag = true;
 }

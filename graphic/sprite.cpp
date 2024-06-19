@@ -33,9 +33,6 @@ SpriteRenderer* SpriteRenderer::instantiate(DevicePtr device) {
 		return renderer[reinterpret_cast<intptr_t>(device)];
 	} else { // デバイスに対応するスプライトは初回の使用(初期化が必要)
 		renderer[reinterpret_cast<intptr_t>(device)] = new SpriteRenderer(device);
-#ifndef WITH_DIRECTX
-		PreloadTextures(device);
-#endif /* WITH_DIRECTX */
 		return renderer[reinterpret_cast<intptr_t>(device)];
 	}
 }
