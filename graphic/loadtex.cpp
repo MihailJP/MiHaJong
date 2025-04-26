@@ -22,16 +22,8 @@ namespace mihajong_graphic {
 	std::map<TexturePtr, unsigned> TextureHeight;
 #endif
 //}
-#ifndef WITH_DIRECTX
-extern thread_local bool isGraphicThread;
-#endif
 
 void LoadTexture(DevicePtr device, TexturePtr* texture, LPCTSTR resource) {
-#ifndef WITH_DIRECTX
-	if (!isGraphicThread) {
-		return; // OpenGLの場合は違うスレッドで読み込んでも意味がない
-	}
-#endif
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	using namespace Gdiplus;
 #endif

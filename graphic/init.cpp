@@ -23,9 +23,6 @@ namespace {
 	std::condition_variable condVar;
 	bool initialized = false;
 }
-#ifndef WITH_DIRECTX
-thread_local bool isGraphicThread = false;
-#endif
 
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 GdiplusStartupInput gdiplusInput;
@@ -40,9 +37,6 @@ EXPORT bool InitWindow(void* hInstance, int nCmdShow, LPCTSTR icon, Window* hwnd
 {
 	/* ウィンドウの初期化 */
 	std::unique_lock<std::mutex> lock(initMutex);
-#ifndef WITH_DIRECTX
-	isGraphicThread = true;
-#endif
 #if defined(_WIN32) && !defined(WITH_DIRECTX)
 	GdiplusStartup(&gdiplusToken, &gdiplusInput, nullptr);
 #endif
