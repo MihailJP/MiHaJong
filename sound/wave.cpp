@@ -24,7 +24,9 @@ void sound::WaveData::GetFormat(std::ifstream& file) {
 	std::uint16_t id; file.read(reinterpret_cast<char*>(&id), 2);
 #ifdef _WIN32
 	if (id == 1) format.wFormatTag = WAVE_FORMAT_PCM;
+#ifdef WAVE_FORMAT_ADPCM
 	else if (id == 2) format.wFormatTag = WAVE_FORMAT_ADPCM;
+#endif /* WAVE_FORMAT_ADPCM */
 	else throw CodeConv::tstring(_T("対応していないフォーマットです"));
 #else /* _WIN32 */
 	if (id != 1)

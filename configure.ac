@@ -104,7 +104,9 @@ AS_IF([test "x$using_winapi" != xno],
 )
 AS_IF([test "x$with_directx" = xno],
 	[AS_IF([test "x$using_winapi" != xno],
-		[AC_CHECK_LIB([OpenAL32], [main], [], AC_MSG_ERROR([OpenAL32 is unavailable]))
+		[AC_CHECK_LIB([OpenAL32], [main], [], [
+			AC_CHECK_LIB([openal], [main], [], AC_MSG_ERROR([OpenAL is unavailable]))
+		 ])
 		 AC_CHECK_LIB([gdiplus], [main], [], AC_MSG_ERROR([gdiplus is unavailable]))
 		 AC_CHECK_LIB([gdi32], [main], [], AC_MSG_ERROR([gdi32 is unavailable]))
 		 AC_CHECK_LIB([opengl32], [main], [], AC_MSG_ERROR([opengl32 is unavailable]))],
@@ -198,7 +200,9 @@ AS_IF([test "x$using_winapi" = xno], [
 ])
 AS_IF([test "x$with_directx" = xno], [
 	AC_CHECK_HEADER([GL/gl.h], [], AC_MSG_ERROR([GL/gl.h is unavailable]))
-	AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
+	AS_IF([test "x$using_winapi" = xno], [
+		AC_CHECK_HEADER([GL/glx.h], [], AC_MSG_ERROR([GL/glx.h is unavailable]))
+	])
 ])
 
 AC_ARG_ENABLE([large_pics],

@@ -147,8 +147,8 @@ void MainWindow::initWindow(HINSTANCE hThisInst, int nWinMode, Screen_Mode::Scre
 		scrMode == Screen_Mode::ScreenMode::borderless ? WindowRect.left : CW_USEDEFAULT,
 		scrMode == Screen_Mode::ScreenMode::borderless ? WindowRect.top : CW_USEDEFAULT,
 #else
-		scrMode == Screen_Mode::ScreenMode::borderless ? WindowRect.left : Screen_Mode::ScreenMode::fullscreen ? 0 : CW_USEDEFAULT,
-		scrMode == Screen_Mode::ScreenMode::borderless ? WindowRect.top : Screen_Mode::ScreenMode::fullscreen ? 0 : CW_USEDEFAULT,
+		scrMode == Screen_Mode::ScreenMode::borderless ? WindowRect.left : scrMode == Screen_Mode::ScreenMode::fullscreen ? 0 : CW_USEDEFAULT,
+		scrMode == Screen_Mode::ScreenMode::borderless ? WindowRect.top : scrMode == Screen_Mode::ScreenMode::fullscreen ? 0 : CW_USEDEFAULT,
 #endif
 		WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
 		nullptr, nullptr, hThisInst, nullptr);

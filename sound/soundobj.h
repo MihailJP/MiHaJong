@@ -1,6 +1,8 @@
 ﻿#pragma once
 
-#ifndef _WIN32
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <X11/Xlib.h>
 #endif
 #ifdef USE_XAUDIO2
@@ -39,7 +41,9 @@ namespace sound {
 	public:
 #if defined(_WIN32) && defined(MIDI_SUPPORT)
 		SoundManipulator(int = GuruGuruSmf::Device::DirectMusic, HWND = nullptr);
-#else /* defined(_WIN32) && defined(MIDI_SUPPORT) */
+#elif defined(_WIN32)
+		SoundManipulator(int = 0, HWND = nullptr);
+#else /* !defined(_WIN32) */
 		SoundManipulator(int = 0, Window = 0);
 #endif /* defined(_WIN32) && defined(MIDI_SUPPORT) */
 		SoundManipulator(const SoundManipulator&) = delete; // Delete unexpected copy constructor

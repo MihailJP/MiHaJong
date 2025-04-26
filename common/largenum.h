@@ -2,7 +2,7 @@
 
 #include <type_traits>
 #include <cstdint>
-#include <climits>
+#include <limits>
 #include <iomanip>
 #include "strcode.h"
 #include <type_traits>

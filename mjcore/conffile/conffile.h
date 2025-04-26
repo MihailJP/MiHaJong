@@ -12,9 +12,6 @@
 
 namespace ConfigFile {
 
-using std::uint8_t;
-using std::uint32_t;
-
 #ifdef _WIN32
 inline bool exist(LPCSTR filename) {
 	return (GetFileAttributesA(filename) != -1);

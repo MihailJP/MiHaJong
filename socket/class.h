@@ -36,7 +36,7 @@ private:
 	class client_thread; // クライアントのスレッド
 	class server_thread; // サーバーのスレッド
 	bool isServer;
-	addrinfo* addrInfo;
+	struct addrinfo* addrInfo;
 	SocketDescriptor sock, lsock;
 	network_thread* threadPtr;
 	std::recursive_mutex threadExistenceMutex;
