@@ -14,6 +14,12 @@
 #include "../../common/bgmid.h"
 #include "../except.h"
 
+#ifdef OLD_SCALING
+#define SCALE_XPOS(x) x
+#else /* OLD_SCALING */
+#define SCALE_XPOS(x) (static_cast<float>(x) * wScale)
+#endif /* OLD_SCALING */
+
 namespace mihajong_graphic {
 
 // -------------------------------------------------------------------------
@@ -212,7 +218,7 @@ void TableProtoScene::ScoreBoard::renderWind() {
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind)    )), WindCharY,
 		static_cast<int32_t>(WindCharX + WindCharWidth * (static_cast<int>(wind) + 1)), WindCharY + WindCharHeight
 	};
-	const float x = static_cast<float>(xpos) + WindPosX, y = static_cast<float>(ypos) + WindPosY;
+	const float x = static_cast<float>(xpos) + SCALE_XPOS(WindPosX), y = static_cast<float>(ypos) + WindPosY;
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		WindCharWidth, WindCharHeight,
@@ -225,7 +231,7 @@ void TableProtoScene::ScoreBoard::renderNumeral(int xx, int yy, unsigned num, Ar
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num    )), NumCharY,
 		static_cast<int32_t>(NumCharX + NumCharWidth * (num + 1)), NumCharY + NumCharHeight
 	};
-	const float x = static_cast<float>(xpos) + xx, y = static_cast<float>(ypos) + yy;
+	const float x = static_cast<float>(xpos) + SCALE_XPOS(xx), y = static_cast<float>(ypos) + yy;
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		NumCharWidth, NumCharHeight, color, &rect, 0, 0, &myMatrix);
@@ -335,7 +341,7 @@ void TableProtoScene::ScoreBoard::renderScoreUnit(unsigned unitnum, ArgbColor co
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum    )), ScoreUnitCharY,
 		static_cast<int32_t>(ScoreUnitCharX + ScoreUnitCharWidth * (unitnum + 1)), ScoreUnitCharY + ScoreUnitCharHeight
 	};
-	const float x = static_cast<float>(xpos) + ScoreUnitPosX, y = static_cast<float>(ypos) + ScoreUnitPosY;
+	const float x = static_cast<float>(xpos) + SCALE_XPOS(ScoreUnitPosX), y = static_cast<float>(ypos) + ScoreUnitPosY;
 	const TransformMatrix myMatrix(getMatrix(x, y, wScale, 1.0f));
 	SpriteRenderer::instantiate(myDevice)->ShowSprite(texture, x, y,
 		ScoreUnitCharWidth, ScoreUnitCharHeight, color, &rect, 0, 0, &myMatrix);
@@ -346,7 +352,7 @@ void TableProtoScene::ScoreBoard::renderName() {
 	const unsigned tmpWidth = nameText->strWidthByCols(pName);
 	nameText->NewText(0,
 		(getScoreMode() == ScoreMode::diff) ? _T("点差表示") : ((getScoreMode() == ScoreMode::chip) ? _T("チップ表示") : pName),
-		xpos + NamePosX, ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / static_cast<float>(tmpWidth)) : 1.0f) * wScale);
+		xpos + SCALE_XPOS(NamePosX), ypos + NamePosY, 1.0, ((tmpWidth > 18) ? (18.0f / static_cast<float>(tmpWidth)) : 1.0f) * wScale);
 	nameText->Render();
 }
 

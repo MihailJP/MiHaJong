@@ -40,7 +40,11 @@ void SplashScreen::Render() {
 #if defined(_WIN32) && defined(WITH_DIRECTX)
 	caller->getDevice()->Clear(0, nullptr, D3DCLEAR_TARGET, 0xffffffff, 1.0f, 0);
 	constexpr RECT rect = {0, 0, 1920, 1080};
+#ifdef OLD_SCALING
 	const auto xPos = static_cast<int>((static_cast<float>(Geometry::WindowWidth) * Geometry::WindowScale() - 1080.0f) / 2.0f);
+#else /* OLD_SCALING */
+	const auto xPos = static_cast<int>((static_cast<float>(Geometry::WindowWidth) - static_cast<float>(Geometry::WindowHeight) * 16.0f / 9.0f) / 2.0f);
+#endif /* OLD_SCALING */
 #else
 	const auto width = static_cast<int>(static_cast<float>(Geometry::WindowWidth) / Geometry::WindowScale());
 	const RECT rect = {(1920 - width) / 2, 0, (1920 - width) / 2 + width, 1080};
